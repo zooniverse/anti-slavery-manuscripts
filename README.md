@@ -1,8 +1,6 @@
-[![bitHound Score](https://www.bithound.io/github/Granze/react-starterify/badges/score.svg)](https://www.bithound.io/github/zooniverse/zoo-react-starterify/master)
+# Liberating the Liberator
 
-# Zooniverse Reduxify
-
-A minimal Redux application starter kit, based on [Zooniverse React Starterify](https://github.com/zooniverse/zoo-react-starterify).
+Liberating the Liberator invites volunteers to classify documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
 
 ## Usage
 
@@ -24,7 +22,9 @@ __When you are done, create a production-ready version of the JS bundle:__
 
 ## Credits
 
-Thanks to [Granze](https://github.com/Granze) for the original [React Starterify](https://github.com/Granze/react-starterify), which is used under the [MIT License](http://opensource.org/licenses/MIT).
+Based on the [Zooniverse Redux starter template](https://github.com/zooniverse/zoo-reduxify/),
+which in turn was based on the original [React Starterify](https://github.com/Granze/react-starterify)
+(used under the [MIT License](http://opensource.org/licenses/MIT)).
 
 ## License
 

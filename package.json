@@ -1,25 +1,14 @@
 {
-  "name": "zoo-reduxify",
-  "version": "1.1.0",
-  "description": "React/Redux JS application skeleton using Wepback and other awesome tools",
+  "name": "liberating-the-liberator",
+  "version": "1.0.0",
+  "description": "Liberating the Liberator invites volunteers to classify documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zooniverse/zoo-reduxify"
+    "url": "https://github.com/zooniverse/liberating-the-liberator"
   },
   "keywords": [
-    "wepback",
-    "react",
-    "redux",
-    "wepback",
-    "seed",
-    "boilerplate",
-    "kickstarter",
-    "ES6",
-    "ES2015",
-    "babel",
-    "mocha",
-    "chai"
+    "zooniverse"
   ],
   "scripts": {
     "start": "babel-node server.js",
@@ -30,9 +19,9 @@
   "author": "Zooniverse",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zooniverse/zoo-reduxify"
+    "url": "https://github.com/zooniverse/liberating-the-liberator"
   },
-  "homepage": "https://github.com/zooniverse/zoo-reduxify",
+  "homepage": "https://github.com/zooniverse/liberating-the-liberator",
   "dependencies": {
     "history": "^4.4.1",
     "panoptes-client": "^2.5.2",
