@@ -1,6 +1,6 @@
 # Liberating the Liberator
 
-Liberating the Liberator invites volunteers to classify documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
+Liberating the Liberator invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
 
 ## Usage
 

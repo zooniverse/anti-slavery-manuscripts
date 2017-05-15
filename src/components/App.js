@@ -10,18 +10,15 @@ export default class App extends React.Component {
     return something;
   }
   render() {
-    const version = packageJSON.version;
-
     return (
       <div>
-        <header className="site-header">
-          <h1 className="title">React Starterify {version}</h1>
+        <header className="app-header">
           <Link to="/about" className="link">About</Link>
           <Link to="/poweredby" className="link">Powered by</Link>
           <HeaderAuth />
         </header>
         <section className="content-section">
-          {this.props.children || 'Welcome to React Starterify'}
+          {this.props.children || 'Welcome to Liberating the Liberator'}
         </section>
       </div>
     );

@@ -1,7 +1,7 @@
 {
   "name": "liberating-the-liberator",
   "version": "1.0.0",
-  "description": "Liberating the Liberator invites volunteers to classify documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
+  "description": "Liberating the Liberator invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
   "main": "app.js",
   "repository": {
     "type": "git",
