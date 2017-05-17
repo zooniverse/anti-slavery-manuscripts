@@ -6,7 +6,10 @@ export default class LoginButton extends React.Component {
   render() {
     const login = this.props.login;
     return (
-      <button type="submit" onClick={login}>Login</button>
+      <div className="logout-button">
+        <span>example_user</span>
+        <button type="submit" onClick={login}>Login</button>
+      </div>
     );
   }
 
