@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../actions/login';
+import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../../actions/login';
 
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
