@@ -1,20 +1,55 @@
 .app-header
-  color $light-text-color
-  background $dark-background-color url(../images/zooniverse-icon-web-white-small.png) no-repeat right 
-  background-size contain
+  display: flex
+  align-items: flex-end
+  margin: $unit-size (3 * $unit-size)
+  font-size: 14px
+  border-bottom: 1px solid $grey
+  
+  .app-title
+    color: $text-color
+    
+    img  //To be replaced with the proper Liberating the Liberator logo
+      display: inline-block
+      height: 1em
+      vertical-align: middle
+    h1  //To be rendered invisible, or removed altogether
+      display: inline-block
+      font-size: 1em
+      vertical-align: middle
 
-  .title
-    display inline-block
-    padding 0 20px
+  nav
+    flex: 1 1 auto
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    
+    .link
+      flex: 0 0 auto
+      color: $text-color
+      padding: 0.5em 1em
+      text-transform: uppercase
+      letter-spacing: (2/14)em
+      margin-left: 2em
+      
+      &:hover
+        background: $blueberry
+        color: $light
+        
+  .login-button, .logout-button
+    font-size: 0.8em
+    flex: 0 0 auto
+    padding: 0.5em 0 0.5em 1em
 
-  .link
-    display inline-block
-    margin 10px
-    padding 10px
-    color $light-text-color
-    text-decoration none
-    border-radius 3px
-    &.active,
-    &:hover
-      color: $light-text-color
-      background-color: $primary-color
+    span
+      display: inline-block
+      background: $text-color
+      color: $light
+      padding: 0.5em 1em
+      margin-right: 0.5em
+      
+    button
+      background: $blueberry
+      border: none
+      border-radius: 1em
+      color: $light
+      padding: 0.5em 1em
