@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
-import DashboardPlugin from 'webpack-dashboard/plugin';
+const DashboardPlugin = require('webpack-dashboard/plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const port = isProduction ? process.env.PORT : 3000;
