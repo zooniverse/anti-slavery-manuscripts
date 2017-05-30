@@ -2,7 +2,6 @@
   "name": "liberating-the-liberator",
   "version": "1.0.0",
   "description": "Liberating the Liberator invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
-  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/zooniverse/liberating-the-liberator"
@@ -11,8 +10,8 @@
     "zooniverse"
   ],
   "scripts": {
-    "start": "babel-node server.js",
-    "test": "mocha",
+    "start": "webpack-dashboard -- babel-node server.js",
+    "test": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
     "eslint": "eslint .",
     "build": "webpack --config webpack.production.config.js -p"
   },
@@ -23,8 +22,9 @@
   },
   "homepage": "https://github.com/zooniverse/liberating-the-liberator",
   "dependencies": {
-    "history": "^4.4.1",
+    "history": "^4.6.1",
     "panoptes-client": "^2.5.2",
+    "prop-types": "^15.5.10",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^4.4.6",
@@ -46,6 +46,7 @@
     "chai": "^3.5.0",
     "clean-webpack-plugin": "^0.1.14",
     "css-loader": "^0.26.1",
+    "enzyme": "^2.8.2",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-loader": "^1.6.1",
@@ -61,13 +62,15 @@
     "json-loader": "^0.5.4",
     "mocha": "^3.2.0",
     "nib": "^1.1.2",
-    "react-addons-test-utils": "^15.4.1",
+    "react-addons-test-utils": "^15.4.2",
+    "react-test-renderer": "^15.4.2",
     "rimraf": "^2.5.4",
     "stats-webpack-plugin": "^0.4.2",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
     "webpack": "^2.3.3",
+    "webpack-dashboard": "^0.4.0",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.18.0"
   }

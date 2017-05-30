@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
+import DashboardPlugin from 'webpack-dashboard/plugin';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const port = isProduction ? process.env.PORT : 3000;
@@ -14,6 +15,7 @@ const indexHtml = path.join(__dirname, 'dist/index.html');
 
 if (!isProduction) {
   const compiler = webpack(config);
+  compiler.apply(new DashboardPlugin());
   const middleware = webpackMiddleware(compiler, {
     publicPath: config.output.publicPath,
     contentBase: 'src',

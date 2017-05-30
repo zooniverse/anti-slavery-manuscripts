@@ -1,13 +1,12 @@
 import React from 'react';
-import packageJSON from '../../package.json';
-import { Header } from './common/Header';
+import PropTypes from 'prop-types';
+import { Header } from './Header';
 
 export default class App extends React.Component {
   returnSomething(something) { // eslint-disable-line class-methods-use-this
-    // this is only for testing purposes. Check /test/components/App-test.js
     return something;
   }
-  
+
   render() {
     return (
       <div>
@@ -19,5 +18,5 @@ export default class App extends React.Component {
 }
 
 App.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 };

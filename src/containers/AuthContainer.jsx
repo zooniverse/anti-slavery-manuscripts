@@ -2,25 +2,20 @@
 // components. Stores state in Redux.
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../../actions/login';
+import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
 
-import LoginButton from './LoginButton';
-import LogoutButton from './LogoutButton';
+import LoginButton from '../components/LoginButton';
+import LogoutButton from '../components/LogoutButton';
 
-const PropTypes = React.PropTypes;
-
-class HeaderAuth extends React.Component {
-
-  constructor() {
-    super();
+class AuthContainer extends React.Component {
+  constructor(props) {
+    super(props);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-  }
-
-  componentDidMount() {
-    if (!this.props.initialised) {
-      this.props.dispatch(checkLoginUser());
+    if (!props.initialised) {
+      props.dispatch(checkLoginUser());
     }
   }
 
@@ -39,21 +34,20 @@ class HeaderAuth extends React.Component {
   }
 }
 
-HeaderAuth.propTypes = {
+AuthContainer.propTypes = {
   user: PropTypes.shape({ login: PropTypes.string }),
   initialised: PropTypes.bool,
   dispatch: PropTypes.func,
 };
 
-HeaderAuth.defaultProps = {
+AuthContainer.defaultProps = {
   user: null,
   initialised: false,
 };
 
-function mapStateToProps(state) {  // Listens for changes in the Redux Store
-  return {
-    user: state.login.user,
-    initialised: state.login.initialised,
-  };
-}
-export default connect(mapStateToProps)(HeaderAuth);  // Connects the Component to the Redux Store
+const mapStateToProps = (state) => ({
+  user: state.login.user,
+  initialised: state.login.initialised,
+});
+
+export default connect(mapStateToProps)(AuthContainer);  // Connects the Component to the Redux Store
