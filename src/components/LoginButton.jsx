@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 
 const LoginButton = ({ login }) => {
   return (
-    <button type="submit" onClick={login}>Login</button>
+    <div className="login-button">
+      <button type="submit" onClick={login}>Login</button>
+    </div>
+    
   );
 };
 
