@@ -32,7 +32,8 @@
     "redux": "^3.6.0",
     "redux-devtools-extension": "^1.0.0",
     "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "zooniverse-react-components": "git+ssh://git@github.com/zooniverse/Zooniverse-React-Components.git#v0.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.3",
