@@ -4,12 +4,14 @@ import AuthContainer from '../containers/AuthContainer';
 
 import AppLogo from '../images/zooniverse-icon-web-white-small.png';
 
+import { ZooniverseLogo, ZooniverseLogotype } from 'zooniverse-react-components/lib';
+
 export class Header extends React.Component {
   render() {
     return (
-      <header className="app-header">
+      <header className="app-header">        
         <Link to="/" className="app-title">
-          <img role="presentation" src={AppLogo} />
+          <ZooniverseLogo />
           <h1>Liberating the Liberator</h1>
         </Link>
         <nav>
