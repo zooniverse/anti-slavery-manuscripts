@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header } from './Header';
+import Header from './Header';
+import ZooniverseHeader from './ZooniverseHeader';
 
 export default class App extends React.Component {
   returnSomething(something) { // eslint-disable-line class-methods-use-this
@@ -10,6 +11,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
+        <ZooniverseHeader />
         <Header />
         {this.props.children}
       </div>
