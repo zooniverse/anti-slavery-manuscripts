@@ -1,3 +1,49 @@
 .classifier-page
   display: flex
   flex-direction: row
+  padding: 1rem 0
+  
+  .subject-viewer
+    display: flex
+    flex: 1 1 auto
+    flex-direction: column
+    
+    .subject-controls
+      background: $white
+      font-size: (12/20)rem
+      letter-spacing: (2/12)em
+      padding: 1em 2em
+      text-transform: uppercase
+    
+    .subject-images
+      display: flex
+      flex: 1 1 auto
+      flex-direction: row
+      border: 1px solid green
+      
+      .subject-image
+        background: $dark-grey
+        border: 2px solid $teal
+        flex: 0 0 50%
+
+  .classifier-controls
+    display: flex
+    flex-direction: column
+    font-size: (12/20)rem
+    justify-content: space-between
+    margin: 0 1rem
+    width: 10rem
+    
+    > *
+      margin-bottom: 1em
+      
+    > *:last-child
+      margin: 0
+    
+    > div
+      background: $white
+      flex: 1 1 auto
+    
+    .button
+      display: block
+      width: 100%
