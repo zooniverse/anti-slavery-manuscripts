@@ -1,15 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router';
 import AuthContainer from '../containers/AuthContainer';
+import { ZooniverseLogo } from 'zooniverse-react-components/lib';
 
-import AppLogo from '../images/zooniverse-icon-web-white-small.png';
-
-export class Header extends React.Component {
+class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
         <Link to="/" className="app-title">
-          <img role="presentation" src={AppLogo} />
+          <ZooniverseLogo />
           <h1>Liberating the Liberator</h1>
         </Link>
         <nav>
@@ -21,3 +20,5 @@ export class Header extends React.Component {
     );
   }
 }
+
+export default Header;
