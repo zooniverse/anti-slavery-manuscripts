@@ -5,10 +5,11 @@ import { Provider } from 'react-redux';
 import oauth from 'panoptes-client/lib/oauth';
 
 import App from './components/App';
+import Home from './components/Home';
 import About from './components/About';
+import Classifier from './containers/ClassifierContainer';
 import config from './config';
 import configureStore from './store';
-import HomePage from './components/Home-Page/index';
 
 // Todo: let's find a better way to include Styles,
 // currently Styles looks like an unused var to eslint
@@ -22,7 +23,8 @@ oauth.init(config.panoptesAppId)
       <Provider store={store}>
         <Router history={browserHistory}>
           <Route path="/" component={App}>
-            <IndexRoute component={HomePage} />
+            <IndexRoute component={Home} />
+            <Route path="/classify" component={Classifier} />
             <Route path="/about" component={About} />
           </Route>
         </Router>
