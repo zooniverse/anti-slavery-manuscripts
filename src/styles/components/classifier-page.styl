@@ -40,12 +40,13 @@
       display: flex
       flex: 1 1 auto
       flex-direction: row
-      border: 1px solid green
       
       .subject-image
         background: $dark-grey
-        border: 2px solid $teal
         flex: 0 0 50%
+        
+      .subject-image:last-child  //TEMP just to differentiate two sides
+        background: #444
 
   .classifier-controls
     display: flex
