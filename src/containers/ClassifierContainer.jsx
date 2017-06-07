@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 //import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
 
+import TmpSvgIcon from '../components/TmpSvgIcon';
+
 class ClassifierContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -12,12 +14,29 @@ class ClassifierContainer extends React.Component {
     return (
       <main className="app-content classifier-page">
         <section className="subject-viewer">
-          <div className="subject-controls">Controls up here</div>
+          <div className="subject-controls">
+            <span>
+              <button className="icon button"><TmpSvgIcon /></button>
+              <span>Add Transcription</span>
+            </span>
+            <span>
+              <button className="icon button"><TmpSvgIcon /></button>
+              <span>Rotate Image</span>
+            </span>
+            <span>
+              <button className="icon button"><TmpSvgIcon /></button>
+              <button className="icon button"><TmpSvgIcon /></button>
+              <span>Zoom In/Out</span>
+            </span>
+            <span className="filler">
+              <button className="icon button"><TmpSvgIcon /></button>
+              <button className="icon button"><TmpSvgIcon /></button>
+            </span>
+            <button className="dusty-lavender button">Field Guide</button>
+          </div>
           <div className="subject-images">
-            <div className="subject-image left">
-            </div>
-            <div className="subject-image right">
-            </div>
+            <div className="subject-image left"></div>
+            <div className="subject-image right"></div>
           </div>
         </section>
         <section className="classifier-controls">

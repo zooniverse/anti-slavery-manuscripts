@@ -9,11 +9,32 @@
     flex-direction: column
     
     .subject-controls
+      align-items: stretch
       background: $white
+      display: flex
+      flex-direction: row
       font-size: (12/20)rem
       letter-spacing: (2/12)em
-      padding: 1em 2em
       text-transform: uppercase
+      
+      > span
+        align-items: center
+        display: flex
+        margin-right: 2em
+        
+        span, .button
+          margin-right: 1em
+      
+        &:first-child
+          margin-left: 2em
+          
+      .filler
+        flex: 1 1 auto
+        justify-content: flex-end
+        margin-right: 0
+      
+      > .button
+        padding: 1.5em 2em
     
     .subject-images
       display: flex
