@@ -69,3 +69,81 @@
     .button
       display: block
       width: 100%
+
+    .mini-control
+      display: flex
+      flex-direction: column
+      
+      .title
+        border-bottom: 1px solid $mid-grey
+        margin: 1em 1em 0 1em
+        padding-bottom: 0.5em
+        position: relative
+        
+        b
+          display: block
+          font-weight: normal
+          letter-spacing: (2/12)em
+          text-transform: uppercase
+          margin-bottom: 0.5em
+        
+        i
+          display: block
+          line-height: (4/3)em
+          margin-bottom: 0.5em
+        
+        .button
+          position: absolute
+          right: 0
+          top: 0
+          width: auto
+          
+      .list
+        flex: 1 1 auto
+        margin: 1em
+        overflow: auto
+        
+        .item
+          border-bottom: 1px solid $light-grey
+          margin-bottom: 1em
+          padding-bottom: 0.5em
+          
+          p
+            color: $dark-grey
+            font-size: (14/12)em
+            font-weight: 300
+            line-height: 1.43em
+            margin: 0
+            padding: 0
+        
+        .button
+          margin: 0 auto
+          width: 90%
+      
+      &.talk-section .list
+        .item
+          .username
+            color: $dusty-lavender
+            font-size: (10/12)em
+            letter-spacing: (0.17)em
+            text-transform: uppercase
+          
+      &.crib-sheet .list
+        .item
+          display: flex
+          align-items: center
+          
+          .thumbnail
+            background: $dark-grey
+            flex: 0 0 auto
+            margin-right: 0.5em
+            padding: 0.5em
+            width: 3em
+            height: 3em
+            
+            img
+              display: block
+              width: 100%
+          
+          p
+            flex: 1 1 auto
