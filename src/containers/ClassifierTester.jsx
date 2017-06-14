@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchProject, PROJECT_STATUS } from '../ducks/classifier';
+import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 
 class ClassifierTester extends React.Component {
   constructor(props) {
@@ -83,8 +83,8 @@ ClassifierTester.defaultProps = {
 
 const mapStateToProps = (state) => {
   return {
-    projectStatus: state.classifier.projectStatus,
-    projectData: state.classifier.projectData,
+    projectStatus: state.project.status,
+    projectData: state.project.data,
   }
 };
 

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import login from './login';
-import classifier from './classifier';
+import project from './project';
 
 export default combineReducers({
   login,
-  classifier
+  project,
 });
