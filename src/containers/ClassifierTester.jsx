@@ -1,3 +1,12 @@
+/*
+Classifier Tester
+-----------------
+
+This component is used to test our ability to connect to the Panoptes API
+service, without having to worry about the presentational side of things.
+
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
