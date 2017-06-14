@@ -23,7 +23,7 @@
   "homepage": "https://github.com/zooniverse/liberating-the-liberator",
   "dependencies": {
     "history": "^4.6.1",
-    "panoptes-client": "^2.5.2",
+    "panoptes-client": "^2.7.2",
     "prop-types": "^15.5.10",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
