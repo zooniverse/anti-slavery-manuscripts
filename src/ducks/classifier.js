@@ -1,19 +1,22 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 
 // Action Types
-const TEMPORARY_HARDCODED_PROJECT_ID = '1651';  //Staging: http://localhost:3735/projects/darkeshard/transformers
 const FETCH_PROJECT = 'FETCH_PROJECT';
 const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
 
-const PROJECT_IS_IDLE = 'not initialised';
-const PROJECT_IS_FETCHING = 'fetching project...';
-const PROJECT_IS_READY = 'project ready';
-const PROJECT_IS_ERROR = 'ERROR!';
+// Misc Constants
+const TEMPORARY_HARDCODED_PROJECT_ID = '1651';  //Staging: http://localhost:3735/projects/darkeshard/transformers
+export const PROJECT_STATUS = {
+  IDLE: 'project_status_idle',
+  FETCHING: 'project_status_fetching',
+  READY: 'project_status_ready',
+  ERROR: 'project_status_error',
+};
 
 // Reducer
 const initialState = {
-  projectStatus: PROJECT_IS_IDLE,
+  projectStatus: PROJECT_STATUS.IDLE,
   projectId: null,
   projectData: null,
 };
@@ -22,18 +25,18 @@ const classifierReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_PROJECT:
       return {
-        projectStatus: PROJECT_IS_FETCHING,
+        projectStatus: PROJECT_STATUS.FETCHING,
         projectId: action.projectId,
         projectData: null,
       };
     case FETCH_PROJECT_SUCCESS:
       return {
-        projectStatus: PROJECT_IS_READY,
+        projectStatus: PROJECT_STATUS.READY,
         projectData: action.projectData,
       };
     case FETCH_PROJECT_ERROR:
       return {
-        projectStatus: PROJECT_IS_ERROR,
+        projectStatus: PROJECT_STATUS.ERROR,
       };
       
     default:
@@ -51,9 +54,6 @@ const fetchProject = (projectId = TEMPORARY_HARDCODED_PROJECT_ID) => {
     
     apiClient.type('projects').get(projectId)
     .then((project) => {
-      
-      console.log(project);
-      
       dispatch({
         type: FETCH_PROJECT_SUCCESS,
         projectData: project,

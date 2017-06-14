@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchProject } from '../ducks/classifier';
+//import { fetchProject } from '../ducks/classifier';
 
 import TmpSvgIcon from '../components/TmpSvgIcon';
 import TmpImg from '../images/zooniverse-icon-web-white-small.png';
@@ -41,7 +41,6 @@ class ClassifierContainer extends React.Component {
           </div>
         </section>
         <section className="classifier-controls">
-          <button href="#" className="green button with-shadow" onClick={this.testFetchProject.bind(this)}>TEST PANOPTES</button>
           <button href="#" className="white-grey button with-shadow">Tutorial</button>
           <div className="talk-section mini-control">
             <div className="title">
@@ -85,13 +84,11 @@ class ClassifierContainer extends React.Component {
       </main>
     );
   }
-  
-  testFetchProject() {
-    this.props.dispatch(fetchProject());
-  }
 }
 
-ClassifierContainer.propTypes = {};
+ClassifierContainer.propTypes = {
+  dispatch: PropTypes.func,
+};
 ClassifierContainer.defaultProps = {};
 
 const mapStateToProps = (state) => ({});
