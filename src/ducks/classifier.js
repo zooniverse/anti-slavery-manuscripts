@@ -26,16 +26,24 @@ const classifierReducer = (state = initialState, action) => {
         projectId: action.projectId,
         projectData: null,
       };
+    case FETCH_PROJECT_SUCCESS:
+      return {
+        projectStatus: PROJECT_IS_READY,
+        projectData: action.projectData,
+      };
+    case FETCH_PROJECT_ERROR:
+      return {
+        projectStatus: PROJECT_IS_ERROR,
+      };
+      
     default:
       return state;
   };
 };
 
 // Action Creators
-const fetchProject = () {
+const fetchProject = (projectId = TEMPORARY_HARDCODED_PROJECT_ID) => {
   return (dispatch) => {
-    const projectId = TEMPORARY_HARDCODED_PROJECT_ID;
-    
     dispatch({
       type: FETCH_PROJECT,
       projectId,
