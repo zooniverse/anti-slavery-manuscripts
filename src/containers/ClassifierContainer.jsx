@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-//import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
+//import { fetchProject } from '../ducks/classifier';
 
 import TmpSvgIcon from '../components/TmpSvgIcon';
 import TmpImg from '../images/zooniverse-icon-web-white-small.png';
@@ -86,7 +86,9 @@ class ClassifierContainer extends React.Component {
   }
 }
 
-ClassifierContainer.propTypes = {};
+ClassifierContainer.propTypes = {
+  dispatch: PropTypes.func,
+};
 ClassifierContainer.defaultProps = {};
 
 const mapStateToProps = (state) => ({});
