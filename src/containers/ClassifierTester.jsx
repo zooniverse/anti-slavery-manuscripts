@@ -15,13 +15,14 @@ import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 class ClassifierTester extends React.Component {
   constructor(props) {
     super(props);
+    this.fetchProject = this.fetchProject.bind(this);
   }
 
   render() {
     return (
       <main className="app-content tester-page">
         <div className="control-panel">
-          <button className="green button" onClick={this.fetchProject.bind(this)}>Fetch Project</button>
+          <button className="green button" onClick={this.fetchProject}>Fetch Project</button>
         </div>
         <div className="status-panel">
           {this.printProjectStatus()}
