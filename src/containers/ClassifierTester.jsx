@@ -10,6 +10,7 @@ service, without having to worry about the presentational side of things.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import getSubjectLocation from '../lib/get-subject-location';
 import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 
@@ -102,6 +103,8 @@ class ClassifierTester extends React.Component {
       return null;
     }
 
+    const subjectLocation = getSubjectLocation(this.props.currentSubject);
+
     return (
       <table className="data-panel">
         <tr>
@@ -115,7 +118,7 @@ class ClassifierTester extends React.Component {
         <tr>
           <td>Subject Image:</td>
           <td>
-            <img role="presentation" src={this.props.currentSubject.locations[0]['image/jpeg']} />
+            <img role="presentation" src={subjectLocation.src} />
           </td>
         </tr>
         <tr>
