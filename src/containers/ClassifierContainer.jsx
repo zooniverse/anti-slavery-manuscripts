@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 //import { fetchProject } from '../ducks/classifier';
 
 import TmpSvgIcon from '../components/TmpSvgIcon';
+import TmpNavigator from '../images/classify-navigator-placeholder.png';
 import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
 class ClassifierContainer extends React.Component {
@@ -24,8 +25,8 @@ class ClassifierContainer extends React.Component {
             </p>
           </div>
           <div className="help-buttons">
-            <button href="#" className="white-green button">Field Guide</button>
-            <button href="#" className="white-green button">Your Crib Sheet</button>
+            <button href="#" className="white-blue button">Field Guide</button>
+            <button href="#" className="white-blue button">Your Crib Sheet</button>
             <hr />
             <button href="#" className="white-green button">Done</button>
             <button href="#" className="green button">Done &amp; Talk</button>
@@ -39,13 +40,16 @@ class ClassifierContainer extends React.Component {
         <section className="classifier-controls">
           <div className="classifier-navigator">
             <b>Navigator</b>
+            <img className="" role="presentation" src={TmpNavigator} />
           </div>
           <div className="classifier-toolbar">
-            <b>Toolbar</b>
-            {Object.keys(TOOLBAR_CONTROLS).map((key) => {
+            <b>Toolbar</b><i className="fa fa-chevron-right" />
+            {Object.keys(TOOLBAR_CONTROLS).map((key, i) => {
               return (
-                <div>
-                  <i className={`${TOOLBAR_CONTROLS[key]}`} />
+                <div key={i}>
+                  <span className="classifier-toolbar__icon">
+                    <i className={`${TOOLBAR_CONTROLS[key]}`} />
+                  </span>
                   <span>{key}</span>
                 </div>
               );

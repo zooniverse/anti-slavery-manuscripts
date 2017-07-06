@@ -1,0 +1,32 @@
+.project-header
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  margin: 1.5em 3em
+
+  h1
+    margin: 0
+
+  &__nav
+    background-color: white
+    font-family: $nav-font
+    font-size: 0.75rem
+    font-weight: 700
+    justify-content: flex-end
+
+  &__link
+    flex: 0 0 auto
+    color: $dark-grey
+    letter-spacing: (0.9/15)em
+    margin: 0.5rem 0rem 0rem 1.25rem
+
+    &--active
+      border-bottom: 2px solid red
+      color: red
+
+    i
+      font-family: $small-nav-font
+      text-transform: lowercase
+
+    &:first-child
+      margin-left: 0
