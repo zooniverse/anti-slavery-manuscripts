@@ -13,9 +13,9 @@ class Header extends React.Component {
         </Link>
         <nav>
           <ul className="app-header__nav-links">
-            {SiteNavItems.map((item) => {
+            {SiteNavItems.map((item, i) => {
               return (
-                <li key={item.label}>
+                <li key={i}>
                   <a href={item.to} className="app-header__link">{item.label}</a>
                 </li>
               );
