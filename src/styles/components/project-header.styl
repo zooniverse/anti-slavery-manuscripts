@@ -14,6 +14,17 @@
       display: flex
       flex-direction: column
 
+  &__home-nav
+    justify-content: center
+
+    .project-header__nav
+      border-bottom: 2px solid $eggplant
+
+    .project-header__link
+      &--active
+        border-bottom: 2px solid $eggplant
+        color: $eggplant
+
   &__link
     flex: 0 0 auto
     color: $dark-grey

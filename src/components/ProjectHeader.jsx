@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 class ProjectHeader extends React.Component {
   render() {
+    const onHome = this.props.onIndex ? 'project-header__home-nav' : ''
     return (
-      <div id="project-header" className="project-header">
-        <h1 className="title-header">Anti-Slavery Manuscripts</h1>
+      <div className={`project-header ${onHome}`}>
+        {!this.props.onIndex && (
+          <h1 className="title-header">Anti-Slavery Manuscripts</h1>
+        )}
         <nav className="project-header__nav">
           <Link
             activeClassName="project-header__link--active"
@@ -45,5 +48,13 @@ class ProjectHeader extends React.Component {
     );
   }
 }
+
+ProjectHeader.defaultProps = {
+  onIndex: false,
+};
+
+ProjectHeader.propTypes = {
+  onIndex: PropTypes.bool,
+};
 
 export default ProjectHeader;

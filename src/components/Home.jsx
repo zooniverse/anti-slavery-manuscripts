@@ -8,6 +8,7 @@ class Home extends React.Component {
     this.state = {
       backgroundHeight: 'auto',
     };
+    this.resizeBackground = this.resizeBackground.bind(this);
   }
 
   componentDidMount() {
@@ -19,18 +20,10 @@ class Home extends React.Component {
     removeEventListener('resize', this.resizeBackground);
   }
 
-  renderTopic() {
-    const numbers = ['One', 'Two', 'Three', 'Four'];
-    return numbers.map((num, i) => {
-      return <div key={i}>Topic {num} &#8608;</div>;
-    });
-  }
-
   resizeBackground() {
-    const navBar = 48;
-    const content = document.getElementById('home-content');
+    const content = document.getElementById('home-logos');
     if (content) {
-      const contentBottom = content.getBoundingClientRect().bottom;
+      const contentBottom = content.getBoundingClientRect().top;
       const sectionHeight = document.body.scrollTop + contentBottom;
       if (this.state.backgroundHeight !== sectionHeight) {
         this.setState({ backgroundHeight: sectionHeight });
@@ -38,11 +31,18 @@ class Home extends React.Component {
     }
   }
 
+  renderTopic() {
+    const numbers = ['One', 'Two', 'Three', 'Four'];
+    return numbers.map((num, i) => {
+      return <div key={i}>Topic {num} &#8608;</div>;
+    });
+  }
+
   render() {
     return (
       <main className="app-content home-page">
         <div className="project-background" style={{ height: this.state.backgroundHeight }}></div>
-        <div id="home-content" className="home-page__content">
+        <div className="home-page__content">
           <h1 className="title-header">Anti-Slavery Manuscripts</h1>
           <img role="presentation" className="home-page__divider" src={Divider} />
           <div className="home-page__body-text">
@@ -57,7 +57,7 @@ class Home extends React.Component {
             {this.renderTopic()}
           </div>
         </div>
-        <div className="home-page__logos">
+        <div id="home-logos" className="home-page__logos">
           <ZooniverseLogotype />
           <div className="circle"></div>
           <div className="circle"></div>

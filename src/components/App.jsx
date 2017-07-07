@@ -12,7 +12,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <ProjectHeader />
+        <ProjectHeader onIndex={this.props.location.pathname === '/'} />
         {this.props.children}
       </div>
     );
@@ -21,6 +21,9 @@ class App extends React.Component {
 
 App.propTypes = {
   children: PropTypes.node,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
 };
 
 export default App;
