@@ -1,0 +1,90 @@
+.home-page
+
+  h3
+    font-family: $secondary-font
+    text-transform: uppercase
+
+  &__content
+    display: flex
+    flex-direction: column
+    padding-bottom: 5em
+    text-align: center
+
+  &__body-text
+    columns: 2
+    font-family: $body-font
+    margin: 0 22% 2em 22%
+    text-align: left
+
+  &__instructions
+    font-family: $body-font
+    font-style: italic
+
+  &__divider
+    display: block
+    margin: 2em auto
+    width: 8em
+
+  &__topic-select
+    display: flex
+    flex-direction: row
+    justify-content: center
+    margin: 0.75em 0
+
+    > div
+      font-family: $secondary-font
+      letter-spacing: (1/12)rem
+      padding: 0.25em 0.75em
+      text-transform: uppercase
+
+    > div:not(:first-child):not(:last-child)
+      border-left: 1px solid black
+
+    > div:nth-child(3)
+      border-right: 1px solid black
+
+  &__logos
+    align-items: center
+    background: $light-grey
+    display: flex
+    flex-direction: row
+    justify-content: space-around
+    padding: 0 3em
+    height: 12em
+
+  &__zooniverse
+    background: $black
+    color: $white
+    display: flex
+    flex-direction: column
+    padding: 0 22%
+    text-align: center
+
+    .zooniverse-logo
+      color: $light-teal
+      margin: 2.25em auto
+
+    span
+      color: $light-grey
+      font-family: $secondary-font
+      font-size: 0.75rem
+      line-height: 1.35rem
+      text-transform: uppercase
+
+    a
+      color: $white
+      font-family: $nav-font
+      letter-spacing: (2/12)rem
+      margin: 2em 0 3em 0
+
+  .circle
+    background: white
+    border-radius: 2.5em
+    height: 5em
+    width: 5em
+
+  .project-background
+    background-image: url('../images/home-bg.jpg')
+
+  .title-header
+    font-size: 3rem

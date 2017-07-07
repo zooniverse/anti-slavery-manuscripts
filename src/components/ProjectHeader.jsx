@@ -4,8 +4,8 @@ import { Link } from 'react-router';
 class ProjectHeader extends React.Component {
   render() {
     return (
-      <div className="project-header">
-        <h1>Anti-Slavery Manuscripts</h1>
+      <div id="project-header" className="project-header">
+        <h1 className="title-header">Anti-Slavery Manuscripts</h1>
         <nav className="project-header__nav">
           <Link
             activeClassName="project-header__link--active"
