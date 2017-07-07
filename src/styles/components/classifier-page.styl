@@ -3,17 +3,32 @@
   flex-direction: row
   padding: 1rem 0
 
+  .classifier-divider
+    margin: 1.5em 0
+
+  h2
+    color: $black
+    display: inline
+    font-family: $secondary-font
+    font-size: 1.15em
+    font-weight: 700
+    letter-spacing: 0.15rem
+    margin: 0
+    text-transform: uppercase
+
   .help-pane
     display: flex
     flex-direction: column
     font-size: (12/20)rem
     letter-spacing: (2/12)em
-    max-width: 20%
+    width: 14rem
     padding: 0 1.5rem 0 4rem
 
     .help-directions
-      b
-        text-transform: uppercase
+      p
+        font-family: $body-font
+        font-size: 1.25em
+        margin-top: 0.25em
 
     .help-buttons
       margin-top: auto
@@ -38,7 +53,7 @@
       flex-direction: row
 
       .subject-image
-        background: $light-grey
+        background: $background-grey
         flex: 0 0 100%
 
   .classifier-controls
@@ -47,8 +62,10 @@
     font-size: (12/20)rem
     letter-spacing: (2/12)em
     margin: 0 1rem
-    text-transform: uppercase
     width: 10rem
+
+    .classifier-divider
+      width: 9em
 
     .classifier-toolbar
       > div
@@ -62,9 +79,6 @@
         span
           align-self: center
           margin-right: 0.75rem
-
-      .fa-chevron-right
-        margin-left: 0.5rem
 
       &__icon
         text-align: center
