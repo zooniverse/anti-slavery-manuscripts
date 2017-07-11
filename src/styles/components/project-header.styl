@@ -1,0 +1,45 @@
+.project-header
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  margin: 1.5em 3.75em
+
+  h1
+    color: $black
+    flex: 1
+    font-family: $lincoln-font
+    font-size: 2.25rem
+    letter-spacing: 0.5rem
+    margin: 0
+    text-transform: uppercase
+
+  &__nav
+    font-family: $nav-font
+    font-size: 0.75rem
+    font-weight: 700
+    justify-content: flex-end
+
+    @media (max-width:1035px)
+      display: flex
+      flex-direction: column
+
+  &__link
+    flex: 0 0 auto
+    color: $dark-grey
+    display: inline-block
+    letter-spacing: (0.9/15)em
+    margin: 0.5rem 0rem 0rem 1.25rem
+
+    @media (max-width:1035px)
+      margin-left: 0
+
+    &--active
+      border-bottom: 2px solid red
+      color: red
+
+    i
+      font-family: $secondary-font
+      text-transform: lowercase
+
+    &:first-child
+      margin-left: 0

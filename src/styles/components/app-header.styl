@@ -1,19 +1,21 @@
 .app-header
   align-items: flex-end
+  background-color: black
   display: flex
   font-size: 0.75rem
-  padding: 1rem 1rem 1rem 0.5rem
-  
+  padding: 0rem 0.5rem
+
   .app-title
-    color: $dark-grey
+    align-self: center
+    color: $teal-blue
     font-family: $title-font
-    
+
     svg  //To be replaced with the proper Liberating the Liberator logo
       display: inline-block
       height: 1rem
       margin-right: 0.5em
       vertical-align: middle
-    
+
     h1  //To be rendered invisible, or removed altogether
       display: inline-block
       font-size: 1.2rem
@@ -23,24 +25,26 @@
       padding: 0
       vertical-align: middle
 
-  nav
-    align-items: center
+  &__nav-links
+    clear: left
     display: flex
+    flex-direction: row
+    list-style: none
+    padding-left: 0
+
+  &__link
+    color: #cbcccb
+    font-size: 0.8em
+    margin: 0.5rem 1rem 0 1rem
+    padding-bottom: 0.3rem
+    text-transform: uppercase
+
+    &:hover, &:focus
+      border
+
+  nav
     flex: 1 1 auto
-    font-size: 0.75rem
-    justify-content: flex-end
-    
-    .link
-      flex: 0 0 auto
-      color: $dark-grey
-      padding: 0.5em 1em
-      letter-spacing: (0.9/15)em
-      margin-left: 1em
-      
-      &:hover
-        background: $dusty-green
-        color: $white
-        
+
   .login-button, .logout-button
     font-size: 0.8em
     flex: 0 0 auto
@@ -53,7 +57,7 @@
       color: $white
       padding: 0.5em 1em
       margin-right: 0.5em
-      
+
     button
       background: $dusty-green
       border: none

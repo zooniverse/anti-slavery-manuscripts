@@ -5,33 +5,42 @@
 .button
   background: none
   border: none
+  box-shadow: 3px 3px 3px $mid-grey
   color: $white
   display: inline-block
   letter-spacing: 0.1em
   padding: 1em
-  text-transform: uppercase
-  
+
   &.with-shadow
     box-shadow: 1px 2px 0 0 $shadow-color
-  
+
   &.icon
     padding: 0
-    
-  &.white-grey
+
+  &.white-red
     background: $white
-    border: 1px solid $dusty-lavender
-    color: $dusty-lavender
-    
+    border: 1px solid $red-orange
+    color: $black
+
+    &:hover, &:focus
+      background: $red-orange
+
   &.white-green
     background: $white
-    border: 1px solid $teal-blue
-    color: $dusty-green
-    
+    border: 1px solid $forest-green
+    color: $black
+
+    &:hover, &:focus
+      background: $forest-green
+
   &.green
-    background: $dusty-green
+    background: $aqua-marine
     border: none
-    color: $white
-  
+    color: $black
+
+    &:hover, &:focus
+      background: $forest-green
+
   &.dusty-lavender
     background: $dusty-lavender
     border: none

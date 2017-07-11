@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 //import { fetchProject } from '../ducks/classifier';
 
 import TmpSvgIcon from '../components/TmpSvgIcon';
-import TmpImg from '../images/zooniverse-icon-web-white-small.png';
+import TmpNavigator from '../images/classify-navigator-placeholder.png';
+import Divider from '../images/img_divider.png';
+import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
 class ClassifierContainer extends React.Component {
   constructor(props) {
@@ -14,72 +16,52 @@ class ClassifierContainer extends React.Component {
   render() {
     return (
       <main className="app-content classifier-page">
-        <section className="subject-viewer">
-          <div className="subject-controls">
-            <span>
-              <button className="icon button"><TmpSvgIcon /></button>
-              <span>Add Transcription</span>
-            </span>
-            <span>
-              <button className="icon button"><TmpSvgIcon /></button>
-              <span>Rotate Image</span>
-            </span>
-            <span>
-              <button className="icon button"><TmpSvgIcon /></button>
-              <button className="icon button"><TmpSvgIcon /></button>
-              <span>Zoom In/Out</span>
-            </span>
-            <span className="filler">
-              <button className="icon button"><TmpSvgIcon /></button>
-              <button className="icon button"><TmpSvgIcon /></button>
-            </span>
-            <button className="dusty-lavender button">Field Guide</button>
+        <div className="project-background"></div>
+        <section className="help-pane">
+          <div className="help-directions">
+            <h2>directions</h2>
+            <p>
+              Using the Annotate tool, click under each word in a line of text,
+              then add your transcription. Clip common symbols or phrases to your
+              crib sheet for reference.
+            </p>
+            <p>
+              When you&apos;re finished, discuss the document on Talk, or move
+              on to the next subject right away.
+            </p>
           </div>
+          <div className="help-buttons">
+            <button href="#" className="white-red button">Field Guide</button>
+            <button href="#" className="white-red button">Your Crib Sheet</button>
+            <img className="classifier-divider" role="presentation" src={Divider} />
+            <button href="#" className="white-green button">Done</button>
+            <button href="#" className="green button">Done &amp; Talk</button>
+          </div>
+        </section>
+        <section className="subject-viewer">
           <div className="subject-images">
-            <div className="subject-image left"></div>
-            <div className="subject-image right"></div>
+            <div className="subject-image"></div>
           </div>
         </section>
         <section className="classifier-controls">
-          <button href="#" className="white-grey button with-shadow">Tutorial</button>
-          <div className="talk-section mini-control">
-            <div className="title">
-              <b>Talk</b>
-              <button className="icon button"><TmpSvgIcon width="15" height="15" /></button>
-            </div>
-            <div className="list">
-              <div className="item">
-                <span className="username">@username</span>
-                <p>Letters from Deborah Weston to Anne Warren Weston</p>
-              </div>
-              <div className="item">
-                <span className="username">@freshprince</span>
-                <p>Now this is a story all about how my life got flipped-turned upside down</p>
-              </div>
-              <button className="icon button"><TmpSvgIcon width="15" height="15" /></button>
-            </div>
-            <button className="dusty-lavender button">View on Talk</button>
+          <div className="classifier-navigator">
+            <h2>Navigator</h2>
+            <img className="" role="presentation" src={TmpNavigator} />
           </div>
-          <div className="crib-sheet mini-control">
-            <div className="title">
-              <b>Crib Sheet</b>
-              <i>Save interesting images for reference</i>
-              <button className="icon button"><TmpSvgIcon width="15" height="15" /></button>
-            </div>
-            <div className="list">
-              <div className="item">
-                <span className="thumbnail"><img src={TmpImg} /></span>
-                <p>Ampersand</p>
-              </div>
-              <div className="item">
-                <span className="thumbnail"><img src={TmpImg} /></span>
-                <p>Zooniverse Logo</p>
-              </div>
-              <button className="icon button"><TmpSvgIcon width="15" height="15" /></button>
-            </div>
+          <img className="classifier-divider" role="presentation" src={Divider} />
+          <div className="classifier-toolbar">
+            <h2>Toolbar</h2>
+            {Object.keys(TOOLBAR_CONTROLS).map((key, i) => {
+              return (
+                <div key={i}>
+                  <span className="classifier-toolbar__icon">
+                    <i className={`${TOOLBAR_CONTROLS[key]}`} />
+                  </span>
+                  <span>{key}</span>
+                </div>
+              );
+            })}
           </div>
-          <button href="#" className="white-green button with-shadow">Save &amp; Close</button>
-          <button href="#" className="green button with-shadow">Done</button>
         </section>
       </main>
     );
