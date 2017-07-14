@@ -1,0 +1,30 @@
+.subject-viewer
+  flex: 1 1 auto
+  overflow: hidden
+  background: #333  //TMP: visual differentiator for the Subject
+  border: 1px solid #333  //TMP
+  
+  svg
+    border: 1px solid #fff  //TMP
+    
+//TODO: review loading and error indicators.
+
+.svg-image-loading
+  animation-name: loading-pulse
+  animation-duration: 1s
+  animation-direction: alternate
+  animation-iteration-count: infinite
+
+.svg-image-error
+  fill: #c33
+  stroke: #fff
+  stroke-width: 4
+
+@keyframes loading-pulse {
+  from {
+    fill: #39c
+  }
+  to {
+    fill: #fff
+  }
+}

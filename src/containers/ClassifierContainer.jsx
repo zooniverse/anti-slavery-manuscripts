@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 //import { fetchProject } from '../ducks/classifier';
 
-import TmpSvgIcon from '../components/TmpSvgIcon';
+import SubjectViewer from './SubjectViewer';
+
 import TmpNavigator from '../images/classify-navigator-placeholder.png';
 import Divider from '../images/img_divider.png';
 import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
@@ -38,11 +39,7 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="green button">Done &amp; Talk</button>
           </div>
         </section>
-        <section className="subject-viewer">
-          <div className="subject-images">
-            <div className="subject-image"></div>
-          </div>
-        </section>
+        <SubjectViewer />
         <section className="classifier-controls">
           <div className="classifier-navigator">
             <h2>Navigator</h2>
