@@ -7,17 +7,27 @@ options/settings of the SubjectViewer component.
 
  */
 
+//Misc Constants
+const SUBJECTVIEWER_STATES = {
+  IDLE: 'idle',  //Eh, doing nothing.
+  NAVIGATING: 'navigating',  //User wants to use the mouse to navigate the Subject.
+  ANNOTATING: 'annotating',  //User has started, or is in the process of, adding annotations to the Subject.
+}
+
+//Initial State
 const initialState = {
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
+  viewerState: SUBJECTVIEWER_STATES.NAVIGATING,
 };
 
 //Action Types
 const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
+const SET_VIEWER_STATE = 'SET_VIEWER_STATE';
 
 /*
 --------------------------------------------------------------------------------
@@ -40,6 +50,11 @@ const subjectViewerReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         translationX: action.x,
         translationY: action.y,
+      });
+    
+    case SET_VIEWER_STATE:
+      return Object.assign({}, state, {
+        viewerState: action.viewerState,
       });
     
     default:
@@ -78,6 +93,15 @@ const setTranslation = (x, y) => {
   }
 }
 
+const setViewerState = (viewerState) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_VIEWER_STATE,
+      viewerState,
+    });
+  }
+}
+
 /*
 --------------------------------------------------------------------------------
  */
@@ -88,4 +112,6 @@ export {
   setRotation,
   setScaling,
   setTranslation,
+  setViewerState,
+  SUBJECTVIEWER_STATES,
 };
