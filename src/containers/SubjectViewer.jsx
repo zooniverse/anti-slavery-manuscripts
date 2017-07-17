@@ -5,7 +5,7 @@ import { Utility } from '../lib/Utility';
 
 import {
   setRotation, setScaling, setTranslation,
-  setViewerState, SUBJECTVIEWER_STATES,
+  setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 const INPUT_STATE = {
@@ -127,7 +127,7 @@ class SubjectViewer extends React.Component {
   //----------------------------------------------------------------
   
   onMouseDown(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.ACTIVE;
       this.pointer.start = { x: pointerXY.x, y: pointerXY.y };
@@ -142,7 +142,7 @@ class SubjectViewer extends React.Component {
   }
   
   onMouseUp(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.IDLE;
       this.pointer.now = { x: pointerXY.x, y: pointerXY.y };
@@ -152,7 +152,7 @@ class SubjectViewer extends React.Component {
   }
   
   onMouseMove(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.now = { x: pointerXY.x, y: pointerXY.y };
       if (this.pointer.state === INPUT_STATE.ACTIVE && this.tmpTransform) {
@@ -170,20 +170,19 @@ class SubjectViewer extends React.Component {
   }
   
   onMouseLeave(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       this.pointer.state = INPUT_STATE.IDLE;
       return Utility.stopEvent(e);
     }
   }
     
   onWheel(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
-      const MIN_SCALE = 0.1;
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const SCALE_STEP = 0.1;      
       if (e.deltaY > 0) {
-        this.props.dispatch(setScaling(Math.max(this.props.scaling - SCALE_STEP, MIN_SCALE)));
+        this.props.dispatch(setScaling(this.props.scaling - SCALE_STEP));
       } else if (e.deltaY < 0) {
-        this.props.dispatch(setScaling(Math.max(this.props.scaling + SCALE_STEP, MIN_SCALE)));
+        this.props.dispatch(setScaling(this.props.scaling + SCALE_STEP));
       }
       return Utility.stopEvent(e);
     }
@@ -226,6 +225,7 @@ class SubjectViewer extends React.Component {
 }
 
 SubjectViewer.propTypes = {
+  dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -237,9 +237,9 @@ SubjectViewer.defaultProps = {
   scaling: 1,
   translationX: 0,
   translationY: 0,
-  viewerState: SUBJECTVIEWER_STATES.NAVIGATING,
+  viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
-function mapStateToProps(state, ownProps) {  //Listens for changes in the Redux Store
+const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const store = state.subjectViewer;
   return {
     rotation: store.rotation,
@@ -248,5 +248,5 @@ function mapStateToProps(state, ownProps) {  //Listens for changes in the Redux 
     translationY: store.translationY,
     viewerState: store.viewerState,
   };
-}
+};
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

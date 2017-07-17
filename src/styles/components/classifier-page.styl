@@ -57,10 +57,16 @@
       width: 9em
 
     .classifier-toolbar
-      > div
+      > .block
         display: flex
         flex-direction: row
+        letter-spacing: inherit
         margin: 0.8rem 0
+        text-align: left
+        
+        &.selected
+          background: $forest-green  //TMP
+          color: $white
 
         i
           font-size: 1rem
