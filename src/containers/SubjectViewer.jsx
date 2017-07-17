@@ -27,6 +27,7 @@ class SubjectViewer extends React.Component {
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onWheel = this.onWheel.bind(this);
     
     //Other functions
     this.getPointerXY = this.getPointerXY.bind(this);
@@ -57,9 +58,7 @@ class SubjectViewer extends React.Component {
           onMouseUp={this.onMouseUp}
           onMouseMove={this.onMouseMove}
           onMouseLeave={this.onMouseLeave}
-          onWheel={(e) => {
-            //TODO
-          }}
+          onWheel={this.onWheel}
         >
           <g transform={transform}>
             <SVGImage src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg" />
@@ -89,7 +88,7 @@ class SubjectViewer extends React.Component {
   updateSize() {
     if (!this.section || !this.svg) return;
     
-    const ARBITRARY_OFFSET = 8;
+    const ARBITRARY_OFFSET = 2;
     const w = this.section.offsetWidth - ARBITRARY_OFFSET;
     const h = this.section.offsetHeight - ARBITRARY_OFFSET;
     
@@ -139,9 +138,6 @@ class SubjectViewer extends React.Component {
           x: this.pointer.now.x - this.pointer.start.x,
           y: this.pointer.now.y - this.pointer.start.y
         };
-        
-        console.log('!'.repeat(40), this.tmpTransform, this.tmpTransform.translateX, pointerDelta.x, this.tmpTransform.scale);
-        
         this.props.dispatch(setTranslation(
           this.tmpTransform.translateX + pointerDelta.x / this.tmpTransform.scale,
           this.tmpTransform.translateY + pointerDelta.y / this.tmpTransform.scale,
@@ -154,6 +150,19 @@ class SubjectViewer extends React.Component {
   onMouseLeave(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
       this.pointer.state = INPUT_STATE.IDLE;
+      return Utility.stopEvent(e);
+    }
+  }
+    
+  onWheel(e) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATES.NAVIGATING) {
+      const MIN_SCALE = 0.1;
+      const SCALE_STEP = 0.1;      
+      if (e.deltaY > 0) {
+        this.props.dispatch(setScaling(Math.max(this.props.scaling - SCALE_STEP, MIN_SCALE)));
+      } else if (e.deltaY < 0) {
+        this.props.dispatch(setScaling(Math.max(this.props.scaling + SCALE_STEP, MIN_SCALE)));
+      }
       return Utility.stopEvent(e);
     }
   }
