@@ -42,20 +42,9 @@
         margin-bottom: 1em
         width: 40%
 
-  .subject-viewer
-    display: flex
-    flex: 1 1 auto
-    flex-direction: column
-
-    .subject-images
-      display: flex
-      flex: 1 1 auto
-      flex-direction: row
-
-      .subject-image
-        background: $background-grey
-        flex: 0 0 100%
-
+  //.subject-viewer
+  //  -> Separate component; see SubjectViewer.
+    
   .classifier-controls
     display: flex
     flex-direction: column
@@ -68,10 +57,16 @@
       width: 9em
 
     .classifier-toolbar
-      > div
+      > .block
         display: flex
         flex-direction: row
+        letter-spacing: inherit
         margin: 0.8rem 0
+        text-align: left
+        
+        &.selected
+          background: $forest-green  //TMP
+          color: $white
 
         i
           font-size: 1rem
