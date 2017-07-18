@@ -33,6 +33,9 @@ const INPUT_STATE = {
   ACTIVE: 1,
 }
 
+//Add ?dev=1 to the URL to enable DEV_MODE
+const DEV_MODE = window.location && /(\?|&)dev(=|&|$)/ig.test(window.location.search);
+
 class SubjectViewer extends React.Component {
   constructor(props) {
     super(props);
@@ -83,28 +86,30 @@ class SubjectViewer extends React.Component {
           <g transform={transform}>
             <SVGImage src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg" />
           </g>
-          <g className="developer-grid" transform={transform}>
-            {(()=>{
-              const MIN_VAL = -1000;
-              const MAX_VAL = 1000;
-              const STEP_VAL = 100;
-              const STYLE = { stroke: '#fff', strokeWidth: 2 };
-              const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
-              const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
-              const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
-              const arr = []
-              for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
-                arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={STYLE} />);
-                arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={STYLE} />);
-              }
-              arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
-              arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
-              arr.push(<text x={2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
-              arr.push(<text x={-2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
-              arr.push(<text x={0} y={0} style={STYLE_TEXT}>(0,0)</text>);
-              return arr;
-            })()}
-          </g>
+          {(!DEV_MODE) ? null :
+            <g className="developer-grid" transform={transform}>
+              {(()=>{
+                const MIN_VAL = -1000;
+                const MAX_VAL = 1000;
+                const STEP_VAL = 100;
+                const STYLE = { stroke: '#fff', strokeWidth: 2 };
+                const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
+                const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
+                const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
+                const arr = []
+                for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
+                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={STYLE} />);
+                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={STYLE} />);
+                }
+                arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
+                arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
+                arr.push(<text x={2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
+                arr.push(<text x={-2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
+                arr.push(<text x={0} y={0} style={STYLE_TEXT}>(0,0)</text>);
+                return arr;
+              })()}
+            </g>
+          }
         </svg>
       </section>
     );
