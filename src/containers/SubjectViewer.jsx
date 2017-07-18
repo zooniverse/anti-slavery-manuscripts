@@ -43,9 +43,11 @@ class SubjectViewer extends React.Component {
     //HTML element refs.
     this.section = null;
     this.svg = null;
+    this.svgImage = null;
     
     //Events!
     this.updateSize = this.updateSize.bind(this);
+    this.fitSubjectToContainer = this.fitSubjectToContainer.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -84,7 +86,11 @@ class SubjectViewer extends React.Component {
           onWheel={this.onWheel}
         >
           <g transform={transform}>
-            <SVGImage src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg" />
+            <SVGImage
+              ref={(c)=>{this.svgImage=c}}
+              src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
+              onLoad={this.fitSubjectToContainer}
+            />
           </g>
           {(!DEV_MODE) ? null :
             <g className="developer-grid" transform={transform}>
@@ -147,6 +153,21 @@ class SubjectViewer extends React.Component {
     this.svg.setAttribute('viewBox', `${-w/2} ${(-h/2)} ${w} ${h}`);
     this.svg.style.width = w + 'px';
     this.svg.style.height = h + 'px';
+  }
+  
+  /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.
+   */
+  fitSubjectToContainer() {
+    if (this.svgImage.image) {
+      const imgW = (this.svgImage.image.width) ? this.svgImage.image.width : 1;
+      const imgH = (this.svgImage.image.height) ? this.svgImage.image.height : 1;
+      const boundingBox = this.getBoundingBox();
+      const svgW = boundingBox.width;
+      const svgH = boundingBox.height;
+      const scaleW = svgW / imgW;
+      const scaleH = svgH / imgH;
+      this.props.dispatch(setScaling(Math.min(scaleW, scaleH)));
+    }
   }
   
   //----------------------------------------------------------------

@@ -40,8 +40,13 @@ const subjectViewerReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case SET_ROTATION:
+      let newAngle = action.angle;
+      //Ensure angle normalises to within 0-360 degrees.
+      while (newAngle < 0) { newAngle += 360; }  //JS's mod (%) acts weird with negatives.
+      newAngle = newAngle % 360;
+      
       return Object.assign({}, state, {
-        rotation: action.angle
+        rotation: newAngle
       });
     
     case SET_SCALING:
