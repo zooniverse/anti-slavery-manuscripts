@@ -41,7 +41,7 @@ class Home extends React.Component {
   render() {
     return (
       <main className="app-content home-page">
-        <div className="project-background" style={{ height: this.state.backgroundHeight }}></div>
+        <div className="project-background" style={{ height: this.state.backgroundHeight }} />
         <div className="home-page__content">
           <h1 className="title-header">Anti-Slavery Manuscripts</h1>
           <img role="presentation" className="home-page__divider" src={Divider} />
@@ -52,17 +52,19 @@ class Home extends React.Component {
             tempus luctus lacinia.
           </div>
           <h3>Transcribe Random&#8608;</h3>
-          <span className="home-page__instructions">Click the button above to start with a random document, or choose a topic:</span>
+          <span className="home-page__instructions">
+            Click the button above to start with a random document, or choose a topic:
+          </span>
           <div className="home-page__topic-select">
             {this.renderTopic()}
           </div>
         </div>
         <div id="home-logos" className="home-page__logos">
           <ZooniverseLogotype />
-          <div className="circle"></div>
-          <div className="circle"></div>
-          <div className="circle"></div>
-          <div className="circle"></div>
+          <div className="circle" />
+          <div className="circle" />
+          <div className="circle" />
+          <div className="circle" />
         </div>
         <div className="home-page__zooniverse">
           <ZooniverseLogo height="3.5em" width="3.5em" />
