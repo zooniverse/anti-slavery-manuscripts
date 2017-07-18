@@ -4,20 +4,13 @@
   justify-content: space-between
   margin: 1.5em 3.75em
 
-  h1
-    color: $black
-    flex: 1
-    font-family: $lincoln-font
-    font-size: 2.25rem
-    letter-spacing: 0.5rem
-    margin: 0
-    text-transform: uppercase
-
   &__nav
+    align-self: flex-start
+    border-bottom: 2px solid $eggplant
     font-family: $nav-font
     font-size: 0.75rem
     font-weight: 700
-    justify-content: flex-end
+    margin-left: auto
 
     @media (max-width:1035px)
       display: flex
@@ -33,9 +26,9 @@
     @media (max-width:1035px)
       margin-left: 0
 
-    &--active
-      border-bottom: 2px solid red
-      color: red
+    &--active, &:hover, &:focus
+      border-bottom: 2px solid $eggplant
+      color: $eggplant
 
     i
       font-family: $secondary-font
