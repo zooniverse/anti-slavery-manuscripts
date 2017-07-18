@@ -1,4 +1,33 @@
-import React, { PropTypes } from 'react';
+/*
+SVG Image
+--------------
+
+This is a container element that makes it easy(-ier) to load images into an
+SVG element. Of note is the ability to determine when the image has loaded (or
+failed to), thus allowing the code to know when to check the image size.
+
+Usage:
+  <svg>
+    <SVGImage
+      ref={(c)=>{this.svgImage=c}}
+      src="example.jpg"
+      onLoad={() => {
+        console.log('The image has loaded, and its size is:');
+        console.log(this.svgImage.image.width);
+        console.log(this.svgImage.image.height);
+      }}
+    />
+  </svg>
+
+Intended functionality:
+* Display a single image
+ 
+NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
+default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
+ */
+
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class SVGImage extends React.Component {
   constructor(props) {

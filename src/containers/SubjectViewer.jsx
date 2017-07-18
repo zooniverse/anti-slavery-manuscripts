@@ -1,4 +1,24 @@
-import React, { PropTypes } from 'react';
+/*
+Subject Viewer
+--------------
+
+This component allows users to view a single Subject image (i.e. the SVGImage)
+and navigate (pan and zoom) the Subject using the mouse.
+
+Intended functionality:
+* Display a single image
+* When in 'Navigating' mode, click & drag mouse to pan the Subject Image.
+* When in 'Navigating' mode, mouse wheel to zoom in/out.
+* (TODO) When in 'Annotating' mode, mouse click to place a sequence of
+  annotation marks, then click again (on the last annotation mark) to finish
+  the sequence.
+
+NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
+default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
+ */
+
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SVGImage from '../components/SVGImage';
 import { Utility } from '../lib/Utility';
@@ -18,8 +38,8 @@ class SubjectViewer extends React.Component {
     super(props);
     
     //HTML element refs.
-    this.section = undefined;
-    this.svg = undefined;
+    this.section = null;
+    this.svg = null;
     
     //Events!
     this.updateSize = this.updateSize.bind(this);
