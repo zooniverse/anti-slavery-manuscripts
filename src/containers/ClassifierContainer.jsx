@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  setRotation, setScaling,
+  setRotation, setScaling, resetTransformations,
   setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
@@ -14,16 +14,22 @@ import Divider from '../images/img_divider.png';
 import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
 const ZOOM_STEP = 0.1;
+const ROTATION_STEP = 90;
   
 class ClassifierContainer extends React.Component {
   constructor(props) {
     super(props);
     
+    //Bind events
+    this.useAnnotationTool = this.useAnnotationTool.bind(this);
+    this.usePanTool = this.usePanTool.bind(this);
     this.useZoomIn = this.useZoomIn.bind(this);
     this.useZoomOut = this.useZoomOut.bind(this);
-    this.usePanTool = this.usePanTool.bind(this);
     this.useRotate90 = this.useRotate90.bind(this);
+    this.useResetImage = this.useResetImage.bind(this);
   }
+
+  //----------------------------------------------------------------
 
   render() {
     return (
@@ -60,7 +66,20 @@ class ClassifierContainer extends React.Component {
           <div className="classifier-toolbar">
             <h2>Toolbar</h2>
             
-            <button className={(this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) ? 'flat-button block selected' : 'flat-button block'}>
+            <button
+              className={(this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) ? 'flat-button block selected' : 'flat-button block'}
+              onClick={this.useAnnotationTool}
+            >
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-plus-circle" />
+              </span>
+              <span>Annotate</span>
+            </button>
+            
+            <button
+              className={(this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) ? 'flat-button block selected' : 'flat-button block'}
+              onClick={this.usePanTool}
+            >
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-arrows" />
               </span>
@@ -71,14 +90,28 @@ class ClassifierContainer extends React.Component {
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-plus" />
               </span>
-              <span>Zoom in</span>
+              <span>Zoom In</span>
             </button>
             
             <button className="flat-button block" onClick={this.useZoomOut}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-minus" />
               </span>
-              <span>Zoom out</span>
+              <span>Zoom Out</span>
+            </button>
+            
+            <button className="flat-button block" onClick={this.useRotate90}>
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-repeat" />
+              </span>
+              <span>Rotate 90 &deg;</span>
+            </button>
+            
+            <button className="flat-button block" onClick={this.useResetImage}>
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-refresh" />
+              </span>
+              <span>Reset Image</span>
             </button>
             
             {Object.keys(TOOLBAR_CONTROLS).map((key, i) => {
@@ -96,9 +129,18 @@ class ClassifierContainer extends React.Component {
       </main>
     );
   }
-  
+
+  //----------------------------------------------------------------
+
+  useAnnotationTool() {
+    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
+  }
+
+  usePanTool() {
+    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+  }
+
   useZoomIn() {
-    console.log('x'.repeat(80));
     this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
   }
 
@@ -106,12 +148,12 @@ class ClassifierContainer extends React.Component {
     this.props.dispatch(setScaling(this.props.scaling - ZOOM_STEP));
   }
 
-  usePanTool() {
-    
+  useRotate90() {
+    this.props.dispatch(setRotation(this.props.rotation + ROTATION_STEP));
   }
 
-  useRotate90() {
-    
+  useResetImage() {
+    this.props.dispatch(resetTransformations());
   }
 }
 

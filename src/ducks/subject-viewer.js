@@ -29,6 +29,7 @@ const initialState = {
 const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
+const RESET_TRANSFORMATIONS = 'RESET_TRANSFORMATIONS';
 const SET_VIEWER_STATE = 'SET_VIEWER_STATE';
 
 /*
@@ -56,6 +57,14 @@ const subjectViewerReducer = (state = initialState, action) => {
         translationX: action.x,
         translationY: action.y,
       });
+      
+    case RESET_TRANSFORMATIONS:
+      return Object.assign({}, state, {
+        rotation: 0,
+        scaling: 1,
+        translationX: 0,
+        translationY: 0,
+      });
     
     case SET_VIEWER_STATE:
       return Object.assign({}, state, {
@@ -78,7 +87,7 @@ const setRotation = (angle) => {
       angle,
     });
   }
-}
+};
 
 const setScaling = (scale) => {
   return (dispatch) => {
@@ -87,7 +96,7 @@ const setScaling = (scale) => {
       scale,
     });
   }
-}
+};
 
 const setTranslation = (x, y) => {
   return (dispatch) => {
@@ -96,7 +105,15 @@ const setTranslation = (x, y) => {
       x, y,
     });
   }
-}
+};
+
+const resetTransformations = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_TRANSFORMATIONS,
+    });
+  }
+};
 
 const setViewerState = (viewerState) => {
   return (dispatch) => {
@@ -105,7 +122,7 @@ const setViewerState = (viewerState) => {
       viewerState,
     });
   }
-}
+};
 
 /*
 --------------------------------------------------------------------------------
@@ -117,6 +134,7 @@ export {
   setRotation,
   setScaling,
   setTranslation,
+  resetTransformations,
   setViewerState,
   SUBJECTVIEWER_STATE,
 };
