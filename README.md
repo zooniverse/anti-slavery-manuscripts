@@ -1,6 +1,6 @@
-# Liberating the Liberator
+# Anti-Slavery Manuscripts
 
-Liberating the Liberator invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
+Anti-Slavery Manuscripts invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
 
 ## Usage
 
