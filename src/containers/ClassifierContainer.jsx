@@ -15,11 +15,11 @@ import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
 const ZOOM_STEP = 0.1;
 const ROTATION_STEP = 90;
-  
+
 class ClassifierContainer extends React.Component {
   constructor(props) {
     super(props);
-    
+
     //Bind events
     this.useAnnotationTool = this.useAnnotationTool.bind(this);
     this.usePanTool = this.usePanTool.bind(this);
@@ -56,7 +56,7 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="green button">Done &amp; Talk</button>
           </div>
         </section>
-        <SubjectViewer />
+        <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
           <div className="classifier-navigator">
             <h2>Navigator</h2>
@@ -65,7 +65,7 @@ class ClassifierContainer extends React.Component {
           <img className="classifier-divider" role="presentation" src={Divider} />
           <div className="classifier-toolbar">
             <h2>Toolbar</h2>
-            
+
             <button
               className={(this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) ? 'flat-button block selected' : 'flat-button block'}
               onClick={this.useAnnotationTool}
@@ -75,7 +75,7 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Annotate</span>
             </button>
-            
+
             <button
               className={(this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) ? 'flat-button block selected' : 'flat-button block'}
               onClick={this.usePanTool}
@@ -85,35 +85,35 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Pan image</span>
             </button>
-            
+
             <button className="flat-button block" onClick={this.useZoomIn}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-plus" />
               </span>
               <span>Zoom In</span>
             </button>
-            
+
             <button className="flat-button block" onClick={this.useZoomOut}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-minus" />
               </span>
               <span>Zoom Out</span>
             </button>
-            
+
             <button className="flat-button block" onClick={this.useRotate90}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-repeat" />
               </span>
               <span>Rotate 90 &deg;</span>
             </button>
-            
+
             <button className="flat-button block" onClick={this.useResetImage}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-refresh" />
               </span>
               <span>Reset Image</span>
             </button>
-            
+
             {Object.keys(TOOLBAR_CONTROLS).map((key, i) => {
               return (
                 <div className="block" key={i}>

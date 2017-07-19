@@ -13,7 +13,7 @@ const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
 const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 
-const TEMPORARY_HARDCODED_WORKFLOW_ID = '2628';
+const TEMPORARY_HARDCODED_WORKFLOW_ID = '3012';
 const SUBJECT_STATUS = {
   IDLE: 'subject_status_idle',
   FETCHING: 'subject_status_fetching',
@@ -67,8 +67,11 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
     };
 
     const fetchQueue = () => {
+      console.log('FETCHING');
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
+          console.log('HERE is the quue');
+          console.log(queue);
           const currentSubject = queue.shift();
           dispatch({
             currentSubject,
