@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  setRotation, setScaling, resetTransformations,
+  setRotation, setScaling, resetView,
   setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
@@ -153,7 +153,7 @@ class ClassifierContainer extends React.Component {
   }
 
   useResetImage() {
-    this.props.dispatch(resetTransformations());
+    this.props.dispatch(resetView());
   }
 }
 

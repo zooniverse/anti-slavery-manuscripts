@@ -18,19 +18,26 @@ const MAX_SCALING = 10;
 
 //Initial State
 const initialState = {
+  //Image transformations
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
+  
+  //Viewer settings
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  viewerSize: { width: 0, height: 0 },
+  imageSize: { width: 0, height: 0 },
 };
 
 //Action Types
 const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
-const RESET_TRANSFORMATIONS = 'RESET_TRANSFORMATIONS';
+const RESET_VIEW = 'RESET_VIEW';
 const SET_VIEWER_STATE = 'SET_VIEWER_STATE';
+const UPDATE_VIEWER_SIZE = 'UPDATE_VIEWER_SIZE';
+const UPDATE_IMAGE_SIZE = 'UPDATE_IMAGE_SIZE';
 
 /*
 --------------------------------------------------------------------------------
@@ -63,10 +70,19 @@ const subjectViewerReducer = (state = initialState, action) => {
         translationY: action.y,
       });
       
-    case RESET_TRANSFORMATIONS:
+    case RESET_VIEW:
+      let bestFitScale = 1;
+      if (state.viewerSize.width && state.viewerSize.height &&
+          state.imageSize.width && state.imageSize.height) {
+        bestFitScale = Math.min(
+          state.viewerSize.width / state.imageSize.width,
+          state.viewerSize.height / state.imageSize.height
+        );
+      }
+      
       return Object.assign({}, state, {
         rotation: 0,
-        scaling: 1,
+        scaling: bestFitScale,
         translationX: 0,
         translationY: 0,
       });
@@ -74,6 +90,22 @@ const subjectViewerReducer = (state = initialState, action) => {
     case SET_VIEWER_STATE:
       return Object.assign({}, state, {
         viewerState: action.viewerState,
+      });
+      
+    case UPDATE_VIEWER_SIZE:
+      return Object.assign({}, state, {
+        viewerSize: {
+          width: action.width,
+          height: action.height,
+        },
+      });
+    
+    case UPDATE_IMAGE_SIZE:
+      return Object.assign({}, state, {
+        imageSize: {
+          width: action.width,
+          height: action.height,
+        },
       });
     
     default:
@@ -112,10 +144,10 @@ const setTranslation = (x, y) => {
   }
 };
 
-const resetTransformations = () => {
+const resetView = () => {
   return (dispatch) => {
     dispatch({
-      type: RESET_TRANSFORMATIONS,
+      type: RESET_VIEW,
     });
   }
 };
@@ -125,6 +157,24 @@ const setViewerState = (viewerState) => {
     dispatch({
       type: SET_VIEWER_STATE,
       viewerState,
+    });
+  }
+};
+
+const updateViewerSize = (width, height) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_VIEWER_SIZE,
+      width, height,
+    });
+  }
+};
+
+const updateImageSize = (width, height) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_IMAGE_SIZE,
+      width, height,
     });
   }
 };
@@ -139,7 +189,9 @@ export {
   setRotation,
   setScaling,
   setTranslation,
-  resetTransformations,
+  resetView,
   setViewerState,
+  updateViewerSize,
+  updateImageSize,
   SUBJECTVIEWER_STATE,
 };
