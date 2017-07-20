@@ -32,7 +32,8 @@ class Navigator extends React.Component {
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
     }
-    let viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
+    const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
+    const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
 
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>
@@ -46,7 +47,15 @@ class Navigator extends React.Component {
               ref={(c) => { this.svgImage = c; }}
               src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
             />
-            <circle cx="0" cy="0" r="20" fill="red" />
+          </g>
+          <g transform={transform}>
+            <rect
+              x={this.props.viewerSize.width / -2 / this.props.scaling}
+              y={this.props.viewerSize.height / -2 / this.props.scaling}
+              width={this.props.viewerSize.width / this.props.scaling}
+              height={this.props.viewerSize.height / this.props.scaling}
+              fill="none" stroke="red" strokeWidth="8px"
+            />
           </g>
         </svg>
       </section>
