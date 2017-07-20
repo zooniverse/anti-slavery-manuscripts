@@ -67,11 +67,8 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
     };
 
     const fetchQueue = () => {
-      console.log('FETCHING');
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
-          console.log('HERE is the quue');
-          console.log(queue);
           const currentSubject = queue.shift();
           dispatch({
             currentSubject,
