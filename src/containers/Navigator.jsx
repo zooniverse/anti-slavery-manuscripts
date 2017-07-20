@@ -26,17 +26,27 @@ class Navigator extends React.Component {
   //----------------------------------------------------------------
 
   render() {
+    const SVG_WIDTH = 200;
+    const SVG_HEIGHT = 200;
+    let scale = 0.1;
+    if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
+      scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
+    }
+    let viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
+
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>
         <svg
+          style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
           ref={(c) => { this.svg = c; }}
+          viewBox={viewBox}
         >
-          <g transform="">
+          <g>
             <SVGImage
               ref={(c) => { this.svgImage = c; }}
               src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
-              onLoad={this.onImageLoad}
             />
+            <circle cx="0" cy="0" r="20" fill="red" />
           </g>
         </svg>
       </section>
@@ -52,19 +62,33 @@ class Navigator extends React.Component {
 }
 
 Navigator.propTypes = {
+  imageSize: {
+    width: PropTypes.number,
+    height: PropTypes.number,
+  },
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
-  viewerState: PropTypes.string,
+  viewerSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
 };
 Navigator.defaultProps = {
+  imageSize: {
+    width: 0,
+    height: 0,
+  },
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
-  viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  viewerSize: {
+    width: 0,
+    height: 0,
+  },
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const store = state.subjectViewer;
@@ -73,7 +97,8 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     scaling: store.scaling,
     translationX: store.translationX,
     translationY: store.translationY,
-    viewerState: store.viewerState,
+    viewerSize: store.viewerSize,
+    imageSize: store.imageSize,
   };
 };
 export default connect(mapStateToProps)(Navigator);  //Connects the Component to the Redux Store

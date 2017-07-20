@@ -10,7 +10,6 @@ import {
 import SubjectViewer from './SubjectViewer';
 
 import Navigator from './Navigator';
-import TmpNavigator from '../images/classify-navigator-placeholder.png';
 import Divider from '../images/img_divider.png';
 import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
