@@ -24,8 +24,9 @@ import SVGImage from '../components/SVGImage';
 import { Utility } from '../lib/Utility';
 
 import {
-  setRotation, setScaling, setTranslation,
-  setViewerState, SUBJECTVIEWER_STATE,
+  setRotation, setScaling, setTranslation, resetView,
+  setViewerState, updateViewerSize, updateImageSize,
+  SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 const INPUT_STATE = {
@@ -47,7 +48,7 @@ class SubjectViewer extends React.Component {
     
     //Events!
     this.updateSize = this.updateSize.bind(this);
-    this.fitSubjectToContainer = this.fitSubjectToContainer.bind(this);
+    this.onImageLoad = this.onImageLoad.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -89,7 +90,7 @@ class SubjectViewer extends React.Component {
             <SVGImage
               ref={(c)=>{this.svgImage=c}}
               src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
-              onLoad={this.fitSubjectToContainer}
+              onLoad={this.onImageLoad}
             />
           </g>
           {(!DEV_MODE) ? null :
@@ -153,20 +154,23 @@ class SubjectViewer extends React.Component {
     this.svg.setAttribute('viewBox', `${-w/2} ${(-h/2)} ${w} ${h}`);
     this.svg.style.width = w + 'px';
     this.svg.style.height = h + 'px';
+    
+    //Record the changes.
+    const boundingBox = this.getBoundingBox();
+    const svgW = boundingBox.width;
+    const svgH = boundingBox.height;
+    this.props.dispatch(updateViewerSize(svgW, svgH));
   }
   
   /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.
    */
-  fitSubjectToContainer() {
+  onImageLoad() {
     if (this.svgImage.image) {
       const imgW = (this.svgImage.image.width) ? this.svgImage.image.width : 1;
       const imgH = (this.svgImage.image.height) ? this.svgImage.image.height : 1;
-      const boundingBox = this.getBoundingBox();
-      const svgW = boundingBox.width;
-      const svgH = boundingBox.height;
-      const scaleW = svgW / imgW;
-      const scaleH = svgH / imgH;
-      this.props.dispatch(setScaling(Math.min(scaleW, scaleH)));
+      
+      this.props.dispatch(updateImageSize(imgW, imgH));
+      this.props.dispatch(resetView());  
     }
   }
   
