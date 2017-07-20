@@ -101,19 +101,21 @@ class SubjectViewer extends React.Component {
             )}
           </g>
           {(!DEV_MODE) ? null :
-            <g className="developer-grid" transform={transform}>
+            <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
               {(()=>{
-                const MIN_VAL = -1000;
-                const MAX_VAL = 1000;
+                const MIN_VAL = 0;
+                const MAX_VAL = 2000;
                 const STEP_VAL = 100;
                 const STYLE = { stroke: '#fff', strokeWidth: 2 };
+                const STYLE_DIVISOR = { stroke: '#c99', strokeWidth: 2 };
                 const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
                 const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
                 const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
                 const arr = []
                 for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
-                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={STYLE} />);
-                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={STYLE} />);
+                  let styl = (v % 500 === 0) ? STYLE_DIVISOR : STYLE;
+                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={styl} />);
+                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={styl} />);
                 }
                 arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
                 arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
@@ -294,6 +296,10 @@ SubjectViewer.propTypes = {
   translationX: PropTypes.number,
   translationY: PropTypes.number,
   viewerState: PropTypes.string,
+  imageSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
 };
 SubjectViewer.defaultProps = {
   contrast: false,
@@ -302,6 +308,10 @@ SubjectViewer.defaultProps = {
   translationX: 0,
   translationY: 0,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  imageSize: {
+    width: 0,
+    height: 0,
+  },
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const store = state.subjectViewer;
@@ -313,6 +323,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     translationX: store.translationX,
     translationY: store.translationY,
     viewerState: store.viewerState,
+    imageSize: store.imageSize,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store
