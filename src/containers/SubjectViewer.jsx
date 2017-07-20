@@ -57,10 +57,10 @@ class SubjectViewer extends React.Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
 
     //Other functions
-    this.getPointerXY = this.getPointerXY.bind(this);
     this.getBoundingBox = this.getBoundingBox.bind(this);
     this.fetchSubject = this.fetchSubject.bind(this);
-
+    this.getPointerXY = this.getPointerXY.bind(this);
+    this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
@@ -211,16 +211,23 @@ class SubjectViewer extends React.Component {
         translateY: this.props.translationY,
       };
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+      return Utility.stopEvent(e);
     }
   }
 
   onMouseUp(e) {
+    console.log('DEBUG');
+    console.log('-'.repeat(80));
+    console.log(this.getPointerXYOnImage(e));
+    
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.IDLE;
       this.pointer.now = { x: pointerXY.x, y: pointerXY.y };
       this.tmpTransform = false;
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
     }
   }
 
@@ -258,9 +265,10 @@ class SubjectViewer extends React.Component {
     return boundingBox;
   }
 
+  
+  /*  Gets the pointer coordinates, relative to the Subject Viewer.
+   */
   getPointerXY(e) {
-    //Compensate for HTML elements
-    //----------------
     const boundingBox = this.getBoundingBox();
     let clientX = 0;
     let clientY = 0;
@@ -277,10 +285,49 @@ class SubjectViewer extends React.Component {
     const sizeRatioX = 1;
     const sizeRatioY = 1;
 
-    var inputX = (clientX - boundingBox.left) * sizeRatioX;
-    var inputY = (clientY - boundingBox.top) * sizeRatioY;
-    //----------------
-
+    const inputX = (clientX - boundingBox.left) * sizeRatioX;
+    const inputY = (clientY - boundingBox.top) * sizeRatioY;
+    
+    return { x: inputX, y: inputY };
+  }
+    
+  /*  Gets the pointer coordinates, relative to the Subject image.
+   */
+  getPointerXYOnImage(e) {
+    //Get the coordinates of the pointer on the Subject Viewer first.
+    const pointerXY = this.getPointerXY(e);
+    let inputX = pointerXY.x;
+    let inputY = pointerXY.y;
+    
+    //Safety checks
+    if (this.props.scaling === 0) {
+      alert('ERROR: unexpected issue with Subject image scaling.');
+      console.error('ERROR: Invalid value - SubjectViewer.props.scaling is 0.');
+      return pointerXY;
+    }
+    
+    //Compensate for the fact that the SVG Viewer has an offset that makes its
+    //centre (not its top-left) is the (0,0) origin.
+    inputX = inputX - this.props.viewerSize.width / 2;
+    inputY = inputY - this.props.viewerSize.height / 2;
+    
+    //Compensate for SVG transformations: scaling, then translations (in order)
+    inputX = inputX / this.props.scaling - this.props.translationX;
+    inputY = inputY / this.props.scaling - this.props.translationY;
+    
+    //Compensate for SVG transformation: rotation
+    const rotation = -this.props.rotation / 180 * Math.PI;
+    const tmpX = inputX;
+    const tmpY = inputY;
+    inputX = tmpX * Math.cos(rotation) - tmpY * Math.sin(rotation);
+    inputY = tmpX * Math.sin(rotation) + tmpY * Math.cos(rotation);
+    
+    //Compensate for the Subject image having an offset that aligns its centre
+    //to the (0,0) origin
+    //console.log(this.props.imageSize);
+    inputX = inputX + this.props.imageSize.width / 2;
+    inputY = inputY + this.props.imageSize.height / 2;
+    
     return { x: inputX, y: inputY };
   }
 }
@@ -296,6 +343,10 @@ SubjectViewer.propTypes = {
   translationX: PropTypes.number,
   translationY: PropTypes.number,
   viewerState: PropTypes.string,
+  viewerSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
   imageSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
@@ -308,6 +359,10 @@ SubjectViewer.defaultProps = {
   translationX: 0,
   translationY: 0,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  viewerSize: {
+    width: 0,
+    height: 0,
+  },
   imageSize: {
     width: 0,
     height: 0,
@@ -323,6 +378,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     translationX: store.translationX,
     translationY: store.translationY,
     viewerState: store.viewerState,
+    viewerSize: store.viewerSize,
     imageSize: store.imageSize,
   };
 };
