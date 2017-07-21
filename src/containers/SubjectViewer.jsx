@@ -98,6 +98,7 @@ class SubjectViewer extends React.Component {
                 ref={(c) => { this.svgImage = c; }}
                 src={subjectLocation}
                 onLoad={this.onImageLoad}
+                contrast={this.props.contrast}
               />
             )}
           </g>
@@ -291,6 +292,7 @@ SubjectViewer.propTypes = {
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
+  contrast: PropTypes.bool,
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
@@ -299,6 +301,7 @@ SubjectViewer.propTypes = {
   viewerState: PropTypes.string,
 };
 SubjectViewer.defaultProps = {
+  contrast: false,
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -309,6 +312,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
   const store = state.subjectViewer;
   return {
     currentSubject: state.subject.currentSubject,
+    contrast: store.contrast,
     rotation: store.rotation,
     scaling: store.scaling,
     translationX: store.translationX,
