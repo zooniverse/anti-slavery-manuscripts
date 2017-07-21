@@ -21,7 +21,7 @@ Usage:
 
 Intended functionality:
 * Display a single image
- 
+
 NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
 default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
  */
@@ -36,7 +36,7 @@ export default class SVGImage extends React.Component {
       loaded: false,
       error: false,
     };
-    
+
     this.image = new Image();
     this.image.onload = () => {
       if (this.props.onLoad) this.props.onLoad(this.image);
@@ -50,7 +50,7 @@ export default class SVGImage extends React.Component {
         error: true,
       });
     };
-    
+
     if (this.props.src) {
       this.image.src = this.props.src;
     } else {
@@ -58,7 +58,7 @@ export default class SVGImage extends React.Component {
       this.state.error = true;
     }
   }
-  
+
   render() {
     if (this.state.loaded) {
       return (
@@ -69,7 +69,7 @@ export default class SVGImage extends React.Component {
           x={(this.image.width * -0.5)+'px'}
           y={(this.image.height * -0.5)+'px'} />
       );
-      
+
     //TODO: review loading and error indicators.
     } else if (this.state.error) {
       return (

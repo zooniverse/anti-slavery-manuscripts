@@ -22,6 +22,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SVGImage from '../components/SVGImage';
 import { Utility } from '../lib/Utility';
+import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
+import getSubjectLocation from '../lib/get-subject-location';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -40,12 +42,12 @@ const DEV_MODE = window.location && /(\?|&)dev(=|&|$)/ig.test(window.location.se
 class SubjectViewer extends React.Component {
   constructor(props) {
     super(props);
-    
+
     //HTML element refs.
     this.section = null;
     this.svg = null;
     this.svgImage = null;
-    
+
     //Events!
     this.updateSize = this.updateSize.bind(this);
     this.onImageLoad = this.onImageLoad.bind(this);
@@ -54,27 +56,31 @@ class SubjectViewer extends React.Component {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.onWheel = this.onWheel.bind(this);
-    
+
     //Other functions
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getBoundingBox = this.getBoundingBox.bind(this);
-    
+    this.fetchSubject = this.fetchSubject.bind(this);
+
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
       now: { x: 0, y: 0 },
       state: INPUT_STATE.IDLE,
     };
-    
+
     //Misc
     this.tmpTransform = null;
   }
-  
+
   //----------------------------------------------------------------
-  
+
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
-    
+    let subjectLocation;
+
+    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
+
     return (
       <section className="subject-viewer" ref={(c)=>{this.section=c}}>
         <svg
@@ -87,11 +93,13 @@ class SubjectViewer extends React.Component {
           onWheel={this.onWheel}
         >
           <g transform={transform}>
-            <SVGImage
-              ref={(c)=>{this.svgImage=c}}
-              src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
-              onLoad={this.onImageLoad}
-            />
+            {subjectLocation && (
+              <SVGImage
+                ref={(c) => { this.svgImage = c; }}
+                src={subjectLocation}
+                onLoad={this.onImageLoad}
+              />
+            )}
           </g>
           {(!DEV_MODE) ? null :
             <g className="developer-grid" transform={transform}>
@@ -121,67 +129,72 @@ class SubjectViewer extends React.Component {
       </section>
     );
   }
-  
+
   //----------------------------------------------------------------
-  
+
   componentDidMount() {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
+    this.fetchSubject();
   }
-  
+
   componentWillUnmount() {
     //Cleanup
     window.removeEventListener('resize', this.updateSize);
   }
-  
+
+  fetchSubject() {
+    this.props.dispatch(fetchSubject());
+  }
+
   //----------------------------------------------------------------
-  
+
   /*  Update the size of the SVG element; this requires manual tweaking.
    */
   updateSize() {
     if (!this.section || !this.svg) return;
-    
+
     const ARBITRARY_OFFSET = 2;
     const w = this.section.offsetWidth - ARBITRARY_OFFSET;
     const h = this.section.offsetHeight - ARBITRARY_OFFSET;
-    
+
     //Note: if .offsetWidth/.offsetHeight gives problems, use
     //.getBoundingClientRect() or .clientHeight/.clientWidth .
-    
+
     //Use the SVG viewbox to fit the 'canvas' to the <section> container, then
     //center the view on coordinates 0, 0.
     this.svg.setAttribute('viewBox', `${-w/2} ${(-h/2)} ${w} ${h}`);
     this.svg.style.width = w + 'px';
     this.svg.style.height = h + 'px';
-    
+
     //Record the changes.
     const boundingBox = this.getBoundingBox();
     const svgW = boundingBox.width;
     const svgH = boundingBox.height;
     this.props.dispatch(updateViewerSize(svgW, svgH));
   }
-  
+
   /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.
    */
   onImageLoad() {
     if (this.svgImage.image) {
       const imgW = (this.svgImage.image.width) ? this.svgImage.image.width : 1;
       const imgH = (this.svgImage.image.height) ? this.svgImage.image.height : 1;
-      
+
       this.props.dispatch(updateImageSize(imgW, imgH));
-      this.props.dispatch(resetView());  
+      this.props.dispatch(resetView());
     }
   }
-  
+
   //----------------------------------------------------------------
-  
+
   onMouseDown(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.ACTIVE;
       this.pointer.start = { x: pointerXY.x, y: pointerXY.y };
-      this.pointer.now = { x: pointerXY.x, y: pointerXY.y };    
+      this.pointer.now = { x: pointerXY.x, y: pointerXY.y };
       this.tmpTransform = {
         scale: this.props.scaling,
         translateX: this.props.translationX,
@@ -190,7 +203,7 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   onMouseUp(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
@@ -200,7 +213,7 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   onMouseMove(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
@@ -218,17 +231,17 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   onMouseLeave(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       this.pointer.state = INPUT_STATE.IDLE;
       return Utility.stopEvent(e);
     }
   }
-    
+
   onWheel(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
-      const SCALE_STEP = 0.1;      
+      const SCALE_STEP = 0.1;
       if (e.deltaY > 0) {
         this.props.dispatch(setScaling(this.props.scaling - SCALE_STEP));
       } else if (e.deltaY < 0) {
@@ -237,16 +250,16 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   //----------------------------------------------------------------
-  
+
   getBoundingBox() {
     const boundingBox = (this.svg && this.svg.getBoundingClientRect)
       ? this.svg.getBoundingClientRect()
       : { left: 0, top: 0, width: 1, height: 1 };
     return boundingBox;
   }
-  
+
   getPointerXY(e) {
     //Compensate for HTML elements
     //----------------
@@ -261,7 +274,7 @@ class SubjectViewer extends React.Component {
       clientX = e.touches[0].clientX;
       clientY = e.touches[0].clientY;
     }
-    
+
     //SVG scaling: usually not an issue.
     const sizeRatioX = 1;
     const sizeRatioY = 1;
@@ -269,12 +282,15 @@ class SubjectViewer extends React.Component {
     var inputX = (clientX - boundingBox.left) * sizeRatioX;
     var inputY = (clientY - boundingBox.top) * sizeRatioY;
     //----------------
-    
+
     return { x: inputX, y: inputY };
   }
 }
 
 SubjectViewer.propTypes = {
+  currentSubject: PropTypes.shape({
+    src: PropTypes.string,
+  }),
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
@@ -292,6 +308,7 @@ SubjectViewer.defaultProps = {
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const store = state.subjectViewer;
   return {
+    currentSubject: state.subject.currentSubject,
     rotation: store.rotation,
     scaling: store.scaling,
     translationX: store.translationX,

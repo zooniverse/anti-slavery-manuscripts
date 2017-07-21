@@ -56,7 +56,7 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="green button">Done &amp; Talk</button>
           </div>
         </section>
-        <SubjectViewer />
+        <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
           <div className="classifier-navigator">
             <h2>Navigator</h2>

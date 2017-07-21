@@ -1,7 +1,7 @@
 {
-  "name": "liberating-the-liberator",
+  "name": "anti-slavery-manuscripts",
   "version": "1.0.0",
-  "description": "Liberating the Liberator invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
+  "description": "Anti-Slavery Manuscripts invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
   "repository": {
     "type": "git",
     "url": "https://github.com/zooniverse/liberating-the-liberator"

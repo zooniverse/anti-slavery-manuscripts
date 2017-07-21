@@ -46,7 +46,7 @@ class Home extends React.Component {
           <h1 className="title-header">Anti-Slavery Manuscripts</h1>
           <img role="presentation" className="home-page__divider" src={Divider} />
           <div className="home-page__body-text">
-            <b>Welcome to Liberating the Liberator.</b> Now let&apos;s drop some
+            <b>Welcome to Anti-Slavery Manuscripts.</b> Now let&apos;s drop some
             of that phat Lorem ipsum beat. Lorem ipsum dolor sit amet, consectetur
             adipiscing elit. Donec eget eleifend risus, id aliquet est. Maecenas
             tempus luctus lacinia.
