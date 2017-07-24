@@ -14,7 +14,8 @@
     "test": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
     "test-travis": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
     "eslint": "eslint .",
-    "build": "BABEL_ENV=production webpack --config webpack.production.config.js -p"
+    "build": "BABEL_ENV=production webpack --config webpack.production.config.js -p",
+    "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org"
   },
   "author": "Zooniverse",
   "license": "Apache-2.0",
@@ -64,6 +65,7 @@
     "json-loader": "^0.5.4",
     "mocha": "^3.2.0",
     "nib": "^1.1.2",
+    "publisssh": "^1.1.0",
     "react-addons-test-utils": "^15.4.2",
     "react-test-renderer": "^15.4.2",
     "rimraf": "^2.5.4",
