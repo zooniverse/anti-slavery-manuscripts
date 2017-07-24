@@ -29,22 +29,7 @@ default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const FILTER = {
-  invert: "url('#svg-invert-filter')",
-};
-
-const INVERT =
-  `<svg style="position: fixed; right: 100%; top: 100%; visibility: hidden;">
-    <defs>
-      <filter id="svg-invert-filter">
-        <feComponentTransfer>
-          <feFuncR type="table" tableValues="1 0"/>
-          <feFuncG type="table" tableValues="1 0"/>
-          <feFuncB type="table" tableValues="1 0"/>
-        </feComponentTransfer>
-      </filter>
-    </defs>
-  </svg>`;
+const FILTER = "url('#svg-invert-filter')"
 
 export default class SVGImage extends React.Component {
   constructor(props) {
@@ -54,7 +39,6 @@ export default class SVGImage extends React.Component {
       error: false,
     };
 
-    this.invertFilter = this.invertFilter.bind(this);
     this.image = new Image();
     this.image.onload = () => {
       if (this.props.onLoad) this.props.onLoad(this.image);
@@ -77,21 +61,13 @@ export default class SVGImage extends React.Component {
     }
   }
 
-  invertFilter() {
-    if (this.props.contrast) {
-      if (!document.getElementById('svg-invert-filter')) {
-        document.body.insertAdjacentHTML('afterbegin', INVERT);
-      }
-      return { filter: FILTER.invert };
-    }
-    return {};
-  }
-
   render() {
+    const invertFilter = this.props.contrast ? { filter: FILTER } : {};
+
     if (this.state.loaded) {
       return (
         <image className="svg-image"
-          style={this.invertFilter()}
+          style={invertFilter}
           href={this.image.src}
           width={this.image.width}
           height={this.image.height}

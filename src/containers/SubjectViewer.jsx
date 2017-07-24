@@ -126,6 +126,15 @@ class SubjectViewer extends React.Component {
               })()}
             </g>
           }
+          <defs>
+            <filter id="svg-invert-filter">
+              <feComponentTransfer>
+                <feFuncR type="table" tableValues="1 0"/>
+                <feFuncG type="table" tableValues="1 0"/>
+                <feFuncB type="table" tableValues="1 0"/>
+              </feComponentTransfer>
+            </filter>
+          </defs>
         </svg>
       </section>
     );

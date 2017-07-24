@@ -32,7 +32,7 @@ const initialState = {
 };
 
 //Action Types
-const SET_CONTRAST = 'SET_CONTRAST';
+const TOGGLE_CONTRAST = 'TOGGLE_CONTRAST';
 const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
@@ -48,7 +48,7 @@ const UPDATE_IMAGE_SIZE = 'UPDATE_IMAGE_SIZE';
 const subjectViewerReducer = (state = initialState, action) => {
   switch (action.type) {
 
-    case SET_CONTRAST:
+    case TOGGLE_CONTRAST:
       return Object.assign({}, state, {
         contrast: !state.contrast,
       });
@@ -127,7 +127,7 @@ const subjectViewerReducer = (state = initialState, action) => {
 const setContrast = () => {
   return (dispatch) => {
     dispatch({
-      type: SET_CONTRAST,
+      type: TOGGLE_CONTRAST,
     });
   }
 };

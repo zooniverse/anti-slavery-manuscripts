@@ -128,21 +128,21 @@ class ClassifierContainer extends React.Component {
               <span>Contrast</span>
             </button>
 
-            <button className="flat-button block" onClick={this.useResetImage}>
+            <button className="flat-button block">
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-heart-o" />
               </span>
               <span>Favorite</span>
             </button>
 
-            <button className="flat-button block" onClick={this.useResetImage}>
+            <button className="flat-button block">
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-list" />
               </span>
               <span>Collection</span>
             </button>
 
-            <button className="flat-button block" onClick={this.useResetImage}>
+            <button className="flat-button block">
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-info-circle" />
               </span>
