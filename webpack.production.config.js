@@ -77,11 +77,7 @@ module.exports = {
       }),
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
-      use: [{
-        loader: 'file-loader',
-      }, {
-        loader: 'image-webpack-loader',
-      }],
+      loader: 'file-loader',
     }],
   },
 
