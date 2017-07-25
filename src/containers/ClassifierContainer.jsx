@@ -7,9 +7,12 @@ import {
   resetView, setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
+import { toggleFavorite } from '../ducks/subject';
+
 import SubjectViewer from './SubjectViewer';
 
 import Navigator from './Navigator';
+import FavoritesButton from '../components/FavoritesButton'
 import Popup from '../components/Popup';
 import Divider from '../images/img_divider.png';
 
@@ -28,6 +31,7 @@ class ClassifierContainer extends React.Component {
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
     this.useContrast = this.useContrast.bind(this);
+    this.toggleFavorite = this.toggleFavorite.bind(this);
 
     //TEMPORARY
     this.state = {
@@ -134,12 +138,7 @@ class ClassifierContainer extends React.Component {
               <span>Contrast</span>
             </button>
 
-            <button className="flat-button block">
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-heart-o" />
-              </span>
-              <span>Favorite</span>
-            </button>
+            <FavoritesButton favorite={this.props.favoriteSubject} toggleFavorite={this.toggleFavorite} />
 
             <button className="flat-button block">
               <span className="classifier-toolbar__icon">
@@ -155,12 +154,6 @@ class ClassifierContainer extends React.Component {
               <span>Subject Info</span>
             </button>
 
-            <button className="flat-button block" onClick={this.TEST_OPEN_POPUP.bind(this)}>
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-exclamation-triangle" />
-              </span>
-              <span>Test Popup</span>
-            </button>
           </div>
         </section>
 
@@ -219,6 +212,10 @@ class ClassifierContainer extends React.Component {
   useContrast() {
     this.props.dispatch(setContrast());
   }
+
+  toggleFavorite() {
+    this.props.dispatch(toggleFavorite());
+  }
 }
 
 ClassifierContainer.propTypes = {
@@ -235,6 +232,7 @@ ClassifierContainer.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const store = state.subjectViewer;
   return {
+    favoriteSubject: state.subject.favorite,
     rotation: store.rotation,
     scaling: store.scaling,
     viewerState: store.viewerState,
