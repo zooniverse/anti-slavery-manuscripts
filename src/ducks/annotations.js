@@ -38,7 +38,7 @@ const subjectReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_ANNOTATION_POINT:
       const annotationInProgress = (state.annotationInProgress)
-        ? state.annotationInProgress
+        ? Object.assign({}, state.annotationInProgress) //Create a copy, don't modify the existing object.
         : { text: '', points: [] };
       annotationInProgress.points.push({ x: action.x, y: action.y });
       return Object.assign({}, state, {

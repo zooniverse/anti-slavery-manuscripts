@@ -108,6 +108,8 @@ class SubjectViewer extends React.Component {
             )}
             <AnnotationsPane
               imageSize={this.props.imageSize}
+              annotationInProgress={this.props.annotationInProgress}
+              annotations={this.props.annotations}
             />
           </g>
           {(!DEV_MODE) ? null :
