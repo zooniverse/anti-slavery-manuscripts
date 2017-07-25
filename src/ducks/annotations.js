@@ -43,13 +43,18 @@ const subjectReducer = (state = initialState, action) => {
       annotationInProgress.points.push({ x: action.x, y: action.y });
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IN_PROGRESS,
-        annotationInProgress: annotationInProgress,
+        annotationInProgress,
       });
     
     case COMPLETE_ANNOTATION:
+      const annotations = (state.annotations)
+        ? state.annotations.splice(0)  //Make a copy, don't just modify the current object, just to be sure we trigger Redux-React changers.
+        : [];
+      annotations.push(state.annotationInProgress);
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IDLE,
         annotationInProgress: null,
+        annotations,
       });
       
     default:

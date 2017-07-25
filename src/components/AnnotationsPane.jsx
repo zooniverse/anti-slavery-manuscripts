@@ -24,7 +24,9 @@ export default class AnnotationsPane extends React.Component {
     const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
       <g transform={imageOffset}>
-        {this.renderAnnotationInProgress()}
+        <g>
+          {this.renderAnnotationInProgress()}
+        </g>
       </g>
     );
   }
@@ -32,26 +34,58 @@ export default class AnnotationsPane extends React.Component {
   renderAnnotationInProgress() {
     if (!this.props.annotationInProgress) return null;
     
-    const keyPrefix = 'ANNOTATION_IN_PROGRESS_';
-    const line = [];
+    const linePrefix = 'ANNOTATION_IN_PROGRESS_LINE_';
+    const pointPrefix = 'ANNOTATION_IN_PROGRESS_POINT_';
+    const lines = [];
+    const points = [];
     
     for (let i = 0; i < this.props.annotationInProgress.points.length; i++) {
       const point = this.props.annotationInProgress.points[i];
       
-      line.push(<circle key={keyPrefix+i} cx={point.x} cy={point.y} fill="#3cf" r={10} />);
+      if (i === this.props.annotationInProgress.points.length-1) {  //Final node: click to finish annotation.
+        points.push(
+          <circle
+            key={pointPrefix+i}
+            cx={point.x} cy={point.y} r={10} fill="#c33"
+            className="end"
+            style={{cursor: 'pointer'}}
+            onMouseUp={this.props.onCompleteAnnotation}
+          />
+        );  
+      } else {
+        points.push(
+          <circle
+            key={pointPrefix+i}
+            cx={point.x} cy={point.y} r={10} fill="#3cf"
+          />
+        );
+      }
       
       if (i > 0) {
         const prevPoint = this.props.annotationInProgress.points[i-1];
-        line.push(<line x1={prevPoint.x} y1={prevPoint.y} x2={point.x} y2={point.y} stroke="#39c" strokeWidth="2" />);
-        
+        lines.push(
+          <line
+            key={linePrefix+(i-1)}
+            x1={prevPoint.x} y1={prevPoint.y}
+            x2={point.x} y2={point.y}
+            stroke="#39c" strokeWidth="2"
+          />
+        );
       }
     }
     
-    return <g className="annotation-in-progress">{line}</g>;
+    return (
+      <g className="annotation-in-progress">
+        {lines}
+        {points}
+      </g>
+    );
   }
 }
 
 AnnotationsPane.propTypes = {
+  onCompleteAnnotation: PropTypes.func,
+  //--------
   imageSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
@@ -76,6 +110,8 @@ AnnotationsPane.propTypes = {
 };
 
 AnnotationsPane.defaultProps = {
+  onCompleteAnnotation: null,
+  //--------
   imageSize: {
     width: 0,
     height: 0,

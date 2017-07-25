@@ -68,6 +68,8 @@ class SubjectViewer extends React.Component {
     this.fetchSubject = this.fetchSubject.bind(this);
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
+    this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
+    
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
@@ -77,6 +79,11 @@ class SubjectViewer extends React.Component {
 
     //Misc
     this.tmpTransform = null;
+    
+    //State
+    this.state = {
+      pointerXYOnImage: null,
+    };
   }
 
   //----------------------------------------------------------------
@@ -110,6 +117,7 @@ class SubjectViewer extends React.Component {
               imageSize={this.props.imageSize}
               annotationInProgress={this.props.annotationInProgress}
               annotations={this.props.annotations}
+              onCompleteAnnotation={this.onCompleteAnnotation}
             />
           </g>
           {(!DEV_MODE) ? null :
@@ -264,6 +272,14 @@ class SubjectViewer extends React.Component {
       this.pointer.state = INPUT_STATE.IDLE;
       return Utility.stopEvent(e);
     }
+  }
+  
+  /*  Triggers when the user clicks on the final node/point of an
+      annotation-in-progress.
+   */
+  onCompleteAnnotation(e) {
+    this.props.dispatch(completeAnnotation());
+    return Utility.stopEvent(e);
   }
 
   //----------------------------------------------------------------
