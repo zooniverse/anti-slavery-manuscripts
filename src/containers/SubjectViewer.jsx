@@ -83,7 +83,7 @@ class SubjectViewer extends React.Component {
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
-    let subjectLocation;
+    let subjectLocation = undefined;
 
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
@@ -227,10 +227,6 @@ class SubjectViewer extends React.Component {
   }
 
   onMouseUp(e) {
-    console.log('DEBUG');
-    console.log('-'.repeat(80));
-    console.log(this.getPointerXYOnImage(e));
-    
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.IDLE;
@@ -238,6 +234,8 @@ class SubjectViewer extends React.Component {
       this.tmpTransform = false;
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+      const pointerXYOnImage = this.getPointerXYOnImage(e);
+      this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y));
     }
   }
 
@@ -343,11 +341,14 @@ class SubjectViewer extends React.Component {
 }
 
 SubjectViewer.propTypes = {
+  dispatch: PropTypes.func,
+  //--------
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
   contrast: PropTypes.bool,
   dispatch: PropTypes.func,
+  //--------
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -361,9 +362,29 @@ SubjectViewer.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
+  //--------
+  annotationsStatus: PropTypes.string,
+  annotationInProgress: PropTypes.shape({
+    text: PropTypes.string,
+    points: PropTypes.arrayOf(PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    })),
+  }),
+  annotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string,
+      points: PropTypes.arrayOf(PropTypes.shape({
+        x: PropTypes.number,
+        y: PropTypes.number,
+      })),
+    })
+  ),
 };
 SubjectViewer.defaultProps = {
   contrast: false,
+  currentSubject: null,
+  //--------
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -377,12 +398,18 @@ SubjectViewer.defaultProps = {
     width: 0,
     height: 0,
   },
+  //--------
+  annotationsStatus: ANNOTATION_STATUS.IDLE,
+  annotationInProgress: null,
+  annotations: [],
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const sv = state.subjectViewer;
+  const anno = state.annotations;
   return {
     currentSubject: state.subject.currentSubject,
     contrast: sv.contrast,
+    //--------
     rotation: sv.rotation,
     scaling: sv.scaling,
     translationX: sv.translationX,
@@ -390,6 +417,10 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     viewerState: sv.viewerState,
     viewerSize: sv.viewerSize,
     imageSize: sv.imageSize,
+    //--------
+    annotationsStatus: anno.status,
+    annotationInProgress: anno.annotationInProgress,
+    annotations: anno.annotations,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store
