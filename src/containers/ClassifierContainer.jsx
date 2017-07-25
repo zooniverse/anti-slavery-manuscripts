@@ -42,6 +42,7 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   render() {
+    console.log(this.props.user);
     return (
       <main className="app-content classifier-page flex-row">
         <div className="project-background"></div>
@@ -138,7 +139,9 @@ class ClassifierContainer extends React.Component {
               <span>Contrast</span>
             </button>
 
-            <FavoritesButton favorite={this.props.favoriteSubject} toggleFavorite={this.toggleFavorite} />
+            {this.props.user && (
+              <FavoritesButton favorite={this.props.favoriteSubject} toggleFavorite={this.toggleFavorite} />
+            )}
 
             <button className="flat-button block">
               <span className="classifier-toolbar__icon">
@@ -223,6 +226,9 @@ ClassifierContainer.propTypes = {
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   viewerState: PropTypes.string,
+  user: PropTypes.shape({
+    id: PropTypes.string
+  })
 };
 ClassifierContainer.defaultProps = {
   rotation: 0,
@@ -232,6 +238,7 @@ ClassifierContainer.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const store = state.subjectViewer;
   return {
+    user: state.login.user,
     favoriteSubject: state.subject.favorite,
     rotation: store.rotation,
     scaling: store.scaling,
