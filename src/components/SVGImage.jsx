@@ -23,7 +23,8 @@ Intended functionality:
 * Display a single image
 
 NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
-default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
+default top left. Please review SubjectViewer.jsx, SVGImage.jsx and
+AnnotationsPane.jsx for details.
  */
 
 import React from 'react';

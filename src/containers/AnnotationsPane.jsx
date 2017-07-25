@@ -1,42 +1,21 @@
 /*
-Subject Viewer
---------------
+Annotations Pane
+----------------
 
-This component allows users to view a single Subject image (i.e. the SVGImage)
-and navigate (pan and zoom) the Subject using the mouse.
+TODO: Description
 
-Intended functionality:
-* Display a single image
-* When in 'Navigating' mode, click & drag mouse to pan the Subject Image.
-* When in 'Navigating' mode, mouse wheel to zoom in/out.
-* (TODO) When in 'Annotating' mode, mouse click to place a sequence of
-  annotation marks, then click again (on the last annotation mark) to finish
-  the sequence.
-
-NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
-default top left. Please review SubjectViewer.jsx, SVGImage.jsx and
-AnnotationsPane.jsx for details.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import SVGImage from '../components/SVGImage';
-import AnnotationsPane from '../components/AnnotationsPane';
 import { Utility } from '../lib/Utility';
-import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
-import getSubjectLocation from '../lib/get-subject-location';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
-  
-import {
-  addAnnotationPoint, completeAnnotation,
-  ANNOTATION_STATUS,
-} from '../ducks/annotations';
 
 const INPUT_STATE = {
   IDLE: 0,
@@ -62,6 +41,7 @@ class SubjectViewer extends React.Component {
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onWheel = this.onWheel.bind(this);
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
@@ -96,6 +76,7 @@ class SubjectViewer extends React.Component {
           onMouseUp={this.onMouseUp}
           onMouseMove={this.onMouseMove}
           onMouseLeave={this.onMouseLeave}
+          onWheel={this.onWheel}
         >
           <g transform={transform}>
             {subjectLocation && (
@@ -103,12 +84,8 @@ class SubjectViewer extends React.Component {
                 ref={(c) => { this.svgImage = c; }}
                 src={subjectLocation}
                 onLoad={this.onImageLoad}
-                contrast={this.props.contrast}
               />
             )}
-            <AnnotationsPane
-              imageSize={this.props.imageSize}
-            />
           </g>
           {(!DEV_MODE) ? null :
             <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
@@ -136,15 +113,6 @@ class SubjectViewer extends React.Component {
               })()}
             </g>
           }
-          <defs>
-            <filter id="svg-invert-filter">
-              <feComponentTransfer>
-                <feFuncR type="table" tableValues="1 0"/>
-                <feFuncG type="table" tableValues="1 0"/>
-                <feFuncB type="table" tableValues="1 0"/>
-              </feComponentTransfer>
-            </filter>
-          </defs>
         </svg>
       </section>
     );
@@ -266,6 +234,18 @@ class SubjectViewer extends React.Component {
     }
   }
 
+  onWheel(e) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
+      const SCALE_STEP = 0.1;
+      if (e.deltaY > 0) {
+        this.props.dispatch(setScaling(this.props.scaling - SCALE_STEP));
+      } else if (e.deltaY < 0) {
+        this.props.dispatch(setScaling(this.props.scaling + SCALE_STEP));
+      }
+      return Utility.stopEvent(e);
+    }
+  }
+
   //----------------------------------------------------------------
 
   getBoundingBox() {
@@ -346,7 +326,6 @@ SubjectViewer.propTypes = {
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
-  contrast: PropTypes.bool,
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
@@ -363,7 +342,6 @@ SubjectViewer.propTypes = {
   }),
 };
 SubjectViewer.defaultProps = {
-  contrast: false,
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -379,17 +357,16 @@ SubjectViewer.defaultProps = {
   },
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
-  const sv = state.subjectViewer;
+  const store = state.subjectViewer;
   return {
     currentSubject: state.subject.currentSubject,
-    contrast: sv.contrast,
-    rotation: sv.rotation,
-    scaling: sv.scaling,
-    translationX: sv.translationX,
-    translationY: sv.translationY,
-    viewerState: sv.viewerState,
-    viewerSize: sv.viewerSize,
-    imageSize: sv.imageSize,
+    rotation: store.rotation,
+    scaling: store.scaling,
+    translationX: store.translationX,
+    translationY: store.translationY,
+    viewerState: store.viewerState,
+    viewerSize: store.viewerSize,
+    imageSize: store.imageSize,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store
