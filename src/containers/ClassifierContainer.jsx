@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  setRotation, setScaling, resetView,
-  setViewerState, SUBJECTVIEWER_STATE,
+  setRotation, setScaling, setContrast,
+  resetView, setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 import SubjectViewer from './SubjectViewer';
@@ -12,7 +12,6 @@ import SubjectViewer from './SubjectViewer';
 import Navigator from './Navigator';
 import Popup from '../components/Popup';
 import Divider from '../images/img_divider.png';
-import TOOLBAR_CONTROLS from '../lib/toolbar-controls';
 
 const ZOOM_STEP = 0.1;
 const ROTATION_STEP = 90;
@@ -28,6 +27,7 @@ class ClassifierContainer extends React.Component {
     this.useZoomOut = this.useZoomOut.bind(this);
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
+    this.useContrast = this.useContrast.bind(this);
   
     //TEMPORARY
     this.state = {
@@ -126,16 +126,40 @@ class ClassifierContainer extends React.Component {
               <span>Reset Image</span>
             </button>
 
-            {Object.keys(TOOLBAR_CONTROLS).map((key, i) => {
-              return (
-                <div className="block" key={i}>
-                  <span className="classifier-toolbar__icon">
-                    <i className={`${TOOLBAR_CONTROLS[key]}`} />
-                  </span>
-                  <span>{key}</span>
-                </div>
-              );
-            })}
+            <button className="flat-button block">
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-eye" />
+              </span>
+              <span>Toggle Prev. Marks</span>
+            </button>
+
+            <button className="flat-button block" onClick={this.useContrast}>
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-adjust" />
+              </span>
+              <span>Contrast</span>
+            </button>
+
+            <button className="flat-button block">
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-heart-o" />
+              </span>
+              <span>Favorite</span>
+            </button>
+
+            <button className="flat-button block">
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-list" />
+              </span>
+              <span>Collection</span>
+            </button>
+
+            <button className="flat-button block">
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-info-circle" />
+              </span>
+              <span>Subject Info</span>
+            </button>
           </div>
         </section>
         
@@ -178,6 +202,10 @@ class ClassifierContainer extends React.Component {
 
   useResetImage() {
     this.props.dispatch(resetView());
+  }
+
+  useContrast() {
+    this.props.dispatch(setContrast());
   }
 }
 

@@ -29,6 +29,8 @@ default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const FILTER = "url('#svg-invert-filter')"
+
 export default class SVGImage extends React.Component {
   constructor(props) {
     super(props);
@@ -60,9 +62,12 @@ export default class SVGImage extends React.Component {
   }
 
   render() {
+    const invertFilter = this.props.contrast ? { filter: FILTER } : {};
+
     if (this.state.loaded) {
       return (
         <image className="svg-image"
+          style={invertFilter}
           href={this.image.src}
           width={this.image.width}
           height={this.image.height}
@@ -86,12 +91,14 @@ export default class SVGImage extends React.Component {
 }
 
 SVGImage.propTypes = {
+  contrast: PropTypes.bool,
   src: PropTypes.string,
   onLoad: PropTypes.func,
   onError: PropTypes.func,
 };
 
 SVGImage.defaultProps = {
+  contrast: false,
   src: null,
   onLoad: null,
   onError: null,

@@ -19,11 +19,12 @@ const MAX_SCALING = 10;
 //Initial State
 const initialState = {
   //Image transformations
+  contrast: false,
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
-  
+
   //Viewer settings
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
   viewerSize: { width: 0, height: 0 },
@@ -31,6 +32,7 @@ const initialState = {
 };
 
 //Action Types
+const TOGGLE_CONTRAST = 'TOGGLE_CONTRAST';
 const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
@@ -46,30 +48,35 @@ const UPDATE_IMAGE_SIZE = 'UPDATE_IMAGE_SIZE';
 const subjectViewerReducer = (state = initialState, action) => {
   switch (action.type) {
 
+    case TOGGLE_CONTRAST:
+      return Object.assign({}, state, {
+        contrast: !state.contrast,
+      });
+
     case SET_ROTATION:
       let newAngle = action.angle;
       //Ensure angle normalises to within 0-360 degrees.
       while (newAngle < 0) { newAngle += 360; }  //JS's mod (%) acts weird with negatives.
       newAngle = newAngle % 360;
-      
+
       return Object.assign({}, state, {
         rotation: newAngle
       });
-    
+
     case SET_SCALING:
       let newScale = (action.scale) ? action.scale : state.scaling;
       newScale = Math.max(MIN_SCALING, Math.min(MAX_SCALING, newScale));
-      
+
       return Object.assign({}, state, {
         scaling: newScale,
       });
-    
+
     case SET_TRANSLATION:
       return Object.assign({}, state, {
         translationX: action.x,
         translationY: action.y,
       });
-      
+
     case RESET_VIEW:
       let bestFitScale = 1;
       if (state.viewerSize.width && state.viewerSize.height &&
@@ -79,19 +86,19 @@ const subjectViewerReducer = (state = initialState, action) => {
           state.viewerSize.height / state.imageSize.height
         );
       }
-      
+
       return Object.assign({}, state, {
         rotation: 0,
         scaling: bestFitScale,
         translationX: 0,
         translationY: 0,
       });
-    
+
     case SET_VIEWER_STATE:
       return Object.assign({}, state, {
         viewerState: action.viewerState,
       });
-      
+
     case UPDATE_VIEWER_SIZE:
       return Object.assign({}, state, {
         viewerSize: {
@@ -99,7 +106,7 @@ const subjectViewerReducer = (state = initialState, action) => {
           height: action.height,
         },
       });
-    
+
     case UPDATE_IMAGE_SIZE:
       return Object.assign({}, state, {
         imageSize: {
@@ -107,7 +114,7 @@ const subjectViewerReducer = (state = initialState, action) => {
           height: action.height,
         },
       });
-    
+
     default:
       return state;
   }
@@ -116,6 +123,14 @@ const subjectViewerReducer = (state = initialState, action) => {
 /*
 --------------------------------------------------------------------------------
  */
+
+const setContrast = () => {
+  return (dispatch) => {
+    dispatch({
+      type: TOGGLE_CONTRAST,
+    });
+  }
+};
 
 const setRotation = (angle) => {
   return (dispatch) => {
@@ -186,6 +201,7 @@ const updateImageSize = (width, height) => {
 export default subjectViewerReducer;
 
 export {
+  setContrast,
   setRotation,
   setScaling,
   setTranslation,

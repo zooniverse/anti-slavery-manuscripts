@@ -9,6 +9,7 @@ import {
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
+import getSubjectLocation from '../lib/get-subject-location';
 
 class Navigator extends React.Component {
   constructor(props) {
@@ -34,6 +35,8 @@ class Navigator extends React.Component {
     }
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
     const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
+    let subjectLocation;
+    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>
@@ -43,10 +46,12 @@ class Navigator extends React.Component {
           viewBox={viewBox}
         >
           <g>
-            <SVGImage
-              ref={(c) => { this.svgImage = c; }}
-              src="https://panoptes-uploads.zooniverse.org/production/subject_location/97af440c-15d2-4fb1-bc18-167c9151050a.jpeg"
-            />
+            {subjectLocation && (
+              <SVGImage
+                ref={(c) => { this.svgImage = c; }}
+                src={subjectLocation}
+              />
+            )}
           </g>
           <g transform={transform}>
             <rect
@@ -71,6 +76,9 @@ class Navigator extends React.Component {
 }
 
 Navigator.propTypes = {
+  currentSubject: PropTypes.shape({
+    src: PropTypes.string,
+  }),
   imageSize: {
     width: PropTypes.number,
     height: PropTypes.number,
@@ -102,6 +110,7 @@ Navigator.defaultProps = {
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const store = state.subjectViewer;
   return {
+    currentSubject: state.subject.currentSubject,
     rotation: store.rotation,
     scaling: store.scaling,
     translationX: store.translationX,
