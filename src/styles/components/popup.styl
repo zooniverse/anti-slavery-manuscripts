@@ -1,0 +1,32 @@
+.popup
+  position: fixed
+  left: 0
+  top: 0
+  width: 100vw
+  height: 100vh
+  background: rgba(0, 0, 0, 0.5)
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: stretch
+  
+  .popup-title
+    flex: 0 0 auto
+    background: $forest-green
+    color: $white
+    margin: 10vh 10vw 0 10vw
+    padding: 0.5em 1em
+    border-top-left-radius: 1em
+    border-top-right-radius: 1em
+    text-align: right
+  
+  .popup-content
+    flex: 0 1 auto
+    overflow: auto
+    background: $white
+    color: $text-color
+    margin: 0 10vw 10vh 10vw
+    padding: 0.5em 1em
+    border-bottom-left-radius: 1em
+    border-bottom-right-radius: 1em
+    

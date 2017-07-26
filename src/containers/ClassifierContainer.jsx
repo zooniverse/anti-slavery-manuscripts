@@ -10,6 +10,7 @@ import {
 import SubjectViewer from './SubjectViewer';
 
 import Navigator from './Navigator';
+import Popup from '../components/Popup';
 import Divider from '../images/img_divider.png';
 
 const ZOOM_STEP = 0.1;
@@ -27,6 +28,17 @@ class ClassifierContainer extends React.Component {
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
     this.useContrast = this.useContrast.bind(this);
+  
+    //TEMPORARY
+    this.state = {
+      TEST_POPUP: (
+        <div>
+          <div>If there's something strange</div>
+          <div>In your neighbourhood</div>
+          <div>Who you gonna call?</div>
+        </div>
+      )
+    };
   }
 
   //----------------------------------------------------------------
@@ -150,8 +162,20 @@ class ClassifierContainer extends React.Component {
             </button>
           </div>
         </section>
+        
+        {(this.state.TEST_POPUP === null) ? null :
+          <Popup onClose={this.TEST_CLOSE_POPUP.bind(this)}>
+            {this.state.TEST_POPUP}
+          </Popup>
+        }
       </main>
     );
+  }
+
+  //----------------------------------------------------------------
+
+  TEST_CLOSE_POPUP() {
+    this.setState({ TEST_POPUP: null });
   }
 
   //----------------------------------------------------------------
