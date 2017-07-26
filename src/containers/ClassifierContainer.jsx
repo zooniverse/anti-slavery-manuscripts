@@ -31,14 +31,8 @@ class ClassifierContainer extends React.Component {
   
     //TEMPORARY
     this.state = {
-      TEST_POPUP: (
-        <div>
-          <div>If there's something strange</div>
-          <div>In your neighbourhood</div>
-          <div>Who you gonna call?</div>
-        </div>
-      )
-    };
+      TEST_POPUP: null,
+    }
   }
 
   //----------------------------------------------------------------
@@ -160,6 +154,13 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Subject Info</span>
             </button>
+            
+            <button className="flat-button block" onClick={this.TEST_OPEN_POPUP.bind(this)}>
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-exclamation-triangle" />
+              </span>
+              <span>Test Popup</span>
+            </button>
           </div>
         </section>
         
@@ -173,6 +174,17 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+
+  TEST_OPEN_POPUP() {
+    this.setState({ TEST_POPUP: (
+      <div>
+        <h1>Hello World!</h1>
+        <h2>Sample popup</h2>
+        <p>This is an example of how we can add popup messages (and similar things) to our project.</p>
+        <p>This will be useful for error messages and info boxes.</p>
+      </div>
+    ) });
+  }
 
   TEST_CLOSE_POPUP() {
     this.setState({ TEST_POPUP: null });
