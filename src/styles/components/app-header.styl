@@ -1,34 +1,20 @@
+@import "font-groups.styl"
+
 .app-header
-  align-items: flex-end
+  align-items: center
   background-color: black
   display: flex
   font-size: 0.75rem
   padding: 0rem 0.5rem
 
   .app-title
-    align-self: center
     color: $teal-blue
-    font-family: $title-font
 
-    svg  //To be replaced with the proper Anti-Slavery Manuscripts logo
-      display: inline-block
-      height: 1rem
-      margin-right: 0.5em
-      vertical-align: middle
-
-    h1  //To be rendered invisible, or removed altogether
-      display: inline-block
-      font-size: 1.2rem
-      font-style: italic
-      font-weight: bold
-      margin: 0
-      padding: 0
+    svg
+      margin: 0 0.25em
       vertical-align: middle
 
   &__nav-links
-    clear: left
-    display: flex
-    flex-direction: row
     list-style: none
     padding-left: 0
 
@@ -38,9 +24,6 @@
     margin: 0.5rem 1rem 0 1rem
     padding-bottom: 0.3rem
     text-transform: uppercase
-
-    &:hover, &:focus
-      border
 
   nav
     flex: 1 1 auto
@@ -64,12 +47,3 @@
       border-radius: 1em
       color: $white
       padding: 0.5em 1em
-
-.title-header
-  color: $black
-  flex: 1
-  font-family: $lincoln-font
-  font-size: 2.25rem
-  letter-spacing: 0.5rem
-  margin: 0
-  text-transform: uppercase

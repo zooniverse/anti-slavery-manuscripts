@@ -9,10 +9,10 @@ class Header extends React.Component {
     return (
       <header className="app-header">
         <Link to="/" className="app-title">
-          <ZooniverseLogo height="2em" width="2em" />
+          <ZooniverseLogo height="1.35em" width="1.35em" />
         </Link>
         <nav>
-          <ul className="app-header__nav-links">
+          <ul className="app-header__nav-links flex-row">
             {SiteNavItems.map((item, i) => {
               return (
                 <li key={i}>

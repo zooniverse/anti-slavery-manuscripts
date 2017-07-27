@@ -1,8 +1,13 @@
-.home-page
+@import "font-groups.styl"
 
-  h3
-    font-family: $secondary-font
-    text-transform: uppercase
+.home-page
+  .transcribe
+    @extend .secondary-head
+    font-weight: 600
+    margin: 0.5em 0
+
+  .secondary-head
+    font-size: 1.35em
 
   &__content
     display: flex
@@ -10,32 +15,36 @@
     padding-bottom: 5em
     text-align: center
 
+  &__progress-bar
+    background: $light-eggplant
+    display: flex
+    flex-wrap: nowrap
+    height: 2em
+    width: 100%
+
+    .completed
+      background: $eggplant
+      color: white
+      font-family: $sans-font
+      font-size: 0.8em
+      text-align: right
+
+      span
+        margin: 0.5em
+
   &__body-text
+    @extend .body-copy
     columns: 2
-    font-family: $body-font
-    margin: 0 22% 2em 22%
+    margin: 0 22% 4em 22%
     text-align: left
 
-  &__instructions
-    font-family: $body-font
-    font-style: italic
-
-  &__divider
-    display: block
-    margin: 2em auto
-    width: 8em
-
   &__topic-select
-    display: flex
-    flex-direction: row
     justify-content: center
     margin: 0.75em 0
 
     > div
-      font-family: $secondary-font
-      letter-spacing: (1/12)rem
-      padding: 0.25em 0.75em
-      text-transform: uppercase
+      @extend .secondary-head
+      padding: 0 1em
 
     > div:not(:first-child):not(:last-child)
       border-left: 1px solid black
@@ -43,14 +52,111 @@
     > div:nth-child(3)
       border-right: 1px solid black
 
+    span
+      font-weight: 600
+
   &__logos
     align-items: center
-    background: $light-grey
-    display: flex
-    flex-direction: row
-    justify-content: space-around
-    padding: 0 3em
-    height: 12em
+    background: white
+    justify-content: center
+    padding: 4em
+
+    img
+      max-height: 4em
+      padding-left: 5em
+
+  &__social-section
+    background: $sandy
+    padding: 5em
+    text-align: center
+
+    .secondary-conjunctions
+      font-size: 1.75rem
+      vertical-align: middle
+
+    span
+      display: block
+      margin: 1em 0
+
+  &__subject-row
+    justify-content: center
+
+    div
+      border: 15px solid white
+      height: 14em
+      margin: 2em 0 4em 0
+      width: 18em
+
+  &__social-content
+    margin: 2em 0
+    text-align: left
+
+    .main-title
+      font-size: 2rem
+
+    div
+      background: white
+      flex: 1
+
+    > div:first-child
+      padding: 2em
+
+    span
+      @extend .body-copy
+
+  &__project-stats
+    background: white
+    margin: 2em 0
+    padding: 2em
+    text-align: left
+
+    > div:first-child
+      flex: 5
+      padding-right: 2em
+
+    div:nth-child(2)
+      flex: 2
+
+    .main-title
+      font-size: 2rem
+
+    .secondary-head
+      font-size: 0.8em
+      font-weight: 600
+
+  &__numbers
+    border-left: 1px solid $light-grey
+    columns: 2
+    padding-left: 2.5em
+
+    div
+      display: flex
+      flex-direction: column
+      height: 100%
+
+      span:nth-child(even)
+        line-height: 1.5em
+
+      p
+        font-size: 2.25em
+        margin: 0.25em 0
+
+  &__news-section
+    margin-left: 2em
+
+    .social-bar
+      align-items: center
+      background: $light-eggplant
+      display: flex
+      flex-direction: column
+      max-width: 3em
+
+      i
+        color: white
+        margin: 0.5em 0.8em
+
+    div:nth-child(2)
+      padding: 2em
 
   &__zooniverse
     background: $black
@@ -65,26 +171,14 @@
       margin: 2.25em auto
 
     span
+      @extend .secondary-head
       color: $light-grey
-      font-family: $secondary-font
-      font-size: 0.75rem
-      line-height: 1.35rem
-      text-transform: uppercase
+      letter-spacing: 0.12em
 
     a
+      @extend .text-links
       color: $white
-      font-family: $nav-font
-      letter-spacing: (2/12)rem
       margin: 2em 0 3em 0
-
-  .circle
-    background: white
-    border-radius: 2.5em
-    height: 5em
-    width: 5em
 
   .project-background
     background-image: url('../images/home-bg.jpg')
-
-  .title-header
-    font-size: 3rem

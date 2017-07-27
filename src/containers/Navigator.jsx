@@ -27,8 +27,8 @@ class Navigator extends React.Component {
   //----------------------------------------------------------------
 
   render() {
-    const SVG_WIDTH = 200;
-    const SVG_HEIGHT = 200;
+    const SVG_WIDTH = 150;
+    const SVG_HEIGHT = 150;
     let scale = 0.1;
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
