@@ -42,7 +42,6 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   render() {
-    console.log(this.props.user);
     return (
       <main className="app-content classifier-page flex-row">
         <div className="project-background"></div>
