@@ -14,6 +14,7 @@ import SubjectViewer from './SubjectViewer';
 import Navigator from './Navigator';
 import FavoritesButton from '../components/FavoritesButton'
 import Popup from '../components/Popup';
+import ShowMetadata from '../components/ShowMetadata';
 import Divider from '../images/img_divider.png';
 
 const ZOOM_STEP = 0.1;
@@ -32,10 +33,11 @@ class ClassifierContainer extends React.Component {
     this.useResetImage = this.useResetImage.bind(this);
     this.useContrast = this.useContrast.bind(this);
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.showMetadata = this.showMetadata.bind(this);
 
     //TEMPORARY
     this.state = {
-      TEST_POPUP: null,
+      POPUP: null,
     }
   }
 
@@ -149,19 +151,18 @@ class ClassifierContainer extends React.Component {
               <span>Collection</span>
             </button>
 
-            <button className="flat-button block">
+            <button className="flat-button block" onClick={this.showMetadata}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-info-circle" />
               </span>
               <span>Subject Info</span>
             </button>
-
           </div>
         </section>
 
-        {(this.state.TEST_POPUP === null) ? null :
-          <Popup onClose={this.TEST_CLOSE_POPUP.bind(this)}>
-            {this.state.TEST_POPUP}
+        {(this.state.POPUP === null) ? null :
+          <Popup onClose={this.CLOSE_POPUP.bind(this)}>
+            {this.state.POPUP}
           </Popup>
         }
       </main>
@@ -170,19 +171,8 @@ class ClassifierContainer extends React.Component {
 
   //----------------------------------------------------------------
 
-  TEST_OPEN_POPUP() {
-    this.setState({ TEST_POPUP: (
-      <div>
-        <h1>Hello World!</h1>
-        <h2>Sample popup</h2>
-        <p>This is an example of how we can add popup messages (and similar things) to our project.</p>
-        <p>This will be useful for error messages and info boxes.</p>
-      </div>
-    ) });
-  }
-
-  TEST_CLOSE_POPUP() {
-    this.setState({ TEST_POPUP: null });
+  CLOSE_POPUP() {
+    this.setState({ POPUP: null });
   }
 
   //----------------------------------------------------------------
@@ -218,9 +208,18 @@ class ClassifierContainer extends React.Component {
   toggleFavorite() {
     this.props.dispatch(toggleFavorite());
   }
+
+  showMetadata() {
+    this.setState({ POPUP: (
+      <ShowMetadata metadata={this.props.currentSubject.metadata} />
+    ) });
+  }
 }
 
 ClassifierContainer.propTypes = {
+  currentSubject: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
@@ -239,6 +238,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     user: state.login.user,
     favoriteSubject: state.subject.favorite,
+    currentSubject: state.subject.currentSubject,
     rotation: store.rotation,
     scaling: store.scaling,
     viewerState: store.viewerState,

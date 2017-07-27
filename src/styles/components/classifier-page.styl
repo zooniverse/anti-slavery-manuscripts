@@ -53,13 +53,18 @@
     .classifier-toolbar
       > .block
         display: flex
-        letter-spacing: 0.15em
-        margin: 0.8rem 0
+        flex-direction: row
+        letter-spacing: inherit
+        margin: 0.2rem 0
+        padding: 0.5em
         text-align: left
 
+        &:hover, &:focus, &.selected
+          background: $white
+          border-radius: 2em
+
         &.selected
-          background: $forest-green  //TMP
-          color: $white
+          color: $red-orange
 
         i
           font-size: 1rem
