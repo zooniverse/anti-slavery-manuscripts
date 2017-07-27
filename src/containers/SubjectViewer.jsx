@@ -55,7 +55,6 @@ class SubjectViewer extends React.Component {
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
-    this.onWheel = this.onWheel.bind(this);
 
     //Other functions
     this.getPointerXY = this.getPointerXY.bind(this);
@@ -90,7 +89,6 @@ class SubjectViewer extends React.Component {
           onMouseUp={this.onMouseUp}
           onMouseMove={this.onMouseMove}
           onMouseLeave={this.onMouseLeave}
-          onWheel={this.onWheel}
         >
           <g transform={transform}>
             {subjectLocation && (
@@ -245,18 +243,6 @@ class SubjectViewer extends React.Component {
   onMouseLeave(e) {
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       this.pointer.state = INPUT_STATE.IDLE;
-      return Utility.stopEvent(e);
-    }
-  }
-
-  onWheel(e) {
-    if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
-      const SCALE_STEP = 0.1;
-      if (e.deltaY > 0) {
-        this.props.dispatch(setScaling(this.props.scaling - SCALE_STEP));
-      } else if (e.deltaY < 0) {
-        this.props.dispatch(setScaling(this.props.scaling + SCALE_STEP));
-      }
       return Utility.stopEvent(e);
     }
   }
