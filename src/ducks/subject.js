@@ -67,9 +67,10 @@ const createFavorites = (project) => {
     subjects: [],
     projects: [project.id],
   };
+  const display_name = (project.data) ? project.data.display_name : 'UNKNOWN PROJECT';
   const collection = {
     favorite: true,
-    display_name: `Favorites ${project.data.display_name}`,
+    display_name,
     links
   };
   apiClient.type('collections')
