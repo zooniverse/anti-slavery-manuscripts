@@ -37,7 +37,7 @@ class ClassifierContainer extends React.Component {
 
     //TEMPORARY
     this.state = {
-      POPUP: null,
+      popup: null,
     }
   }
 
@@ -160,9 +160,9 @@ class ClassifierContainer extends React.Component {
           </div>
         </section>
 
-        {(this.state.POPUP === null) ? null :
-          <Popup onClose={this.CLOSE_POPUP.bind(this)}>
-            {this.state.POPUP}
+        {(this.state.popup === null) ? null :
+          <Popup onClose={this.closePopup.bind(this)}>
+            {this.state.popup}
           </Popup>
         }
       </main>
@@ -171,8 +171,8 @@ class ClassifierContainer extends React.Component {
 
   //----------------------------------------------------------------
 
-  CLOSE_POPUP() {
-    this.setState({ POPUP: null });
+  closePopup() {
+    this.setState({ popup: null });
   }
 
   //----------------------------------------------------------------
@@ -210,7 +210,7 @@ class ClassifierContainer extends React.Component {
   }
 
   showMetadata() {
-    this.setState({ POPUP: (
+    this.setState({ popup: (
       <ShowMetadata metadata={this.props.currentSubject.metadata} />
     ) });
   }
