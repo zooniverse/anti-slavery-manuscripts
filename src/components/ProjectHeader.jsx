@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 const ProjectHeader = ({ onIndex }) =>
   <div className="project-header">
     {!onIndex && (
-      <h1 className="title-header">Anti-Slavery Manuscripts</h1>
+      <h1 className="main-title">Anti-Slavery Manuscripts</h1>
     )}
     <nav className="project-header__nav">
       <Link

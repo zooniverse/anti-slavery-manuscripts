@@ -1,36 +1,33 @@
+@import "font-groups.styl"
+
 .classifier-page
-  display: flex
-  flex-direction: row
   padding: 1rem 0
 
-  .classifier-divider
-    margin: 1.5em 0
-
   h2
-    color: $black
+    @extend .secondary-head
     display: inline
-    font-family: $secondary-font
-    font-size: 1.15em
-    font-weight: 700
-    letter-spacing: 0.15rem
-    margin: 0
-    text-transform: uppercase
+    font-weight: 600
+    letter-spacing: 0.2em
+
+  p
+    margin-top: 0
 
   .help-pane
+    @extend .body-copy
     display: flex
     flex-direction: column
-    font-size: (12/20)rem
-    letter-spacing: 0.05em
-    width: 14rem
     padding: 0 1.5rem 0 4rem
+    width: 14rem
 
-    .help-directions
-      p
-        font-family: $body-font
-        font-size: 1.25em
-        margin-top: 0.25em
+    h2
+      font-size: 0.75em
+
+    p
+      font-size: 0.75em
+      line-height: 1.5em
 
     .help-buttons
+      font-family: $sans-font
       margin-top: auto
 
       .button
@@ -42,9 +39,6 @@
         margin-bottom: 1em
         width: 40%
 
-  //.subject-viewer
-  //  -> Separate component; see SubjectViewer.
-    
   .classifier-controls
     display: flex
     flex-direction: column
@@ -53,17 +47,16 @@
     margin: 0 1rem
     width: 10rem
 
-    .classifier-divider
-      width: 9em
+    .divider
+      margin-left: 0
 
     .classifier-toolbar
       > .block
         display: flex
-        flex-direction: row
-        letter-spacing: inherit
+        letter-spacing: 0.15em
         margin: 0.8rem 0
         text-align: left
-        
+
         &.selected
           background: $forest-green  //TMP
           color: $white
@@ -79,10 +72,8 @@
         text-align: center
         width: 1.2rem
 
-    .classifier-navigator
-      display: flex
-      flex-direction: column
-      margin-bottom: 1rem
+.navigator-viewer
 
-      img
-        width: 9em
+  svg
+    background: $light-grey
+    padding: 1em

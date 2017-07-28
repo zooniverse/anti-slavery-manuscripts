@@ -1,6 +1,8 @@
 import React from 'react';
 import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components';
+import SocialSection from '../components/SocialSection';
 import Divider from '../images/img_divider.png';
+import BostonLogo from '../images/BPL_logo.jpg';
 
 class Home extends React.Component {
   constructor() {
@@ -34,7 +36,11 @@ class Home extends React.Component {
   renderTopic() {
     const numbers = ['One', 'Two', 'Three', 'Four'];
     return numbers.map((num, i) => {
-      return <div key={i}>Topic {num} &#8608;</div>;
+      return (
+        <div key={i}>
+          <span>Topic {num} &#8608;</span>
+        </div>
+      )
     });
   }
 
@@ -43,28 +49,33 @@ class Home extends React.Component {
       <main className="app-content home-page">
         <div className="project-background" style={{ height: this.state.backgroundHeight }} />
         <div className="home-page__content">
-          <h1 className="title-header">Anti-Slavery Manuscripts</h1>
-          <img role="presentation" className="home-page__divider" src={Divider} />
+          <h1 className="main-title">Anti-Slavery Manuscripts</h1>
+          <h1 className="secondary-head">Presented <i className="secondary-conjunctions">by the</i> Boston Public Library</h1>
+          <img role="presentation" className="divider" src={Divider} />
           <div className="home-page__body-text">
-            <b>Welcome to Anti-Slavery Manuscripts.</b> Now let&apos;s drop some
+            <b className="body-copy-first-word">Welcome</b> to Anti-Slavery Manuscripts. Now let&apos;s drop some
             of that phat Lorem ipsum beat. Lorem ipsum dolor sit amet, consectetur
             adipiscing elit. Donec eget eleifend risus, id aliquet est. Maecenas
             tempus luctus lacinia.
           </div>
-          <h3>Transcribe Random&#8608;</h3>
-          <span className="home-page__instructions">
+          <h3 className="transcribe">Transcribe Random&#8608;</h3>
+          <span className="instructions">
             Click the button above to start with a random document, or choose a topic:
           </span>
-          <div className="home-page__topic-select">
+          <div className="home-page__topic-select flex-row">
             {this.renderTopic()}
           </div>
         </div>
-        <div id="home-logos" className="home-page__logos">
-          <ZooniverseLogotype />
-          <div className="circle" />
-          <div className="circle" />
-          <div className="circle" />
-          <div className="circle" />
+        <div id="home-logos" className="home-page__logos flex-row">
+          <a href="https://www.zooniverse.org">
+            <ZooniverseLogotype />
+          </a>
+          <a href="https://www.bpl.org">
+            <img role="presentation" src={BostonLogo} />
+          </a>
+        </div>
+        <SocialSection />
+        <div className="home-page__community">
         </div>
         <div className="home-page__zooniverse">
           <ZooniverseLogo height="3.5em" width="3.5em" />

@@ -4,15 +4,18 @@
   justify-content: space-between
   margin: 1.5em 3.75em
 
+  .main-title
+    flex: 1
+    font-size 2.5rem
+
   &__nav
     align-self: flex-start
-    border-bottom: 2px solid $eggplant
-    font-family: $nav-font
+    font-family: $playfair-sc
     font-size: 0.75rem
     font-weight: 700
     margin-left: auto
 
-    @media (max-width:1035px)
+    @media (max-width:1060px)
       display: flex
       flex-direction: column
 
@@ -23,7 +26,7 @@
     letter-spacing: (0.9/15)em
     margin: 0.5rem 0rem 0rem 1.25rem
 
-    @media (max-width:1035px)
+    @media (max-width:1060px)
       margin-left: 0
 
     &--active, &:hover, &:focus
@@ -31,7 +34,7 @@
       color: $eggplant
 
     i
-      font-family: $secondary-font
+      font-family: $playfair-display
       text-transform: lowercase
 
     &:first-child

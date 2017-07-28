@@ -28,7 +28,7 @@ class ClassifierContainer extends React.Component {
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
     this.useContrast = this.useContrast.bind(this);
-  
+
     //TEMPORARY
     this.state = {
       TEST_POPUP: null,
@@ -39,10 +39,10 @@ class ClassifierContainer extends React.Component {
 
   render() {
     return (
-      <main className="app-content classifier-page">
+      <main className="app-content classifier-page flex-row">
         <div className="project-background"></div>
         <section className="help-pane">
-          <div className="help-directions">
+          <div>
             <h2>directions</h2>
             <p>
               Using the Annotate tool, click under each word in a line of text,
@@ -57,18 +57,18 @@ class ClassifierContainer extends React.Component {
           <div className="help-buttons">
             <button href="#" className="white-red button">Field Guide</button>
             <button href="#" className="white-red button">Your Crib Sheet</button>
-            <img className="classifier-divider" role="presentation" src={Divider} />
+            <img className="divider" role="presentation" src={Divider} />
             <button href="#" className="white-green button">Done</button>
             <button href="#" className="green button">Done &amp; Talk</button>
           </div>
         </section>
         <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
-          <div className="classifier-navigator">
+          <div>
             <h2>Navigator</h2>
             <Navigator />
           </div>
-          <img className="classifier-divider" role="presentation" src={Divider} />
+          <img className="divider" role="presentation" src={Divider} />
           <div className="classifier-toolbar">
             <h2>Toolbar</h2>
 
@@ -154,7 +154,7 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Subject Info</span>
             </button>
-            
+
             <button className="flat-button block" onClick={this.TEST_OPEN_POPUP.bind(this)}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-exclamation-triangle" />
@@ -163,7 +163,7 @@ class ClassifierContainer extends React.Component {
             </button>
           </div>
         </section>
-        
+
         {(this.state.TEST_POPUP === null) ? null :
           <Popup onClose={this.TEST_CLOSE_POPUP.bind(this)}>
             {this.state.TEST_POPUP}
