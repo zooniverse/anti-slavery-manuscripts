@@ -15,7 +15,7 @@ const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
 
 //Misc Constants
-const TEMPORARY_HARDCODED_PROJECT_ID = '1651';  //Staging: http://localhost:3735/projects/darkeshard/transformers
+const TEMPORARY_HARDCODED_PROJECT_ID = '1764';  //Staging: http://localhost:3735/projects/wgranger-test/anti-slavery-testing
 const PROJECT_STATUS = {
   IDLE: 'project_status_idle',
   FETCHING: 'project_status_fetching',
@@ -35,7 +35,7 @@ const initialState = {
 
 const classifierReducer = (state = initialState, action) => {
   switch (action.type) {
-    
+
     //State Transition: we are going from idle to fetching a project.
     case FETCH_PROJECT:
       return Object.assign({}, state, {
@@ -43,20 +43,20 @@ const classifierReducer = (state = initialState, action) => {
         id: action.id,
         data: null,
       });
-    
+
     //State Transition: we tried fetching a project, and we're successful!
     case FETCH_PROJECT_SUCCESS:
       return Object.assign({}, state, {
         status: PROJECT_STATUS.READY,
         data: action.data,
       });
-    
+
     //State Transition: we tried fetching a project, but that didn't work...
     case FETCH_PROJECT_ERROR:
       return Object.assign({}, state, {
         status: PROJECT_STATUS.ERROR,
       });
-    
+
     default:
       return state;
   };
@@ -68,34 +68,34 @@ const classifierReducer = (state = initialState, action) => {
 
 const fetchProject = (id = TEMPORARY_HARDCODED_PROJECT_ID) => {
   return (dispatch) => {
-    
+
     //Step 1: tell the Redux store that we're about to attempt to fetch a project.
     //We'll transition from an idle state to the 'currently-trying-to-fetch' state.
     dispatch({
       type: FETCH_PROJECT,
       id,
     });
-    
+
     //Although fetchProject() is one simple function, it has three 'redux
     //actions' and four distinct states, simply to accommodate the nature of the
     //asynchronous Promise request. Speaking of which...
-    
+
     //Step 2: Begin the asynchronous magic!
     apiClient.type('projects').get(id)
     .then((project) => {
-      
+
       //Step 3a: Tell the Redux store we're successful, along with the data we fetched.
       dispatch({
         type: FETCH_PROJECT_SUCCESS,
         data: project,
       });
-      
+
     })
     .catch((err) => {
-      
+
       //Step 3b: Tell the Redux store we screwed up.
       dispatch({ type: FETCH_PROJECT_ERROR });
-      
+
     });
   };
 }
