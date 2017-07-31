@@ -16,6 +16,7 @@ export default class AnnotationsPane extends React.Component {
   constructor(props) {
     super(props);
     this.renderAnnotationInProgress = this.renderAnnotationInProgress.bind(this);
+    this.renderAnnotations = this.renderAnnotations.bind(this);
   }
 
   //----------------------------------------------------------------
@@ -24,28 +25,29 @@ export default class AnnotationsPane extends React.Component {
     const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
       <g transform={imageOffset}>
-        <g>
-          {this.renderAnnotationInProgress()}
-        </g>
+        {this.renderAnnotationInProgress()}
+        {this.renderAnnotations()}
       </g>
     );
   }
   
+  /*  Renders the annotation that the user is currently making, if there is one.
+   */
   renderAnnotationInProgress() {
     if (!this.props.annotationInProgress) return null;
     
-    const linePrefix = 'ANNOTATION_IN_PROGRESS_LINE_';
-    const pointPrefix = 'ANNOTATION_IN_PROGRESS_POINT_';
-    const lines = [];
-    const points = [];
+    const svgLinePrefix = 'ANNOTATION_IN_PROGRESS_LINE_';
+    const svgPointPrefix = 'ANNOTATION_IN_PROGRESS_POINT_';
+    const svgLines = [];
+    const svgPoints = [];
     
     for (let i = 0; i < this.props.annotationInProgress.points.length; i++) {
       const point = this.props.annotationInProgress.points[i];
       
       if (i === this.props.annotationInProgress.points.length-1) {  //Final node: click to finish annotation.
-        points.push(
+        svgPoints.push(
           <circle
-            key={pointPrefix+i}
+            key={svgPointPrefix+i}
             cx={point.x} cy={point.y} r={10} fill="#c33"
             className="end"
             style={{cursor: 'pointer'}}
@@ -53,19 +55,19 @@ export default class AnnotationsPane extends React.Component {
           />
         );  
       } else {
-        points.push(
+        svgPoints.push(
           <circle
-            key={pointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#3cf"
+            key={svgPointPrefix+i}
+            cx={point.x} cy={point.y} r={10} fill="#3fc"
           />
         );
       }
       
       if (i > 0) {
         const prevPoint = this.props.annotationInProgress.points[i-1];
-        lines.push(
+        svgLines.push(
           <line
-            key={linePrefix+(i-1)}
+            key={svgLinePrefix+(i-1)}
             x1={prevPoint.x} y1={prevPoint.y}
             x2={point.x} y2={point.y}
             stroke="#39c" strokeWidth="2"
@@ -76,10 +78,56 @@ export default class AnnotationsPane extends React.Component {
     
     return (
       <g className="annotation-in-progress">
-        {lines}
-        {points}
+        {svgLines}
+        {svgPoints}
       </g>
     );
+  }
+  
+  /*  Renders all the annotations that the user has completed.
+      WARNING: Not to be confused with annotations from other users!
+   */
+  renderAnnotations() {
+    if (!this.props.annotations) return null;
+    
+    const annotationPrefix = 'ANNOTATION_';
+    
+    return this.props.annotations.map((annotation, h) => {
+      const svgLinePrefix = `ANNOTATION_${h}_LINE_`;
+      const svgPointPrefix = `ANNOTATION_${h}_POINT_`;
+      const svgLines = [];
+      const svgPoints = [];
+      
+      for (let i = 0; i < annotation.points.length; i++) {
+        const point = annotation.points[i];
+
+        svgPoints.push(
+          <circle
+            key={svgPointPrefix+i}
+            cx={point.x} cy={point.y} r={10} fill="#3cf"
+          />
+        );
+
+        if (i > 0) {
+          const prevPoint = annotation.points[i-1];
+          svgLines.push(
+            <line
+              key={svgLinePrefix+(i-1)}
+              x1={prevPoint.x} y1={prevPoint.y}
+              x2={point.x} y2={point.y}
+              stroke="#39c" strokeWidth="2"
+            />
+          );
+        }
+      }
+    
+      return (
+        <g className="annotation" key={annotationPrefix + h}>
+          {svgLines}
+          {svgPoints}
+        </g>
+      );
+    });
   }
 }
 
