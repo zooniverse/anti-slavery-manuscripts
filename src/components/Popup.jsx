@@ -7,7 +7,7 @@ class Popup extends React.Component {
     this.popupBody = null;
     this.close = this.close.bind(this);
   }
-  
+
   render() {
     return (
       <div className="popup" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
@@ -20,12 +20,12 @@ class Popup extends React.Component {
       </div>
     );
   }
-  
+
   close(e) {
     this.props.onClose && this.props.onClose();
     return this.stopEvent(e);
   }
-  
+
   stopEvent(e) {
     e.preventDefault && e.preventDefault();
     e.stopPropagation && e.stopPropagation();
