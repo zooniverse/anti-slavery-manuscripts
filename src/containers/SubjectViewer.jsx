@@ -357,7 +357,6 @@ class SubjectViewer extends React.Component {
     
     //Compensate for the Subject image having an offset that aligns its centre
     //to the (0,0) origin
-    //console.log(this.props.imageSize);
     inputX = inputX + this.props.imageSize.width / 2;
     inputY = inputY + this.props.imageSize.height / 2;
     
