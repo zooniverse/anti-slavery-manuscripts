@@ -34,7 +34,7 @@ import {
 } from '../ducks/subject-viewer';
   
 import {
-  addAnnotationPoint, completeAnnotation,
+  addAnnotationPoint, completeAnnotation, selectAnnotation,
   ANNOTATION_STATUS,
 } from '../ducks/annotations';
 
@@ -69,6 +69,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
+    this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     
     //Mouse or touch pointer
     this.pointer = {
@@ -118,6 +119,7 @@ class SubjectViewer extends React.Component {
               annotationInProgress={this.props.annotationInProgress}
               annotations={this.props.annotations}
               onCompleteAnnotation={this.onCompleteAnnotation}
+              onSelectAnnotation={this.onSelectAnnotation}
             />
           </g>
           {(!DEV_MODE) ? null :
@@ -277,9 +279,14 @@ class SubjectViewer extends React.Component {
   /*  Triggers when the user clicks on the final node/point of an
       annotation-in-progress.
    */
-  onCompleteAnnotation(e) {
+  onCompleteAnnotation() {
     this.props.dispatch(completeAnnotation());
-    return Utility.stopEvent(e);
+  }
+    
+  /*  Triggers when the user clicks on a specific line of annotation.
+   */
+  onSelectAnnotation(indexOfAnnotation) {
+    this.props.dispatch(selectAnnotation(indexOfAnnotation));
   }
 
   //----------------------------------------------------------------

@@ -11,6 +11,7 @@ AnnotationsPane.jsx for details.
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Utility } from '../lib/Utility';
 
 export default class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -51,7 +52,18 @@ export default class AnnotationsPane extends React.Component {
             cx={point.x} cy={point.y} r={10} fill="#c33"
             className="end"
             style={{cursor: 'pointer'}}
-            onMouseUp={this.props.onCompleteAnnotation}
+            onClick={(e) => {
+              if (this.props.onCompleteAnnotation) {
+                this.props.onCompleteAnnotation();
+              }
+              return Utility.stopEvent(e);
+            }}
+            onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
+              return Utility.stopEvent(e);
+            }}
+            onMouseUp={(e) => {
+              return Utility.stopEvent(e);
+            }}
           />
         );  
       } else {
@@ -92,9 +104,9 @@ export default class AnnotationsPane extends React.Component {
     
     const annotationPrefix = 'ANNOTATION_';
     
-    return this.props.annotations.map((annotation, h) => {
-      const svgLinePrefix = `ANNOTATION_${h}_LINE_`;
-      const svgPointPrefix = `ANNOTATION_${h}_POINT_`;
+    return this.props.annotations.map((annotation, indexOfAnnotation) => {
+      const svgLinePrefix = `ANNOTATION_${indexOfAnnotation}_LINE_`;
+      const svgPointPrefix = `ANNOTATION_${indexOfAnnotation}_POINT_`;
       const svgLines = [];
       const svgPoints = [];
       
@@ -122,7 +134,23 @@ export default class AnnotationsPane extends React.Component {
       }
     
       return (
-        <g className="annotation" key={annotationPrefix + h}>
+        <g
+          className="annotation"
+          key={annotationPrefix + indexOfAnnotation}
+          style={{cursor: 'pointer'}}
+          onClick={(e) => {
+            if (this.props.onSelectAnnotation) {
+              this.props.onSelectAnnotation(indexOfAnnotation);
+            }
+            return Utility.stopEvent(e);
+          }}
+          onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
+            return Utility.stopEvent(e);
+          }}
+          onMouseUp={(e) => {
+            return Utility.stopEvent(e);
+          }}
+        >
           {svgLines}
           {svgPoints}
         </g>
@@ -133,6 +161,7 @@ export default class AnnotationsPane extends React.Component {
 
 AnnotationsPane.propTypes = {
   onCompleteAnnotation: PropTypes.func,
+  onSelectAnnotation: PropTypes.func,
   //--------
   imageSize: PropTypes.shape({
     width: PropTypes.number,
@@ -159,6 +188,7 @@ AnnotationsPane.propTypes = {
 
 AnnotationsPane.defaultProps = {
   onCompleteAnnotation: null,
+  onSelectAnnotation: null,
   //--------
   imageSize: {
     width: 0,

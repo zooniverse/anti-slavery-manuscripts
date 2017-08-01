@@ -9,6 +9,7 @@ Redux Duck: Annotations
 //Action Types
 const ADD_ANNOTATION_POINT = 'ADD_ANNOTATION_POINT';
 const COMPLETE_ANNOTATION = 'COMPLETE_ANNOTATION';
+const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
 
 //Misc Constants
 const ANNOTATION_STATUS = {
@@ -55,6 +56,15 @@ const subjectReducer = (state = initialState, action) => {
         status: ANNOTATION_STATUS.IDLE,
         annotationInProgress: null,
         annotations,
+        selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
+      });
+    
+    case SELECT_ANNOTATION:
+      const selectedAnnotation = (state.annotations && state.annotations[action.index])
+        ? state.annotations[action.index]
+        : null;
+      return Object.assign({}, state, {
+        selectedAnnotation
       });
       
     default:
@@ -71,6 +81,15 @@ const addAnnotationPoint = (x, y) => {
     dispatch({
       type: ADD_ANNOTATION_POINT,
       x, y,
+    });
+  };
+};
+
+const selectAnnotation = (index) => {
+  return (dispatch) => {
+    dispatch({
+      type: SELECT_ANNOTATION,
+      index
     });
   };
 };

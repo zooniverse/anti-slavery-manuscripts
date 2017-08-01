@@ -35,7 +35,6 @@ class ClassifierContainer extends React.Component {
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.showMetadata = this.showMetadata.bind(this);
 
-    //TEMPORARY
     this.state = {
       popup: null,
     }
