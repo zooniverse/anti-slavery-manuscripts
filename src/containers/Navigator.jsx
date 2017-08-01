@@ -9,7 +9,7 @@ import {
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
-import getSubjectLocation from '../lib/get-subject-location';
+import { getSubjectLocation } from '../lib/get-subject-location';
 
 class Navigator extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Navigator extends React.Component {
     const SVG_HEIGHT = 150;
     let scale = 0.1;
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
-      scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
+      scale = Math.max(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
     }
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
     const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;

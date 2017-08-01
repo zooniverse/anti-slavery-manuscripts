@@ -25,14 +25,14 @@ import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
-import getSubjectLocation from '../lib/get-subject-location';
+import { getAllLocations, getSubjectLocation } from '../lib/get-subject-location';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
-  
+
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
   ANNOTATION_STATUS,
@@ -70,7 +70,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
-    
+
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
@@ -80,14 +80,62 @@ class SubjectViewer extends React.Component {
 
     //Misc
     this.tmpTransform = null;
-    
+
     //State
     this.state = {
       pointerXYOnImage: null,
     };
   }
 
+  handleFrameChange() {
+
+  }
+
   //----------------------------------------------------------------
+
+  renderFrame() {
+    const SVG_WIDTH = 80;
+    const SVG_HEIGHT = 120;
+    let scale = 0.1;
+    let images;
+    const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
+    if (this.props.currentSubject) {
+      console.log(getAllLocations(this.props.currentSubject));
+    }
+
+    if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
+      scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
+    }
+
+    return (
+      <div className="related-images__frames">
+        <svg
+          style={{ width: `${80}px`, height: `${120}px` }}
+          ref={(c) => { this.svg = c; }}
+          viewBox={viewBox}
+        >
+          <g>
+            <SVGImage
+              ref={(c) => { this.svgImage = c; }}
+              src={"https://panoptes-uploads.zooniverse.org/staging/subject_location/40258985-b041-4bcc-99a1-1ee11bb76f87.png"}
+            />
+          </g>
+          {/* <g transform={transform}>
+            <rect
+              x={this.props.viewerSize.width / -2 / this.props.scaling}
+              y={this.props.viewerSize.height / -2 / this.props.scaling}
+              width={this.props.viewerSize.width / this.props.scaling}
+              height={this.props.viewerSize.height / this.props.scaling}
+              fill="none" stroke="red" strokeWidth="8px"
+            />
+          </g> */}
+        </svg>
+        <div>
+          <span>1 / 2</span>
+        </div>
+      </div>
+    )
+  }
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
@@ -97,6 +145,13 @@ class SubjectViewer extends React.Component {
 
     return (
       <section className="subject-viewer" ref={(c)=>{this.section=c}}>
+        <div className="related-images">
+          <div>
+            <h2>Related Images</h2>
+          </div>
+
+          {this.renderFrame()}
+        </div>
         <svg
           ref={(c)=>{this.svg=c}}
           viewBox="0 0 100 100"
@@ -275,14 +330,14 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   /*  Triggers when the user clicks on the final node/point of an
       annotation-in-progress.
    */
   onCompleteAnnotation() {
     this.props.dispatch(completeAnnotation());
   }
-    
+
   /*  Triggers when the user clicks on a specific line of annotation.
    */
   onSelectAnnotation(indexOfAnnotation) {
@@ -302,7 +357,7 @@ class SubjectViewer extends React.Component {
     return boundingBox;
   }
 
-  
+
   /*  Gets the pointer coordinates, relative to the Subject Viewer.
    */
   getPointerXY(e) {
@@ -324,10 +379,10 @@ class SubjectViewer extends React.Component {
 
     const inputX = (clientX - boundingBox.left) * sizeRatioX;
     const inputY = (clientY - boundingBox.top) * sizeRatioY;
-    
+
     return { x: inputX, y: inputY };
   }
-    
+
   /*  Gets the pointer coordinates, relative to the Subject image.
    */
   getPointerXYOnImage(e) {
@@ -335,35 +390,35 @@ class SubjectViewer extends React.Component {
     const pointerXY = this.getPointerXY(e);
     let inputX = pointerXY.x;
     let inputY = pointerXY.y;
-    
+
     //Safety checks
     if (this.props.scaling === 0) {
       alert('ERROR: unexpected issue with Subject image scaling.');
       console.error('ERROR: Invalid value - SubjectViewer.props.scaling is 0.');
       return pointerXY;
     }
-    
+
     //Compensate for the fact that the SVG Viewer has an offset that makes its
     //centre (not its top-left) is the (0,0) origin.
     inputX = inputX - this.props.viewerSize.width / 2;
     inputY = inputY - this.props.viewerSize.height / 2;
-    
+
     //Compensate for SVG transformations: scaling, then translations (in order)
     inputX = inputX / this.props.scaling - this.props.translationX;
     inputY = inputY / this.props.scaling - this.props.translationY;
-    
+
     //Compensate for SVG transformation: rotation
     const rotation = -this.props.rotation / 180 * Math.PI;
     const tmpX = inputX;
     const tmpY = inputY;
     inputX = tmpX * Math.cos(rotation) - tmpY * Math.sin(rotation);
     inputY = tmpX * Math.sin(rotation) + tmpY * Math.cos(rotation);
-    
+
     //Compensate for the Subject image having an offset that aligns its centre
     //to the (0,0) origin
     inputX = inputX + this.props.imageSize.width / 2;
     inputY = inputY + this.props.imageSize.height / 2;
-    
+
     return { x: inputX, y: inputY };
   }
 }
@@ -376,7 +431,7 @@ SubjectViewer.propTypes = {
   }),
   contrast: PropTypes.bool,
   dispatch: PropTypes.func,
-  //--------
+  imageSize: PropTypes.object,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -413,6 +468,10 @@ SubjectViewer.defaultProps = {
   contrast: false,
   currentSubject: null,
   //--------
+  imageSize: {
+    width: 0,
+    height: 0,
+  },
   rotation: 0,
   scaling: 1,
   translationX: 0,
