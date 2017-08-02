@@ -286,7 +286,11 @@ class SubjectViewer extends React.Component {
   /*  Triggers when the user clicks on a specific line of annotation.
    */
   onSelectAnnotation(indexOfAnnotation) {
-    this.props.dispatch(selectAnnotation(indexOfAnnotation));
+    //Don't allow an annotation to be selected if there's one in progress,
+    //otherwise it gets confusing.
+    if (this.props.annotationInProgress === null) {
+      this.props.dispatch(selectAnnotation(indexOfAnnotation));
+    }
   }
 
   //----------------------------------------------------------------
