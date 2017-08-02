@@ -14,13 +14,15 @@ Intended functionality:
   the sequence.
 
 NOTE: we've adjusted the (0,0) origin of the SVG to the CENTRE, instead of the
-default top left. Please review SubjectViewer.jsx and SVGImage.jsx for details.
+default top left. Please review SubjectViewer.jsx, SVGImage.jsx and
+AnnotationsPane.jsx for details.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SVGImage from '../components/SVGImage';
+import AnnotationsPane from '../components/AnnotationsPane';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 import getSubjectLocation from '../lib/get-subject-location';
@@ -30,6 +32,11 @@ import {
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
+  
+import {
+  addAnnotationPoint, completeAnnotation, selectAnnotation,
+  ANNOTATION_STATUS,
+} from '../ducks/annotations';
 
 const INPUT_STATE = {
   IDLE: 0,
@@ -57,10 +64,13 @@ class SubjectViewer extends React.Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
 
     //Other functions
-    this.getPointerXY = this.getPointerXY.bind(this);
     this.getBoundingBox = this.getBoundingBox.bind(this);
     this.fetchSubject = this.fetchSubject.bind(this);
-
+    this.getPointerXY = this.getPointerXY.bind(this);
+    this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
+    this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
+    this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
+    
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
@@ -70,13 +80,18 @@ class SubjectViewer extends React.Component {
 
     //Misc
     this.tmpTransform = null;
+    
+    //State
+    this.state = {
+      pointerXYOnImage: null,
+    };
   }
 
   //----------------------------------------------------------------
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
-    let subjectLocation;
+    let subjectLocation = undefined;
 
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
@@ -99,21 +114,30 @@ class SubjectViewer extends React.Component {
                 contrast={this.props.contrast}
               />
             )}
+            <AnnotationsPane
+              imageSize={this.props.imageSize}
+              annotationInProgress={this.props.annotationInProgress}
+              annotations={this.props.annotations}
+              onCompleteAnnotation={this.onCompleteAnnotation}
+              onSelectAnnotation={this.onSelectAnnotation}
+            />
           </g>
           {(!DEV_MODE) ? null :
-            <g className="developer-grid" transform={transform}>
+            <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
               {(()=>{
-                const MIN_VAL = -1000;
-                const MAX_VAL = 1000;
+                const MIN_VAL = 0;
+                const MAX_VAL = 2000;
                 const STEP_VAL = 100;
                 const STYLE = { stroke: '#fff', strokeWidth: 2 };
+                const STYLE_DIVISOR = { stroke: '#c99', strokeWidth: 2 };
                 const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
                 const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
                 const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
                 const arr = []
                 for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
-                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={STYLE} />);
-                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={STYLE} />);
+                  let styl = (v % 500 === 0) ? STYLE_DIVISOR : STYLE;
+                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={styl} />);
+                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={styl} />);
                 }
                 arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
                 arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
@@ -209,6 +233,8 @@ class SubjectViewer extends React.Component {
         translateY: this.props.translationY,
       };
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+      return Utility.stopEvent(e);
     }
   }
 
@@ -219,6 +245,9 @@ class SubjectViewer extends React.Component {
       this.pointer.now = { x: pointerXY.x, y: pointerXY.y };
       this.tmpTransform = false;
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+      const pointerXYOnImage = this.getPointerXYOnImage(e);
+      this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y));
     }
   }
 
@@ -246,6 +275,23 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
+  
+  /*  Triggers when the user clicks on the final node/point of an
+      annotation-in-progress.
+   */
+  onCompleteAnnotation() {
+    this.props.dispatch(completeAnnotation());
+  }
+    
+  /*  Triggers when the user clicks on a specific line of annotation.
+   */
+  onSelectAnnotation(indexOfAnnotation) {
+    //Don't allow an annotation to be selected if there's one in progress,
+    //otherwise it gets confusing.
+    if (this.props.annotationInProgress === null) {
+      this.props.dispatch(selectAnnotation(indexOfAnnotation));
+    }
+  }
 
   //----------------------------------------------------------------
 
@@ -256,9 +302,10 @@ class SubjectViewer extends React.Component {
     return boundingBox;
   }
 
+  
+  /*  Gets the pointer coordinates, relative to the Subject Viewer.
+   */
   getPointerXY(e) {
-    //Compensate for HTML elements
-    //----------------
     const boundingBox = this.getBoundingBox();
     let clientX = 0;
     let clientY = 0;
@@ -275,44 +322,133 @@ class SubjectViewer extends React.Component {
     const sizeRatioX = 1;
     const sizeRatioY = 1;
 
-    var inputX = (clientX - boundingBox.left) * sizeRatioX;
-    var inputY = (clientY - boundingBox.top) * sizeRatioY;
-    //----------------
-
+    const inputX = (clientX - boundingBox.left) * sizeRatioX;
+    const inputY = (clientY - boundingBox.top) * sizeRatioY;
+    
+    return { x: inputX, y: inputY };
+  }
+    
+  /*  Gets the pointer coordinates, relative to the Subject image.
+   */
+  getPointerXYOnImage(e) {
+    //Get the coordinates of the pointer on the Subject Viewer first.
+    const pointerXY = this.getPointerXY(e);
+    let inputX = pointerXY.x;
+    let inputY = pointerXY.y;
+    
+    //Safety checks
+    if (this.props.scaling === 0) {
+      alert('ERROR: unexpected issue with Subject image scaling.');
+      console.error('ERROR: Invalid value - SubjectViewer.props.scaling is 0.');
+      return pointerXY;
+    }
+    
+    //Compensate for the fact that the SVG Viewer has an offset that makes its
+    //centre (not its top-left) is the (0,0) origin.
+    inputX = inputX - this.props.viewerSize.width / 2;
+    inputY = inputY - this.props.viewerSize.height / 2;
+    
+    //Compensate for SVG transformations: scaling, then translations (in order)
+    inputX = inputX / this.props.scaling - this.props.translationX;
+    inputY = inputY / this.props.scaling - this.props.translationY;
+    
+    //Compensate for SVG transformation: rotation
+    const rotation = -this.props.rotation / 180 * Math.PI;
+    const tmpX = inputX;
+    const tmpY = inputY;
+    inputX = tmpX * Math.cos(rotation) - tmpY * Math.sin(rotation);
+    inputY = tmpX * Math.sin(rotation) + tmpY * Math.cos(rotation);
+    
+    //Compensate for the Subject image having an offset that aligns its centre
+    //to the (0,0) origin
+    inputX = inputX + this.props.imageSize.width / 2;
+    inputY = inputY + this.props.imageSize.height / 2;
+    
     return { x: inputX, y: inputY };
   }
 }
 
 SubjectViewer.propTypes = {
+  dispatch: PropTypes.func,
+  //--------
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
   contrast: PropTypes.bool,
   dispatch: PropTypes.func,
+  //--------
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
   viewerState: PropTypes.string,
+  viewerSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  imageSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  //--------
+  annotationsStatus: PropTypes.string,
+  annotationInProgress: PropTypes.shape({
+    text: PropTypes.string,
+    points: PropTypes.arrayOf(PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    })),
+  }),
+  annotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string,
+      points: PropTypes.arrayOf(PropTypes.shape({
+        x: PropTypes.number,
+        y: PropTypes.number,
+      })),
+    })
+  ),
 };
 SubjectViewer.defaultProps = {
   contrast: false,
+  currentSubject: null,
+  //--------
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  viewerSize: {
+    width: 0,
+    height: 0,
+  },
+  imageSize: {
+    width: 0,
+    height: 0,
+  },
+  //--------
+  annotationsStatus: ANNOTATION_STATUS.IDLE,
+  annotationInProgress: null,
+  annotations: [],
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
-  const store = state.subjectViewer;
+  const sv = state.subjectViewer;
+  const anno = state.annotations;
   return {
     currentSubject: state.subject.currentSubject,
-    contrast: store.contrast,
-    rotation: store.rotation,
-    scaling: store.scaling,
-    translationX: store.translationX,
-    translationY: store.translationY,
-    viewerState: store.viewerState,
+    contrast: sv.contrast,
+    //--------
+    rotation: sv.rotation,
+    scaling: sv.scaling,
+    translationX: sv.translationX,
+    translationY: sv.translationY,
+    viewerState: sv.viewerState,
+    viewerSize: sv.viewerSize,
+    imageSize: sv.imageSize,
+    //--------
+    annotationsStatus: anno.status,
+    annotationInProgress: anno.annotationInProgress,
+    annotations: anno.annotations,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store
