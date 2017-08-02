@@ -1,0 +1,61 @@
+@import "../../node_modules/react-select/dist/react-select.css"
+
+// Override default styles from react-select
+.search
+  padding-left: 0
+  padding-right: 0
+  background: #fff
+
+  .Select-control
+    border: none !important
+    box-shadow: none !important
+    background: none !important
+
+  .Select-placeholder
+    border: none !important
+    box-shadow: none !important
+    background: none !important
+
+  .Select-menu
+    max-height: 174px
+
+.collections-manager
+  font-size: 0.7em
+
+  &__search
+    display: flex
+    margin-top: 0.25em
+
+    > div
+      width: 15em
+
+  &__create
+    .collection-name-input
+      border: 1px solid #cccccc
+      border-color: #d9d9d9 #cccccc #b3b3b3
+      border-radius: 4px
+      box-shadow: none
+      box-sizing: border-box
+      font: inherit
+      margin: 4px 0 5px 0
+      padding: 8px 10px
+      width: 100%
+
+  &__form-actions
+    display: flex
+    margin-top: 1em
+
+    > *
+      flex: 1 0 auto
+
+    .submit-button-container
+      text-align: right
+
+  hr
+    margin: 1.25em 0
+
+  button
+    color: black
+    height: 2em
+    padding: 0.25rem 0.5rem
+    margin: auto 1em
