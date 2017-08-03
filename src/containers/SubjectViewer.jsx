@@ -21,11 +21,12 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
-import { getAllLocations, getSubjectLocation } from '../lib/get-subject-location';
+import { getSubjectLocation } from '../lib/get-subject-location';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -87,55 +88,7 @@ class SubjectViewer extends React.Component {
     };
   }
 
-  handleFrameChange() {
-
-  }
-
   //----------------------------------------------------------------
-
-  renderFrame() {
-    const SVG_WIDTH = 80;
-    const SVG_HEIGHT = 120;
-    let scale = 0.1;
-    let images;
-    const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
-    if (this.props.currentSubject) {
-      console.log(getAllLocations(this.props.currentSubject));
-    }
-
-    if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
-      scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
-    }
-
-    return (
-      <div className="related-images__frames">
-        <svg
-          style={{ width: `${80}px`, height: `${120}px` }}
-          ref={(c) => { this.svg = c; }}
-          viewBox={viewBox}
-        >
-          <g>
-            <SVGImage
-              ref={(c) => { this.svgImage = c; }}
-              src={"https://panoptes-uploads.zooniverse.org/staging/subject_location/40258985-b041-4bcc-99a1-1ee11bb76f87.png"}
-            />
-          </g>
-          {/* <g transform={transform}>
-            <rect
-              x={this.props.viewerSize.width / -2 / this.props.scaling}
-              y={this.props.viewerSize.height / -2 / this.props.scaling}
-              width={this.props.viewerSize.width / this.props.scaling}
-              height={this.props.viewerSize.height / this.props.scaling}
-              fill="none" stroke="red" strokeWidth="8px"
-            />
-          </g> */}
-        </svg>
-        <div>
-          <span>1 / 2</span>
-        </div>
-      </div>
-    )
-  }
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
@@ -145,13 +98,9 @@ class SubjectViewer extends React.Component {
 
     return (
       <section className="subject-viewer" ref={(c)=>{this.section=c}}>
-        <div className="related-images">
-          <div>
-            <h2>Related Images</h2>
-          </div>
 
-          {this.renderFrame()}
-        </div>
+        <FilmstripViewer />
+        
         <svg
           ref={(c)=>{this.svg=c}}
           viewBox="0 0 100 100"

@@ -14,7 +14,7 @@
     width: 6em
     position: absolute
 
-    div:first-child
+    > div:first-child
       display: flex
       transform: rotate(-90deg) translateX(-50%) translateY(-100%)
       width: 10em
@@ -22,16 +22,21 @@
       h2
         font-size: 0.8em
 
+    button
+      background: transparent
+      border: none
+      padding: 0
+
     &__frames
       position: absolute
-      top: 12.5em
+      top: 12em
       text-align: center
       width: 100%
       line-height: 0.8em
 
-      div
+      > div
         background: $dark-grey
-        margin: 0 auto
+        margin: 0.5em auto
         width: 80px
 
         span

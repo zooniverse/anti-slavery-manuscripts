@@ -22,9 +22,12 @@ function getSubjectLocation(subject, frame = 0) {
 }
 
 function getAllLocations(subject) {
-  return subject.locations.map((image) => {
+  return subject.locations.map((image, i) => {
     const mimeType = Object.keys(image)
-    return image[mimeType];
+    return {
+      src: image[mimeType],
+      frame: i
+    }
   });
 }
 

@@ -20,6 +20,7 @@ const MAX_SCALING = 10;
 const initialState = {
   //Image transformations
   contrast: false,
+  frame: 0,
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -40,6 +41,7 @@ const RESET_VIEW = 'RESET_VIEW';
 const SET_VIEWER_STATE = 'SET_VIEWER_STATE';
 const UPDATE_VIEWER_SIZE = 'UPDATE_VIEWER_SIZE';
 const UPDATE_IMAGE_SIZE = 'UPDATE_IMAGE_SIZE';
+const CHANGE_FRAME = 'CHANGE_FRAME';
 
 /*
 --------------------------------------------------------------------------------
@@ -113,6 +115,11 @@ const subjectViewerReducer = (state = initialState, action) => {
           width: action.width,
           height: action.height,
         },
+      });
+
+    case CHANGE_FRAME:
+      return Object.assign({}, state, {
+        frame: action.frame
       });
 
     default:
@@ -194,6 +201,15 @@ const updateImageSize = (width, height) => {
   }
 };
 
+const changeFrame = (frame) => {
+  return (dispatch) => {
+    dispatch({
+      type: CHANGE_FRAME,
+      frame
+    });
+  }
+};
+
 /*
 --------------------------------------------------------------------------------
  */
@@ -201,6 +217,7 @@ const updateImageSize = (width, height) => {
 export default subjectViewerReducer;
 
 export {
+  changeFrame,
   setContrast,
   setRotation,
   setScaling,
