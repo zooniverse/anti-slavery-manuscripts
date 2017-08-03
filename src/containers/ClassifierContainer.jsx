@@ -13,7 +13,8 @@ import { selectAnnotation, unselectAnnotation } from '../ducks/annotations';
 import SubjectViewer from './SubjectViewer';
 
 import Navigator from './Navigator';
-import FavoritesButton from '../components/FavoritesButton'
+import FilmstripViewer from '../components/FilmstripViewer';
+import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import ShowMetadata from '../components/ShowMetadata';
@@ -72,6 +73,11 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="green button">Done &amp; Talk</button>
           </div>
         </section>
+
+        <section>
+          <FilmstripViewer />
+        </section>
+
         <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
           <div>
@@ -174,9 +180,9 @@ class ClassifierContainer extends React.Component {
       </main>
     );
   }
-  
+
   //----------------------------------------------------------------
-  
+
   componentWillReceiveProps(next) {
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({

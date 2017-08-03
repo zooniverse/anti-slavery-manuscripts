@@ -17,8 +17,8 @@ class FilmstripViewer extends React.Component {
   }
 
   renderFrames() {
-    const SVG_WIDTH = 80;
-    const SVG_HEIGHT = 120;
+    const SVG_WIDTH = 40;
+    const SVG_HEIGHT = 60;
     let scale = 0.1;
     let images = [];
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
@@ -30,7 +30,7 @@ class FilmstripViewer extends React.Component {
         <div className="related-images__frame">
           <button onClick={this.changeFrame.bind(this, i)}>
             <svg
-              style={{ width: `${80}px`, height: `${120}px` }}
+              style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
               ref={(c) => { this.svg = c; }}
               viewBox={viewBox}
             >

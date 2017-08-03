@@ -8,40 +8,45 @@
     background: $light-grey
     border: 1px solid #fff  //TMP: Borders offer visual differentiation but may interfere with precise mathematical calculations of width.
 
-  .related-images
-    background: $mid-grey
-    height: 100%
-    width: 6em
-    position: absolute
+.related-images
+  background: $mid-grey
+  height: 100%
+  overflow: hidden
+  width: 3em
 
-    > div:first-child
-      display: flex
-      transform: rotate(-90deg) translateX(-50%) translateY(-100%)
-      width: 10em
+  > div:first-child
+    transform: rotate(-90deg) translateX(-50%) translateY(-135%)
+    width: 7em
 
-      h2
-        font-size: 0.8em
+    h2
+      font-size: 0.6em
 
-    button
-      background: transparent
-      border: none
-      padding: 0
+  button
+    background: transparent
+    border: none
+    padding: 0
 
-    &__frames
-      position: absolute
-      top: 12em
-      text-align: center
-      width: 100%
-      line-height: 0.8em
+  &__frame
+    margin: 0 1em
 
-      > div
-        background: $dark-grey
-        margin: 0.5em auto
-        width: 80px
+  &__frames
+    line-height: 0.8em
+    position: relative
+    top: 8em
+    text-align: center
+    width: 100%
 
-        span
-          color: white
-          font-size: 0.5em
+    > div
+      background: $dark-grey
+      margin: 0.5em 0.5em
+
+      button
+        font-size: 0.75em
+        line-height: 0.8em
+
+      span
+        color: white
+        font-size: 0.5em
 
 //TODO: review loading and error indicators.
 

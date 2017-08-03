@@ -62,6 +62,12 @@ export default class SVGImage extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.src !== this.image.src) {
+      this.image.src = nextProps.src;
+    }
+  }
+
   render() {
     const invertFilter = this.props.contrast ? { filter: FILTER } : {};
 
