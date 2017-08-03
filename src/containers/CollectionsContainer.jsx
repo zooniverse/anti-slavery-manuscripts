@@ -38,10 +38,12 @@ class CollectionContainer extends React.Component {
     const collection = { display_name, private: privateChecked, links }
 
     apiClient.type('collections').create(collection).save()
+      .then(() => {
+        this.props.closePopup();
+      })
       .catch((e) => {
         this.setState({ error: e.toString() })
       })
-    this.props.closePopup();
   }
 
   searchCollections(value) {

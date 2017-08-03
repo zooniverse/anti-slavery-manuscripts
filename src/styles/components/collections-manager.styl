@@ -2,9 +2,10 @@
 
 // Override default styles from react-select
 .search
+  background: #fff
   padding-left: 0
   padding-right: 0
-  background: #fff
+  position: relative
 
   .Select-control
     border: none !important
@@ -22,9 +23,21 @@
 .collections-manager
   font-size: 0.7em
 
+  &__error
+    color: red
+    margin: 0.5em 0
+
   &__search
     display: flex
     margin-top: 0.25em
+    position: absolute
+
+    div:first-child
+      position: relative
+
+    .Select-input
+      position: absolute
+      top: 0
 
     > div
       width: 15em
@@ -52,7 +65,7 @@
       text-align: right
 
   hr
-    margin: 1.25em 0
+    margin: 4.5em 0 1.25em 0
 
   button
     color: black

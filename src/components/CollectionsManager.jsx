@@ -71,12 +71,12 @@ class CollectionsManager extends React.Component {
               <div className="submit-button-container">
                 <button className="button" disabled={this.state.disableAdd} type="submit">Add to Collection</button>
               </div>
-              {this.props.error && (
-                <div>
-                  {this.props.error}
-                </div>
-              )}
             </div>
+            {this.props.error && (
+              <div className="collections-manager__error">
+                {this.props.error}
+              </div>
+            )}
           </form>
         </div>
 

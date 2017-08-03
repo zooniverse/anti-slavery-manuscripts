@@ -147,12 +147,14 @@ class ClassifierContainer extends React.Component {
               <FavoritesButton favorite={this.props.favoriteSubject} toggleFavorite={this.toggleFavorite} />
             )}
 
-            <button className="flat-button block" onClick={this.showCollections}>
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-list" />
-              </span>
-              <span>Collection</span>
-            </button>
+            {this.props.user && (
+              <button className="flat-button block" onClick={this.showCollections}>
+                <span className="classifier-toolbar__icon">
+                  <i className="fa fa-list" />
+                </span>
+                <span>Collection</span>
+              </button>
+            )}
 
             <button className="flat-button block" onClick={this.showMetadata}>
               <span className="classifier-toolbar__icon">
