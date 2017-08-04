@@ -10,24 +10,56 @@ class FilmstripViewer extends React.Component {
     super(props);
 
     this.renderFrames = this.renderFrames.bind(this);
+    this.scroll = this.scroll.bind(this);
+    this.scrollTop = this.scrollTop.bind(this);
   }
 
   changeFrame(i) {
     this.props.dispatch(changeFrame(i))
   }
 
+  scrollTop() {
+    let i = 0;
+
+    const scroll = () => {
+      this.viewport.scrollTop -= 20;
+      i += 1;
+
+      if (i < 10) {
+        setTimeout(scroll, 20);
+      }
+    }
+    scroll();
+  }
+
+  scroll() {
+    let i = 0;
+
+    const scroll = () => {
+      this.viewport.scrollTop += 20;
+      i += 1;
+
+      if (i < 10) {
+        setTimeout(scroll, 20);
+      }
+    }
+    scroll();
+  }
+
   renderFrames() {
     const SVG_WIDTH = 40;
     const SVG_HEIGHT = 60;
-    let scale = 0.1;
+    let scale = 0.08;
     let images = [];
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
     if (this.props.currentSubject) {
       images = getAllLocations(this.props.currentSubject);
     }
     const render = images.map((image, i) => {
+      const activeBorder = i === this.props.frame ? "related-images__frame--active" : ""
+
       return (
-        <div className="related-images__frame">
+        <div className={`related-images__frame ${activeBorder}`} ref={(el) => {this.strip = el; }}>
           <button onClick={this.changeFrame.bind(this, i)}>
             <svg
               style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
@@ -57,14 +89,18 @@ class FilmstripViewer extends React.Component {
 
   render() {
     return (
-      <div className="related-images">
-        <div>
-          <h2>Related Images</h2>
+      <section className="filmstrip-viewer" style={{height: this.props.viewerSize.height}}>
+        <button className="related-images__top" onClick={this.scrollTop}><i className="fa fa-chevron-up" /></button>
+        <div className="related-images" ref={(el) => {this.viewport = el; }} style={{height: this.props.viewerSize.height}}>
+          <div>
+            <h2>Related Images</h2>
+          </div>
+
+          {this.renderFrames()}
+
         </div>
-
-        {this.renderFrames()}
-
-      </div>
+        <button className="related-images__down" onClick={this.scroll}><i className="fa fa-chevron-down" /></button>
+      </section>
     )
   }
 }
@@ -93,6 +129,7 @@ const mapStateToProps = (state, ownProps) => {
     currentSubject: state.subject.currentSubject,
     frame: sv.frame,
     imageSize: sv.imageSize,
+    viewerSize: sv.viewerSize
   }
 }
 

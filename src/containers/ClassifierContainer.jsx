@@ -74,9 +74,7 @@ class ClassifierContainer extends React.Component {
           </div>
         </section>
 
-        <section>
-          <FilmstripViewer />
-        </section>
+        <FilmstripViewer />
 
         <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
