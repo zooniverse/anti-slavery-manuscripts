@@ -17,6 +17,7 @@ import FavoritesButton from '../components/FavoritesButton'
 import Popup from '../components/Popup';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import ShowMetadata from '../components/ShowMetadata';
+import CollectionsContainer from './CollectionsContainer';
 import Divider from '../images/img_divider.png';
 
 const ZOOM_STEP = 0.1;
@@ -36,6 +37,8 @@ class ClassifierContainer extends React.Component {
     this.useContrast = this.useContrast.bind(this);
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.showMetadata = this.showMetadata.bind(this);
+    this.showCollections = this.showCollections.bind(this);
+    this.closePopup = this.closePopup.bind(this);
 
     this.state = {
       popup: null,
@@ -145,12 +148,14 @@ class ClassifierContainer extends React.Component {
               <FavoritesButton favorite={this.props.favoriteSubject} toggleFavorite={this.toggleFavorite} />
             )}
 
-            <button className="flat-button block">
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-list" />
-              </span>
-              <span>Collection</span>
-            </button>
+            {this.props.user && (
+              <button className="flat-button block" onClick={this.showCollections}>
+                <span className="classifier-toolbar__icon">
+                  <i className="fa fa-list" />
+                </span>
+                <span>Collection</span>
+              </button>
+            )}
 
             <button className="flat-button block" onClick={this.showMetadata}>
               <span className="classifier-toolbar__icon">
@@ -227,6 +232,10 @@ class ClassifierContainer extends React.Component {
     this.setState({ popup: (
       <ShowMetadata metadata={this.props.currentSubject.metadata} />
     ) });
+  }
+
+  showCollections() {
+    this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> })
   }
 }
 
