@@ -83,7 +83,7 @@ const subjectViewerReducer = (state = initialState, action) => {
       let bestFitScale = 1;
       if (state.viewerSize.width && state.viewerSize.height &&
           state.imageSize.width && state.imageSize.height) {
-        bestFitScale = Math.max(
+        bestFitScale = Math.min(
           state.viewerSize.width / state.imageSize.width,
           state.viewerSize.height / state.imageSize.height
         );

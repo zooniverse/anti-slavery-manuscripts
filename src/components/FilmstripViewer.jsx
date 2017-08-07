@@ -11,37 +11,20 @@ class FilmstripViewer extends React.Component {
 
     this.renderFrames = this.renderFrames.bind(this);
     this.scroll = this.scroll.bind(this);
-    this.scrollTop = this.scrollTop.bind(this);
   }
 
   changeFrame(i) {
     this.props.dispatch(changeFrame(i))
   }
 
-  scrollTop() {
+  scroll(scrollDown = true) {
     let i = 0;
 
     const scroll = () => {
-      this.viewport.scrollTop -= 20;
+      scrollDown ? this.viewport.scrollTop += 20 : this.viewport.scrollTop -= 20
       i += 1;
 
-      if (i < 10) {
-        setTimeout(scroll, 20);
-      }
-    }
-    scroll();
-  }
-
-  scroll() {
-    let i = 0;
-
-    const scroll = () => {
-      this.viewport.scrollTop += 20;
-      i += 1;
-
-      if (i < 10) {
-        setTimeout(scroll, 20);
-      }
+      if (i < 10) { setTimeout(scroll, 20); }
     }
     scroll();
   }
@@ -50,16 +33,15 @@ class FilmstripViewer extends React.Component {
     const SVG_WIDTH = 40;
     const SVG_HEIGHT = 60;
     let scale = 0.08;
-    let images = [];
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
-    if (this.props.currentSubject) {
-      images = getAllLocations(this.props.currentSubject);
-    }
+    if (!this.props.currentSubject) { return }
+    const images = getAllLocations(this.props.currentSubject);
+
     const render = images.map((image, i) => {
       const activeBorder = i === this.props.frame ? "related-images__frame--active" : ""
 
       return (
-        <div className={`related-images__frame ${activeBorder}`} ref={(el) => {this.strip = el; }}>
+        <div key={i} className={`related-images__frame ${activeBorder}`} ref={(el) => {this.strip = el; }}>
           <button onClick={this.changeFrame.bind(this, i)}>
             <svg
               style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
@@ -88,9 +70,12 @@ class FilmstripViewer extends React.Component {
   }
 
   render() {
+    const renderButtons = this.props.currentSubject && this.props.currentSubject.locations.length > 5 ? true : false;
     return (
       <section className="filmstrip-viewer" style={{height: this.props.viewerSize.height}}>
-        <button className="related-images__top" onClick={this.scrollTop}><i className="fa fa-chevron-up" /></button>
+        {renderButtons && (
+          <button className="related-images__top" onClick={this.scroll.bind(this, false)}><i className="fa fa-chevron-up" /></button>
+        )}
         <div className="related-images" ref={(el) => {this.viewport = el; }} style={{height: this.props.viewerSize.height}}>
           <div>
             <h2>Related Images</h2>
@@ -99,7 +84,9 @@ class FilmstripViewer extends React.Component {
           {this.renderFrames()}
 
         </div>
-        <button className="related-images__down" onClick={this.scroll}><i className="fa fa-chevron-down" /></button>
+        {renderButtons && (
+          <button className="related-images__down" onClick={this.scroll.bind(this, true)}><i className="fa fa-chevron-down" /></button>
+        )}
       </section>
     )
   }
@@ -107,6 +94,7 @@ class FilmstripViewer extends React.Component {
 
 FilmstripViewer.propTypes = {
   currentSubject: PropTypes.shape({
+    locations: PropTypes.array,
     src: PropTypes.string,
   }),
   dispatch: PropTypes.func,
