@@ -22,9 +22,55 @@ class Navigator extends React.Component {
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
+    this.getPointerXY = this.getPointerXY.bind(this);
 
   }
   //----------------------------------------------------------------
+
+  componentDidMount() {
+    this.svg.addEventListener('click', this.getPointerXY);
+  }
+
+  componentWillUnmount() {
+    this.svg.addEventListener('click', this.getPointerXY);
+  }
+
+  getPointerXY(e) {
+    const ZOOM_STEP = 0.1;
+    const boundingBox = this.getBoundingBox();
+    let clientX = 0;
+    let clientY = 0;
+    if (e.clientX && e.clientY) {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    } else if (e.touches && e.touches.length > 0 && e.touches[0].clientX &&
+        e.touches[0].clientY) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
+
+    //SVG scaling: usually not an issue.
+    const sizeRatioX = 1;
+    const sizeRatioY = 1;
+
+    const inputX = (clientX - boundingBox.left) * sizeRatioX;
+    const inputY = (clientY - boundingBox.top) * sizeRatioY;
+
+    this.tmpTransform = {
+      scale: this.props.scaling,
+      translateX: this.props.translationX,
+      translateY: this.props.translationY,
+    };
+
+    console.log(this.tmpTransform.translateX + inputX / this.tmpTransform.scale);
+
+    this.props.dispatch(setTranslation(
+      this.tmpTransform.translateX + inputX * this.tmpTransform.scale,
+      this.tmpTransform.translateY + inputY * this.tmpTransform.scale,
+    ));
+    // return { x: inputX, y: inputY };
+    this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
+  }
 
   render() {
     const SVG_WIDTH = 150;
@@ -34,7 +80,7 @@ class Navigator extends React.Component {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
     }
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
-    const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
+    const transform = `translate(${this.props.translationX * this.props.scaling}, ${this.props.translationY * this.props.scaling}) rotate(${this.props.rotation})`;
     let subjectLocation;
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
@@ -45,7 +91,7 @@ class Navigator extends React.Component {
           ref={(c) => { this.svg = c; }}
           viewBox={viewBox}
         >
-          <g>
+          <g transform={transform}>
             {subjectLocation && (
               <SVGImage
                 ref={(c) => { this.svgImage = c; }}
@@ -53,7 +99,7 @@ class Navigator extends React.Component {
               />
             )}
           </g>
-          <g transform={transform}>
+          <g>
             <rect
               x={this.props.viewerSize.width / -2 / this.props.scaling}
               y={this.props.viewerSize.height / -2 / this.props.scaling}
