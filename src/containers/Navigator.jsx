@@ -79,10 +79,10 @@ Navigator.propTypes = {
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
-  imageSize: {
+  imageSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
-  },
+  }),
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
