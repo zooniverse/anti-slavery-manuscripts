@@ -11,6 +11,10 @@ import {
 } from '../ducks/subject-viewer';
 import getSubjectLocation from '../lib/get-subject-location';
 
+const SVG_WIDTH = 150;
+const SVG_HEIGHT = 150;
+const ZOOM_STEP = 0.1;
+
 class Navigator extends React.Component {
   constructor(props) {
     super(props);
@@ -22,24 +26,25 @@ class Navigator extends React.Component {
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
-    this.getPointerXY = this.getPointerXY.bind(this);
+    this.clickZoom = this.clickZoom.bind(this);
 
   }
   //----------------------------------------------------------------
 
   componentDidMount() {
-    this.svg.addEventListener('click', this.getPointerXY);
+    this.svg.addEventListener('click', this.clickZoom);
   }
 
   componentWillUnmount() {
-    this.svg.addEventListener('click', this.getPointerXY);
+    this.svg.addEventListener('click', this.clickZoom);
   }
 
-  getPointerXY(e) {
-    const ZOOM_STEP = 0.1;
+  clickZoom(e) {
     const boundingBox = this.getBoundingBox();
     let clientX = 0;
     let clientY = 0;
+    let newX;
+    let newY;
     if (e.clientX && e.clientY) {
       clientX = e.clientX;
       clientY = e.clientY;
@@ -56,25 +61,20 @@ class Navigator extends React.Component {
     const inputX = (clientX - boundingBox.left) * sizeRatioX;
     const inputY = (clientY - boundingBox.top) * sizeRatioY;
 
-    this.tmpTransform = {
-      scale: this.props.scaling,
-      translateX: this.props.translationX,
-      translateY: this.props.translationY,
-    };
-
-    console.log(this.tmpTransform.translateX + inputX / this.tmpTransform.scale);
-
-    this.props.dispatch(setTranslation(
-      this.tmpTransform.translateX + inputX * this.tmpTransform.scale,
-      this.tmpTransform.translateY + inputY * this.tmpTransform.scale,
-    ));
-    // return { x: inputX, y: inputY };
+    if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
+      const centerX = this.props.imageSize.width / -2
+      const centerY = this.props.imageSize.height / -2
+      const xScale = SVG_WIDTH / this.props.imageSize.width;
+      const yScale = SVG_HEIGHT / this.props.imageSize.height;
+      newX = centerX + (inputX / xScale);
+      newY = centerY + (inputY / yScale);
+    }
+    this.props.dispatch(setTranslation(-newX, -newY));
     this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
+    return Utility.stopEvent(e);
   }
 
   render() {
-    const SVG_WIDTH = 150;
-    const SVG_HEIGHT = 150;
     let scale = 0.1;
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
