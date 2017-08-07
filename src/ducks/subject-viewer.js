@@ -151,7 +151,6 @@ const setScaling = (scale) => {
 };
 
 const setTranslation = (x, y) => {
-  console.log(x, y);
   return (dispatch) => {
     dispatch({
       type: SET_TRANSLATION,

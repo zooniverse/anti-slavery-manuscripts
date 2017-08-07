@@ -264,8 +264,6 @@ class SubjectViewer extends React.Component {
           this.tmpTransform.translateX + pointerDelta.x / this.tmpTransform.scale,
           this.tmpTransform.translateY + pointerDelta.y / this.tmpTransform.scale,
         ));
-        console.log(this.pointer.now.x - this.pointer.start.x);
-        console.log(this.tmpTransform.translateX + pointerDelta.x / this.tmpTransform.scale);
       }
       return Utility.stopEvent(e);
     }
