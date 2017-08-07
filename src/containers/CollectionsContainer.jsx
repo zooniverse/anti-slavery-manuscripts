@@ -21,9 +21,12 @@ class CollectionContainer extends React.Component {
     if (this.props.selectedCollections.length) {
       this.props.selectedCollections.forEach((item) => {
         item.collection.addLink('subjects', [this.props.currentSubject.id])
+        .then(() => { this.props.closePopup(); })
+        .catch((e) => {
+          this.setState({ error: e.toString() })
+        })
       })
     }
-    this.props.closePopup();
   }
 
   onChange(collection) {
