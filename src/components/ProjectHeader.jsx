@@ -38,6 +38,7 @@ const ProjectHeader = ({ onIndex }) =>
       <Link
         activeClassName="project-header__link--active"
         className="project-header__link"
+        to="/about-the-collection"
       >
         About <i>the</i> Collection
       </Link>

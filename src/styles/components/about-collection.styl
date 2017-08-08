@@ -1,0 +1,244 @@
+@import "font-groups.styl"
+
+.about-the-collection
+  color: $dark-grey
+
+  &__intro
+    margin: 0 6em
+    flex-wrap: wrap
+
+    div:first-child
+      background-color: hsla(0, 100, 100, 0.55)
+      flex: 2 1 60%
+      margin-top: 4em
+      padding: 1.5em
+
+    a
+      @extend .secondary-head
+      cursor: pointer
+      display: inline-block
+      font-size: 0.7em
+      letter-spacing: 0.4em
+      margin: 2em 0
+
+    h2
+      @extend .secondary-head
+      font-size: 0.75em
+
+    h3
+      @extend .main-title
+      letter-spacing: 0.04em
+      font-size: 2.75em
+
+    i
+      @extend .secondary-conjunctions
+      border-bottom 1px solid #000
+      display: inline-block
+      font-size: 0.5em
+      margin-bottom: 0.75em
+      padding-bottom: 0.05em
+      vertical-align: middle
+
+    span
+      @extend .body-copy
+      font-size: 0.75em
+      line-height: 1.5em
+
+    div:nth-child(2)
+      flex: 1 1 40%
+      min-width: 12em
+      max-width: 18em
+      float: right
+
+      img
+        max-width: 18em
+        overflow: hidden
+        width: 100%
+
+      span
+        @extend .secondary-head
+        float: right
+        font-size: 0.5em
+        font-style: italic
+
+  &__significance
+    flex-wrap: wrap
+    margin: 6em 2.5em
+
+    > div:first-child
+      flex: 1
+      text-align: right
+
+      span
+        @extend .secondary-head
+        display: block
+        font-size: 0.5em
+        line-height: 1.75em
+        font-style: italic
+        text-align: right
+
+    > div:nth-child(2)
+      flex: 3
+      margin: 2em
+      min-width: 18em
+
+      a
+        @extend .secondary-head
+        display: block
+        font-size: 0.75em
+        letter-spacing: 0.4em
+        margin-top: 3em
+        pointer: cursor
+
+      h2
+        @extend .body-copy
+        font-size: 1.5em
+        margin: 0em
+
+      .columns
+        columns: 2
+
+        div
+          @extend .body-copy
+          font-size: 0.8em
+          line-height: 1.5em
+
+        div:nth-child(2)
+          margin: 1em 0
+
+  &__attribution
+    background-color: $sandy
+    min-height: 12em
+    padding: 3em 28%
+    text-align: center
+
+    span
+      @extend .secondary-conjunctions
+      font-size: 0.65em
+      font-weight: 600
+      letter-spacing: 0.05em
+      line-height: 1.75em
+
+    h2
+      @extend .secondary-head
+      font-size: 0.75em
+      letter-spacing: 0.35em
+      margin-top: 1em
+
+  &__timeline
+    margin: 2.5em
+
+    h2
+      @extend .secondary-head
+      font-size: 1.5em
+      letter-spacing: 0.05em
+      text-transform: lowercase
+
+    div
+      font-size: 0.75em
+      justify-content: center
+      margin: 1em 2em
+
+  &__notable-figures
+    margin: 2.5em
+    position: relative
+
+    div:first-child
+      max-height: 20em
+      overflow: hidden
+      position: absolute
+      width: 100%
+      z-index: -1
+
+      span
+        @extend .secondary-head
+        display: inline-block
+        font-size: 0.5em
+        margin-left: 4em
+        max-width: 50%
+
+      img
+        max-height: 20em
+        object-fit: cover
+        overflow: hidden
+        width: 100%
+
+    div:nth-child(2)
+      margin: auto 2em 4em 2em
+      flex: 3
+      max-width: 50%
+      text-align: right
+
+      img
+        max-height: 10em
+        width: auto
+
+      span
+        @extend .secondary-head
+        display: inline-block
+        font-size: 0.5em
+
+    div:nth-child(3)
+      background: white
+      margin: 12em 3em 0 3em
+      flex: 2
+      padding: 2em
+
+      h2
+        @extend .body-copy
+        font-size: 2em
+        margin: 0
+
+      span
+        @extend .body-copy
+        display: inline-block
+        font-size: 0.8em
+        line-height: 1.5em
+        margin-bottom: 0.5em
+
+  &__provenance
+    background: $sandy
+    padding: 4em 8em
+    display: flex
+
+    div:first-child
+      margin-right: 2em
+
+      span
+        @extend .body-copy
+        display: inline-block
+        margin-bottom: 1em
+        line-height: 1.5em
+
+      h2
+        @extend .body-copy
+        font-size: 2em
+        margin: 0
+
+      a
+        @extend .secondary-head
+        font-size: 0.8em
+
+    div:nth-child(2)
+      margin: 2em
+      max-width: 50%
+      text-align: right
+
+      span
+        @extend .secondary-head
+        font-size: 0.8em
+        font-style: italic
+
+      img
+        max-height: 20em
+
+  &__transcribe
+    @extend .secondary-head
+    font-size: 0.8em
+    margin: 4em 0
+    text-align: center
+
+  .project-background
+    background-image: url('../images/home-bg.jpg')
+    height: 25em
+    top: 2em
