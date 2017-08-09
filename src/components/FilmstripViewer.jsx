@@ -30,31 +30,16 @@ class FilmstripViewer extends React.Component {
   }
 
   renderFrames() {
-    const SVG_WIDTH = 40;
-    const SVG_HEIGHT = 60;
-    let scale = 0.08;
-    const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
     if (!this.props.currentSubject) { return }
     const images = getAllLocations(this.props.currentSubject);
 
     const render = images.map((image, i) => {
-      const activeBorder = i === this.props.frame ? "related-images__frame--active" : ""
+      const activeBorder = i === this.props.frame ? "related-images__frame--active" : "";
 
       return (
         <div key={i} className={`related-images__frame ${activeBorder}`} ref={(el) => {this.strip = el; }}>
           <button onClick={this.changeFrame.bind(this, i)}>
-            <svg
-              style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
-              ref={(c) => { this.svg = c; }}
-              viewBox={viewBox}
-            >
-              <g>
-                <SVGImage
-                  ref={(c) => { this.svgImage = c; }}
-                  src={image.src}
-                />
-              </g>
-            </svg>
+            <img alt={`Frame ${i + 1}`} src={image.src} style={{ width: "40px", height: "60px" }} />
             <div>
               <span> {i + 1} / {images.length}</span>
             </div>
@@ -70,7 +55,8 @@ class FilmstripViewer extends React.Component {
   }
 
   render() {
-    const renderButtons = this.props.currentSubject && this.props.currentSubject.locations.length > 5 ? true : false;
+    const MINIMUM_IMAGES_FOR_SCROLL_BUTTONS = 5;
+    const renderButtons = this.props.currentSubject && this.props.currentSubject.locations.length > MINIMUM_IMAGES_FOR_SCROLL_BUTTONS;
     return (
       <section className="filmstrip-viewer" style={{height: this.props.viewerSize.height}}>
         {renderButtons && (
