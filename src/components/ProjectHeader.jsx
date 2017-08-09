@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 
-const ProjectHeader = ({ onIndex }) =>
+const ProjectHeader = ({ showTitle }) =>
   <div className="project-header">
-    {!onIndex && (
+    {!showTitle && (
       <h1 className="main-title">Anti-Slavery Manuscripts</h1>
     )}
     <nav className="project-header__nav">
@@ -46,11 +46,11 @@ const ProjectHeader = ({ onIndex }) =>
   </div>;
 
 ProjectHeader.defaultProps = {
-  onIndex: false,
+  showTitle: false,
 };
 
 ProjectHeader.propTypes = {
-  onIndex: PropTypes.bool,
+  showTitle: PropTypes.bool,
 };
 
 export default ProjectHeader;

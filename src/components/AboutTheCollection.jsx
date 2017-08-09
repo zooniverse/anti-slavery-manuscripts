@@ -13,9 +13,9 @@ class AboutTheCollection extends React.Component {
         <div className="project-background" />
           <div className="about-the-collection__intro flex-row">
             <div>
-              <h2>Anti-Slavery Manuscripts</h2>
+              <Link to="/">Anti-Slavery Manuscripts</Link>
               <h3>About <i>the</i> Collection</h3>
-              <span>
+              <span className="about-the-collection__content">
                 The Boston Public Library's Anti-Slavery collection-one of the largest
                 and most important collections of abolitionists material in the United
                 States-contains roughly 40,000 pieces of correspondence, broadsides,
@@ -26,19 +26,19 @@ class AboutTheCollection extends React.Component {
             </div>
             <div>
               <img role="presentation" src={AboutEnvelope}></img>
-              <span>Envelope addressed to the Westons, CA. 1832-1867</span>
+              <span className="footnote">Envelope addressed to the Westons, CA. 1832-1867</span>
             </div>
           </div>
 
           <div className="about-the-collection__significance flex-row">
             <div>
               <img role="presentation" src={AboutProgram}></img>
-              <span>
+              <span className="footnote">
                 Program of anti-slavery meetings in New England, Summer of 1857
               </span>
             </div>
             <div>
-              <h2>Significance of the Correspondence</h2>
+              <h2 className="about-the-collection__sub-head">Significance of the Correspondence</h2>
 
               <div className="columns">
                 <div>
@@ -93,29 +93,29 @@ class AboutTheCollection extends React.Component {
           <div className="about-the-collection__notable-figures flex-row">
             <div>
               <img src={NotableBackground} />
-              <span>
+              <span className="footnote">
                 Wendell Phillips, William Lloyd Garrison and George Thompson, 1851
               </span>
             </div>
             <div>
               <img role="presentation" src={AboutMaria} /><br />
-              <span>Maria Weston Chapman, CA 1864</span>
+              <span className="footnote">Maria Weston Chapman, CA 1864</span>
             </div>
             <div>
-              <h2>Notable Figures</h2>
-              <span>
+              <h2 className="about-the-collection__sub-head">Notable Figures</h2>
+              <span className="about-the-collection__content">
                 Letters from and to leading representatives of the abolitionist
                 movement in the Boston area, most notable <i>Liberator</i> editor
                 William Lloyd Garrison (1805-1879) and the Weston sisters of Weymouth,
                 Massachusetts, form the most significant component of the correspondence.
               </span>
-              <span>
-                Other mahor holdings include the papers of American abolitionists
-                Lydia Maria Child, Amos Augustus Phelps, and Smuel May Jr.; a substantial
+              <span className="about-the-collection__content">
+                Other major holdings include the papers of American abolitionists
+                Lydia Maria Child, Amos Augustus Phelps, and Samuel May Jr.; a substantial
                 amount of correspondence from British and Irish abolitionists such as
                 John Bishop Estlin, Harriet Martineau, and Richard and Hannah Webb,
-                who did much to promote the cuase both in their respective countries
-                and in the United States; and records of the America, Massachusetts,
+                who did much to promote the cause both in their respective countries
+                and in the United States; and records of the American, Massachusetts,
                 New England, and Female Anti-Slavery Societies.
               </span>
               <a href="#">View More</a>
@@ -124,15 +124,15 @@ class AboutTheCollection extends React.Component {
 
           <div className="about-the-collection__provenance flex-row">
             <div>
-              <h2>Provenance</h2>
-              <span>
+              <h2 className="about-the-collection__sub-head">Provenance</h2>
+              <span className="about-the-collection__content">
                 In the late 1890s, the family of William Lloyd Garrison, along with
                 others closely involved in the anti-slavery movement, presented the
                 library with a major gathering of correspondence, documents, and other
                 original material relating to the abolitionist cause from 1832 until
                 after the Civil War.
               </span>
-              <span>
+              <span className="about-the-collection__content">
                 The majority of the Anti-Slavery Collection was donated to the Boston
                 Public Library by the end of the 19th century by Theodore Parker, Wendell
                 Phillips, and the families of such abolitionists as William Lloyd
@@ -142,7 +142,7 @@ class AboutTheCollection extends React.Component {
             </div>
             <div>
               <img role="presentation" src={AboutBroadside} />
-              <span>Broadside, 1800</span>
+              <span className="footnote">Broadside, 1800</span>
             </div>
           </div>
 
