@@ -9,29 +9,29 @@ class SelectedAnnotation extends React.Component {
 
   render() {
     if (!this.props.annotation) return null;  //Sanity check. //TODO: Put a warning message instead, saying "No Annotations here, bro"
-    
+
     return (
       <div className="selected-annotation">
-        <h1>TODO</h1>
-        <h2>Text:</h2>
+        <h2>Transcribe</h2>
+        <span>
+          Enter the words you marked in the order you marked them. Open the
+          dropdown menu to use previous volunteers' transcriptions as a starting
+          point.
+        </span>
         <p>
           <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.props.annotation.text} />
         </p>
-        <h2>Points</h2>          
-        {(!this.props.annotation.points) ? null :
-          this.props.annotation.points.map((point, index) => {
-            return (
-              <p key={`selected_annoation_point_${index}`}>x: {point.x}, y: {point.y} </p>
-            );
-          })
-        }
+        <div className="selected-annotation__buttons">
+          <button>Done</button>
+          <button>Cancel</button>
+        </div>
       </div>
     );
   }
-          
+
   onTextUpdate() {
     if (!this.inputText) return;
-    
+
     //TODO
     //WARNING WARNING
     //This isn't the 'correct' way to update redux.annotations.annotations.
@@ -48,5 +48,5 @@ class SelectedAnnotation extends React.Component {
 }
 
 //TODO: propTypes, defaultProps.
- 
+
 export default SelectedAnnotation;

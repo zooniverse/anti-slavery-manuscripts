@@ -1,7 +1,21 @@
+@import "font-groups.styl"
+
 .selected-annotation
+  @extend .body-copy
+  display: flex
+  flex-direction: column
+
   input[type=text]
     font-family: inherit
     font-size: inherit
     width: 100%
     padding: 0.5em
-    
+
+  &__buttons
+    text-align: right
+
+    button
+      background: white
+      border: 1px solid $teal-blue
+      margin: 0 0.5em
+      padding: 0.25em 1.5em
