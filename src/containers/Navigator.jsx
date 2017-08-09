@@ -54,7 +54,6 @@ class Navigator extends React.Component {
       clientY = e.touches[0].clientY;
     }
 
-    //SVG scaling: usually not an issue.
     const sizeRatioX = 1;
     const sizeRatioY = 1;
 
@@ -70,7 +69,6 @@ class Navigator extends React.Component {
       newY = centerY + (inputY / yScale);
     }
     this.props.dispatch(setTranslation(-newX, -newY));
-    this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
     return Utility.stopEvent(e);
   }
 
@@ -80,7 +78,8 @@ class Navigator extends React.Component {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
     }
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
-    const transform = `translate(${this.props.translationX * this.props.scaling}, ${this.props.translationY * this.props.scaling}) rotate(${this.props.rotation})`;
+    const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
+    const rotate = `rotate(${this.props.rotation})`;
     let subjectLocation;
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
@@ -91,7 +90,7 @@ class Navigator extends React.Component {
           ref={(c) => { this.svg = c; }}
           viewBox={viewBox}
         >
-          <g transform={transform}>
+          <g transform={rotate}>
             {subjectLocation && (
               <SVGImage
                 ref={(c) => { this.svgImage = c; }}
@@ -99,7 +98,7 @@ class Navigator extends React.Component {
               />
             )}
           </g>
-          <g>
+          <g transform={transform}>
             <rect
               x={this.props.viewerSize.width / -2 / this.props.scaling}
               y={this.props.viewerSize.height / -2 / this.props.scaling}
