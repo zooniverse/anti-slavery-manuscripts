@@ -15,10 +15,13 @@ class App extends React.Component {
   }
 
   render() {
+    const path = this.props.location.pathname;
+    const showTitle = path === '/' || path === '/about-the-collection';
+
     return (
       <div>
         <Header />
-        <ProjectHeader onIndex={this.props.location.pathname === '/'} />
+        <ProjectHeader showTitle={showTitle} />
         {this.props.children}
       </div>
     );

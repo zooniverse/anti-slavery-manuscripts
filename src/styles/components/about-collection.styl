@@ -1,0 +1,200 @@
+@import "font-groups.styl"
+
+.about-the-collection
+  color: $dark-grey
+
+  a
+    @extend .secondary-head-link
+    border-bottom: 2px solid transparent
+
+    &:hover, &:focus
+      border-bottom: 2px solid $eggplant
+      color: $eggplant
+
+  > div
+    flex-wrap: wrap
+
+  &__content
+    @extend .body-copy
+    display: inline-block
+    font-size: 0.75em
+    margin-bottom: 1em
+    line-height: 1.5em
+
+  &__sub-head
+    @extend .body-copy
+    font-size: 1.5em
+    margin: 0
+
+  &__intro
+    margin: 4em 6em
+
+    a:first-child
+      margin-top: 0
+
+    div:first-child
+      background-color: hsla(0, 100, 100, 0.55)
+      flex: 2 1 60%
+      margin-top: 4em
+      padding: 1.5em
+
+      h3
+        @extend .main-title
+        letter-spacing: 0.04em
+        font-size: 2.75em
+
+      i
+        @extend .secondary-conjunctions
+        border-bottom 1px solid #000
+        display: inline-block
+        font-size: 0.5em
+        margin-bottom: 0.75em
+        padding-bottom: 0.05em
+        vertical-align: middle
+
+    div:nth-child(2)
+      flex: 1 1 40%
+      min-width: 12em
+      max-width: 18em
+      text-align: right
+
+      img
+        max-width: 18em
+        overflow: hidden
+        width: 100%
+
+  &__significance
+    margin: 6em 2.5em
+
+    > div:first-child
+      flex: 1
+      text-align: right
+
+    > div:nth-child(2)
+      flex: 3
+      margin: 2em
+      min-width: 18em
+
+      .columns
+        columns: 2
+
+        div
+          @extend .body-copy
+          font-size: 0.8em
+          line-height: 1.5em
+
+        div:nth-child(2)
+          margin: 1em 0
+
+  &__attribution
+    background-color: $sandy
+    min-height: 12em
+    padding: 3em 28%
+    text-align: center
+
+    span
+      @extend .secondary-conjunctions
+      font-size: 0.65em
+      font-weight: 600
+      letter-spacing: 0.05em
+      line-height: 1.75em
+
+    h2
+      @extend .secondary-head
+      font-size: 0.75em
+      letter-spacing: 0.35em
+      margin-top: 1em
+
+  &__timeline
+    margin: 2.5em
+
+    h2
+      @extend .secondary-head
+      font-size: 1.5em
+      letter-spacing: 0.05em
+      text-transform: lowercase
+
+    div
+      font-size: 0.75em
+      justify-content: center
+      margin: 1em 2em
+
+  &__notable-figures
+    margin: 2.5em
+    position: relative
+
+    div:first-child
+      max-height: 20em
+      overflow: hidden
+      position: absolute
+      width: 100%
+      z-index: -1
+
+      span
+        margin-left: 4em
+        max-width: 40%
+
+      img
+        max-height: 18em
+        object-fit: cover
+        overflow: hidden
+        width: 100%
+
+    div:nth-child(2)
+      margin: 20em 0em 4em 0em
+      flex: 2
+      text-align: right
+
+      @media (max-width: 834px)
+        margin-top: 15em
+
+      img
+        max-width: 100%
+        min-width: 12em
+        width: auto
+
+    div:nth-child(3)
+      background: white
+      flex: 1
+      margin: 12em 3em 0 3em
+      max-width: 22em
+      min-width: 18em
+      padding: 1em 2em
+
+      @media (max-width: 1000px)
+        margin-top: 8em
+
+      @media (max-width: 834px)
+        margin-top: 0
+
+  &__provenance
+    background: $sandy
+    padding: 4em 8em
+    display: flex
+
+    div:first-child
+      flex: 1
+      margin-right: 4em
+
+    div:nth-child(2)
+      flex: 2
+      margin: 2em 0
+      max-width: 60%
+      min-width: 16em
+      text-align: right
+
+      img
+        max-height: 20em
+        max-width: 100%
+
+  &__transcribe
+    @extend .secondary-head
+    font-size: 0.8em
+    letter-spacing: 0.4em
+    margin: 4em 0
+    text-align: center
+
+  .project-background
+    background-image: url('../images/home-bg.jpg')
+    height: 25em
+    top: 2em
