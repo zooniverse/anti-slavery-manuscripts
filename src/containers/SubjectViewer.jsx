@@ -32,7 +32,7 @@ import {
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
-  
+
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
   ANNOTATION_STATUS,
@@ -70,7 +70,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
-    
+
     //Mouse or touch pointer
     this.pointer = {
       start: { x: 0, y: 0 },
@@ -80,7 +80,7 @@ class SubjectViewer extends React.Component {
 
     //Misc
     this.tmpTransform = null;
-    
+
     //State
     this.state = {
       pointerXYOnImage: null,
@@ -275,14 +275,14 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     }
   }
-  
+
   /*  Triggers when the user clicks on the final node/point of an
       annotation-in-progress.
    */
   onCompleteAnnotation() {
     this.props.dispatch(completeAnnotation());
   }
-    
+
   /*  Triggers when the user clicks on a specific line of annotation.
    */
   onSelectAnnotation(indexOfAnnotation) {
@@ -302,7 +302,7 @@ class SubjectViewer extends React.Component {
     return boundingBox;
   }
 
-  
+
   /*  Gets the pointer coordinates, relative to the Subject Viewer.
    */
   getPointerXY(e) {
@@ -324,10 +324,10 @@ class SubjectViewer extends React.Component {
 
     const inputX = (clientX - boundingBox.left) * sizeRatioX;
     const inputY = (clientY - boundingBox.top) * sizeRatioY;
-    
+
     return { x: inputX, y: inputY };
   }
-    
+
   /*  Gets the pointer coordinates, relative to the Subject image.
    */
   getPointerXYOnImage(e) {
@@ -335,35 +335,35 @@ class SubjectViewer extends React.Component {
     const pointerXY = this.getPointerXY(e);
     let inputX = pointerXY.x;
     let inputY = pointerXY.y;
-    
+
     //Safety checks
     if (this.props.scaling === 0) {
       alert('ERROR: unexpected issue with Subject image scaling.');
       console.error('ERROR: Invalid value - SubjectViewer.props.scaling is 0.');
       return pointerXY;
     }
-    
+
     //Compensate for the fact that the SVG Viewer has an offset that makes its
     //centre (not its top-left) is the (0,0) origin.
     inputX = inputX - this.props.viewerSize.width / 2;
     inputY = inputY - this.props.viewerSize.height / 2;
-    
+
     //Compensate for SVG transformations: scaling, then translations (in order)
     inputX = inputX / this.props.scaling - this.props.translationX;
     inputY = inputY / this.props.scaling - this.props.translationY;
-    
+
     //Compensate for SVG transformation: rotation
     const rotation = -this.props.rotation / 180 * Math.PI;
     const tmpX = inputX;
     const tmpY = inputY;
     inputX = tmpX * Math.cos(rotation) - tmpY * Math.sin(rotation);
     inputY = tmpX * Math.sin(rotation) + tmpY * Math.cos(rotation);
-    
+
     //Compensate for the Subject image having an offset that aligns its centre
     //to the (0,0) origin
     inputX = inputX + this.props.imageSize.width / 2;
     inputY = inputY + this.props.imageSize.height / 2;
-    
+
     return { x: inputX, y: inputY };
   }
 }

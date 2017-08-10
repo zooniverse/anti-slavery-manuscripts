@@ -11,6 +11,10 @@ import {
 } from '../ducks/subject-viewer';
 import getSubjectLocation from '../lib/get-subject-location';
 
+const SVG_WIDTH = 150;
+const SVG_HEIGHT = 150;
+const ZOOM_STEP = 0.1;
+
 class Navigator extends React.Component {
   constructor(props) {
     super(props);
@@ -22,19 +26,60 @@ class Navigator extends React.Component {
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
+    this.clickZoom = this.clickZoom.bind(this);
 
   }
   //----------------------------------------------------------------
 
+  componentDidMount() {
+    this.svg.addEventListener('click', this.clickZoom);
+  }
+
+  componentWillUnmount() {
+    this.svg.addEventListener('click', this.clickZoom);
+  }
+
+  clickZoom(e) {
+    const boundingBox = this.getBoundingBox();
+    let clientX = 0;
+    let clientY = 0;
+    let newX;
+    let newY;
+    if (e.clientX && e.clientY) {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    } else if (e.touches && e.touches.length > 0 && e.touches[0].clientX &&
+        e.touches[0].clientY) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
+
+    const sizeRatioX = 1;
+    const sizeRatioY = 1;
+
+    const inputX = (clientX - boundingBox.left) * sizeRatioX;
+    const inputY = (clientY - boundingBox.top) * sizeRatioY;
+
+    if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
+      const centerX = this.props.imageSize.width / -2
+      const centerY = this.props.imageSize.height / -2
+      const xScale = SVG_WIDTH / this.props.imageSize.width;
+      const yScale = SVG_HEIGHT / this.props.imageSize.height;
+      newX = centerX + (inputX / xScale);
+      newY = centerY + (inputY / yScale);
+    }
+    this.props.dispatch(setTranslation(-newX, -newY));
+    return Utility.stopEvent(e);
+  }
+
   render() {
-    const SVG_WIDTH = 150;
-    const SVG_HEIGHT = 150;
     let scale = 0.1;
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
       scale = Math.min(SVG_WIDTH / this.props.imageSize.width, SVG_HEIGHT / this.props.imageSize.height);
     }
     const viewBox = `-${(SVG_WIDTH / scale) / 2} -${(SVG_HEIGHT / scale) / 2} ${SVG_WIDTH / scale} ${SVG_HEIGHT / scale}`;
     const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
+    const rotate = `rotate(${this.props.rotation})`;
     let subjectLocation;
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
 
@@ -45,7 +90,7 @@ class Navigator extends React.Component {
           ref={(c) => { this.svg = c; }}
           viewBox={viewBox}
         >
-          <g>
+          <g transform={rotate}>
             {subjectLocation && (
               <SVGImage
                 ref={(c) => { this.svgImage = c; }}
