@@ -68,6 +68,9 @@ module.exports = {
         fallback: 'style-loader',
         use: [{
           loader: 'css-loader',
+          options: {
+             includePaths: [path.resolve(__dirname, 'node_modules/zoo-grommet/dist')]
+          }
         }, {
           loader: 'stylus-loader',
           options: {
