@@ -21,4 +21,17 @@ function getSubjectLocation(subject, frame = 0) {
   return { type, format, src };
 }
 
-export default getSubjectLocation;
+function getAllLocations(subject) {
+  return subject.locations.map((image, i) => {
+    const mimeType = Object.keys(image)
+    return {
+      src: image[mimeType],
+      frame: i
+    }
+  });
+}
+
+export {
+  getAllLocations,
+  getSubjectLocation
+};

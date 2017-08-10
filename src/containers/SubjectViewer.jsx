@@ -21,11 +21,12 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
-import getSubjectLocation from '../lib/get-subject-location';
+import { getSubjectLocation } from '../lib/get-subject-location';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -93,10 +94,13 @@ class SubjectViewer extends React.Component {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
     let subjectLocation = undefined;
 
-    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
+    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
 
     return (
       <section className="subject-viewer" ref={(c)=>{this.section=c}}>
+
+        {/* <FilmstripViewer /> */}
+
         <svg
           ref={(c)=>{this.svg=c}}
           viewBox="0 0 100 100"
@@ -376,7 +380,8 @@ SubjectViewer.propTypes = {
   }),
   contrast: PropTypes.bool,
   dispatch: PropTypes.func,
-  //--------
+  frame: PropTypes.number,
+  imageSize: PropTypes.object,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -412,7 +417,12 @@ SubjectViewer.propTypes = {
 SubjectViewer.defaultProps = {
   contrast: false,
   currentSubject: null,
+  frame: 0,
   //--------
+  imageSize: {
+    width: 0,
+    height: 0,
+  },
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -438,6 +448,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     currentSubject: state.subject.currentSubject,
     contrast: sv.contrast,
     //--------
+    frame: sv.frame,
     rotation: sv.rotation,
     scaling: sv.scaling,
     translationX: sv.translationX,

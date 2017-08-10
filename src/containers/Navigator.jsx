@@ -9,7 +9,7 @@ import {
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
-import getSubjectLocation from '../lib/get-subject-location';
+import { getSubjectLocation } from '../lib/get-subject-location';
 
 const SVG_WIDTH = 150;
 const SVG_HEIGHT = 150;
@@ -81,7 +81,7 @@ class Navigator extends React.Component {
     const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
     const rotate = `rotate(${this.props.rotation})`;
     let subjectLocation;
-    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject).src;
+    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
 
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>
@@ -124,6 +124,7 @@ Navigator.propTypes = {
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
+  frame: PropTypes.number,
   imageSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
@@ -139,6 +140,7 @@ Navigator.propTypes = {
   }),
 };
 Navigator.defaultProps = {
+  frame: 0,
   imageSize: {
     width: 0,
     height: 0,
@@ -156,6 +158,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
   const store = state.subjectViewer;
   return {
     currentSubject: state.subject.currentSubject,
+    frame: store.frame,
     rotation: store.rotation,
     scaling: store.scaling,
     translationX: store.translationX,

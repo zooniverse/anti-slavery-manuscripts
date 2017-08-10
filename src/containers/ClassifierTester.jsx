@@ -10,7 +10,7 @@ service, without having to worry about the presentational side of things.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import getSubjectLocation from '../lib/get-subject-location';
+import { getSubjectLocation } from '../lib/get-subject-location';
 import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 
