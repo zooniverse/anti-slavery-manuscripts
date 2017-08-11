@@ -23,8 +23,10 @@ class App extends React.Component {
       <div>
         <Header />
         <ProjectHeader showTitle={showTitle} />
-          {this.props.children}
-        <ZooFooter />
+        {this.props.children}
+        <div className="grommet">
+          <ZooFooter />
+        </div>
       </div>
     );
   }
