@@ -78,7 +78,7 @@ class Home extends React.Component {
         <div className="home-page__community">
         </div>
         <div className="home-page__zooniverse">
-          <ZooniverseLogo height="3.5em" width="3.5em" />
+          <ZooniverseLogo className="zooniverse-logo" height="3.5em" width="3.5em" />
           <span>
             The Zooniverse is the world&#39;s largest and most popular platform
             for people-powered research. This research is made possible by
