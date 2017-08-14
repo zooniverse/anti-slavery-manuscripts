@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { getAllLocations } from '../lib/get-subject-location';
 import { changeFrame } from '../ducks/subject-viewer';
 
+const THUMB_WIDTH = 40;
+const THUMB_HEIGHT = 60;
+
 class FilmstripViewer extends React.Component {
   constructor(props) {
     super(props);
@@ -29,17 +32,26 @@ class FilmstripViewer extends React.Component {
     scroll();
   }
 
+  thumbnailPath(src) {
+    const thumbSize = `${THUMB_WIDTH}x${THUMB_HEIGHT}/`;
+    const thumbHost = 'https://thumbnails.zooniverse.org/';
+    const protomatch = /^(https?|ftp):\/\//;
+    const subjectLoc = src.replace(protomatch, '');
+    return thumbHost + thumbSize + subjectLoc;
+  }
+
   renderFrames() {
     if (!this.props.currentSubject) { return }
     const images = getAllLocations(this.props.currentSubject);
 
     const render = images.map((image, i) => {
       const activeBorder = i === this.props.frame ? "related-images__frame--active" : "";
+      const thumbnailSrc = this.thumbnailPath(image.src);
 
       return (
         <div key={i} className={`related-images__frame ${activeBorder}`} ref={(el) => {this.strip = el; }}>
           <button onClick={this.changeFrame.bind(this, i)}>
-            <img alt={`Frame ${i + 1}`} src={image.src} style={{ width: "40px", height: "60px" }} />
+            <img alt={`Frame ${i + 1}`} src={thumbnailSrc} style={{ width: '100%', height: 'auto' }} />
             <div>
               <span> {i + 1} / {images.length}</span>
             </div>
