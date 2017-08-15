@@ -60,6 +60,9 @@ module.exports = {
         loader: 'style-loader',
       }, {
         loader: 'css-loader',
+        options: {
+           includePaths: [path.resolve(__dirname, 'node_modules/zoo-grommet/dist'), path.resolve(__dirname, 'node_modules/zooniverse-react-components/lib/zooniverse-react-components.css')]
+        }
       }, {
         loader: 'stylus-loader',
         options: {

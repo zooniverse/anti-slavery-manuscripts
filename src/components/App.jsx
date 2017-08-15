@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
@@ -23,6 +24,9 @@ class App extends React.Component {
         <Header />
         <ProjectHeader showTitle={showTitle} />
         {this.props.children}
+        <div className="grommet">
+          <ZooFooter />
+        </div>
       </div>
     );
   }
