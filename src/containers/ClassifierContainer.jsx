@@ -40,8 +40,10 @@ class ClassifierContainer extends React.Component {
     this.showMetadata = this.showMetadata.bind(this);
     this.showCollections = this.showCollections.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.closeAnnotation = this.closeAnnotation.bind(this);
 
     this.state = {
+      annotation: null,
       popup: null,
     }
   }
@@ -151,6 +153,9 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
+
+        {this.state.annotation}
+
       </main>
     );
   }
@@ -160,18 +165,20 @@ class ClassifierContainer extends React.Component {
   componentWillReceiveProps(next) {
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
-        popup: <SelectedAnnotation annotation={next.selectedAnnotation} />
+        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
       });
     }
   }
 
   //----------------------------------------------------------------
 
+  closeAnnotation() {
+    this.setState({ annotation: null });
+    this.props.dispatch(unselectAnnotation());
+  }
+
   closePopup() {
     this.setState({ popup: null });
-    if (this.props.selectedAnnotation) {
-      this.props.dispatch(unselectAnnotation());
-    }
   }
 
   //----------------------------------------------------------------

@@ -34,6 +34,8 @@ const initialState = {
   annotationInProgress: null,  //Incomplete annotation. null if nothing is in progress.
   annotations: [],  //Completed annotations.
   selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
+  endClicks: [],
+  annotationPanePosition: null,
 };
 
 const subjectReducer = (state = initialState, action) => {
@@ -47,32 +49,40 @@ const subjectReducer = (state = initialState, action) => {
         status: ANNOTATION_STATUS.IN_PROGRESS,
         annotationInProgress,
       });
-    
+
     case COMPLETE_ANNOTATION:
       const annotations = (state.annotations)
         ? state.annotations.splice(0)  //Make a copy, don't just modify the current object, just to be sure we trigger Redux-React changers.
         : [];
       annotations.push(state.annotationInProgress);
+      const endClicks = (state.endClicks) ? state.endClicks.splice(0) : [];
+      endClicks.push(action.clickLocation);
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IDLE,
         annotationInProgress: null,
         annotations,
+        endClicks,
+        annotationPanePosition: action.clickLocation,
         selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
       });
-    
+
     case SELECT_ANNOTATION:
       const selectedAnnotation = (state.annotations && state.annotations[action.index])
         ? state.annotations[action.index]
         : null;
+      const annotationPanePosition = (state.endClicks && state.endClicks[action.index])
+        ? state.endClicks[action.index]
+        : null;
       return Object.assign({}, state, {
         selectedAnnotation,
+        annotationPanePosition,
       });
-    
+
     case UNSELECT_ANNOTATION:
       return Object.assign({}, state, {
         selectedAnnotation: null,
       });
-      
+
     default:
       return state;
   }
@@ -108,10 +118,11 @@ const unselectAnnotation = () => {
   };
 };
 
-const completeAnnotation = () => {
+const completeAnnotation = (clickLocation) => {
   return (dispatch) => {
     dispatch({
       type: COMPLETE_ANNOTATION,
+      clickLocation
     });
   };
 };

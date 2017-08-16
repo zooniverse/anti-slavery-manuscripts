@@ -1,21 +1,47 @@
 @import "font-groups.styl"
 
+.drag-handler
+  bottom: 1px !important
+  right: -3px !important
+
+.drag-handler:before
+  content: "\21F2"
+
 .selected-annotation
   @extend .body-copy
+  border-top: 0.25em solid $success
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
   display: flex
   flex-direction: column
+  height: 100%
+  overflow: hidden
+  padding: 0.25em 1em 1em 1em
+
+  h2
+    font-size: 0.8em
+
+  span
+    line-height: 1.25em
+    margin-bottom: 1em
+
+  button
+    background: transparent
+    border: none
+    float: right
 
   input[type=text]
+    border: 2px solid $dark-grey
     font-family: inherit
     font-size: inherit
     width: 100%
     padding: 0.5em
 
-  &__buttons
-    text-align: right
-
-    button
-      background: white
+  &__buttons button
       border: 1px solid $teal-blue
+      font-family: $sans-font
+      font-size: 0.8em
       margin: 0 0.5em
-      padding: 0.25em 1.5em
+      padding: 0.5em 3.5em
+
+      &:hover, &:focus
+        background: $teal-blue

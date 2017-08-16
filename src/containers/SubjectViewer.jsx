@@ -74,9 +74,6 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
-    this.usePanTool = this.usePanTool.bind(this);
-    this.useZoomIn = this.useZoomIn.bind(this);
-    this.useZoomOut = this.useZoomOut.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -303,8 +300,10 @@ class SubjectViewer extends React.Component {
   /*  Triggers when the user clicks on the final node/point of an
       annotation-in-progress.
    */
-  onCompleteAnnotation() {
-    this.props.dispatch(completeAnnotation());
+  onCompleteAnnotation(e) {
+    const offset = this.getBoundingBox();
+    const clickPos = { x: e.clientX - offset.left, y: e.clientY - offset.top };
+    this.props.dispatch(completeAnnotation(clickPos));
   }
 
   /*  Triggers when the user clicks on a specific line of annotation.

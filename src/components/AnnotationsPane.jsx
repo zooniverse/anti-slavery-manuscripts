@@ -55,7 +55,7 @@ class AnnotationsPane extends React.Component {
             style={{cursor: 'pointer'}}
             onClick={(e) => {
               if (this.props.onCompleteAnnotation) {
-                this.props.onCompleteAnnotation();
+                this.props.onCompleteAnnotation(e);
               }
               return Utility.stopEvent(e);
             }}
@@ -142,7 +142,7 @@ class AnnotationsPane extends React.Component {
           style={{cursor: 'pointer'}}
           onClick={(e) => {
             if (this.props.onSelectAnnotation) {
-              this.props.onSelectAnnotation(indexOfAnnotation);
+              this.props.onSelectAnnotation(indexOfAnnotation, e);
             }
             return Utility.stopEvent(e);
           }}
