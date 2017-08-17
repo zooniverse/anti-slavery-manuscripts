@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import Timeline from './Timeline';
 import AboutEnvelope from '../images/about-envelope.png';
 import AboutProgram from '../images/about-program.png';
 import AboutMaria from '../images/about-maria.png';
@@ -85,15 +86,9 @@ class AboutTheCollection extends React.Component {
           </div>
 
           <div className="about-the-collection__timeline">
-            <h2>Timeline</h2>
-            <hr />
-            <div className="flex-row">
-              <div>Lorem ipsum dolor sit amet.</div>
-              <div>Lorem ipsum dolor sit amet.</div>
-              <div>Lorem ipsum dolor sit amet.</div>
-              <div>Lorem ipsum dolor sit amet.</div>
-              <div>Lorem ipsum dolor sit amet.</div>
-            </div>
+            <h2 className="about-the-collection__sub-head">Notable Events</h2>
+            <span className="about-the-collection__content">The tan box illustrates a bar graph of items in the collection.</span>
+            <Timeline />
           </div>
 
           <div className="about-the-collection__notable-figures flex-row">
