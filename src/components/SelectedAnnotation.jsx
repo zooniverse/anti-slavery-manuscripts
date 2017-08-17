@@ -7,6 +7,7 @@ import { unselectAnnotation } from '../ducks/annotations';
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
 const PANE_OFFSET = 25;
+const BUFFER = 10;
 
 class SelectedAnnotation extends React.Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
-    if (!this.props.annotation) return null;  //Sanity check. //TODO: Put a warning message instead, saying "No Annotations here, bro"
+    if (!this.props.annotation) return null;
 
     const panePosition = this.props.annotationPanePosition;
 
@@ -40,11 +41,11 @@ class SelectedAnnotation extends React.Component {
       height: PANE_HEIGHT,
     };
 
-    defaultPosition.x = Math.min(testX, document.body.clientWidth - PANE_WIDTH)
-    console.log(document.body.clientWidth - PANE_WIDTH);
-    console.log(document.body.clientHeight);
-    console.log(document.body.scrollWidth);
-    console.log(document.body.scrollTop);
+    defaultPosition.x = Math.min(Math.max(0 + BUFFER, testX - BUFFER), document.body.clientWidth - PANE_WIDTH - BUFFER)
+
+    if (testY + PANE_OFFSET + PANE_HEIGHT > window.innerHeight + document.body.scrollTop) {
+      defaultPosition.y = testY - PANE_OFFSET - (PANE_HEIGHT + BUFFER);
+      }
 
     return (
       <Rnd
