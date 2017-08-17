@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  setRotation, setScaling, setContrast,
-  resetView, setViewerState, SUBJECTVIEWER_STATE,
+  setRotation, setContrast, resetView,
+  setViewerState, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 import { toggleFavorite } from '../ducks/subject';
@@ -18,10 +18,10 @@ import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import ShowMetadata from '../components/ShowMetadata';
+import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
 import Divider from '../images/img_divider.png';
 
-const ZOOM_STEP = 0.1;
 const ROTATION_STEP = 90;
 
 class ClassifierContainer extends React.Component {
@@ -30,9 +30,6 @@ class ClassifierContainer extends React.Component {
 
     //Bind events
     this.useAnnotationTool = this.useAnnotationTool.bind(this);
-    this.usePanTool = this.usePanTool.bind(this);
-    this.useZoomIn = this.useZoomIn.bind(this);
-    this.useZoomOut = this.useZoomOut.bind(this);
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
     this.useContrast = this.useContrast.bind(this);
@@ -94,30 +91,6 @@ class ClassifierContainer extends React.Component {
                 <i className="fa fa-plus-circle" />
               </span>
               <span>Annotate</span>
-            </button>
-
-            <button
-              className={(this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) ? 'flat-button block selected' : 'flat-button block'}
-              onClick={this.usePanTool}
-            >
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-arrows" />
-              </span>
-              <span>Pan image</span>
-            </button>
-
-            <button className="flat-button block" onClick={this.useZoomIn}>
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-plus" />
-              </span>
-              <span>Zoom In</span>
-            </button>
-
-            <button className="flat-button block" onClick={this.useZoomOut}>
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-minus" />
-              </span>
-              <span>Zoom Out</span>
             </button>
 
             <button className="flat-button block" onClick={this.useRotate90}>
@@ -202,18 +175,6 @@ class ClassifierContainer extends React.Component {
 
   useAnnotationTool() {
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
-  }
-
-  usePanTool() {
-    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
-  }
-
-  useZoomIn() {
-    this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
-  }
-
-  useZoomOut() {
-    this.props.dispatch(setScaling(this.props.scaling - ZOOM_STEP));
   }
 
   useRotate90() {
