@@ -24,6 +24,7 @@ import { connect } from 'react-redux';
 import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
+import ZoomTools from '../components/ZoomTools';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
@@ -43,6 +44,8 @@ const INPUT_STATE = {
   IDLE: 0,
   ACTIVE: 1,
 }
+
+const ZOOM_STEP = 0.1;
 
 //Add ?dev=1 to the URL to enable DEV_MODE
 const DEV_MODE = window.location && /(\?|&)dev(=|&|$)/ig.test(window.location.search);
@@ -71,6 +74,9 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
+    this.usePanTool = this.usePanTool.bind(this);
+    this.useZoomIn = this.useZoomIn.bind(this);
+    this.useZoomOut = this.useZoomOut.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -93,13 +99,14 @@ class SubjectViewer extends React.Component {
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
     let subjectLocation = undefined;
+    const cursor = this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING ? 'cursor-move' : '';
 
     if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
 
     return (
-      <section className="subject-viewer" ref={(c)=>{this.section=c}}>
+      <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
 
-        {/* <FilmstripViewer /> */}
+        <ZoomTools viewerState={this.props.viewerState} usePanTool={this.usePanTool} useZoomIn={this.useZoomIn} useZoomOut={this.useZoomOut} />
 
         <svg
           ref={(c)=>{this.svg=c}}
@@ -221,6 +228,18 @@ class SubjectViewer extends React.Component {
       this.props.dispatch(updateImageSize(imgW, imgH));
       this.props.dispatch(resetView());
     }
+  }
+
+  usePanTool() {
+    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+  }
+
+  useZoomIn() {
+    this.props.dispatch(setScaling(this.props.scaling + ZOOM_STEP));
+  }
+
+  useZoomOut() {
+    this.props.dispatch(setScaling(this.props.scaling - ZOOM_STEP));
   }
 
   //----------------------------------------------------------------
