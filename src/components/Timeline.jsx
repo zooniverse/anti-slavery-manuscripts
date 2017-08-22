@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import timelineEvents from '../lib/timeline-events';
+import Text from './Text';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -10,9 +11,10 @@ class Timeline extends React.Component {
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.renderEvent = this.renderEvent.bind(this);
+    this.renderText = this.renderText.bind(this);
+
     this.state = {
-      hoverBox: null,
-      hoverIndex: null,
+      timelineText: null,
       timelineWidth: 100
     }
   }
@@ -39,70 +41,90 @@ class Timeline extends React.Component {
       color = 'gray'
     }
 
-    const percentagePlace = (startDate - BEGINNING_YEAR) / TIMELINE_LENGTH * 100;
+    const percentagePlace = (startDate - BEGINNING_YEAR) / TIMELINE_LENGTH * this.state.timelineWidth;
 
     return {
-      placement: `${percentagePlace}%`,
+      placement: percentagePlace,
       width: yearWidth,
       color
     }
   }
 
   handleMouseEnter(e) {
-    this.setState({ hoverIndex: e.target.getAttribute('data-index') })
+    this.setState({ timelineText: e.target.getAttribute('data-index') })
   }
 
   handleMouseLeave() {
-    this.setState({ hoverIndex: null })
+    this.setState({ clickIndex: null })
   }
 
   renderEvent(event, i) {
     const position = this.dateFinder(event.year);
-    let lineSize = {
-      y1: "50",
-      y2: "70"
-    }
+    const clicked = this.state.clickIndex == i ? true : false;
 
-    if (this.state.hoverIndex == i) {
-      lineSize.y1 = "45",
-      lineSize.y2 = "75"
+    const styles = {
+      exampleText: {
+        width: 200
+      },
+      range: {
+        marginLeft: 25,
+        width: 275
+      },
+      svg: {
+        height: 125,
+        display: 'block',
+        border: '1px solid #aaa',
+        marginBottom: 10,
+      }
     }
 
     return (
-      <a key={i}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-      >
-        <line data-index={i} ref={(c) => {this.test = c;} } x1={position.placement} y1={lineSize.y1} x2={position.placement} y2={lineSize.y2} strokeWidth={position.width} stroke={position.color} />
-        <text x="0" y="35" fill="grey" style={{ display: 'none' }}>
-          bleh
-        </text>
-      </a>
+      <g key={i} className={`group-${i}`} onMouseDown={this.handleMouseEnter} >
+        <line
+          ref={(c) => {this.test = c;} }
+          data-index={event.text}
+          x1={position.placement}
+          y1="50"
+          x2={position.placement}
+          y2="70"
+          stroke={position.color}
+          strokeWidth={position.width}
+        />
+      </g>
     )
   }
 
   render() {
     return (
       <div className="timeline" ref={(c)=>this.timeline=c}>
-        <svg width="100%" height="300" viewBox={`0 0 ${this.state.timelineWidth} 300`}>
-          <text x="0" y="35" fill="grey">
-            1800
-          </text>
-          <text textAnchor="end" x={50 / 120 * this.state.timelineWidth} y="35" fill="grey">
-            1850
-          </text>
-          <text textAnchor="end" x={100 / 120 * this.state.timelineWidth} y="35" fill="grey">
-            1900
-          </text>
-          <line x1="0" y1="55" x2="0" y2="65" strokeWidth="5" stroke="gray" />
-          <line x1="0" y1="60" x2="100%" y2="60" strokeWidth="1" stroke="gray" />
-          <line x1="100%" y1="55" x2="100%" y2="65" strokeWidth="5" stroke="gray" />
-          {timelineEvents.map((event, i) => {
-            return this.renderEvent(event, i)
-          })}
-          <text textAnchor="end" x="100%" y="35" fill="grey">
-            1920
-          </text>
+        <svg width="100%" preserveAspectRatio="xMinYMin meet" height="300" viewBox={`0 0 ${this.state.timelineWidth} 300`} xmlSpace="preserve">
+          <g id="timeline">
+
+            <text id="shape" x="0" y="35" fill="grey">
+              1800
+            </text>
+            <text textAnchor="end" x={50 / 120 * this.state.timelineWidth} y="35" fill="grey">
+              1850
+            </text>
+            <text textAnchor="end" x={100 / 120 * this.state.timelineWidth} y="35" fill="grey">
+              1900
+            </text>
+            <line x1="0" y1="55" x2="0" y2="65" strokeWidth="5" stroke="gray" />
+            <line x1="0" y1="60" x2="100%" y2="60" strokeWidth="1" stroke="gray" />
+            <line x1="100%" y1="55" x2="100%" y2="65" strokeWidth="5" stroke="gray" />
+
+            {timelineEvents.map((event, i) => {
+              return this.renderEvent(event, i)
+            })}
+            {this.state.timelineText && (
+              <Text x={200} y={100} width={200}>
+                {this.state.timelineText}
+              </Text>
+            )}
+            <text textAnchor="end" x="100%" y="35" fill="grey">
+              1920
+            </text>
+          </g>
         </svg>
         <span className="footnote">Click a line to learn more about the date</span>
       </div>
