@@ -69,13 +69,14 @@ class AboutTheCollection extends React.Component {
           </div>
 
           <div className="about-the-collection__attribution">
-            <span>
-              Loremm ipsumm dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore el dolore magna aliqua. Ut enim
-              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-              aliquip ex ea commodo consequat.
+            <h2>From the Researchers</h2>
+            <span className="about-the-collection__content">
+              "Through the participation of citizen historians, we now stand on the
+              threshold of having available-free to all-the entire contents of the
+              Boston Public Library's extraordinary Anti-Slavery Manuscripts
+              collection: the personal papers of women and men who joined together,
+              across barriers of race and class, in the Abolitionist crusade."
             </span>
-            <h2>Attribution</h2>
           </div>
 
           <div className="about-the-collection__timeline">
