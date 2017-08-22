@@ -3,18 +3,32 @@ import PropTypes from 'prop-types';
 import timelineEvents from '../lib/timeline-events';
 import Text from './Text';
 
+const collectionGroups = [{
+  years: "1820-1840",
+  width: "50"
+}, {
+  years: "1840-1860",
+  width: "100"
+}, {
+  years: "1860-1880",
+  width: "70"
+}, {
+  years: "1880-1900",
+  width: "10"
+}];
+
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
 
     this.timeline = null;
-    this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.renderEvent = this.renderEvent.bind(this);
     this.renderText = this.renderText.bind(this);
+    this.renderGroups = this.renderGroups.bind(this);
 
     this.state = {
-      timelineText: null,
+      activeEvent: null,
       timelineWidth: 100
     }
   }
@@ -30,7 +44,7 @@ class Timeline extends React.Component {
     let startDate = date;
     const TIMELINE_LENGTH = 120;
     const BEGINNING_YEAR = 1800;
-    let yearWidth = 3;
+    let yearWidth = 4;
     let color = 'black';
 
     if (date.includes('-')) {
@@ -38,7 +52,7 @@ class Timeline extends React.Component {
       startDate = dates[0];
       const yearDifference = dates[1] - dates[0];
       yearWidth = yearDifference / TIMELINE_LENGTH * this.state.timelineWidth;
-      color = 'gray'
+      if (yearDifference > 10) { color = 'grey' }
     }
 
     const percentagePlace = (startDate - BEGINNING_YEAR) / TIMELINE_LENGTH * this.state.timelineWidth;
@@ -50,8 +64,8 @@ class Timeline extends React.Component {
     }
   }
 
-  handleMouseEnter(e) {
-    this.setState({ timelineText: e.target.getAttribute('data-index') })
+  handleMouseEnter(data) {
+    this.setState({ activeEvent: data })
   }
 
   handleMouseLeave() {
@@ -61,35 +75,41 @@ class Timeline extends React.Component {
   renderEvent(event, i) {
     const position = this.dateFinder(event.year);
     const clicked = this.state.clickIndex == i ? true : false;
-
-    const styles = {
-      exampleText: {
-        width: 200
-      },
-      range: {
-        marginLeft: 25,
-        width: 275
-      },
-      svg: {
-        height: 125,
-        display: 'block',
-        border: '1px solid #aaa',
-        marginBottom: 10,
-      }
-    }
+    const data = { x: position.placement, event: event, i };
 
     return (
-      <g key={i} className={`group-${i}`} onMouseDown={this.handleMouseEnter} >
+      <g key={i} onMouseDown={this.handleMouseEnter.bind(this, data)} >
         <line
           ref={(c) => {this.test = c;} }
-          data-index={event.text}
+          className="event-line"
           x1={position.placement}
-          y1="50"
-          x2={position.placement}
-          y2="70"
+          y1="60"
+          x2={position.placement + position.width}
+          y2="60"
           stroke={position.color}
-          strokeWidth={position.width}
+          strokeWidth={25}
         />
+      </g>
+    )
+  }
+
+  renderText() {
+    const data = this.state.activeEvent
+    const anchor = data.i == timelineEvents.length - 1 ? 'end' : 'start';
+
+    return (
+      <Text textAnchor={anchor} x={data.x} y={100} year={data.event.year} width={200}>
+        {data.event.text}
+      </Text>
+    )
+  }
+
+  renderGroups(group, i) {
+    const test = this.dateFinder(group.years);
+
+    return (
+      <g>
+        <line x1={test.placement} y1="60" x2={test.placement + test.width} y2="60" strokeWidth={group.width} stroke="#F4F0E7" />
       </g>
     )
   }
@@ -99,6 +119,10 @@ class Timeline extends React.Component {
       <div className="timeline" ref={(c)=>this.timeline=c}>
         <svg width="100%" preserveAspectRatio="xMinYMin meet" height="300" viewBox={`0 0 ${this.state.timelineWidth} 300`} xmlSpace="preserve">
           <g id="timeline">
+
+            {collectionGroups.map((group, i) => {
+              return this.renderGroups(group, i)
+            })}
 
             <text id="shape" x="0" y="35" fill="grey">
               1800
@@ -116,11 +140,10 @@ class Timeline extends React.Component {
             {timelineEvents.map((event, i) => {
               return this.renderEvent(event, i)
             })}
-            {this.state.timelineText && (
-              <Text x={200} y={100} width={200}>
-                {this.state.timelineText}
-              </Text>
+            {this.state.activeEvent && (
+              this.renderText()
             )}
+
             <text textAnchor="end" x="100%" y="35" fill="grey">
               1920
             </text>

@@ -18,38 +18,64 @@ export default class Text extends React.Component {
     this.setState({ lines });
   }
 
+  componentDidMount() {
+    const animation1 = document.getElementById('animation1');
+    const animation2 = document.getElementById('animation2');
+    const animation3 = document.getElementById('animation3');
+    animation1.beginElement();
+    animation2.beginElement();
+    animation3.beginElement();
+  }
+
+  componentWillReceiveProps() {
+    const animation1 = document.getElementById('animation1');
+    const animation2 = document.getElementById('animation2');
+    const animation3 = document.getElementById('animation3');
+    animation1.beginElement();
+    animation2.beginElement();
+    animation3.beginElement();
+  }
+
   render() {
     const { lineHeight, capHeight} = this.props;
+    console.log(lineHeight);
     const dy = capHeight;
     const { x, y } = this.props;
 
     return (
       <g>
-        <text fontSize="14" dy={`${dy}em`}>
+        <text textAnchor={this.props.textAnchor} id="textObj" fontSize="14" dy={`${dy}em`}>
+          <tspan fontSize="16" x={x} y={y} dy="0">
+            {this.props.year}
+          </tspan>
+
           {this.state.lines.map((word, i) => (
-            <tspan key={i} x={x} y={y} dy={`${i * lineHeight}em`}>
+            <tspan key={i} x={x} y={y} dy={`${i + 1 * lineHeight}em`}>
               {word}
             </tspan>
           ))}
-          <animateTransform attributeName="transform"
+          <animateTransform id="animation1" attributeName="transform"
             type="translate"
-            from="0 0"
-            to="150 20"
-            dur="1s"
-            begin="10s"
-            repeatCount="5"
+            values={`${this.props.x} 100`}
+            dur="0s"
+            begin="indefinite"
             additive="sum"
-            accumulative="sum"
           />
-          <animateTransform attributeName="transform"
+          <animateTransform id="animation2" attributeName="transform"
             type="scale"
             from="0 0"
             to="1 1"
-            dur="1s"
-            repeatCount="5"
-            begin="10s"
+            dur="0.35s"
+            begin="indefinite"
+            repeatCount="1"
             additive="sum"
-            accumulative="sum"
+          />
+          <animateTransform id="animation3" attributeName="transform"
+            type="translate"
+            values={`-${this.props.x} -100`}
+            dur="0"
+            begin="indefinite"
+            additive="sum"
           />
         </text>
       </g>
@@ -120,6 +146,7 @@ export default class Text extends React.Component {
 }
 
 Text.defaultProps = {
-  lineHeight: 1,
   capHeight: 0.71,
+  lineHeight: 1.5,
+  textAnchor: "start"
 }
