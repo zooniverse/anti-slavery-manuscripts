@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Timeline from './Timeline';
+import MobileTimeline from './MobileTimeline';
 import AboutEnvelope from '../images/about-envelope.png';
 import AboutProgram from '../images/about-program.png';
 import AboutMaria from '../images/about-maria.png';
@@ -11,6 +12,8 @@ import Divider from '../images/img_divider.png';
 
 class AboutTheCollection extends React.Component {
   render() {
+    const timelineSize = (window.innerWidth > 700) ? <Timeline /> : <MobileTimeline />;
+
     return (
       <main className="app-content about-the-collection">
         <div className="project-background" />
@@ -87,8 +90,7 @@ class AboutTheCollection extends React.Component {
 
           <div className="about-the-collection__timeline">
             <h2 className="about-the-collection__sub-head">Notable Events</h2>
-            <span className="about-the-collection__content">The tan box illustrates a bar graph of items in the collection.</span>
-            <Timeline />
+            {timelineSize}
           </div>
 
           <div className="about-the-collection__notable-figures flex-row">

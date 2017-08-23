@@ -10,24 +10,27 @@ export default class Text extends React.Component {
   }
 
   componentWillMount() {
-    const { wordsWithComputedWidth, spaceWidth } = this.calculateWordWidths();
-    this.wordsWithComputedWidth = wordsWithComputedWidth;
-    this.spaceWidth = spaceWidth;
+    this.updateWidths();
 
     const lines = this.calculateLines(this.wordsWithComputedWidth, this.spaceWidth, this.props.width);
     this.setState({ lines });
   }
 
   componentDidMount() {
-    const animation1 = document.getElementById('animation1');
-    const animation2 = document.getElementById('animation2');
-    const animation3 = document.getElementById('animation3');
-    animation1.beginElement();
-    animation2.beginElement();
-    animation3.beginElement();
+    this.beginAnimations();
   }
 
   componentWillReceiveProps() {
+    this.beginAnimations();
+  }
+
+  updateWidths() {
+    const { wordsWithComputedWidth, spaceWidth } = this.calculateWordWidths();
+    this.wordsWithComputedWidth = wordsWithComputedWidth;
+    this.spaceWidth = spaceWidth;
+  }
+
+  beginAnimations() {
     const animation1 = document.getElementById('animation1');
     const animation2 = document.getElementById('animation2');
     const animation3 = document.getElementById('animation3');
@@ -37,16 +40,13 @@ export default class Text extends React.Component {
   }
 
   render() {
-    const { lineHeight, capHeight} = this.props;
-    console.log(lineHeight);
-    const dy = capHeight;
-    const { x, y } = this.props;
+    const { capHeight, lineHeight, textAnchor, x, y, year } = this.props;
 
     return (
       <g>
-        <text textAnchor={this.props.textAnchor} id="textObj" fontSize="14" dy={`${dy}em`}>
+        <text textAnchor={textAnchor} id="textObj" fontSize="14" dy={`${capHeight}em`}>
           <tspan fontSize="16" x={x} y={y} dy="0">
-            {this.props.year}
+            {year}
           </tspan>
 
           {this.state.lines.map((word, i) => (
@@ -56,7 +56,7 @@ export default class Text extends React.Component {
           ))}
           <animateTransform id="animation1" attributeName="transform"
             type="translate"
-            values={`${this.props.x} 100`}
+            values={`${x} 100`}
             dur="0s"
             begin="indefinite"
             additive="sum"
@@ -72,7 +72,7 @@ export default class Text extends React.Component {
           />
           <animateTransform id="animation3" attributeName="transform"
             type="translate"
-            values={`-${this.props.x} -100`}
+            values={`-${x} -100`}
             dur="0"
             begin="indefinite"
             additive="sum"
@@ -84,15 +84,13 @@ export default class Text extends React.Component {
 
   componentDidUpdate(nextProps, nextState) {
     if (this.props.children != nextProps.children) {
-      const { wordsWithComputedWidth, spaceWidth } = this.calculateWordWidths();
-      this.wordsWithComputedWidth = wordsWithComputedWidth;
-      this.spaceWidth = spaceWidth;
+      this.updateWidths();
     }
 
     const lines = this.calculateLines(this.wordsWithComputedWidth, this.spaceWidth, this.props.width);
     const newLineAdded = this.state.lines.length !== lines.length;
     const wordMoved = this.state.lines.some((line, index) => line.length != lines[index].length);
-    // Only update if number of lines or length of any lines change
+
     if (newLineAdded || wordMoved) {
       this.setState({ lines })
     }

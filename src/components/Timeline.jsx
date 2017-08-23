@@ -78,16 +78,14 @@ class Timeline extends React.Component {
     const data = { x: position.placement, event: event, i };
 
     return (
-      <g key={i} onMouseDown={this.handleMouseEnter.bind(this, data)} >
+      <g key={i} transform={`translate(${position.placement}, ${60})`} onMouseDown={this.handleMouseEnter.bind(this, data)} >
         <line
           ref={(c) => {this.test = c;} }
           className="event-line"
-          x1={position.placement}
-          y1="60"
-          x2={position.placement + position.width}
-          y2="60"
+          x1="0" x2={position.width}
+          y1="0" y2="0"
           stroke={position.color}
-          strokeWidth={25}
+          strokeWidth="25"
         />
       </g>
     )
@@ -108,7 +106,7 @@ class Timeline extends React.Component {
     const test = this.dateFinder(group.years);
 
     return (
-      <g>
+      <g key={i}>
         <line x1={test.placement} y1="60" x2={test.placement + test.width} y2="60" strokeWidth={group.width} stroke="#F4F0E7" />
       </g>
     )
@@ -117,8 +115,10 @@ class Timeline extends React.Component {
   render() {
     return (
       <div className="timeline" ref={(c)=>this.timeline=c}>
-        <svg width="100%" preserveAspectRatio="xMinYMin meet" height="300" viewBox={`0 0 ${this.state.timelineWidth} 300`} xmlSpace="preserve">
-          <g id="timeline">
+        <span className="about-the-collection__content">The tan box illustrates a bar graph of items in the collection.</span>
+
+        <svg x="0" y="0" width="100%" preserveAspectRatio="xMinYMin meet" height="350" viewBox={`0 0 ${this.state.timelineWidth} 350`} xmlSpace="preserve">
+          <g className="timeline__bar">
 
             {collectionGroups.map((group, i) => {
               return this.renderGroups(group, i)
