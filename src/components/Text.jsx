@@ -34,9 +34,11 @@ export default class Text extends React.Component {
     const animation1 = document.getElementById('animation1');
     const animation2 = document.getElementById('animation2');
     const animation3 = document.getElementById('animation3');
-    animation1.beginElement();
-    animation2.beginElement();
-    animation3.beginElement();
+    if ('beginElement' in animation1) {
+      animation1.beginElement();
+      animation2.beginElement();
+      animation3.beginElement();
+    }
   }
 
   render() {
