@@ -28,6 +28,7 @@ import ZoomTools from '../components/ZoomTools';
 import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
+import SelectedAnnotation from '../components/SelectedAnnotation';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -37,7 +38,7 @@ import {
 
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
-  ANNOTATION_STATUS,
+  unselectAnnotation, ANNOTATION_STATUS,
 } from '../ducks/annotations';
 
 const INPUT_STATE = {
@@ -74,6 +75,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
+    this.closeAnnotation = this.closeAnnotation.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -87,6 +89,7 @@ class SubjectViewer extends React.Component {
 
     //State
     this.state = {
+      annotation: null,
       pointerXYOnImage: null,
     };
   }
@@ -178,6 +181,14 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
+  }
+
+  componentWillReceiveProps(next) {
+    if (!this.props.selectedAnnotation && next.selectedAnnotation) {
+      this.setState({
+        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -300,10 +311,13 @@ class SubjectViewer extends React.Component {
   /*  Triggers when the user clicks on the final node/point of an
       annotation-in-progress.
    */
-  onCompleteAnnotation(e) {
-    const offset = this.getBoundingBox();
-    const clickPos = { x: e.clientX - offset.left, y: e.clientY - offset.top };
-    this.props.dispatch(completeAnnotation(clickPos));
+  onCompleteAnnotation(point) {
+    this.props.dispatch(completeAnnotation(point));
+  }
+
+  closeAnnotation() {
+    this.setState({ annotation: null });
+    this.props.dispatch(unselectAnnotation());
   }
 
   /*  Triggers when the user clicks on a specific line of annotation.
@@ -433,6 +447,13 @@ SubjectViewer.propTypes = {
     })
   ),
   showPreviousMarks: PropTypes.bool,
+  selectedAnnotation: PropTypes.shape({
+    text: PropTypes.string,
+    points: PropTypes.arrayOf(PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    })),
+  }),
 };
 SubjectViewer.defaultProps = {
   contrast: false,
@@ -445,6 +466,7 @@ SubjectViewer.defaultProps = {
   },
   rotation: 0,
   scaling: 1,
+  selectedAnnotation: null,
   translationX: 0,
   translationY: 0,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
@@ -482,6 +504,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
     showPreviousMarks: sv.showPreviousMarks,
+    selectedAnnotation: state.annotations.selectedAnnotation,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

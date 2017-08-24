@@ -9,7 +9,6 @@ import {
 } from '../ducks/subject-viewer';
 
 import { toggleFavorite } from '../ducks/subject';
-import { selectAnnotation, unselectAnnotation } from '../ducks/annotations';
 import { toggleDialog } from '../ducks/dialog';
 
 import SubjectViewer from './SubjectViewer';
@@ -18,7 +17,6 @@ import Navigator from './Navigator';
 import FilmstripViewer from '../components/FilmstripViewer';
 import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
-import SelectedAnnotation from '../components/SelectedAnnotation';
 import ShowMetadata from '../components/ShowMetadata';
 import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
@@ -40,10 +38,8 @@ class ClassifierContainer extends React.Component {
     this.showMetadata = this.showMetadata.bind(this);
     this.showCollections = this.showCollections.bind(this);
     this.closePopup = this.closePopup.bind(this);
-    this.closeAnnotation = this.closeAnnotation.bind(this);
 
     this.state = {
-      annotation: null,
       popup: null,
     }
   }
@@ -154,28 +150,11 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
 
-        {this.state.annotation}
-
       </main>
     );
   }
 
   //----------------------------------------------------------------
-
-  componentWillReceiveProps(next) {
-    if (!this.props.selectedAnnotation && next.selectedAnnotation) {
-      this.setState({
-        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
-      });
-    }
-  }
-
-  //----------------------------------------------------------------
-
-  closeAnnotation() {
-    this.setState({ annotation: null });
-    this.props.dispatch(unselectAnnotation());
-  }
 
   closePopup() {
     this.setState({ popup: null });
@@ -225,13 +204,6 @@ ClassifierContainer.propTypes = {
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   viewerState: PropTypes.string,
-  selectedAnnotation: PropTypes.shape({
-    text: PropTypes.string,
-    points: PropTypes.arrayOf(PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    })),
-  }),
   user: PropTypes.shape({
     id: PropTypes.string
   })
@@ -240,7 +212,6 @@ ClassifierContainer.defaultProps = {
   rotation: 0,
   scaling: 1,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
-  selectedAnnotation: null,
 };
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -250,7 +221,6 @@ const mapStateToProps = (state, ownProps) => {
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
     viewerState: state.subjectViewer.viewerState,
-    selectedAnnotation: state.annotations.selectedAnnotation,
   };
 };
 export default connect(mapStateToProps)(ClassifierContainer);

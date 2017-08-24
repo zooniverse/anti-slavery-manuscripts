@@ -55,7 +55,7 @@ class AnnotationsPane extends React.Component {
             style={{cursor: 'pointer'}}
             onClick={(e) => {
               if (this.props.onCompleteAnnotation) {
-                this.props.onCompleteAnnotation(e);
+                this.props.onCompleteAnnotation(point);
               }
               return Utility.stopEvent(e);
             }}

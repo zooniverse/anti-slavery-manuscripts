@@ -2,11 +2,9 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { unselectAnnotation } from '../ducks/annotations';
 
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
-const PANE_OFFSET = 25;
 const BUFFER = 10;
 
 class SelectedAnnotation extends React.Component {
@@ -20,32 +18,29 @@ class SelectedAnnotation extends React.Component {
     if (!this.props.annotation) return null;
 
     const panePosition = this.props.annotationPanePosition;
+    const rotation = -this.props.rotation / 180 * Math.PI;
 
-    const paneTest = {x: panePosition.x, y: panePosition.y};
-    const testCoordY = paneTest.y - (this.props.viewerSize.height / 2);
-    const testCoordX = paneTest.x - (this.props.viewerSize.width / 2);
+    let inputX = panePosition.x - this.props.imageSize.width / 2;
+    let inputY = panePosition.y - this.props.imageSize.height / 2;
 
-    const rotation = this.props.rotation / 180 * Math.PI;
-    const cos = Math.cos(rotation);
-    const sin = Math.sin(rotation);
+    const tmpX = inputX;
+    const tmpY = inputY;
+    inputX = tmpX * Math.cos(rotation) + tmpY * Math.sin(rotation);
+    inputY = tmpY * Math.cos(rotation) - tmpX * Math.sin(rotation);
 
-    const inputX = testCoordX * cos - testCoordY * sin;
-    const inputY = testCoordX * sin + testCoordY * cos;
-    const testX = this.props.viewerSize.width / 2 + inputX;
-    const testY = this.props.viewerSize.height / 2 + inputY;
+    inputX = inputX * this.props.scaling + (this.props.translationX * this.props.scaling);
+    inputX = inputX + this.props.viewerSize.width / 2;
+
+    inputY = inputY * this.props.scaling + (this.props.translationY * this.props.scaling);
+    inputY = inputY + this.props.viewerSize.height / 2;
+
 
     const defaultPosition = {
-      x: testX,
-      y: testY + PANE_OFFSET,
+      x: inputX - (PANE_WIDTH / 2),
+      y: inputY + BUFFER,
       width: PANE_WIDTH,
       height: PANE_HEIGHT,
     };
-
-    defaultPosition.x = Math.min(Math.max(0 + BUFFER, testX - BUFFER), document.body.clientWidth - PANE_WIDTH - BUFFER)
-
-    if (testY + PANE_OFFSET + PANE_HEIGHT > window.innerHeight + document.body.scrollTop) {
-      defaultPosition.y = testY - PANE_OFFSET - (PANE_HEIGHT + BUFFER);
-      }
 
     return (
       <Rnd
@@ -114,6 +109,10 @@ SelectedAnnotation.propTypes = {
   scaling: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
+  viewerSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
 }
 
 const mapStateToProps = (state, ownProps) => {

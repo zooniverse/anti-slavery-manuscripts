@@ -56,13 +56,13 @@ const subjectReducer = (state = initialState, action) => {
         : [];
       annotations.push(state.annotationInProgress);
       const endClicks = (state.endClicks) ? state.endClicks.splice(0) : [];
-      endClicks.push(action.clickLocation);
+      endClicks.push(action.endPoint);
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IDLE,
         annotationInProgress: null,
         annotations,
         endClicks,
-        annotationPanePosition: action.clickLocation,
+        annotationPanePosition: action.endPoint,
         selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
       });
 
@@ -118,11 +118,11 @@ const unselectAnnotation = () => {
   };
 };
 
-const completeAnnotation = (clickLocation) => {
+const completeAnnotation = (endPoint) => {
   return (dispatch) => {
     dispatch({
       type: COMPLETE_ANNOTATION,
-      clickLocation
+      endPoint
     });
   };
 };
