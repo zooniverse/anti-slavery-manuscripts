@@ -67,6 +67,9 @@ class SubjectViewer extends React.Component {
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.useZoomIn = this.useZoomIn.bind(this);
+    this.useZoomOut = this.useZoomOut.bind(this);
+    this.usePanTool = this.usePanTool.bind(this);
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
@@ -107,6 +110,8 @@ class SubjectViewer extends React.Component {
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
 
         <ZoomTools viewerState={this.props.viewerState} usePanTool={this.usePanTool} useZoomIn={this.useZoomIn} useZoomOut={this.useZoomOut} />
+
+        {this.state.annotation}
 
         <svg
           ref={(c)=>{this.svg=c}}
