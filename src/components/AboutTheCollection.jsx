@@ -3,8 +3,10 @@ import { Link } from 'react-router';
 import AboutEnvelope from '../images/about-envelope.png';
 import AboutProgram from '../images/about-program.png';
 import AboutMaria from '../images/about-maria.png';
+import AboutCharles from '../images/about-charles.png';
 import NotableBackground from '../images/about-three.png';
 import AboutBroadside from '../images/about-broadside.png';
+import Divider from '../images/img_divider.png';
 
 class AboutTheCollection extends React.Component {
   render() {
@@ -69,13 +71,17 @@ class AboutTheCollection extends React.Component {
           </div>
 
           <div className="about-the-collection__attribution">
-            <span>
-              Loremm ipsumm dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore el dolore magna aliqua. Ut enim
-              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-              aliquip ex ea commodo consequat.
+            <span className="about-the-collection__content">
+              "Through the participation of citizen historians, we now stand on the
+              threshold of having available-free to all-the entire contents of the
+              Boston Public Library's extraordinary Anti-Slavery Manuscripts
+              collection: the personal papers of women and men who joined together,
+              across barriers of race and class, in the Abolitionist crusade."
             </span>
-            <h2>Attribution</h2>
+            <img className="divider" role="presentation" src={Divider} />
+            <h2>Peter Drummey</h2>
+            <h3>Stephen T. Riley Librarian, Massachusetts Historical Society</h3>
+
           </div>
 
           <div className="about-the-collection__timeline">
@@ -97,9 +103,20 @@ class AboutTheCollection extends React.Component {
                 Wendell Phillips, William Lloyd Garrison and George Thompson, 1851
               </span>
             </div>
-            <div>
-              <img role="presentation" src={AboutMaria} /><br />
-              <span className="footnote">Maria Weston Chapman, CA 1864</span>
+            <div className="flex-row">
+              <div>
+                <figure>
+                  <img role="presentation" src={AboutCharles} />
+                  <span className="footnote">Charles Lenox Remond, CA. 1851-1856</span>
+                </figure>
+              </div>
+
+              <div>
+                <figure>
+                  <img role="presentation" src={AboutMaria} />
+                  <span className="footnote">Maria Weston Chapman, CA 1864</span>
+                </figure>
+              </div>
             </div>
             <div>
               <h2 className="about-the-collection__sub-head">Notable Figures</h2>

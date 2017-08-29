@@ -3,6 +3,9 @@
 .about-the-collection
   color: $dark-grey
 
+  img
+    max-width: 100%
+
   a
     @extend .secondary-head-link
     border-bottom: 2px solid transparent
@@ -29,6 +32,9 @@
   &__intro
     margin: 4em 6em
 
+    @media(max-width: 900px)
+      margin: 1em
+
     a:first-child
       margin-top: 0
 
@@ -54,29 +60,32 @@
 
     div:nth-child(2)
       flex: 1 1 40%
-      min-width: 12em
       max-width: 18em
       text-align: right
 
-      img
-        max-width: 18em
-        overflow: hidden
-        width: 100%
+      @media(max-width: 600px)
+        display: none
 
   &__significance
     margin: 6em 2.5em
 
+    @media(max-width: 400px)
+      margin: 2em
+
     > div:first-child
       flex: 1
+      margin: 0 2em 2em 0
       text-align: right
 
     > div:nth-child(2)
       flex: 3
-      margin: 2em
-      min-width: 18em
+      min-width: 12em
 
       .columns
         columns: 2
+
+        @media(max-width: 700px)
+          columns: 1
 
         div
           @extend .body-copy
@@ -88,22 +97,30 @@
 
   &__attribution
     background-color: $sandy
-    min-height: 12em
-    padding: 3em 28%
+    padding: 2em 18%
     text-align: center
 
+    @media(max-width: 400px)
+      padding: 1em
+
     span
-      @extend .secondary-conjunctions
-      font-size: 0.65em
-      font-weight: 600
-      letter-spacing: 0.05em
-      line-height: 1.75em
+      font-size: 1em
+      margin-top: 0.75em
+
+    .divider
+      margin: 1.5em auto
 
     h2
       @extend .secondary-head
       font-size: 0.75em
+      font-weight: 600
       letter-spacing: 0.35em
       margin-top: 1em
+
+    h3
+      @extend .instructions
+      font-size: 0.75em
+      font-weight: 400
 
   &__timeline
     margin: 2.5em
@@ -115,6 +132,7 @@
       text-transform: lowercase
 
     div
+      flex-wrap: wrap
       font-size: 0.75em
       justify-content: center
       margin: 1em 2em
@@ -123,69 +141,96 @@
     margin: 2.5em
     position: relative
 
-    div:first-child
-      max-height: 20em
-      overflow: hidden
-      position: absolute
-      width: 100%
-      z-index: -1
+    @media(max-width: 400px)
+      margin: 2.5em 0
 
-      span
-        margin-left: 4em
-        max-width: 40%
-
-      img
-        max-height: 18em
-        object-fit: cover
+    > div:first-child
+        max-height: 22em
         overflow: hidden
+        position: absolute
         width: 100%
+        z-index: -1
 
-    div:nth-child(2)
-      margin: 20em 0em 4em 0em
+        @media(max-width: 400px)
+          order: 1
+
+        span
+          margin-left: 4em
+          max-width: 40%
+
+          @media(max-width: 679px)
+            margin: 1em
+            max-width: 100%
+
+        img
+          max-height: 18em
+          object-fit: cover
+          width: 100%
+
+    > div:nth-child(2)
       flex: 2
+      justify-content: space-around
+      margin: 20em 0 0 2em
+      min-width: 14em
       text-align: right
 
-      @media (max-width: 834px)
-        margin-top: 15em
+      @media (max-width: 950px)
+        margin: 15em 0 0 0
 
-      img
-        max-width: 100%
-        min-width: 12em
-        width: auto
+      @media(max-width: 400px)
+        margin: 0
+        order: 3
 
-    div:nth-child(3)
+      > div
+        margin: 1em
+
+        figure
+          display: table
+
+        img
+          height: auto
+          width: 100%
+
+        span
+          caption-side: bottom
+          display: table-caption
+
+    > div:nth-child(3)
       background: white
       flex: 1
-      margin: 12em 3em 0 3em
-      max-width: 22em
-      min-width: 18em
-      padding: 1em 2em
+      margin: 12em 3em 0 0em
+      min-width: 14em
+      padding: 1em
 
       @media (max-width: 1000px)
-        margin-top: 8em
+        margin: 8em 1em 0 0
 
-      @media (max-width: 834px)
+      @media (max-width: 679px)
         margin-top: 0
+
+      @media(max-width: 400px)
+        margin-top: 9em
+        order: 2
 
   &__provenance
     background: $sandy
-    padding: 4em 8em
-    display: flex
+    padding: 4em
+
+    @media(max-width: 700px)
+      padding: 2em
 
     div:first-child
       flex: 1
-      margin-right: 4em
+      min-width: 10em
 
     div:nth-child(2)
-      flex: 2
-      margin: 2em 0
-      max-width: 60%
-      min-width: 16em
+      flex: 1
+      margin: 1em
+      min-width: 10em
       text-align: right
 
       img
         max-height: 20em
-        max-width: 100%
 
   &__transcribe
     @extend .secondary-head
