@@ -10,11 +10,11 @@ class Popup extends React.Component {
 
   render() {
     return (
-      <div className="popup" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
-        <div className="popup-title">
+      <div className="popup modal" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
+        <div className="popup-title modal-title">
           <button className="fa fa-close close-button" onClick={this.close}></button>
         </div>
-        <div className="popup-content">
+        <div className="popup-content modal-content">
           {this.props.children}
         </div>
       </div>

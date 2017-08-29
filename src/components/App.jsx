@@ -5,6 +5,7 @@ import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
+import Dialog from './Dialog';
 
 class App extends React.Component {
   returnSomething(something) { // eslint-disable-line class-methods-use-this
@@ -27,6 +28,13 @@ class App extends React.Component {
         <div className="grommet">
           <ZooFooter />
         </div>
+
+        {(this.props.dialog === null) ? null :
+          <Dialog>
+            {this.props.dialog}
+          </Dialog>
+        }
+
       </div>
     );
   }
@@ -38,11 +46,13 @@ App.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }),
+  dialog: PropTypes.node
 };
 
 
 const mapStateToProps = (state) => {
   return {
+    dialog: state.dialog.data,
     project: state.project,
   };
 };

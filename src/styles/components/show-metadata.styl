@@ -1,24 +1,36 @@
 .show-metadata
+  align-items: center
   display: flex
   flex-direction: column
-  padding: 2em 4em
+  padding: 0 2em 4em 2em
 
   table
     border-collapse: collapse
+    table-layout: fixed
+
+  .divider
+    margin: 0.5em auto 1em auto
 
   h2
-    color: $dark-grey
-    font-family: $sans-font
-    font-size: 0.5em
-    margin-bottom: 2em
-    text-align: center
+    @extend .secondary-head
+    font-size: 0.8em
+    font-weight: 600
+    letter-spacing: 0.12em
+    margin-bottom: 0
 
   td
-    padding: 0.5em
+    @extend .secondary-head
+    line-height: 1.75em
+    padding: 0.25em 0.75em
+    word-wrap: break-word
+    vertical-align: top
+
+  td:first-child
+    text-align: right
+
+  td:nth-child(2)
+    letter-spacing: 0.05em
+    text-transform: none
 
   tr
-    border-bottom: 1px solid $dark-grey
     font-size: 0.75em
-
-  tr:last-child
-    border-bottom: none
