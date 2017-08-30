@@ -17,7 +17,9 @@ function getSubjectLocation(subject, frame = 0) {
       return type;
     }
   });
-
+  console.log(type);
+  console.log(format);
+  console.log(src);
   return { type, format, src };
 }
 

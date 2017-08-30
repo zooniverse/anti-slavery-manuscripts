@@ -70,8 +70,12 @@
     padding: 5em
     text-align: center
 
-    .secondary-conjunctions
+    i
+      @extend .secondary-conjunctions
+      display: inline-block
       font-size: 1.75rem
+      margin: 0 0 0.5em 0.5em
+      padding-bottom: 0.05em
       vertical-align: middle
 
     span
@@ -106,16 +110,17 @@
 
   &__project-stats
     background: white
+    flex-wrap: wrap
     margin: 2em 0
     padding: 2em
     text-align: left
 
     > div:first-child
-      flex: 5
+      flex: 5 1 0%
       padding-right: 2em
 
-    div:nth-child(2)
-      flex: 2
+    > div:nth-child(2)
+      flex: 3 1 0%
 
     .main-title
       font-size: 2rem
@@ -126,13 +131,17 @@
 
   &__numbers
     border-left: 1px solid $light-grey
-    columns: 2
+    flex-wrap: wrap
+    display: flex
     padding-left: 2.5em
+
+    div:nth-child(odd)
+      margin-right: 0.5em
 
     div
       display: flex
       flex-direction: column
-      height: 100%
+      min-height: 50%
 
       span:nth-child(even)
         line-height: 1.5em

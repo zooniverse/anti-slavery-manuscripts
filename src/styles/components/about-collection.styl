@@ -40,7 +40,7 @@
 
     div:first-child
       background-color: hsla(0, 100, 100, 0.55)
-      flex: 2 1 60%
+      flex: 2 1 40%
       margin-top: 4em
       padding: 1.5em
 
@@ -59,8 +59,9 @@
         vertical-align: middle
 
     div:nth-child(2)
-      flex: 1 1 40%
-      max-width: 18em
+      flex: 1 auto 60%
+      max-width: 14em
+      min-width: 10em
       text-align: right
 
       @media(max-width: 600px)
@@ -73,12 +74,14 @@
       margin: 2em
 
     > div:first-child
-      flex: 1
+      flex: 1 1 0%
       margin: 0 2em 2em 0
+      min-width: 5em
+      max-width: 12em
       text-align: right
 
     > div:nth-child(2)
-      flex: 3
+      flex: 3 1 0%
       min-width: 12em
 
       .columns
