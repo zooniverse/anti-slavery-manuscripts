@@ -1,0 +1,31 @@
+.timeline
+  .footnote
+    text-align: center
+
+  h3
+    font-size: 0.75em
+    margin-bottom: 0.25em
+
+  > div
+    margin: 1em 0
+
+    span
+      font-size: 0.75em
+
+.timeline__bar > g .event-line
+  transform: scale(1)
+  -moz-transform: scale(1)
+  -webkit-transform: scale(1)
+  transition: .5s
+  -moz-transition: .5s
+  -webkit-transition: .5s
+
+.timeline__bar > g:hover .event-line
+  cursor: pointer
+  stroke: $red-orange
+  transform: scale(1.25)
+  -moz-transform: scale(1.25)
+  -webkit-transform: scale(1.25)
+  transition: .5s
+  -moz-transition: .5s
+  -webkit-transition: .5s
