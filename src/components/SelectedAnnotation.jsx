@@ -7,11 +7,32 @@ const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
 const BUFFER = 10;
 
+const ENABLE_DRAG = "handle selected-annotation";
+const DISABLE_DRAG = "selected-annotation";
+
 class SelectedAnnotation extends React.Component {
   constructor(props) {
     super(props);
     this.inputText = null;
     this.onTextUpdate = this.onTextUpdate.bind(this);
+  }
+
+  componentDidMount() {
+    this.inputText.addEventListener('mousedown', () => {
+      this.dialog.className = DISABLE_DRAG;
+    });
+    this.inputText.addEventListener('mouseup', () => {
+      this.dialog.className = ENABLE_DRAG;
+    });
+  }
+
+  componentWillUnmount() {
+    this.inputText.removeEventListener('mousedown', () => {
+      this.dialog.className = DISABLE_DRAG;
+    });
+    this.inputText.removeEventListener('mouseup', () => {
+      this.dialog.className = ENABLE_DRAG;
+    });
   }
 
   render() {
@@ -45,13 +66,14 @@ class SelectedAnnotation extends React.Component {
     return (
       <Rnd
         default={defaultPosition}
+        dragHandlerClassName={'.handle'}
         enableResizing={{ bottomRight: true }}
         minHeight={PANE_HEIGHT}
         minWidth={500}
         resizeHandlerClasses={{ bottomRight: "drag-handler" }}
         style={{backgroundColor: 'white' }}
       >
-        <div className="selected-annotation">
+        <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
           <div>
             <h2>Transcribe</h2>
             <button className="fa fa-close close-button" onClick={this.props.onClose}></button>
@@ -92,10 +114,18 @@ class SelectedAnnotation extends React.Component {
 }
 
 SelectedAnnotation.defaultProps = {
+  annotationPanePosition: {
+    x: 0,
+    y: 0,
+  },
   rotation: 0,
   scaling: 1,
   translationX: 0,
   translationY: 0,
+  viewerSize: {
+    width: 0,
+    height: 0,
+  }
 }
 
 SelectedAnnotation.propTypes = {
