@@ -4,7 +4,7 @@ import Divider from '../images/img_divider.png';
 
 const SocialSection = ({ classifications, completedSubjects, percentComplete, subjects, volunteers }) =>
   <div className="home-page__social-section">
-    <h2 className="main-title">Subjects <i className="secondary-conjunctions">of</i>  Note</h2>
+    <h2 className="main-title">Subjects<i>of</i>  Note</h2>
     <img role="presentation" className="divider" src={Divider} />
     <div className="home-page__subject-row flex-row">
       <div></div>

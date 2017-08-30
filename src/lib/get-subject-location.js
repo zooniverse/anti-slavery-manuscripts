@@ -13,11 +13,13 @@ function getSubjectLocation(subject, frame = 0) {
     src = currentLocation[mimeType];
     [type, format] = mimeType.split('/');
     const extensions = type || [];
-    if (type in READABLE_FORMATS && READABLE_FORMATS[extensions].includes(format)) {
+    if (type in READABLE_FORMATS && READABLE_FORMATS[extensions].indexOf(format) > -1) {
       return type;
     }
   });
-
+  console.log(type);
+  console.log(format);
+  console.log(src);
   return { type, format, src };
 }
 
