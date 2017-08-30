@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import {
   setRotation, setContrast, resetView,
-  setViewerState, SUBJECTVIEWER_STATE,
+  togglePreviousMarks, setViewerState,
+  SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 import { toggleFavorite } from '../ducks/subject';
@@ -33,6 +34,7 @@ class ClassifierContainer extends React.Component {
     this.useAnnotationTool = this.useAnnotationTool.bind(this);
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
+    this.togglePreviousMarks = this.togglePreviousMarks.bind(this);
     this.useContrast = this.useContrast.bind(this);
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.showMetadata = this.showMetadata.bind(this);
@@ -108,7 +110,7 @@ class ClassifierContainer extends React.Component {
               <span>Reset Image</span>
             </button>
 
-            <button className="flat-button block">
+            <button className="flat-button block" onClick={this.togglePreviousMarks}>
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-eye" />
               </span>
@@ -184,6 +186,10 @@ class ClassifierContainer extends React.Component {
 
   useResetImage() {
     this.props.dispatch(resetView());
+  }
+
+  togglePreviousMarks() {
+    this.props.dispatch(togglePreviousMarks());
   }
 
   useContrast() {

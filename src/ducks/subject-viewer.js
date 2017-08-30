@@ -23,6 +23,7 @@ const initialState = {
   frame: 0,
   rotation: 0,
   scaling: 1,
+  showPreviousMarks: true,
   translationX: 0,
   translationY: 0,
 
@@ -38,6 +39,7 @@ const SET_ROTATION = 'SET_ROTATION';
 const SET_SCALING = 'SET_SCALING';
 const SET_TRANSLATION = 'SET_TRANSLATION';
 const RESET_VIEW = 'RESET_VIEW';
+const TOGGLE_MARKS = 'TOGGLE_MARKS';
 const SET_VIEWER_STATE = 'SET_VIEWER_STATE';
 const UPDATE_VIEWER_SIZE = 'UPDATE_VIEWER_SIZE';
 const UPDATE_IMAGE_SIZE = 'UPDATE_IMAGE_SIZE';
@@ -63,6 +65,13 @@ const subjectViewerReducer = (state = initialState, action) => {
 
       return Object.assign({}, state, {
         rotation: newAngle
+      });
+
+    case TOGGLE_MARKS:
+      const visibleMarks = !state.showPreviousMarks;
+
+      return Object.assign({}, state, {
+        showPreviousMarks: visibleMarks
       });
 
     case SET_SCALING:
@@ -174,6 +183,14 @@ const resetView = () => {
   }
 };
 
+const togglePreviousMarks = () => {
+  return (dispatch) => {
+    dispatch({
+      type: TOGGLE_MARKS,
+    });
+  }
+};
+
 const setViewerState = (viewerState) => {
   return (dispatch) => {
     dispatch({
@@ -224,6 +241,7 @@ export {
   setTranslation,
   resetView,
   setViewerState,
+  togglePreviousMarks,
   updateViewerSize,
   updateImageSize,
   SUBJECTVIEWER_STATE,

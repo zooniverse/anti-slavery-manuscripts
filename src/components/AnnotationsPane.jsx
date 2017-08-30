@@ -12,8 +12,9 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
+import { connect } from 'react-redux';
 
-export default class AnnotationsPane extends React.Component {
+class AnnotationsPane extends React.Component {
   constructor(props) {
     super(props);
     this.renderAnnotationInProgress = this.renderAnnotationInProgress.bind(this);
@@ -31,20 +32,20 @@ export default class AnnotationsPane extends React.Component {
       </g>
     );
   }
-  
+
   /*  Renders the annotation that the user is currently making, if there is one.
    */
   renderAnnotationInProgress() {
     if (!this.props.annotationInProgress) return null;
-    
+
     const svgLinePrefix = 'ANNOTATION_IN_PROGRESS_LINE_';
     const svgPointPrefix = 'ANNOTATION_IN_PROGRESS_POINT_';
     const svgLines = [];
     const svgPoints = [];
-    
+
     for (let i = 0; i < this.props.annotationInProgress.points.length; i++) {
       const point = this.props.annotationInProgress.points[i];
-      
+
       if (i === this.props.annotationInProgress.points.length-1) {  //Final node: click to finish annotation.
         svgPoints.push(
           <circle
@@ -65,7 +66,7 @@ export default class AnnotationsPane extends React.Component {
               return Utility.stopEvent(e);
             }}
           />
-        );  
+        );
       } else {
         svgPoints.push(
           <circle
@@ -74,7 +75,7 @@ export default class AnnotationsPane extends React.Component {
           />
         );
       }
-      
+
       if (i > 0) {
         const prevPoint = this.props.annotationInProgress.points[i-1];
         svgLines.push(
@@ -87,7 +88,7 @@ export default class AnnotationsPane extends React.Component {
         );
       }
     }
-    
+
     return (
       <g className="annotation-in-progress">
         {svgLines}
@@ -95,21 +96,22 @@ export default class AnnotationsPane extends React.Component {
       </g>
     );
   }
-  
+
   /*  Renders all the annotations that the user has completed.
       WARNING: Not to be confused with annotations from other users!
    */
   renderAnnotations() {
     if (!this.props.annotations) return null;
-    
+    if (!this.props.showPreviousMarks) return null;
+
     const annotationPrefix = 'ANNOTATION_';
-    
+
     return this.props.annotations.map((annotation, indexOfAnnotation) => {
       const svgLinePrefix = `ANNOTATION_${indexOfAnnotation}_LINE_`;
       const svgPointPrefix = `ANNOTATION_${indexOfAnnotation}_POINT_`;
       const svgLines = [];
       const svgPoints = [];
-      
+
       for (let i = 0; i < annotation.points.length; i++) {
         const point = annotation.points[i];
 
@@ -132,7 +134,7 @@ export default class AnnotationsPane extends React.Component {
           );
         }
       }
-    
+
       return (
         <g
           className="annotation"
@@ -184,6 +186,7 @@ AnnotationsPane.propTypes = {
       })),
     })
   ),
+  showPreviousMarks: PropTypes.bool,
 };
 
 AnnotationsPane.defaultProps = {
@@ -197,4 +200,7 @@ AnnotationsPane.defaultProps = {
   //--------
   annotationInProgress: null,
   annotations: [],
+  showPreviousMarks: true,
 };
+
+export default AnnotationsPane;
