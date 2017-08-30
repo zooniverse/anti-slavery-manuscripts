@@ -9,6 +9,7 @@ import {
 
 import { toggleFavorite } from '../ducks/subject';
 import { selectAnnotation, unselectAnnotation } from '../ducks/annotations';
+import { toggleDialog } from '../ducks/dialog';
 
 import SubjectViewer from './SubjectViewer';
 
@@ -194,9 +195,8 @@ class ClassifierContainer extends React.Component {
   }
 
   showMetadata() {
-    this.setState({ popup: (
-      <ShowMetadata metadata={this.props.currentSubject.metadata} />
-    ) });
+    this.props.dispatch(toggleDialog(
+      <ShowMetadata metadata={this.props.currentSubject.metadata} />));
   }
 
   showCollections() {

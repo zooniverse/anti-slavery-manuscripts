@@ -1,30 +1,56 @@
-.popup
+@import "font-groups.styl"
+
+.react-draggable
+  z-index: 100
+
+.drag-handler
+  bottom: 1px !important
+  right: -3px !important
+
+.drag-handler:before
+  content: "\21F2"
+
+.modal
+  background: rgba(0, 0, 0, 0.5)
   position: fixed
   left: 0
   top: 0
   width: 100vw
   height: 100vh
-  background: rgba(0, 0, 0, 0.5)
+
+  .modal-title
+    margin: 10vh 25vw 0 10vw
+    flex: 0 0 auto
+    color: $white
+    padding: 0.5em 1em
+    text-align: right
+
+  .modal-content
+    margin: 0 25vw 20vh 25vw
+
+.dialog
+  box-shadow: 5px 5px 20px #888888
+  width: 100%
+
+  .dialog-content
+    button
+      color: black
+      float: right
+
+.popup
   display: flex
   flex-direction: column
   justify-content: center
+  height: 100%
+  overflow: hidden
   align-items: stretch
-
-  .popup-title
-    flex: 0 0 auto
-    color: $white
-    margin: 10vh 25vw 0 10vw
-    padding: 0.5em 1em
-    text-align: right
 
   .popup-content
     flex: 0 1 auto
     background: $white
     color: $text-color
-    margin: 0 25vw 20vh 25vw
     overflow: auto
     padding: 0.5em 1em
-    border-radius: 0.25em
 
   button
     background: $aqua-marine
@@ -33,3 +59,9 @@
   .close-button
     background: transparent
     color: white
+
+.popup-content::-webkit-scrollbar
+  background-color: white
+
+.popup-content::-webkit-scrollbar-thumb
+  background: $dark-grey
