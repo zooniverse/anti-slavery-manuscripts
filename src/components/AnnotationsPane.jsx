@@ -186,6 +186,7 @@ AnnotationsPane.propTypes = {
       })),
     })
   ),
+  showPreviousMarks: PropTypes.bool,
 };
 
 AnnotationsPane.defaultProps = {
@@ -199,12 +200,7 @@ AnnotationsPane.defaultProps = {
   //--------
   annotationInProgress: null,
   annotations: [],
+  showPreviousMarks: true,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    showPreviousMarks: state.subjectViewer.showPreviousMarks,
-  };
-};
-
-export default connect(mapStateToProps)(AnnotationsPane);
+export default AnnotationsPane;
