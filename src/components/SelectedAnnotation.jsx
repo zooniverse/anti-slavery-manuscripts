@@ -87,8 +87,7 @@ class SelectedAnnotation extends React.Component {
             <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.props.annotation.text} />
           </p>
           <div className="selected-annotation__buttons">
-            <button>Done</button>
-            <button onClick={this.props.onClose}>Cancel</button>
+            <button onClick={this.props.onClose}>Done</button>
           </div>
         </div>
       </Rnd>
