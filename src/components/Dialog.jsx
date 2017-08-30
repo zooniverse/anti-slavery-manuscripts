@@ -62,10 +62,4 @@ Dialog.propTypes = {
   dispatch: PropTypes.func
 }
 
-const mapStateToProps = (state) => {
-  return {
-    dialog: state.dialog.data,
-  };
-};
-
-export default connect(mapStateToProps)(Dialog);
+export default connect()(Dialog);

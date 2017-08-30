@@ -42,13 +42,18 @@ class App extends React.Component {
 
 App.propTypes = {
   children: PropTypes.node,
+  dialog: PropTypes.node,
   dispatch: PropTypes.func,
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }),
-  dialog: PropTypes.node
 };
 
+App.defaultProps = {
+  children: null,
+  dialog: null,
+  location: {},
+};
 
 const mapStateToProps = (state) => {
   return {
