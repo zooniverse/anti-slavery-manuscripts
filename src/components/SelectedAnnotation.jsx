@@ -1,4 +1,14 @@
 import React from 'react';
+import Rnd from 'react-rnd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+const PANE_WIDTH = 800;
+const PANE_HEIGHT = 260;
+const BUFFER = 10;
+
+const ENABLE_DRAG = "handle selected-annotation";
+const DISABLE_DRAG = "selected-annotation";
 
 class SelectedAnnotation extends React.Component {
   constructor(props) {
@@ -7,31 +17,86 @@ class SelectedAnnotation extends React.Component {
     this.onTextUpdate = this.onTextUpdate.bind(this);
   }
 
+  componentDidMount() {
+    this.inputText.addEventListener('mousedown', () => {
+      this.dialog.className = DISABLE_DRAG;
+    });
+    this.inputText.addEventListener('mouseup', () => {
+      this.dialog.className = ENABLE_DRAG;
+    });
+  }
+
+  componentWillUnmount() {
+    this.inputText.removeEventListener('mousedown', () => {
+      this.dialog.className = DISABLE_DRAG;
+    });
+    this.inputText.removeEventListener('mouseup', () => {
+      this.dialog.className = ENABLE_DRAG;
+    });
+  }
+
   render() {
-    if (!this.props.annotation) return null;  //Sanity check. //TODO: Put a warning message instead, saying "No Annotations here, bro"
-    
+    if (!this.props.annotation) return null;
+
+    const panePosition = this.props.annotationPanePosition;
+    const rotation = -this.props.rotation / 180 * Math.PI;
+
+    let inputX = panePosition.x - this.props.imageSize.width / 2;
+    let inputY = panePosition.y - this.props.imageSize.height / 2;
+
+    const tmpX = inputX;
+    const tmpY = inputY;
+    inputX = tmpX * Math.cos(rotation) + tmpY * Math.sin(rotation);
+    inputY = tmpY * Math.cos(rotation) - tmpX * Math.sin(rotation);
+
+    inputX = inputX * this.props.scaling + (this.props.translationX * this.props.scaling);
+    inputX = inputX + this.props.viewerSize.width / 2;
+
+    inputY = inputY * this.props.scaling + (this.props.translationY * this.props.scaling);
+    inputY = inputY + this.props.viewerSize.height / 2;
+
+
+    const defaultPosition = {
+      x: inputX - (PANE_WIDTH / 2),
+      y: inputY + BUFFER,
+      width: PANE_WIDTH,
+      height: PANE_HEIGHT,
+    };
+
     return (
-      <div className="selected-annotation">
-        <h1>TODO</h1>
-        <h2>Text:</h2>
-        <p>
-          <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.props.annotation.text} />
-        </p>
-        <h2>Points</h2>          
-        {(!this.props.annotation.points) ? null :
-          this.props.annotation.points.map((point, index) => {
-            return (
-              <p key={`selected_annoation_point_${index}`}>x: {point.x}, y: {point.y} </p>
-            );
-          })
-        }
-      </div>
+      <Rnd
+        default={defaultPosition}
+        dragHandlerClassName={'.handle'}
+        enableResizing={{ bottomRight: true }}
+        minHeight={PANE_HEIGHT}
+        minWidth={500}
+        resizeHandlerClasses={{ bottomRight: "drag-handler" }}
+        style={{backgroundColor: 'white' }}
+      >
+        <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
+          <div>
+            <h2>Transcribe</h2>
+            <button className="fa fa-close close-button" onClick={this.props.onClose}></button>
+          </div>
+          <span>
+            Enter the words you marked in the order you marked them. Open the
+            dropdown menu to use previous volunteers' transcriptions as a starting
+            point.
+          </span>
+          <p>
+            <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.props.annotation.text} />
+          </p>
+          <div className="selected-annotation__buttons">
+            <button onClick={this.props.onClose}>Done</button>
+          </div>
+        </div>
+      </Rnd>
     );
   }
-          
+
   onTextUpdate() {
     if (!this.inputText) return;
-    
+
     //TODO
     //WARNING WARNING
     //This isn't the 'correct' way to update redux.annotations.annotations.
@@ -47,6 +112,50 @@ class SelectedAnnotation extends React.Component {
   }
 }
 
-//TODO: propTypes, defaultProps.
- 
-export default SelectedAnnotation;
+SelectedAnnotation.defaultProps = {
+  annotationPanePosition: {
+    x: 0,
+    y: 0,
+  },
+  rotation: 0,
+  scaling: 1,
+  translationX: 0,
+  translationY: 0,
+  viewerSize: {
+    width: 0,
+    height: 0,
+  }
+}
+
+SelectedAnnotation.propTypes = {
+  annotationPanePosition: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+  }),
+  dispatch: PropTypes.func,
+  onClose: PropTypes.func,
+  rotation: PropTypes.number,
+  scaling: PropTypes.number,
+  translationX: PropTypes.number,
+  translationY: PropTypes.number,
+  viewerSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+}
+
+const mapStateToProps = (state, ownProps) => {
+  const sv = state.subjectViewer;
+  return {
+    annotationPanePosition: state.annotations.annotationPanePosition,
+    rotation: sv.rotation,
+    scaling: sv.scaling,
+    selectedAnnotation: state.annotations.selectedAnnotation,
+    translationX: sv.translationX,
+    translationY: sv.translationY,
+    viewerSize: sv.viewerSize,
+    imageSize: sv.imageSize
+  };
+};
+
+export default connect(mapStateToProps)(SelectedAnnotation);
