@@ -291,7 +291,7 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
-      this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y));
+      this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
     }
   }
 

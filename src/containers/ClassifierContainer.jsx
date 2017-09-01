@@ -10,6 +10,9 @@ import {
 
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
+import {
+  createClassification, submitClassification
+} from '../ducks/classifications';
 
 import SubjectViewer from './SubjectViewer';
 
@@ -38,6 +41,7 @@ class ClassifierContainer extends React.Component {
     this.showMetadata = this.showMetadata.bind(this);
     this.showCollections = this.showCollections.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.completeClassification = this.completeClassification.bind(this);
 
     this.state = {
       popup: null,
@@ -45,6 +49,12 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentSubject != nextProps.currentSubject) {
+      this.props.dispatch(createClassification());
+    }
+  }
 
   render() {
     return (
@@ -67,8 +77,8 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="white-red button">Field Guide</button>
             <button href="#" className="white-red button">Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
-            <button href="#" className="white-green button">Done</button>
-            <button href="#" className="green button">Done &amp; Talk</button>
+            <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
+            <button href="#" className="green button" onClick={this.completeClassification}>Done &amp; Talk</button>
           </div>
         </section>
 
@@ -166,6 +176,10 @@ class ClassifierContainer extends React.Component {
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
 
+  completeClassification() {
+    this.props.dispatch(submitClassification())
+  }
+
   useRotate90() {
     this.props.dispatch(setRotation(this.props.rotation + ROTATION_STEP));
   }
@@ -202,15 +216,23 @@ ClassifierContainer.propTypes = {
   }),
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
+  project: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   scaling: PropTypes.number,
   viewerState: PropTypes.string,
+  workflow: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   user: PropTypes.shape({
     id: PropTypes.string
   })
 };
 ClassifierContainer.defaultProps = {
+  project: null,
   rotation: 0,
   scaling: 1,
+  workflow: null,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
 const mapStateToProps = (state, ownProps) => {
@@ -218,8 +240,10 @@ const mapStateToProps = (state, ownProps) => {
     user: state.login.user,
     favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,
+    project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
+    workflow: state.workflow.data,
     viewerState: state.subjectViewer.viewerState,
   };
 };

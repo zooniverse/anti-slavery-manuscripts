@@ -36,13 +36,13 @@ const subjectReducer = (state = initialState, action) => {
     case FETCH_SUBJECT:
       return Object.assign({}, state, {
         status: SUBJECT_STATUS.FETCHING,
-        id: action.id,
       });
 
     case FETCH_SUBJECT_SUCCESS:
       return Object.assign({}, state, {
         currentSubject: action.currentSubject,
         status: SUBJECT_STATUS.READY,
+        id: action.id,
         queue: action.queue,
         favorite: action.favorite,
       });
@@ -112,7 +112,6 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
 
     dispatch({
       type: FETCH_SUBJECT,
-      id,
     });
 
     const subjectQuery = {
@@ -125,6 +124,7 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
           const currentSubject = queue.shift();
           dispatch({
             currentSubject,
+            id: currentSubject.id,
             queue,
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,

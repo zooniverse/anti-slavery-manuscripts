@@ -2,6 +2,7 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { updateText } from '../ducks/annotations';
 
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
@@ -16,6 +17,7 @@ class SelectedAnnotation extends React.Component {
     this.inputText = null;
     this.onTextUpdate = this.onTextUpdate.bind(this);
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
+    this.saveText = this.saveText.bind(this);
 
     this.state = {
       annotationText: '',
@@ -24,6 +26,8 @@ class SelectedAnnotation extends React.Component {
   }
 
   componentDidMount() {
+    const text= this.props.annotation.details[0];
+    this.setState({ annotationText: text.value || '' });
     this.inputText.addEventListener('mousedown', () => {
       this.dialog.className = DISABLE_DRAG;
     });
@@ -99,6 +103,7 @@ class SelectedAnnotation extends React.Component {
           </span>
           <p>
             <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
+
             {this.props.previousAnnotationSelected && (
               <button onClick={this.toggleShowAnnotations}>
                 <span>
@@ -107,6 +112,7 @@ class SelectedAnnotation extends React.Component {
                 <i className="fa fa-caret-down fa-lg"/>
               </button>
             )}
+
           </p>
           {this.state.showAnnotationOptions && (
             this.renderAnnotationOptions()
@@ -119,7 +125,8 @@ class SelectedAnnotation extends React.Component {
             </div>
           )}
           <div className="selected-annotation__buttons">
-            <button onClick={this.props.onClose}>Done</button>
+            <button onClick={this.saveText}>Done</button>
+            <button onClick={this.props.onClose}>Cancel</button>
           </div>
         </div>
       </Rnd>
@@ -138,6 +145,11 @@ class SelectedAnnotation extends React.Component {
         })}
       </div>
     )
+  }
+
+  saveText() {
+    this.props.dispatch(updateText(this.state.annotationText));
+    this.props.onClose();
   }
 
   onTextUpdate() {

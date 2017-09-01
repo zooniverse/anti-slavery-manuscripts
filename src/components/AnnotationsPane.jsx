@@ -109,6 +109,7 @@ class AnnotationsPane extends React.Component {
     const annotationPrefix = 'ANNOTATION_';
 
     return this.props.annotations.map((annotation, indexOfAnnotation) => {
+      if (annotation.frame !== this.props.frame) return null;
       const svgLinePrefix = `ANNOTATION_${indexOfAnnotation}_LINE_`;
       const svgPointPrefix = `ANNOTATION_${indexOfAnnotation}_POINT_`;
       const svgLines = [];
@@ -219,6 +220,7 @@ class AnnotationsPane extends React.Component {
 }
 
 AnnotationsPane.propTypes = {
+  frame: PropTypes.number,
   onCompleteAnnotation: PropTypes.func,
   onSelectAnnotation: PropTypes.func,
   onSelectPreviousAnnotation: PropTypes.func,
@@ -250,6 +252,7 @@ AnnotationsPane.propTypes = {
 };
 
 AnnotationsPane.defaultProps = {
+  frame: 0,
   onCompleteAnnotation: null,
   onSelectAnnotation: null,
   frame: 0,
@@ -265,4 +268,10 @@ AnnotationsPane.defaultProps = {
   showPreviousMarks: true,
 };
 
-export default AnnotationsPane;
+const mapStateToProps = (state) => {
+  return {
+    frame: state.subjectViewer.frame,
+  };
+};
+
+export default connect(mapStateToProps)(AnnotationsPane);
