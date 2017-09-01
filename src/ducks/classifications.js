@@ -1,4 +1,6 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
+import counterpart from 'counterpart';
+import { getSessionID } from '../lib/get-session-id';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
@@ -18,7 +20,15 @@ const classificationReducer = (state = initialState, action) => {
     case SUBMIT_CLASSIFICATION:
       const classification = state.classification;
       classification.annotations.push(action.annotations);
-      console.log(classification);
+      classification.update({
+        completed: true,
+        'metadata.finished_at': (new Date()).toISOString(),
+        'metadata.viewport': {
+          width: innerWidth,
+          height: innerHeight
+        }
+      }).save();
+      // classification.metadata.session = getSessionID();
 
     default:
       return state;
@@ -27,11 +37,13 @@ const classificationReducer = (state = initialState, action) => {
 
 const createClassification = () => {
   return (dispatch, getState) => {
-    const classification = {
+    const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
+        workflow_version: getState().workflow.data.version,
         started_at: (new Date).toISOString(),
         user_agent: navigator.userAgent,
+        user_language: counterpart.getLocale(),
         utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
       },
       links: {
@@ -39,7 +51,9 @@ const createClassification = () => {
         workflow: getState().workflow.id,
         subjects: [getState().subject.id]
       }
-    }
+    });
+    classification._workflow = getState().workflow.data;
+    classification._subjects = [getState().subject.currentSubject];
 
     dispatch({
       type: CREATE_CLASSIFICATION,
