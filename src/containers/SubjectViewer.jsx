@@ -29,6 +29,7 @@ import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
+import { fetchAggregations } from '../ducks/aggregations';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -186,6 +187,7 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
+    this.props.dispatch(fetchAggregations());
   }
 
   componentWillReceiveProps(next) {
