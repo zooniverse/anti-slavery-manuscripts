@@ -73,7 +73,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#3fc"
+            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
           />
         );
       }
@@ -120,7 +120,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#3cf"
+            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
           />
         );
 
@@ -176,13 +176,14 @@ class AnnotationsPane extends React.Component {
               x: currentAnnotations.clusters_x[i],
               y: currentAnnotations.clusters_y[i],
             }],
-            text: currentAnnotations.clusters_text[i]
+            text: '',
+            textOptions: currentAnnotations.clusters_text[i]
           };
 
           data.svg =
             <circle
               key={`point${i}`}
-              cx={data.points[0].x} cy={data.points[0].y} r={5} fill="red"
+              cx={data.points[0].x} cy={data.points[0].y} r={5} fill="#c33"
             />
 
           annotationData.push(data)

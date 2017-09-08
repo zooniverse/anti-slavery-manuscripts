@@ -20,6 +20,24 @@
   h2
     font-size: 0.8em
 
+  p
+    display: flex
+    margin-bottom: 0
+
+    button
+      background: $light-grey
+      border-top: 2px solid $dark-grey
+      border-right: 2px solid $dark-grey
+      border-bottom: 2px solid $dark-grey
+      width: 3em
+
+    span
+      vertical-align: bottom
+
+    i
+      color: $success
+      margin-left: 0.25em
+
   span
     line-height: 1.25em
     margin-bottom: 1em
@@ -36,11 +54,32 @@
     width: 100%
     padding: 0.5em
 
+  &__options
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
+    display: flex
+    flex-direction: column
+    margin-bottom: 0.5em
+
+    button
+      background: $light-grey
+      border-bottom: 2px solid $dark-grey
+      border-left: 2px solid $dark-grey
+      border-right: 2px solid $dark-grey
+      float: left
+      text-align: left
+
+  &__markup
+    margin-top: 0.5em
+
+    button
+      float: left
+      margin-right: 0.5em
+
   &__buttons button
       border: 1px solid $teal-blue
       font-family: $sans-font
       font-size: 0.8em
-      margin: 0 0.5em
+      margin: 0.5em
       padding: 0.5em 3.5em
 
       &:hover, &:focus

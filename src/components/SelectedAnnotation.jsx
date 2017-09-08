@@ -15,6 +15,12 @@ class SelectedAnnotation extends React.Component {
     super(props);
     this.inputText = null;
     this.onTextUpdate = this.onTextUpdate.bind(this);
+    this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
+
+    this.state = {
+      annotationText: '',
+      showAnnotationOptions: false
+    }
   }
 
   componentDidMount() {
@@ -33,6 +39,15 @@ class SelectedAnnotation extends React.Component {
     this.inputText.removeEventListener('mouseup', () => {
       this.dialog.className = ENABLE_DRAG;
     });
+  }
+
+  toggleShowAnnotations() {
+    const showAnnotationOptions = !this.state.showAnnotationOptions;
+    this.setState({ showAnnotationOptions });
+  }
+
+  chooseAnnotationText(annotationText) {
+    this.setState({ annotationText, showAnnotationOptions: false });
   }
 
   render() {
@@ -60,7 +75,6 @@ class SelectedAnnotation extends React.Component {
       x: inputX - (PANE_WIDTH / 2),
       y: inputY + BUFFER,
       width: PANE_WIDTH,
-      height: PANE_HEIGHT,
     };
 
     return (
@@ -84,8 +98,26 @@ class SelectedAnnotation extends React.Component {
             point.
           </span>
           <p>
-            <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.props.annotation.text} />
+            <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
+            {this.props.previousAnnotationSelected && (
+              <button onClick={this.toggleShowAnnotations}>
+                <span>
+                  {this.props.annotation.textOptions.length}
+                </span>
+                <i className="fa fa-caret-down fa-lg"/>
+              </button>
+            )}
           </p>
+          {this.state.showAnnotationOptions && (
+            this.renderAnnotationOptions()
+          )}
+          {this.props.previousAnnotationSelected && !this.state.showAnnotationOptions && (
+            <div className="selected-annotation__markup">
+              <button>[insertion]</button>
+              <button>[deletion]</button>
+              <button>[unclear]</button>
+            </div>
+          )}
           <div className="selected-annotation__buttons">
             <button onClick={this.props.onClose}>Done</button>
           </div>
@@ -94,21 +126,24 @@ class SelectedAnnotation extends React.Component {
     );
   }
 
+  renderAnnotationOptions() {
+    return (
+      <div className="selected-annotation__options">
+        {this.props.annotation.textOptions.map((option, i) => {
+          return (
+            <button onClick={this.chooseAnnotationText.bind(this, option)} key={i}>
+              {option}
+            </button>
+          );
+        })}
+      </div>
+    )
+  }
+
   onTextUpdate() {
     if (!this.inputText) return;
 
-    //TODO
-    //WARNING WARNING
-    //This isn't the 'correct' way to update redux.annotations.annotations.
-    //We should have a a 'save' button that calls a special function
-    //ducks/annotations.updateAnnotation(selectedAnnotation, newText)
-    //That updates the Redux store.
-    //This little hack only works because of the way pointers work in JS.
-    this.props.annotation.text = this.inputText.value;
-    this.forceUpdate();  //See, by changing the values via direct pointers,
-                         //sure, we change the data in the Redux store, but
-                         //nobody else knows the store has been updated -
-                         //not even this component!
+    this.setState({ annotationText: this.inputText.value });
   }
 }
 
@@ -117,6 +152,7 @@ SelectedAnnotation.defaultProps = {
     x: 0,
     y: 0,
   },
+  previousAnnotationSelected: false,
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -134,6 +170,7 @@ SelectedAnnotation.propTypes = {
   }),
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
+  previousAnnotationSelected: PropTypes.bool,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,

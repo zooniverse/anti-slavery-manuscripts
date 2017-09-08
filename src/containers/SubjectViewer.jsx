@@ -29,7 +29,7 @@ import { Utility } from '../lib/Utility';
 import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
-import { fetchAggregations, selectPreviousAnnotation } from '../ducks/aggregations';
+import { fetchAggregations } from '../ducks/aggregations';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -39,7 +39,8 @@ import {
 
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
-  unselectAnnotation, ANNOTATION_STATUS,
+  selectPreviousAnnotation, unselectAnnotation,
+  unselectPreviousAnnotation, ANNOTATION_STATUS
 } from '../ducks/annotations';
 
 const INPUT_STATE = {
@@ -197,15 +198,9 @@ class SubjectViewer extends React.Component {
   componentWillReceiveProps(next) {
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
-        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
+        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} previousAnnotationSelected={next.previousAnnotationSelected} />
       });
     }
-
-    // if (!this.props.selectedAnnotation && next.selectedPreviousAnnotation) {
-    //   this.setState({
-    //     annotation: <SelectedAnnotation annotation={next.selectedPreviousAnnotation} onClose={this.closeAnnotation} />
-    //   });
-    // }
   }
 
   componentWillUnmount() {
@@ -334,7 +329,11 @@ class SubjectViewer extends React.Component {
 
   closeAnnotation() {
     this.setState({ annotation: null });
-    this.props.dispatch(unselectAnnotation());
+    if (this.props.previousAnnotationSelected) {
+      this.props.dispatch(unselectPreviousAnnotation());
+    } else {
+      this.props.dispatch(unselectAnnotation());
+    }
   }
 
   /*  Triggers when the user clicks on a specific line of annotation.
@@ -537,6 +536,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
+    previousAnnotationSelected: anno.previousAnnotationSelected,
     showPreviousMarks: sv.showPreviousMarks,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedPreviousAnnotation: state.aggregations.selectedAnnotation,
