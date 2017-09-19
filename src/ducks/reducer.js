@@ -6,6 +6,7 @@ import subject from './subject';
 import subjectViewer from './subject-viewer';
 import annotations from './annotations';
 import dialog from './dialog';
+import aggregations from './aggregations';
 
 export default combineReducers({
   login,
@@ -14,5 +15,6 @@ export default combineReducers({
   subject,
   subjectViewer,
   annotations,
-  dialog
+  dialog,
+  aggregations
 });

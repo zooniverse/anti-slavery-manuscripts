@@ -19,6 +19,7 @@ class AnnotationsPane extends React.Component {
     super(props);
     this.renderAnnotationInProgress = this.renderAnnotationInProgress.bind(this);
     this.renderAnnotations = this.renderAnnotations.bind(this);
+    this.renderPreviousAnnotations = this.renderPreviousAnnotations.bind(this);
   }
 
   //----------------------------------------------------------------
@@ -29,6 +30,7 @@ class AnnotationsPane extends React.Component {
       <g transform={imageOffset}>
         {this.renderAnnotationInProgress()}
         {this.renderAnnotations()}
+        {this.renderPreviousAnnotations()}
       </g>
     );
   }
@@ -71,7 +73,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#3fc"
+            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
           />
         );
       }
@@ -118,7 +120,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#3cf"
+            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
           />
         );
 
@@ -159,11 +161,67 @@ class AnnotationsPane extends React.Component {
       );
     });
   }
+
+  renderPreviousAnnotations() {
+    const previousAnnotations = this.props.previousAnnotations || [];
+
+    return previousAnnotations.map((reduction) => {
+      const annotationData = [];
+      const currentAnnotations = reduction.data[`frame${this.props.frame}`];
+
+      if (currentAnnotations) {
+        currentAnnotations.clusters_text.map((text, i) => {
+          const data = {
+            points: [{
+              x: currentAnnotations.clusters_x[i],
+              y: currentAnnotations.clusters_y[i],
+            }],
+            text: '',
+            textOptions: currentAnnotations.clusters_text[i]
+          };
+
+          data.svg =
+            <circle
+              key={`point${i}`}
+              cx={data.points[0].x} cy={data.points[0].y} r={5} fill="#c33"
+            />
+
+          annotationData.push(data)
+        });
+      }
+
+      return annotationData.map((point) => {
+        return this.renderCircle(point);
+      })
+    })
+  }
+
+  renderCircle(data) {
+    return (
+      <g
+        onClick={(e) => {
+          if (this.props.onSelectPreviousAnnotation) {
+            this.props.onSelectPreviousAnnotation(data);
+          }
+          return Utility.stopEvent(e);
+        }}
+        onMouseDown={(e) => {
+          return Utility.stopEvent(e);
+        }}
+        onMouseUp={(e) => {
+          return Utility.stopEvent(e);
+        }}
+      >
+        {data.svg}
+      </g>
+    )
+  }
 }
 
 AnnotationsPane.propTypes = {
   onCompleteAnnotation: PropTypes.func,
   onSelectAnnotation: PropTypes.func,
+  onSelectPreviousAnnotation: PropTypes.func,
   //--------
   imageSize: PropTypes.shape({
     width: PropTypes.number,
@@ -186,12 +244,15 @@ AnnotationsPane.propTypes = {
       })),
     })
   ),
+  frame: PropTypes.number,
+  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   showPreviousMarks: PropTypes.bool,
 };
 
 AnnotationsPane.defaultProps = {
   onCompleteAnnotation: null,
   onSelectAnnotation: null,
+  frame: 0,
   //--------
   imageSize: {
     width: 0,
@@ -200,6 +261,7 @@ AnnotationsPane.defaultProps = {
   //--------
   annotationInProgress: null,
   annotations: [],
+  previousAnnotations: [],
   showPreviousMarks: true,
 };
 
