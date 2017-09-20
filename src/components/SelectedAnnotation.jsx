@@ -26,8 +26,11 @@ class SelectedAnnotation extends React.Component {
   }
 
   componentDidMount() {
-    const text= this.props.annotation.details[0];
-    this.setState({ annotationText: text.value || '' });
+    let text = '';
+    if (this.props.annotation.details) {
+      text = this.props.annotation.details[0].value;
+    }
+    this.setState({ annotationText: text });
     this.inputText.addEventListener('mousedown', () => {
       this.dialog.className = DISABLE_DRAG;
     });
@@ -114,16 +117,17 @@ class SelectedAnnotation extends React.Component {
             )}
 
           </p>
+          
           {this.state.showAnnotationOptions && (
             this.renderAnnotationOptions()
           )}
-          {this.props.previousAnnotationSelected && !this.state.showAnnotationOptions && (
-            <div className="selected-annotation__markup">
-              <button>[insertion]</button>
-              <button>[deletion]</button>
-              <button>[unclear]</button>
-            </div>
-          )}
+
+          <div className="selected-annotation__markup">
+            <button>[insertion]</button>
+            <button>[deletion]</button>
+            <button>[unclear]</button>
+          </div>
+
           <div className="selected-annotation__buttons">
             <button onClick={this.saveText}>Done</button>
             <button onClick={this.props.onClose}>Cancel</button>
