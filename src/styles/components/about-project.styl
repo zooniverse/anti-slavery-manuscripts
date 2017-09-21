@@ -1,0 +1,144 @@
+@import "font-groups.styl"
+
+.about-the-project
+  color: $dark-grey
+
+  span
+    @extend .body-copy
+    display: block
+    font-size: 0.8em
+    margin: 1em 0
+
+  a
+    @extend .secondary-head-link
+    border-bottom: 2px solid transparent
+    font-size: 0.75em
+    margin: 0
+
+    &:hover, &:focus
+      border-bottom: 2px solid $eggplant
+      color: $eggplant
+
+  &__title
+    text-align: center
+    margin-top: 7.5em
+
+    h2
+      @extend .secondary-head-link
+
+    h3
+      @extend .main-title
+      letter-spacing: 0.04em
+
+      @media(max-width: 500px)
+        font-size: 2em
+        margin-top: 0.25em
+
+  &__description
+    margin: 1em 12em
+    text-align: center
+
+    @media(max-width: 750px)
+      margin: 1em 4em
+
+    @media(max-width: 500px)
+      margin: 1em 2em
+
+  &__team
+    background-color: $sandy
+    margin: 4em
+    padding: 2em 4em
+
+    h3
+      @extend .body-copy
+      font-size: 1.75em
+      letter-spaceing: 0.2em
+      margin-bottom: 2em
+      text-align: center
+
+    @media(max-width: 750px)
+      margin: 4em 2em
+
+    @media(max-width: 500px)
+      margin: 2em 1em
+      padding: 1em
+
+  &__member
+    display: flex
+    flex-direction: row
+    margin: 1em 0
+
+    div:first-child
+      background-color: $light-grey
+      border: 1px solid black
+      height: 8em
+      min-width: 12em
+
+      @media(max-width: 500px)
+        height: 6em
+        margin: 1em auto
+        min-width: 8em
+
+    h4
+      @extend .secondary-head-link
+      margin: 0
+
+    div:nth-child(2)
+      margin: 0 1.25em
+
+      span
+        font-size: 0.75em
+        margin: 0
+
+    @media(max-width: 750px)
+      flex-wrap: wrap
+      margin: 2em 0
+
+  &__library-photo
+    background-color: $light-grey
+    border: 1px solid black
+    height: 20em
+    margin: 0 4em
+
+    @media(max-width: 750px)
+      margin: 0 2em
+
+  &__library
+    background-color: white
+    font-size: 1.25em
+    margin: -2em 6em
+    padding: 2em
+
+    h3
+      @extend .body-copy
+      font-size: 1.35em
+      line-height: 1.2em
+      margin: 0
+      text-align: center
+
+    h3:nth-child(2)
+      font-style: italic
+
+    span
+      font-size: 0.7em
+
+    @media(max-width: 750px)
+      margin: -2em 2em
+
+    @media(max-width: 500px)
+      padding: 1em
+
+      h3
+        font-size: 1em
+
+  &__icons
+    margin: 4em 0
+    text-align: center
+
+    i
+      margin: 0 0.25em
+
+  .project-background
+    background-image: url('../images/home-bg.jpg')
+    height: 12em
+    top: 2em

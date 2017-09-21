@@ -18,7 +18,7 @@ class App extends React.Component {
 
   render() {
     const path = this.props.location.pathname;
-    const showTitle = path === '/' || path === '/about-the-collection';
+    const showTitle = path === '/classify';
 
     return (
       <div>

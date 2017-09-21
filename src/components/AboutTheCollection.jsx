@@ -28,7 +28,7 @@ class AboutTheCollection extends React.Component {
                 newspapers, pamphlets, books, and memorabilia from the 1830s through
                 the 1870s.
               </span><br />
-              <a href="#">View Collection</a>
+              <Link to="/about-the-project">About the Project</Link>
             </div>
             <div>
               <img role="presentation" src={AboutEnvelope}></img>

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 const ProjectHeader = ({ showTitle }) =>
   <div className="project-header">
-    {!showTitle && (
+    {showTitle && (
       <h1 className="main-title">Anti-Slavery Manuscripts</h1>
     )}
     <nav className="project-header__nav">
@@ -26,6 +26,7 @@ const ProjectHeader = ({ showTitle }) =>
       <Link
         activeClassName="project-header__link--active"
         className="project-header__link"
+        to="/about-the-collection"
       >
         About
       </Link>
@@ -38,9 +39,8 @@ const ProjectHeader = ({ showTitle }) =>
       <Link
         activeClassName="project-header__link--active"
         className="project-header__link"
-        to="/about-the-collection"
       >
-        About <i>the</i> Collection
+        Talk
       </Link>
     </nav>
   </div>;
