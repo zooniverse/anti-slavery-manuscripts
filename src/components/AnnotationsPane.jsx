@@ -13,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
+import { constructLines, constructPoints, constructText } from '../lib/construct-line';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -170,34 +171,29 @@ class AnnotationsPane extends React.Component {
       const annotationData = [];
       const currentAnnotations = reduction.data[`frame${this.props.frame}`];
 
-      if (currentAnnotations && currentAnnotations.clusters_text) {
-        currentAnnotations.clusters_text.map((text, i) => {
+      if (currentAnnotations) {
+        currentAnnotations.map((line, i) => {
+          const lines = constructLines(line, i);
+          const points = constructPoints(line, i);
+          const textOptions = constructText(line, i);
           const data = {
-            points: [{
-              x: currentAnnotations.clusters_x[i],
-              y: currentAnnotations.clusters_y[i],
-            }],
-            text: '',
-            textOptions: currentAnnotations.clusters_text[i]
+            lineSlope: line.line_slope,
+            textOptions: line.clusters_text,
+            index: i,
+            lines,
+            points
           };
-
-          data.svg =
-            <circle
-              key={`point${i}`}
-              cx={data.points[0].x} cy={data.points[0].y} r={5} fill="#c33"
-            />
-
-          annotationData.push(data)
-        });
+          annotationData.push(data);
+        })
       }
 
-      return annotationData.map((point) => {
-        return this.renderCircle(point);
+      return annotationData.map((line) => {
+        return this.renderLine(line);
       })
     })
   }
 
-  renderCircle(data) {
+  renderLine(data) {
     return (
       <g
         onClick={(e) => {
@@ -213,7 +209,8 @@ class AnnotationsPane extends React.Component {
           return Utility.stopEvent(e);
         }}
       >
-        {data.svg}
+        {data.lines}
+        {data.points}
       </g>
     )
   }
