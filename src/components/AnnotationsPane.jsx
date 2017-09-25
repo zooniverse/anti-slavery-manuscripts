@@ -169,7 +169,7 @@ class AnnotationsPane extends React.Component {
       const annotationData = [];
       const currentAnnotations = reduction.data[`frame${this.props.frame}`];
 
-      if (currentAnnotations) {
+      if (currentAnnotations && currentAnnotations.clusters_text) {
         currentAnnotations.clusters_text.map((text, i) => {
           const data = {
             points: [{
