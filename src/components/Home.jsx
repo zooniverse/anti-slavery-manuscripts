@@ -3,6 +3,7 @@ import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components'
 import SocialSection from '../components/SocialSection';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
+import LetterGroups from '../lib/letter-groups';
 
 class Home extends React.Component {
   constructor() {
@@ -33,12 +34,11 @@ class Home extends React.Component {
     }
   }
 
-  renderTopic() {
-    const numbers = ['One', 'Two', 'Three', 'Four'];
-    return numbers.map((num, i) => {
+  renderTopics() {
+    return LetterGroups.map((group, i) => {
       return (
         <div key={i}>
-          <span>Topic {num} &#8608;</span>
+          <span>{group.title}</span>
         </div>
       )
     });
@@ -63,7 +63,7 @@ class Home extends React.Component {
             Click the button above to start with a random document, or choose a topic:
           </span>
           <div className="home-page__topic-select flex-row">
-            {this.renderTopic()}
+            {this.renderTopics()}
           </div>
         </div>
         <div id="home-logos" className="home-page__logos flex-row">
