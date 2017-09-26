@@ -8,6 +8,7 @@ import App from './components/App';
 import Home from './components/Home';
 import About from './components/About';
 import AboutTheCollection from './components/AboutTheCollection';
+import AboutTheProject from './components/AboutTheProject';
 import Classifier from './containers/ClassifierContainer';
 import ClassifierTester from './containers/ClassifierTester';
 import config from './config';
@@ -30,6 +31,7 @@ oauth.init(config.panoptesAppId)
             <Route path="/classify-tester" component={ClassifierTester} />
             <Route path="/about" component={About} />
             <Route path="/about-the-collection" component={AboutTheCollection} />
+            <Route path="/about-the-project" component={AboutTheProject} />
           </Route>
         </Router>
       </Provider>),
