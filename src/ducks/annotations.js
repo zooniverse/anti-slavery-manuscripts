@@ -135,7 +135,7 @@ const selectPreviousAnnotation = (data) => {
 };
 
 const addAnnotationPoint = (x, y, frame) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: ADD_ANNOTATION_POINT,
       x, y, frame

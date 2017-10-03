@@ -37,14 +37,20 @@ const classificationReducer = (state = initialState, action) => {
 
 const createClassification = () => {
   return (dispatch, getState) => {
+    let version = "";
+    if (getState().workflow.data) {
+      version = getState().workflow.data.version;
+    }
+    const dimensions = [];
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
-        workflow_version: getState().workflow.data.version,
+        workflow_version: version,
         started_at: (new Date).toISOString(),
         user_agent: navigator.userAgent,
         user_language: counterpart.getLocale(),
         utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
+        subject_dimensions: []
       },
       links: {
         project: getState().project.id,
@@ -64,17 +70,21 @@ const createClassification = () => {
 
 const submitClassification = () => {
   return (dispatch, getState) => {
+    let task = "T0";
+    if (getState().workflow.data) {
+      task = getState().workflow.data.first_task;
+    }
     const annotations = {
       _key: Math.random(),
       _toolIndex: 0,
-      task: getState().workflow.data.first_task,
+      task: task,
       value: getState().annotations.annotations,
     }
 
     dispatch({
       annotations,
       type: SUBMIT_CLASSIFICATION,
-      task: getState().workflow.data.first_task
+      task
     });
   };
 };

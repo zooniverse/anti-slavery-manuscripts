@@ -51,7 +51,7 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.currentSubject != nextProps.currentSubject) {
+    if (nextProps.currentSubject && nextProps.workflow && !this.props.classification) {
       this.props.dispatch(createClassification());
     }
   }
@@ -237,6 +237,7 @@ ClassifierContainer.defaultProps = {
 };
 const mapStateToProps = (state, ownProps) => {
   return {
+    classification: state.classifications.classification,
     user: state.login.user,
     favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,

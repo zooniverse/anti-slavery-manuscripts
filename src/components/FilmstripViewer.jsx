@@ -17,7 +17,7 @@ class FilmstripViewer extends React.Component {
   }
 
   changeFrame(i) {
-    this.props.dispatch(changeFrame(i))
+    this.props.dispatch(changeFrame(i));
   }
 
   scroll(scrollDown = true) {
