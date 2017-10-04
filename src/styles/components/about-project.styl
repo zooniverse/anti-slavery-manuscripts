@@ -73,11 +73,18 @@
       border: 1px solid black
       height: 8em
       min-width: 12em
+      position: relative
 
       @media(max-width: 500px)
         height: 6em
         margin: 1em auto
         min-width: 8em
+
+      img
+        height: 100%
+        object-fit: cover
+        position: absolute
+        width: 100%
 
     h4
       @extend .secondary-head-link
