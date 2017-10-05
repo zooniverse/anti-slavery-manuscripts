@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
+import { fetchSplit } from '../ducks/splits';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
@@ -14,6 +15,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(fetchProject());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user != nextProps.user) {
+      this.props.dispatch(fetchSplit(nextProps.user));
+    }
   }
 
   render() {
@@ -59,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     dialog: state.dialog.data,
     project: state.project,
+    user: state.login.user
   };
 };
 
