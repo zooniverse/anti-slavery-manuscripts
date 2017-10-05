@@ -1,13 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router';
 import ProjectMembers from '../lib/project-members';
+let members = {
+  Beth: require('../images/Beth-Prindle.jpg'),
+  Eben: require('../images/Eben-English.jpg'),
+  Katherine: require('../images/Katherine-Griffin.jpg'),
+  Marilyn: require('../images/Marilyn-Morgan.jpg'),
+  Susan: require('../images/Susan-Mizruchi.jpg'),
+  Tom: require('../images/Tom-Blake.jpg')
+}
 
 class AboutTheProject extends React.Component {
   renderTeamMember(member, i) {
     return (
       <div key={i} className="about-the-project__member">
         <div>
-          <img />
+          <img src={members[member.photo]} />
         </div>
         <div>
           <h4>{member.name}</h4>
