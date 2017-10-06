@@ -37,20 +37,23 @@ const classificationReducer = (state = initialState, action) => {
 
 const createClassification = () => {
   return (dispatch, getState) => {
-    let version = "";
+    let workflow_version = '';
     if (getState().workflow.data) {
-      version = getState().workflow.data.version;
+      workflow_version = getState().workflow.data.version;
     }
-    const dimensions = [];
+    
+    let subject = getState().subject;
+    let subject_dimensions = [];
+    
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
-        workflow_version: version,
+        workflow_version,
         started_at: (new Date).toISOString(),
         user_agent: navigator.userAgent,
         user_language: counterpart.getLocale(),
         utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
-        subject_dimensions: []
+        subject_dimensions
       },
       links: {
         project: getState().project.id,

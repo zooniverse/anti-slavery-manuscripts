@@ -24,6 +24,7 @@ const SUBJECT_STATUS = {
 
 const initialState = {
   currentSubject: null,
+  imageMetadata: [],  //metadata for each image in the Subject; a single image is defined by subject.location.
   id: null,
   status: SUBJECT_STATUS.IDLE,
   queue: [],
@@ -41,6 +42,7 @@ const subjectReducer = (state = initialState, action) => {
     case FETCH_SUBJECT_SUCCESS:
       return Object.assign({}, state, {
         currentSubject: action.currentSubject,
+        imageMetadata: [],
         status: SUBJECT_STATUS.READY,
         id: action.id,
         queue: action.queue,
@@ -83,10 +85,10 @@ const createFavorites = (project) => {
 
 const toggleFavorite = () => {
   return (dispatch, getState) => {
-    const projectID = getState().project.id
-    const favorite = getState().subject.favorite
-    const user = getState().login.user.login
-    const subject = getState().subject.currentSubject
+    const projectID = getState().project.id;
+    const favorite = getState().subject.favorite;
+    const user = getState().login.user.login;
+    const subject = getState().subject.currentSubject;
     dispatch({ type: TOGGLE_FAVORITE, favorite: !favorite });
 
     if (user) {
