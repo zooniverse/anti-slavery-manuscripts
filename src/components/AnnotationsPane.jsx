@@ -53,7 +53,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#c33"
+            cx={point.x} cy={point.y} r={10} fill="#00CED1"
             className="end"
             style={{cursor: 'pointer'}}
             onClick={(e) => {
@@ -74,7 +74,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
+            cx={point.x} cy={point.y} r={10} fill="#00CED1"
           />
         );
       }
@@ -86,7 +86,7 @@ class AnnotationsPane extends React.Component {
             key={svgLinePrefix+(i-1)}
             x1={prevPoint.x} y1={prevPoint.y}
             x2={point.x} y2={point.y}
-            stroke="#39c" strokeWidth="2"
+            stroke="#00CED1" strokeWidth="2"
           />
         );
       }
@@ -122,7 +122,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#5cb85c"
+            cx={point.x} cy={point.y} r={10} fill="#00CED1"
           />
         );
 
@@ -133,7 +133,7 @@ class AnnotationsPane extends React.Component {
               key={svgLinePrefix+(i-1)}
               x1={prevPoint.x} y1={prevPoint.y}
               x2={point.x} y2={point.y}
-              stroke="#39c" strokeWidth="2"
+              stroke="#00CED1" strokeWidth="2"
             />
           );
         }
@@ -177,6 +177,8 @@ class AnnotationsPane extends React.Component {
           const points = constructPoints(line, i);
           const textOptions = constructText(line, i);
           const data = {
+            x: line.clusters_x[line.clusters_x.length - 1],
+            y: line.clusters_y[line.clusters_y.length - 1],
             lineSlope: line.line_slope,
             textOptions: line.clusters_text,
             index: i,
@@ -196,6 +198,7 @@ class AnnotationsPane extends React.Component {
   renderLine(data) {
     return (
       <g
+        style={{cursor: 'pointer'}}
         onClick={(e) => {
           if (this.props.onSelectPreviousAnnotation) {
             this.props.onSelectPreviousAnnotation(data);

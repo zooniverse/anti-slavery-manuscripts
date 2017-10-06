@@ -9,7 +9,7 @@ function constructLines(line) {
           key={`line${i-1}`}
           x1={line.clusters_x[i - 1]} y1={line.clusters_y[i - 1]}
           x2={line.clusters_x[i]} y2={line.clusters_y[i]}
-          stroke="#39c" strokeWidth="2"
+          stroke="#c33" strokeWidth="2"
         />
       );
     }
@@ -33,7 +33,7 @@ function constructPoints(line) {
 };
 
 function constructText(line) {
-  console.log(line);
+  // console.log(line);
 }
 
 export { constructPoints, constructLines, constructText };

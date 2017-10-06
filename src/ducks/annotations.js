@@ -75,7 +75,7 @@ const subjectReducer = (state = initialState, action) => {
 
     case SELECT_PREVIOUS_ANNOTATION:
       return Object.assign({}, state, {
-        annotationPanePosition: action.data.points[0],
+        annotationPanePosition: {x: action.data.x, y: action.data.y },
         previousAnnotationSelected: true,
         selectedAnnotation: action.data,
       });
