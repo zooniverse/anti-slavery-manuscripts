@@ -13,6 +13,7 @@ const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
 const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
+const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 
 const TEMPORARY_HARDCODED_WORKFLOW_ID = '3017';
 const SUBJECT_STATUS = {
@@ -58,6 +59,17 @@ const subjectReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         favorite: action.favorite,
       });
+      
+    case SET_IMAGE_METADATA:      
+      let imageMetadata = state.imageMetadata.slice();
+      if (action.frameId !== null) {
+        imageMetadata[action.frameId] = Object.assign({}, imageMetadata[action.frameId], action.metadata);
+      }
+      
+      return Object.assign({}, state, {
+        imageMetadata
+      });
+      
 
     default:
       return state;
@@ -109,6 +121,16 @@ const toggleFavorite = () => {
   }
 }
 
+const setImageMetadata = (frameId, metadata) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_IMAGE_METADATA,
+      frameId,
+      metadata,
+    });
+  };
+}
+
 const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
   return (dispatch, getState) => {
 
@@ -155,5 +177,6 @@ export default subjectReducer;
 export {
   toggleFavorite,
   fetchSubject,
+  setImageMetadata,
   SUBJECT_STATUS,
 };

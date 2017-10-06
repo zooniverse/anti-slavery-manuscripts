@@ -26,7 +26,7 @@ import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
 import { Utility } from '../lib/Utility';
-import { fetchSubject, SUBJECT_STATUS } from '../ducks/subject';
+import { fetchSubject, setImageMetadata, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import { fetchAggregations } from '../ducks/aggregations';
@@ -246,6 +246,17 @@ class SubjectViewer extends React.Component {
       const imgW = (this.svgImage.image.width) ? this.svgImage.image.width : 1;
       const imgH = (this.svgImage.image.height) ? this.svgImage.image.height : 1;
 
+      this.props.dispatch(setImageMetadata(this.props.frame, {
+        naturalWidth: imgW,
+        naturalHeight: imgH,
+        
+        //TODO: figure out when to update clientSize - on page resize? On
+        //resetView? etc etc. WARNING: Event hookups may be really complicated
+        //for data that won't be used.
+        //TODO: revisit after Sam checks in with the BPL team (-shaun 20171006) 
+        clientWidth: imgW,
+        clientHeight: imgH,
+      }));
       this.props.dispatch(updateImageSize(imgW, imgH));
       this.props.dispatch(resetView());
     }
@@ -490,10 +501,6 @@ SubjectViewer.defaultProps = {
   currentSubject: null,
   frame: 0,
   //--------
-  imageSize: {
-    width: 0,
-    height: 0,
-  },
   previousAnnotations: [],
   rotation: 0,
   scaling: 1,
