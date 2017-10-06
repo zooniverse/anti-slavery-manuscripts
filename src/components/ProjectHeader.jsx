@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import ProjectLinks from '../lib/project-locations';
 
 const ProjectHeader = ({ showTitle }) =>
   <div className="project-header">
@@ -30,18 +31,20 @@ const ProjectHeader = ({ showTitle }) =>
       >
         About
       </Link>
-      <Link
+      <a
         activeClassName="project-header__link--active"
         className="project-header__link"
+        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/collections'}
       >
         Collect
-      </Link>
-      <Link
+      </a>
+      <a
         activeClassName="project-header__link--active"
         className="project-header__link"
+        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/talk'}
       >
         Talk
-      </Link>
+      </a>
     </nav>
   </div>;
 
