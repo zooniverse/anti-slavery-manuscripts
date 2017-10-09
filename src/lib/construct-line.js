@@ -33,7 +33,14 @@ function constructPoints(line) {
 };
 
 function constructText(line) {
-  // console.log(line);
+  const sentences = [];
+  line.clusters_text.map((value) => {
+    value.map((word, i) => {
+      if (!sentences[i]) { sentences[i] = []; }
+      if (word.length) { sentences[i].push(word); }
+    })
+  });
+  return sentences.map(value => value.join(' '));
 }
 
 export { constructPoints, constructLines, constructText };

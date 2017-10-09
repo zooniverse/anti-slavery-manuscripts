@@ -180,10 +180,7 @@ class AnnotationsPane extends React.Component {
             x: line.clusters_x[line.clusters_x.length - 1],
             y: line.clusters_y[line.clusters_y.length - 1],
             lineSlope: line.line_slope,
-            textOptions: line.clusters_text,
-            index: i,
-            lines,
-            points
+            textOptions, lines, points
           };
           annotationData.push(data);
         })
