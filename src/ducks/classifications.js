@@ -20,13 +20,15 @@ const classificationReducer = (state = initialState, action) => {
     case SUBMIT_CLASSIFICATION:
       const classification = state.classification;
       classification.annotations.push(action.annotations);
+      
       classification.update({
         completed: true,
         'metadata.finished_at': (new Date()).toISOString(),
         'metadata.viewport': {
           width: innerWidth,
           height: innerHeight
-        }
+        },
+        'metadata.subject_dimensions': action.subject_dimensions || [],
       }).save();
       // classification.metadata.session = getSessionID();
 
@@ -42,9 +44,6 @@ const createClassification = () => {
       workflow_version = getState().workflow.data.version;
     }
     
-    let subject = getState().subject;
-    let subject_dimensions = [];
-    
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
@@ -53,7 +52,7 @@ const createClassification = () => {
         user_agent: navigator.userAgent,
         user_language: counterpart.getLocale(),
         utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
-        subject_dimensions
+        subject_dimensions: [],
       },
       links: {
         project: getState().project.id,
@@ -83,11 +82,15 @@ const submitClassification = () => {
       task: task,
       value: getState().annotations.annotations,
     }
+    
+    let subject = getState().subject;
+    let subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
 
     dispatch({
       annotations,
       type: SUBMIT_CLASSIFICATION,
-      task
+      task,
+      subject_dimensions,
     });
   };
 };
