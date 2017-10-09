@@ -13,6 +13,8 @@ const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
 const SELECT_PREVIOUS_ANNOTATION = 'SELECT_PREVIOUS_ANNOTATION';
 const UNSELECT_ANNOTATION = 'UNSELECT_ANNOTATION';
 const UNSELECT_PREVIOUS_ANNOTATION = 'UNSELECT_PREVIOUS_ANNOTATION';
+const UPDATE_TEXT = 'UPDATE_TEXT';
+const SAVE_TEXT = 'SAVE_TEXT';
 
 //Misc Constants
 const ANNOTATION_STATUS = {
@@ -33,12 +35,13 @@ const ANNOTATION_STATUS = {
 
 const initialState = {
   status: ANNOTATION_STATUS.IDLE,
-  annotations: [],  //Completed annotations.
   annotationInProgress: null,  //Incomplete annotation. null if nothing is in progress.
   annotationPanePosition: null,
-  selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
-  previousAnnotationSelected: false,
+  annotations: [],  //Completed annotations.
   endClicks: [],
+  previousAnnotationSelected: false,
+  selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
+  selectedAnnotationIndex: null,
 };
 
 const subjectReducer = (state = initialState, action) => {
@@ -46,7 +49,7 @@ const subjectReducer = (state = initialState, action) => {
     case ADD_ANNOTATION_POINT:
       const annotationInProgress = (state.annotationInProgress)
         ? Object.assign({}, state.annotationInProgress) //Create a copy, don't modify the existing object.
-        : { text: '', points: [] };
+        : { details: [{value: ''}], points: [], frame: action.frame };
       annotationInProgress.points.push({ x: action.x, y: action.y });
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IN_PROGRESS,
@@ -67,6 +70,7 @@ const subjectReducer = (state = initialState, action) => {
         endClicks,
         annotationPanePosition: action.endPoint,
         selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
+        selectedAnnotationIndex: annotations.length - 1
       });
 
     case SELECT_PREVIOUS_ANNOTATION:
@@ -86,12 +90,24 @@ const subjectReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         selectedAnnotation,
         annotationPanePosition,
+        selectedAnnotationIndex: action.index
+      });
+
+    case UPDATE_TEXT:
+      const newDetails = [{value: action.text}];
+      const annotationCopy = state.annotations.slice();
+      const updatedAnnotation = annotationCopy[state.selectedAnnotationIndex];
+      updatedAnnotation.details = newDetails;
+
+      return Object.assign({}, state, {
+        annotations: annotationCopy
       });
 
     case UNSELECT_ANNOTATION:
       return Object.assign({}, state, {
         annotationPanePosition: null,
         selectedAnnotation: null,
+        selectedAnnotationIndex: null
       });
 
     case UNSELECT_PREVIOUS_ANNOTATION:
@@ -118,11 +134,11 @@ const selectPreviousAnnotation = (data) => {
   };
 };
 
-const addAnnotationPoint = (x, y) => {
+const addAnnotationPoint = (x, y, frame) => {
   return (dispatch) => {
     dispatch({
       type: ADD_ANNOTATION_POINT,
-      x, y,
+      x, y, frame
     });
   };
 };
@@ -156,7 +172,16 @@ const completeAnnotation = (endPoint) => {
   return (dispatch) => {
     dispatch({
       type: COMPLETE_ANNOTATION,
-      endPoint
+      endPoint,
+    });
+  };
+};
+
+const updateText = (text) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_TEXT,
+      text
     });
   };
 };
@@ -171,5 +196,5 @@ export {
   addAnnotationPoint, completeAnnotation,
   selectAnnotation, unselectAnnotation,
   unselectPreviousAnnotation, selectPreviousAnnotation,
-  ANNOTATION_STATUS
+  updateText, ANNOTATION_STATUS
 };

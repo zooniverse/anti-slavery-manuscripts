@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
+import { fetchWorkflow } from '../ducks/workflow';
 import { fetchSplit } from '../ducks/splits';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
@@ -15,6 +16,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(fetchProject());
+    this.props.dispatch(fetchWorkflow());
   }
 
   componentWillReceiveProps(nextProps) {

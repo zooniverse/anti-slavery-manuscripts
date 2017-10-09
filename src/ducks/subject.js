@@ -13,6 +13,7 @@ const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
 const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
+const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 
 const TEMPORARY_HARDCODED_WORKFLOW_ID = '3017';
 const SUBJECT_STATUS = {
@@ -24,6 +25,7 @@ const SUBJECT_STATUS = {
 
 const initialState = {
   currentSubject: null,
+  imageMetadata: [],  //metadata for each image in the Subject; a single image is defined by subject.location.
   id: null,
   status: SUBJECT_STATUS.IDLE,
   queue: [],
@@ -36,13 +38,14 @@ const subjectReducer = (state = initialState, action) => {
     case FETCH_SUBJECT:
       return Object.assign({}, state, {
         status: SUBJECT_STATUS.FETCHING,
-        id: action.id,
       });
 
     case FETCH_SUBJECT_SUCCESS:
       return Object.assign({}, state, {
         currentSubject: action.currentSubject,
+        imageMetadata: [],
         status: SUBJECT_STATUS.READY,
+        id: action.id,
         queue: action.queue,
         favorite: action.favorite,
       });
@@ -56,6 +59,17 @@ const subjectReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         favorite: action.favorite,
       });
+      
+    case SET_IMAGE_METADATA:      
+      let imageMetadata = state.imageMetadata.slice();
+      if (action.frameId !== null) {
+        imageMetadata[action.frameId] = Object.assign({}, imageMetadata[action.frameId], action.metadata);
+      }
+      
+      return Object.assign({}, state, {
+        imageMetadata
+      });
+      
 
     default:
       return state;
@@ -83,10 +97,10 @@ const createFavorites = (project) => {
 
 const toggleFavorite = () => {
   return (dispatch, getState) => {
-    const projectID = getState().project.id
-    const favorite = getState().subject.favorite
-    const user = getState().login.user.login
-    const subject = getState().subject.currentSubject
+    const projectID = getState().project.id;
+    const favorite = getState().subject.favorite;
+    const user = getState().login.user.login;
+    const subject = getState().subject.currentSubject;
     dispatch({ type: TOGGLE_FAVORITE, favorite: !favorite });
 
     if (user) {
@@ -107,12 +121,21 @@ const toggleFavorite = () => {
   }
 }
 
+const setImageMetadata = (frameId, metadata) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_IMAGE_METADATA,
+      frameId,
+      metadata,
+    });
+  };
+}
+
 const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
   return (dispatch, getState) => {
 
     dispatch({
       type: FETCH_SUBJECT,
-      id,
     });
 
     const subjectQuery = {
@@ -125,6 +148,7 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
           const currentSubject = queue.shift();
           dispatch({
             currentSubject,
+            id: currentSubject.id,
             queue,
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,
@@ -153,5 +177,6 @@ export default subjectReducer;
 export {
   toggleFavorite,
   fetchSubject,
+  setImageMetadata,
   SUBJECT_STATUS,
 };
