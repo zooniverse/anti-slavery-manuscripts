@@ -13,6 +13,7 @@ import Classifier from './containers/ClassifierContainer';
 import ClassifierTester from './containers/ClassifierTester';
 import config from './config';
 import configureStore from './store';
+import './lib/split-config.js';
 
 // Todo: let's find a better way to include Styles,
 // currently Styles looks like an unused var to eslint

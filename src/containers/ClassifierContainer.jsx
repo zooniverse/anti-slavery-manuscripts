@@ -216,6 +216,7 @@ ClassifierContainer.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.login.user,
+    splits: state.splits.splits,
     favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,
     rotation: state.subjectViewer.rotation,
