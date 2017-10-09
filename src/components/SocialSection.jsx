@@ -65,9 +65,9 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, su
       </div>
       <div className="home-page__news-section flex-row">
         <div className="social-bar fa-2x">
-          <i className="fa fa-twitter"/>
-          <i className="fa fa-facebook"/>
-          <i className="fa fa-instagram"/>
+          <a href="https://twitter.com/BPLBoston" target="_blank"><i className="fa fa-twitter"/></a>
+          <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank"><i className="fa fa-facebook"/></a>
+          <a href="https://www.instagram.com/bplboston" target="_blank"><i className="fa fa-instagram"/></a>
         </div>
         <div>
           <h3 className="main-title">In the News</h3>

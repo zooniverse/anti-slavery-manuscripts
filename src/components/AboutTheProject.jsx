@@ -42,7 +42,7 @@ class AboutTheProject extends React.Component {
             the 1870s.
           </span>
 
-          <a href="#">View Collection</a>
+          <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View Collection</a>
         </div>
 
         <div className="about-the-project__team">
@@ -94,9 +94,9 @@ class AboutTheProject extends React.Component {
           </span>
 
           <div className="about-the-project__icons">
-            <a href="#"><i className="fa fa-facebook fa-2x" /></a>
-            <a href="#"><i className="fa fa-twitter fa-2x" /></a>
-            <a href="#"><i className="fa fa-instagram fa-2x" /></a>
+            <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank"><i className="fa fa-facebook fa-2x" /></a>
+            <a href="https://twitter.com/BPLBoston" target="_blank"><i className="fa fa-twitter fa-2x" /></a>
+            <a href="https://www.instagram.com/bplboston" target="_blank"><i className="fa fa-instagram fa-2x" /></a>
           </div>
         </div>
       </main>
