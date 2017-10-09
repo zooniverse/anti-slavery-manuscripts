@@ -28,7 +28,7 @@ class AboutTheCollection extends React.Component {
                 newspapers, pamphlets, books, and memorabilia from the 1830s through
                 the 1870s.
               </span><br />
-              <a href="#">View Collection</a>
+              <Link to="/about-the-project">About the Project</Link>
             </div>
             <div>
               <img role="presentation" src={AboutEnvelope}></img>
@@ -132,7 +132,7 @@ class AboutTheCollection extends React.Component {
                 and in the United States; and records of the American, Massachusetts,
                 New England, and Female Anti-Slavery Societies.
               </span>
-              <a href="#">View More</a>
+              <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View More</a>
             </div>
           </div>
 
@@ -152,7 +152,7 @@ class AboutTheCollection extends React.Component {
                 Phillips, and the families of such abolitionists as William Lloyd
                 Garrison, the Weston sisters, Amos A. Phelps, John Bishop Estlin, and Samuel Mav.
               </span>
-              <a href="#">View More</a>
+              <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View More</a>
             </div>
             <div>
               <img role="presentation" src={AboutBroadside} />

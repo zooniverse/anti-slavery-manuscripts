@@ -239,6 +239,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     classification: state.classifications.classification,
     user: state.login.user,
+    splits: state.splits.splits,
     favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,
     project: state.project.data,

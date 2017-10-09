@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import ProjectLinks from '../lib/project-locations';
 
 const ProjectHeader = ({ showTitle }) =>
   <div className="project-header">
-    {!showTitle && (
+    {showTitle && (
       <h1 className="main-title">Anti-Slavery Manuscripts</h1>
     )}
     <nav className="project-header__nav">
@@ -26,22 +27,24 @@ const ProjectHeader = ({ showTitle }) =>
       <Link
         activeClassName="project-header__link--active"
         className="project-header__link"
+        to="/about-the-collection"
       >
         About
       </Link>
-      <Link
+      <a
         activeClassName="project-header__link--active"
         className="project-header__link"
+        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/collections'}
       >
         Collect
-      </Link>
-      <Link
+      </a>
+      <a
         activeClassName="project-header__link--active"
         className="project-header__link"
-        to="/about-the-collection"
+        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/talk'}
       >
-        About <i>the</i> Collection
-      </Link>
+        Talk
+      </a>
     </nav>
   </div>;
 
