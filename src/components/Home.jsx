@@ -94,21 +94,12 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  children: PropTypes.node,
-  dialog: PropTypes.node,
-  dispatch: PropTypes.func,
-  location: PropTypes.shape({
-    pathname: PropTypes.string,
-  }),
   project: PropTypes.shape({
-    description: ''
+    description: PropTypes.string
   })
 };
 
 Home.defaultProps = {
-  children: null,
-  dialog: null,
-  location: {},
   project: {
     description: ''
   }
