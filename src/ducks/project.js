@@ -30,7 +30,7 @@ const PROJECT_STATUS = {
 const initialState = {
   status: PROJECT_STATUS.IDLE,
   id: null,
-  data: null,
+  data: {},
 };
 
 const classifierReducer = (state = initialState, action) => {
@@ -41,7 +41,7 @@ const classifierReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         status: PROJECT_STATUS.FETCHING,
         id: action.id,
-        data: null,
+        data: {},
       });
 
     //State Transition: we tried fetching a project, and we're successful!

@@ -1,5 +1,7 @@
 import React from 'react';
 import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import SocialSection from '../components/SocialSection';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
@@ -53,10 +55,8 @@ class Home extends React.Component {
           <h1 className="secondary-head">Presented <i className="secondary-conjunctions">by the</i> Boston Public Library</h1>
           <img role="presentation" className="divider" src={Divider} />
           <div className="home-page__body-text">
-            <b className="body-copy-first-word">Welcome</b> to Anti-Slavery Manuscripts. Now let&apos;s drop some
-            of that phat Lorem ipsum beat. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Donec eget eleifend risus, id aliquet est. Maecenas
-            tempus luctus lacinia.
+            <b className="body-copy-first-word">Welcome</b> to Anti-Slavery Manuscripts.{' '}
+            {this.props.project.description}
           </div>
           <h3 className="transcribe">Transcribe Random&#8608;</h3>
           <span className="instructions">
@@ -74,7 +74,7 @@ class Home extends React.Component {
             <img role="presentation" src={BostonLogo} />
           </a>
         </div>
-        <SocialSection />
+        <SocialSection project={this.props.project} />
         <div className="home-page__community">
         </div>
         <div className="home-page__zooniverse">
@@ -93,4 +93,22 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  project: PropTypes.shape({
+    description: PropTypes.string
+  })
+};
+
+Home.defaultProps = {
+  project: {
+    description: ''
+  }
+};
+
+const mapStateToProps = (state) => {
+  return {
+    project: state.project.data,
+  };
+};
+
+export default connect(mapStateToProps)(Home);

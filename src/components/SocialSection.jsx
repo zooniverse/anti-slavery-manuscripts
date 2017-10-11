@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '../images/img_divider.png';
 
-const SocialSection = ({ classifications, completedSubjects, percentComplete, subjects, volunteers }) =>
+const SocialSection = ({ classifications, completedSubjects, percentComplete, project, subjects, volunteers }) =>
   <div className="home-page__social-section">
     <h2 className="main-title">Subjects<i>of</i>  Note</h2>
     <img role="presentation" className="divider" src={Divider} />
@@ -18,9 +18,7 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, su
       <div>
         <h3 className="main-title">Project Statistics</h3>
         <span className="body-copy">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rhoncus
-          facilisis est. Etiam gravida non elit quis retrum. Vestibulum ut
-          hendrerit felis. Etiam sit amet libero lorem. Nam auctor rhoncus nisl.
+          Check back for updated stats on Anti-Slavery Manuscripts.
         </span>
         <div className="home-page__progress-bar">
           <div className="completed" style={{ minWidth: "2em", width: `${percentComplete}%` }}>
@@ -59,8 +57,7 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, su
       <div>
         <h3 className="main-title">Message from the researchers</h3>
         <span>
-          Lopem upsum dolor sit amet, consectetur adipiscing elit? Aliquan elemeum,
-          msif iaculis eleifend porttitor, nisl aliqua?
+          {project.researcher_quote}
         </span>
       </div>
       <div className="home-page__news-section flex-row">
@@ -72,8 +69,7 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, su
         <div>
           <h3 className="main-title">In the News</h3>
           <span>
-            Lopem upsum dolor sit amet, consectetur adipiscing elit? Aliquan elemeum,
-            msif iaculis eleifend porttitor, nisl aliqua?
+            Check back for updates on Anti-Slavery Manuscripts.
           </span>
         </div>
       </div>
@@ -84,6 +80,9 @@ SocialSection.defaultProps = {
   classifications: 0,
   completedSubjects: 0,
   percentComplete: 0,
+  project: {
+    researcher_quote: ''
+  },
   subjects: 0,
   volunteers: 0,
 };
@@ -92,6 +91,9 @@ SocialSection.propTypes = {
   classifications: PropTypes.number,
   completedSubjects: PropTypes.number,
   percentComplete: PropTypes.number,
+  project: PropTypes.shape({
+    researcher_quote: ''
+  }),
   subjects: PropTypes.number,
   volunteers: PropTypes.number,
 };
