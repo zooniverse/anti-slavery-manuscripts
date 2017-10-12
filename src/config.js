@@ -22,9 +22,19 @@ if (!env.match(/^(production|staging|development)$/)) {
 const baseConfig = {
   development: {
     panoptesAppId: '24ad5676d5d25c6aa850dc5d5f63ec8c03dbc7ae113b6442b8571fce6c5b974c', // test-rog project for dev
+    zooniverseLinks: {
+      host: 'https://master.pfe-preview.zooniverse.org/',
+      projectId: '1764',
+      projectSlug: 'wgranger-test/anti-slavery-testing',
+    },
   },
   production: {
     panoptesAppId: '',
+    zooniverseLinks: {
+      host: 'https://www.zooniverse.org/',
+      projectId: '4973',
+      projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
+    },
   }
 };
 baseConfig.staging = baseConfig.development;  //staging === development, as far as we're concerned.
