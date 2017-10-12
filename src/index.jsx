@@ -11,7 +11,7 @@ import AboutTheCollection from './components/AboutTheCollection';
 import AboutTheProject from './components/AboutTheProject';
 import Classifier from './containers/ClassifierContainer';
 import ClassifierTester from './containers/ClassifierTester';
-import config from './config';
+import { config } from './config';
 import configureStore from './store';
 import './lib/split-config.js';
 
