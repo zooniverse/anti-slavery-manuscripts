@@ -2,13 +2,11 @@ import oauth from 'panoptes-client/lib/oauth';
 
 // Action Types
 const SET_LOGIN_USER = 'project/user/SET_LOGIN_USER';
-const TOGGLE_MODAL = 'TOGGLE_MODAL';
 
 // Reducer
 const initialState = {
  user: null,
  initialised: false,
- showModal: false
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -18,11 +16,6 @@ const loginReducer = (state = initialState, action) => {
        user: action.user,  // null if logged out.
        initialised: true,  // true once we know if user is logged in/out; false if unknown.
      });
-
-    case TOGGLE_MODAL:
-    return Object.assign({}, state, {
-      showModal: action.modal,
-    });
 
    default:
      return state;
@@ -63,15 +56,6 @@ const setLoginUser = (user) => {
  };
 };
 
-const toggleLoginModal = (modal) => {
-  return (dispatch) => {
-    dispatch({
-        type: TOGGLE_MODAL,
-        modal
-    });
-  };
-};
-
 // Helper functions
 const computeRedirectURL = (window) => {
   const { location } = window;
@@ -87,5 +71,4 @@ export {
  loginToPanoptes,
  logoutFromPanoptes,
  setLoginUser,
- toggleLoginModal
 };
