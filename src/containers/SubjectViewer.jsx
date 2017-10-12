@@ -29,7 +29,7 @@ import { Utility } from '../lib/Utility';
 import { fetchSubject, setImageMetadata, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
-import { fetchAggregations } from '../ducks/aggregations';
+import { fetchAnnotations } from '../ducks/previousAnnotations';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -39,8 +39,7 @@ import {
 
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
-  selectPreviousAnnotation, unselectAnnotation,
-  unselectPreviousAnnotation, ANNOTATION_STATUS
+  unselectAnnotation, ANNOTATION_STATUS
 } from '../ducks/annotations';
 
 const INPUT_STATE = {
@@ -80,7 +79,6 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
-    this.onSelectPreviousAnnotation = this.onSelectPreviousAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
 
     //Mouse or touch pointer
@@ -140,7 +138,6 @@ class SubjectViewer extends React.Component {
               frame={this.props.frame}
               onCompleteAnnotation={this.onCompleteAnnotation}
               onSelectAnnotation={this.onSelectAnnotation}
-              onSelectPreviousAnnotation={this.onSelectPreviousAnnotation}
               previousAnnotations={this.props.previousAnnotations}
               showPreviousMarks={this.props.showPreviousMarks}
             />
@@ -192,13 +189,13 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
-    this.props.dispatch(fetchAggregations());
+    this.props.dispatch(fetchAnnotations());
   }
 
   componentWillReceiveProps(next) {
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
-        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} previousAnnotationSelected={next.previousAnnotationSelected} />
+        annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
       });
     }
   }
@@ -249,11 +246,11 @@ class SubjectViewer extends React.Component {
       this.props.dispatch(setImageMetadata(this.props.frame, {
         naturalWidth: imgW,
         naturalHeight: imgH,
-        
+
         //TODO: figure out when to update clientSize - on page resize? On
         //resetView? etc etc. WARNING: Event hookups may be really complicated
         //for data that won't be used.
-        //TODO: revisit after Sam checks in with the BPL team (-shaun 20171006) 
+        //TODO: revisit after Sam checks in with the BPL team (-shaun 20171006)
         clientWidth: imgW,
         clientHeight: imgH,
       }));
@@ -340,26 +337,16 @@ class SubjectViewer extends React.Component {
 
   closeAnnotation() {
     this.setState({ annotation: null });
-    if (this.props.previousAnnotationSelected) {
-      this.props.dispatch(unselectPreviousAnnotation());
-    } else {
-      this.props.dispatch(unselectAnnotation());
-    }
+    this.props.dispatch(unselectAnnotation());
   }
 
   /*  Triggers when the user clicks on a specific line of annotation.
    */
-  onSelectAnnotation(indexOfAnnotation) {
+  onSelectAnnotation(indexOfAnnotation, isPreviousAnnotation) {
     //Don't allow an annotation to be selected if there's one in progress,
     //otherwise it gets confusing.
     if (this.props.annotationInProgress === null) {
-      this.props.dispatch(selectAnnotation(indexOfAnnotation));
-    }
-  }
-
-  onSelectPreviousAnnotation(data) {
-    if (this.props.annotationInProgress === null) {
-      this.props.dispatch(selectPreviousAnnotation(data));
+      this.props.dispatch(selectAnnotation(indexOfAnnotation, isPreviousAnnotation));
     }
   }
 
@@ -481,13 +468,6 @@ SubjectViewer.propTypes = {
     })
   ),
   showPreviousMarks: PropTypes.bool,
-  selectedPreviousAnnotation: PropTypes.shape({
-    text: PropTypes.arrayOf(PropTypes.string),
-    points: PropTypes.arrayOf(PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    })),
-  }),
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -505,7 +485,6 @@ SubjectViewer.defaultProps = {
   rotation: 0,
   scaling: 1,
   selectedAnnotation: null,
-  selectedPreviousAnnotation: null,
   translationX: 0,
   translationY: 0,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
@@ -531,7 +510,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     contrast: sv.contrast,
     //--------
     frame: sv.frame,
-    previousAnnotations: state.aggregations.data,
+    previousAnnotations: state.previousAnnotations.marks,
     rotation: sv.rotation,
     scaling: sv.scaling,
     translationX: sv.translationX,
@@ -543,10 +522,8 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
-    previousAnnotationSelected: anno.previousAnnotationSelected,
     showPreviousMarks: sv.showPreviousMarks,
     selectedAnnotation: state.annotations.selectedAnnotation,
-    selectedPreviousAnnotation: state.aggregations.selectedAnnotation,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

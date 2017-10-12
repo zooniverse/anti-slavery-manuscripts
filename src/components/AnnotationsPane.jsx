@@ -13,7 +13,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
-import { constructLines, constructPoints, constructText } from '../lib/construct-line';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -21,6 +20,8 @@ class AnnotationsPane extends React.Component {
     this.renderAnnotationInProgress = this.renderAnnotationInProgress.bind(this);
     this.renderAnnotations = this.renderAnnotations.bind(this);
     this.renderPreviousAnnotations = this.renderPreviousAnnotations.bind(this);
+    this.renderUserAnnotations = this.renderUserAnnotations.bind(this);
+    this.determineGreenLine = this.determineGreenLine.bind(this);
   }
 
   //----------------------------------------------------------------
@@ -30,7 +31,7 @@ class AnnotationsPane extends React.Component {
     return (
       <g transform={imageOffset}>
         {this.renderAnnotationInProgress()}
-        {this.renderAnnotations()}
+        {this.renderUserAnnotations()}
         {this.renderPreviousAnnotations()}
       </g>
     );
@@ -58,7 +59,7 @@ class AnnotationsPane extends React.Component {
             style={{cursor: 'pointer'}}
             onClick={(e) => {
               if (this.props.onCompleteAnnotation) {
-                this.props.onCompleteAnnotation(point);
+                this.props.onCompleteAnnotation();
               }
               return Utility.stopEvent(e);
             }}
@@ -103,16 +104,50 @@ class AnnotationsPane extends React.Component {
   /*  Renders all the annotations that the user has completed.
       WARNING: Not to be confused with annotations from other users!
    */
-  renderAnnotations() {
+  renderUserAnnotations() {
     if (!this.props.annotations) return null;
+    return this.renderAnnotations(this.props.annotations);
+  }
+
+  renderPreviousAnnotations() {
+    if (!this.props.previousAnnotations) return null;
+    return this.renderAnnotations(this.props.previousAnnotations, true);
+  }
+
+  determineGreenLine(annotation, index) {
+    let greenLine = false;
+
+    if (this.props.selectedAnnotation && index === this.props.selectedAnnotationIndex) {
+      if (annotation.previousAnnotation && this.props.selectedAnnotation.previousAnnotation) {
+        greenLine = true;
+      } else if (!annotation.previousAnnotation && !this.props.selectedAnnotation.previousAnnotation) {
+        greenLine = true;
+      }
+    }
+    return greenLine;
+  }
+
+  renderAnnotations(annotations, previousAnnotations = false) {
+    if (!annotations) return null;
     if (!this.props.showPreviousMarks) return null;
 
     const annotationPrefix = 'ANNOTATION_';
 
-    return this.props.annotations.map((annotation, indexOfAnnotation) => {
+    return annotations.map((annotation, index) => {
+      if (annotation.hasCollaborated === true) { return null; }
+
+      let fillColor = previousAnnotations ? "#c33" : "#00CED1";
+
+      const selectedAnnotation = this.determineGreenLine(annotation, index);
+      if (selectedAnnotation) { fillColor = "#5cb85c"; }
+
       if (annotation.frame !== this.props.frame) return null;
-      const svgLinePrefix = `ANNOTATION_${indexOfAnnotation}_LINE_`;
-      const svgPointPrefix = `ANNOTATION_${indexOfAnnotation}_POINT_`;
+      let svgLinePrefix = `ANNOTATION_${index}_LINE_`;
+      let svgPointPrefix = `ANNOTATION_${index}_POINT_`;
+      if (previousAnnotations) {
+        svgLinePrefix = `PREVIOUS_` + svgLinePrefix;
+        svgPointPrefix = `PREVIOUS_` + svgPointPrefix;
+      };
       const svgLines = [];
       const svgPoints = [];
 
@@ -122,7 +157,7 @@ class AnnotationsPane extends React.Component {
         svgPoints.push(
           <circle
             key={svgPointPrefix+i}
-            cx={point.x} cy={point.y} r={10} fill="#00CED1"
+            cx={point.x} cy={point.y} r={10} fill={fillColor}
           />
         );
 
@@ -133,7 +168,7 @@ class AnnotationsPane extends React.Component {
               key={svgLinePrefix+(i-1)}
               x1={prevPoint.x} y1={prevPoint.y}
               x2={point.x} y2={point.y}
-              stroke="#00CED1" strokeWidth="2"
+              stroke={fillColor} strokeWidth="2"
             />
           );
         }
@@ -142,11 +177,11 @@ class AnnotationsPane extends React.Component {
       return (
         <g
           className="annotation"
-          key={annotationPrefix + indexOfAnnotation}
+          key={annotationPrefix + index}
           style={{cursor: 'pointer'}}
           onClick={(e) => {
             if (this.props.onSelectAnnotation) {
-              this.props.onSelectAnnotation(indexOfAnnotation);
+              this.props.onSelectAnnotation(index, previousAnnotations);
             }
             return Utility.stopEvent(e);
           }}
@@ -163,64 +198,12 @@ class AnnotationsPane extends React.Component {
       );
     });
   }
-
-  renderPreviousAnnotations() {
-    const previousAnnotations = this.props.previousAnnotations || [];
-
-    return previousAnnotations.map((reduction) => {
-      const annotationData = [];
-      const currentAnnotations = reduction.data[`frame${this.props.frame}`];
-
-      if (currentAnnotations) {
-        currentAnnotations.map((line, i) => {
-          const lines = constructLines(line, i);
-          const points = constructPoints(line, i);
-          const textOptions = constructText(line, i);
-          const data = {
-            x: line.clusters_x[line.clusters_x.length - 1],
-            y: line.clusters_y[line.clusters_y.length - 1],
-            lineSlope: line.line_slope,
-            textOptions, lines, points
-          };
-          annotationData.push(data);
-        })
-      }
-
-      return annotationData.map((line) => {
-        return this.renderLine(line);
-      })
-    })
-  }
-
-  renderLine(data) {
-    return (
-      <g
-        style={{cursor: 'pointer'}}
-        onClick={(e) => {
-          if (this.props.onSelectPreviousAnnotation) {
-            this.props.onSelectPreviousAnnotation(data);
-          }
-          return Utility.stopEvent(e);
-        }}
-        onMouseDown={(e) => {
-          return Utility.stopEvent(e);
-        }}
-        onMouseUp={(e) => {
-          return Utility.stopEvent(e);
-        }}
-      >
-        {data.lines}
-        {data.points}
-      </g>
-    )
-  }
 }
 
 AnnotationsPane.propTypes = {
   frame: PropTypes.number,
   onCompleteAnnotation: PropTypes.func,
   onSelectAnnotation: PropTypes.func,
-  onSelectPreviousAnnotation: PropTypes.func,
   //--------
   imageSize: PropTypes.shape({
     width: PropTypes.number,
@@ -245,6 +228,10 @@ AnnotationsPane.propTypes = {
   ),
   frame: PropTypes.number,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
+  selectedAnnotation: PropTypes.shape({
+    previousAnnotation: PropTypes.bool
+  }),
+  selectedAnnotationIndex: PropTypes.number,
   showPreviousMarks: PropTypes.bool,
 };
 
@@ -262,12 +249,18 @@ AnnotationsPane.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   previousAnnotations: [],
+  selectedAnnotation: {
+    previousAnnotation: false
+  },
+  selectedAnnotationIndex: 0,
   showPreviousMarks: true,
 };
 
 const mapStateToProps = (state) => {
   return {
     frame: state.subjectViewer.frame,
+    selectedAnnotation: state.annotations.selectedAnnotation,
+    selectedAnnotationIndex: state.annotations.selectedAnnotationIndex
   };
 };
 

@@ -10,9 +10,8 @@ Redux Duck: Annotations
 const ADD_ANNOTATION_POINT = 'ADD_ANNOTATION_POINT';
 const COMPLETE_ANNOTATION = 'COMPLETE_ANNOTATION';
 const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
-const SELECT_PREVIOUS_ANNOTATION = 'SELECT_PREVIOUS_ANNOTATION';
 const UNSELECT_ANNOTATION = 'UNSELECT_ANNOTATION';
-const UNSELECT_PREVIOUS_ANNOTATION = 'UNSELECT_PREVIOUS_ANNOTATION';
+const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
 const UPDATE_TEXT = 'UPDATE_TEXT';
 const SAVE_TEXT = 'SAVE_TEXT';
 
@@ -38,8 +37,6 @@ const initialState = {
   annotationInProgress: null,  //Incomplete annotation. null if nothing is in progress.
   annotationPanePosition: null,
   annotations: [],  //Completed annotations.
-  endClicks: [],
-  previousAnnotationSelected: false,
   selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
   selectedAnnotationIndex: null,
 };
@@ -61,36 +58,38 @@ const subjectReducer = (state = initialState, action) => {
         ? state.annotations.splice(0)  //Make a copy, don't just modify the current object, just to be sure we trigger Redux-React changers.
         : [];
       annotations.push(state.annotationInProgress);
-      const endClicks = (state.endClicks) ? state.endClicks.splice(0) : [];
-      endClicks.push(action.endPoint);
+      const endPoint = state.annotationInProgress.points[state.annotationInProgress.points.length - 1];
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IDLE,
         annotationInProgress: null,
         annotations,
-        endClicks,
-        annotationPanePosition: action.endPoint,
+        annotationPanePosition: endPoint,
         selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
         selectedAnnotationIndex: annotations.length - 1
       });
 
-    case SELECT_PREVIOUS_ANNOTATION:
-      return Object.assign({}, state, {
-        annotationPanePosition: {x: action.data.x, y: action.data.y },
-        previousAnnotationSelected: true,
-        selectedAnnotation: action.data,
-      });
-
     case SELECT_ANNOTATION:
-      const selectedAnnotation = (state.annotations && state.annotations[action.index])
-        ? state.annotations[action.index]
-        : null;
-      const annotationPanePosition = (state.endClicks && state.endClicks[action.index])
-        ? state.endClicks[action.index]
-        : null;
+      const selectedAnnotation = action.annotation ? action.annotation : null;
+      const annotationPanePosition = selectedAnnotation.points[selectedAnnotation.points.length - 1];
       return Object.assign({}, state, {
         selectedAnnotation,
         annotationPanePosition,
-        selectedAnnotationIndex: action.index
+        selectedAnnotationIndex: action.index,
+      });
+
+    case COLLABORATE_WITH_ANNOTATION:
+      const userAnnotations = (state.annotations)
+        ? state.annotations.splice(0)
+        : [];
+      const newAnnotation = {
+        details: [{ value: action.text }],
+        points: action.annotation.points,
+        frame: action.annotation.frame
+      };
+      userAnnotations.push(newAnnotation);
+
+      return Object.assign({}, state, {
+        annotations: userAnnotations
       });
 
     case UPDATE_TEXT:
@@ -110,13 +109,6 @@ const subjectReducer = (state = initialState, action) => {
         selectedAnnotationIndex: null
       });
 
-    case UNSELECT_PREVIOUS_ANNOTATION:
-      return Object.assign({}, state, {
-        annotationPanePosition: null,
-        previousAnnotationSelected: false,
-        selectedAnnotation: null
-      });
-
     default:
       return state;
   }
@@ -125,15 +117,6 @@ const subjectReducer = (state = initialState, action) => {
 //------------------------------------------------------------------------------
 
 //Action Creators
-const selectPreviousAnnotation = (data) => {
-  return (dispatch) => {
-    dispatch({
-      type: SELECT_PREVIOUS_ANNOTATION,
-      data
-    });
-  };
-};
-
 const addAnnotationPoint = (x, y, frame) => {
   return (dispatch) => {
     dispatch({
@@ -143,11 +126,19 @@ const addAnnotationPoint = (x, y, frame) => {
   };
 };
 
-const selectAnnotation = (index) => {
-  return (dispatch) => {
+const selectAnnotation = (index, previousAnnotation) => {
+  return (dispatch, getState) => {
+    let annotation;
+
+    if (previousAnnotation) {
+      annotation = getState().previousAnnotations.marks[index];
+    } else {
+      annotation = getState().annotations.annotations[index];
+    }
     dispatch({
       type: SELECT_ANNOTATION,
-      index
+      annotation,
+      index,
     });
   };
 };
@@ -160,19 +151,10 @@ const unselectAnnotation = () => {
   };
 };
 
-const unselectPreviousAnnotation = () => {
-  return (dispatch) => {
-    dispatch({
-      type: UNSELECT_PREVIOUS_ANNOTATION,
-    });
-  };
-};
-
-const completeAnnotation = (endPoint) => {
+const completeAnnotation = () => {
   return (dispatch) => {
     dispatch({
       type: COMPLETE_ANNOTATION,
-      endPoint,
     });
   };
 };
@@ -186,6 +168,15 @@ const updateText = (text) => {
   };
 };
 
+const collaborateWithAnnotation = (annotation, text) => {
+  return (dispatch) => {
+    dispatch({
+      type: COLLABORATE_WITH_ANNOTATION,
+      annotation, text
+    });
+  };
+};
+
 export default subjectReducer;
 
 //------------------------------------------------------------------------------
@@ -195,6 +186,6 @@ export default subjectReducer;
 export {
   addAnnotationPoint, completeAnnotation,
   selectAnnotation, unselectAnnotation,
-  unselectPreviousAnnotation, selectPreviousAnnotation,
+  collaborateWithAnnotation,
   updateText, ANNOTATION_STATUS
 };
