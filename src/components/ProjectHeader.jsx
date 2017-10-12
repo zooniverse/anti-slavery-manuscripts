@@ -32,14 +32,12 @@ const ProjectHeader = ({ showTitle }) =>
         About
       </Link>
       <a
-        activeClassName="project-header__link--active"
         className="project-header__link"
         href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/collections'}
       >
         Collect
       </a>
       <a
-        activeClassName="project-header__link--active"
         className="project-header__link"
         href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/talk'}
       >
