@@ -6,7 +6,7 @@ import subject from './subject';
 import subjectViewer from './subject-viewer';
 import annotations from './annotations';
 import dialog from './dialog';
-import aggregations from './aggregations';
+import previousAnnotations from './previousAnnotations';
 import workflow from './workflow';
 import classifications from './classifications';
 import splits from './splits';
@@ -19,7 +19,7 @@ export default combineReducers({
   subjectViewer,
   annotations,
   dialog,
-  aggregations,
+  previousAnnotations,
   workflow,
   classifications,
   splits

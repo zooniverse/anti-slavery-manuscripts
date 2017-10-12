@@ -4,6 +4,7 @@ import SVGImage from './SVGImage';
 import { connect } from 'react-redux';
 import { getAllLocations } from '../lib/get-subject-location';
 import { changeFrame } from '../ducks/subject-viewer';
+import { changeFrameData } from '../ducks/previousAnnotations';
 
 const THUMB_WIDTH = 40;
 const THUMB_HEIGHT = 60;
@@ -18,6 +19,7 @@ class FilmstripViewer extends React.Component {
 
   changeFrame(i) {
     this.props.dispatch(changeFrame(i));
+    this.props.dispatch(changeFrameData(i));
   }
 
   scroll(scrollDown = true) {

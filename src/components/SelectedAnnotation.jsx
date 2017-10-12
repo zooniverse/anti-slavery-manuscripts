@@ -2,7 +2,8 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateText } from '../ducks/annotations';
+import { collaborateWithAnnotation, updateText } from '../ducks/annotations';
+import { updatePreviousAnnotation } from '../ducks/previousAnnotations';
 
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
@@ -107,7 +108,7 @@ class SelectedAnnotation extends React.Component {
           <p>
             <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
 
-            {this.props.previousAnnotationSelected && (
+            {this.props.annotation.previousAnnotation && (
               <button onClick={this.toggleShowAnnotations}>
                 <span>
                   {this.props.annotation.textOptions.length}
@@ -117,7 +118,7 @@ class SelectedAnnotation extends React.Component {
             )}
 
           </p>
-          
+
           {this.state.showAnnotationOptions && (
             this.renderAnnotationOptions()
           )}
@@ -152,7 +153,12 @@ class SelectedAnnotation extends React.Component {
   }
 
   saveText() {
-    this.props.dispatch(updateText(this.state.annotationText));
+    if (this.props.annotation.previousAnnotation) {
+      this.props.dispatch(collaborateWithAnnotation(this.props.annotation, this.state.annotationText));
+      this.props.dispatch(updatePreviousAnnotation(this.props.selectedAnnotationIndex));
+    } else {
+      this.props.dispatch(updateText(this.state.annotationText));
+    }
     this.props.onClose();
   }
 
@@ -168,7 +174,6 @@ SelectedAnnotation.defaultProps = {
     x: 0,
     y: 0,
   },
-  previousAnnotationSelected: false,
   rotation: 0,
   scaling: 1,
   translationX: 0,
@@ -186,9 +191,9 @@ SelectedAnnotation.propTypes = {
   }),
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
-  previousAnnotationSelected: PropTypes.bool,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  selectedAnnotationIndex: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
   viewerSize: PropTypes.shape({
@@ -204,6 +209,7 @@ const mapStateToProps = (state, ownProps) => {
     rotation: sv.rotation,
     scaling: sv.scaling,
     selectedAnnotation: state.annotations.selectedAnnotation,
+    selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
     translationX: sv.translationX,
     translationY: sv.translationY,
     viewerSize: sv.viewerSize,
