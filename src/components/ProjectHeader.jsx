@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import ProjectLinks from '../lib/project-locations';
+import { config } from '../config';
 
 const ProjectHeader = ({ showTitle }) =>
   <div className="project-header">
@@ -32,16 +32,14 @@ const ProjectHeader = ({ showTitle }) =>
         About
       </Link>
       <a
-        activeClassName="project-header__link--active"
         className="project-header__link"
-        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/collections'}
+        href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/collections'}
       >
         Collect
       </a>
       <a
-        activeClassName="project-header__link--active"
         className="project-header__link"
-        href={ProjectLinks.host + 'projects/' + ProjectLinks.slug + '/talk'}
+        href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk'}
       >
         Talk
       </a>

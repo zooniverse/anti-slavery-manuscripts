@@ -1,8 +1,8 @@
 import { Client } from 'seven-ten';
 import apiClient from 'panoptes-client/lib/api-client';
-import locationMatch from './location-match';
+import { env } from '../config';
 
-if (process.env.NODE_ENV === 'production' || locationMatch(/\W?env=(production)/)) {
+if (env === 'production') {
   Client.config = {
     host: 'https://seven-ten.zooniverse.org',
     headers: apiClient.headers
