@@ -29,7 +29,7 @@ const baseConfig = {
     },
   },
   production: {
-    panoptesAppId: '',
+    panoptesAppId: '064a5a32a9d2d389eeb876a8b7cb0fbe596fd80d7a040566f14965446d34c541',  //Anti-Slavery Manuscripts
     zooniverseLinks: {
       host: 'https://www.zooniverse.org/',
       projectId: '4973',

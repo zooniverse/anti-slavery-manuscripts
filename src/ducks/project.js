@@ -8,6 +8,7 @@ projects.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
+import { config } from '../config.js';
 
 //Action Types
 const FETCH_PROJECT = 'FETCH_PROJECT';
@@ -15,7 +16,6 @@ const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
 
 //Misc Constants
-const TEMPORARY_HARDCODED_PROJECT_ID = '1764';  //Staging: http://localhost:3735/projects/wgranger-test/anti-slavery-testing
 const PROJECT_STATUS = {
   IDLE: 'project_status_idle',
   FETCHING: 'project_status_fetching',
@@ -66,7 +66,7 @@ const classifierReducer = (state = initialState, action) => {
 
 //Action Creators
 
-const fetchProject = (id = TEMPORARY_HARDCODED_PROJECT_ID) => {
+const fetchProject = (id = config.zooniverseLinks.projectId) => {
   return (dispatch) => {
 
     //Step 1: tell the Redux store that we're about to attempt to fetch a project.
