@@ -1,6 +1,7 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
+import { Split } from 'seven-ten';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
@@ -20,7 +21,7 @@ const classificationReducer = (state = initialState, action) => {
     case SUBMIT_CLASSIFICATION:
       const classification = state.classification;
       classification.annotations.push(action.annotations);
-      
+
       classification.update({
         completed: true,
         'metadata.finished_at': (new Date()).toISOString(),
@@ -30,7 +31,13 @@ const classificationReducer = (state = initialState, action) => {
         },
         'metadata.subject_dimensions': action.subject_dimensions || [],
       }).save();
+
+      Split.classificationCreated(classification);
       // classification.metadata.session = getSessionID();
+
+      return Object.assign({}, state, {
+        classification: null,
+      });
 
     default:
       return state;
@@ -43,7 +50,7 @@ const createClassification = () => {
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
-    
+
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
@@ -82,7 +89,7 @@ const submitClassification = () => {
       task: task,
       value: getState().annotations.annotations,
     }
-    
+
     let subject = getState().subject;
     let subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
 

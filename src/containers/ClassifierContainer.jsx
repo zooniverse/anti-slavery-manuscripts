@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Split } from 'seven-ten';
 
 import {
   setRotation, setContrast, resetView,
@@ -54,6 +55,10 @@ class ClassifierContainer extends React.Component {
     if (nextProps.currentSubject && nextProps.workflow && !this.props.classification) {
       this.props.dispatch(createClassification());
     }
+  }
+
+  componentWillUnmount() {
+    Split.clear();
   }
 
   render() {

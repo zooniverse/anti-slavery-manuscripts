@@ -189,12 +189,13 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
-    if (this.props.user) {
-      this.props.dispatch(fetchAnnotations());
-    }
   }
 
   componentWillReceiveProps(next) {
+    if (this.props.user && this.props.splits && !this.props.previousAnnotations.length) {
+      this.props.dispatch(fetchAnnotations());
+    }
+
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
@@ -477,6 +478,7 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
+  splits: PropTypes.object,
   user: PropTypes.shape({
     id: PropTypes.string
   })
@@ -506,6 +508,7 @@ SubjectViewer.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   showPreviousMarks: true,
+  splits: null,
   user: null
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
@@ -530,6 +533,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotations: anno.annotations,
     showPreviousMarks: sv.showPreviousMarks,
     selectedAnnotation: state.annotations.selectedAnnotation,
+    splits: state.splits.data,
     user: state.login.user
   };
 };
