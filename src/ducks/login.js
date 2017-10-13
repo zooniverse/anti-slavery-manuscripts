@@ -6,16 +6,17 @@ const SET_LOGIN_USER = 'project/user/SET_LOGIN_USER';
 // Reducer
 const initialState = {
  user: null,
- initialised: false
+ initialised: false,
 };
 
 const loginReducer = (state = initialState, action) => {
  switch (action.type) {
    case SET_LOGIN_USER:
-     return {
+     return Object.assign({}, state, {
        user: action.user,  // null if logged out.
        initialised: true,  // true once we know if user is logged in/out; false if unknown.
-     };
+     });
+
    default:
      return state;
  };
@@ -69,5 +70,5 @@ export {
  checkLoginUser,
  loginToPanoptes,
  logoutFromPanoptes,
- setLoginUser
+ setLoginUser,
 };
