@@ -189,7 +189,9 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
-    this.props.dispatch(fetchAnnotations());
+    if (this.props.user) {
+      this.props.dispatch(fetchAnnotations());
+    }
   }
 
   componentWillReceiveProps(next) {
@@ -475,6 +477,9 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
+  user: PropTypes.shape({
+    id: PropTypes.string
+  })
 };
 SubjectViewer.defaultProps = {
   contrast: false,
@@ -501,6 +506,7 @@ SubjectViewer.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   showPreviousMarks: true,
+  user: null
 };
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const sv = state.subjectViewer;
@@ -524,6 +530,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotations: anno.annotations,
     showPreviousMarks: sv.showPreviousMarks,
     selectedAnnotation: state.annotations.selectedAnnotation,
+    user: state.login.user
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

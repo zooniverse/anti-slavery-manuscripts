@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Anchor from 'grommet/components/Anchor';
 import { LoginButton, LogoutButton, UserMenu, UserNavigation } from 'zooniverse-react-components';
+import { clearSplits } from '../ducks/splits';
 import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
 
 class AuthContainer extends React.Component {
@@ -23,6 +24,9 @@ class AuthContainer extends React.Component {
   }
 
   logout() {
+    if (this.props.splits) {
+      this.props.dispatch(clearSplits());
+    }
     this.props.dispatch(logoutFromPanoptes());
   }
 
@@ -55,16 +59,19 @@ AuthContainer.propTypes = {
   user: PropTypes.shape({ login: PropTypes.string }),
   initialised: PropTypes.bool,
   dispatch: PropTypes.func,
+  splits: PropTypes.object
 };
 
 AuthContainer.defaultProps = {
   user: null,
   initialised: false,
+  splits: null
 };
 
 const mapStateToProps = (state) => ({
   user: state.login.user,
   initialised: state.login.initialised,
+  splits: state.splits.data
 });
 
 export default connect(mapStateToProps)(AuthContainer);  // Connects the Component to the Redux Store

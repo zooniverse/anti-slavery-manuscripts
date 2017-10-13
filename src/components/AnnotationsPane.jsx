@@ -13,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
+import { VisibilitySplit } from 'seven-ten';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -110,7 +111,7 @@ class AnnotationsPane extends React.Component {
   }
 
   renderPreviousAnnotations() {
-    if (!this.props.previousAnnotations) return null;
+    if (!this.props.previousAnnotations || !this.props.splits) return null;
     return this.renderAnnotations(this.props.previousAnnotations, true);
   }
 
@@ -174,7 +175,7 @@ class AnnotationsPane extends React.Component {
         }
       }
 
-      return (
+      const renderedMarks = (
         <g
           className="annotation"
           key={annotationPrefix + index}
@@ -196,6 +197,16 @@ class AnnotationsPane extends React.Component {
           {svgPoints}
         </g>
       );
+
+      if (this.props.splits && previousAnnotations) {
+        return (
+          <VisibilitySplit key={annotationPrefix + index} splits={this.props.splits} splitKey={'classifier.collaborative'} elementKey={'div'}>
+            {renderedMarks}
+          </VisibilitySplit>
+        )
+      } else {
+        return renderedMarks
+      }
     });
   }
 }
@@ -233,6 +244,7 @@ AnnotationsPane.propTypes = {
   }),
   selectedAnnotationIndex: PropTypes.number,
   showPreviousMarks: PropTypes.bool,
+  splits: PropTypes.object
 };
 
 AnnotationsPane.defaultProps = {
@@ -254,13 +266,15 @@ AnnotationsPane.defaultProps = {
   },
   selectedAnnotationIndex: 0,
   showPreviousMarks: true,
+  splits: null
 };
 
 const mapStateToProps = (state) => {
   return {
     frame: state.subjectViewer.frame,
     selectedAnnotation: state.annotations.selectedAnnotation,
-    selectedAnnotationIndex: state.annotations.selectedAnnotationIndex
+    selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
+    splits: state.splits.data
   };
 };
 
