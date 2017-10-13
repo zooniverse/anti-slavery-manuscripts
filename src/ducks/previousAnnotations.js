@@ -53,7 +53,6 @@ const fetchAnnotations = () => {
 
   return (dispatch, getState) => {
     request(CAESAR_HOST, query).then((data) => {
-      console.log(data);
       const frame = getState().subjectViewer.frame;
       const reductions = data.workflow.reductions;
       const marks = constructAnnotations(reductions, frame);

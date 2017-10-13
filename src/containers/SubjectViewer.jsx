@@ -189,13 +189,10 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
     this.fetchSubject();
+    this.props.dispatch(fetchAnnotations());
   }
 
   componentWillReceiveProps(next) {
-    if (this.props.user && this.props.splits && !this.props.previousAnnotations.length) {
-      this.props.dispatch(fetchAnnotations());
-    }
-
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
