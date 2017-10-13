@@ -18,6 +18,7 @@ import './lib/split-config.js';
 // Todo: let's find a better way to include Styles,
 // currently Styles looks like an unused var to eslint
 import Styles from './styles/main.styl'; // eslint-disable-line no-unused-vars
+import { favicon } from './images/favicon.ico';
 
 const store = configureStore();
 
@@ -33,6 +34,7 @@ oauth.init(config.panoptesAppId)
             <Route path="/about" component={About} />
             <Route path="/about-the-collection" component={AboutTheCollection} />
             <Route path="/about-the-project" component={AboutTheProject} />
+            <Route path="*" component={null} />
           </Route>
         </Router>
       </Provider>),

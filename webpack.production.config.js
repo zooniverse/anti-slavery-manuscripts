@@ -81,6 +81,9 @@ module.exports = {
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
       loader: 'file-loader',
+    }, {
+      test: /\.ico$/,
+      loader: 'file-loader?name=[name].[ext]',
     }],
   },
 
