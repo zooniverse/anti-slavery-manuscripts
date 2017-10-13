@@ -52,8 +52,11 @@ module.exports = {
       exclude: /(node_modules)/,
       use: 'babel-loader',
     }, {
-      test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
+      test: /\.(jpg|png|gif|otf|eot|svg)$/,
       use: 'file-loader',
+    }, {
+      test: /\.(ico|ttf|woff\d?)$/,
+      use: 'file-loader?name=[name].[ext]',
     }, {
       test: /\.styl$/,
       use: [{

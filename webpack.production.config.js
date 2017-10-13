@@ -79,10 +79,10 @@ module.exports = {
         }],
       }),
     }, {
-      test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
+      test: /\.(jpg|png|gif|otf|eot|svg)$/,
       loader: 'file-loader',
     }, {
-      test: /\.ico$/,
+      test: /\.(ico|ttf|woff\d?)$/,
       loader: 'file-loader?name=[name].[ext]',
     }],
   },
