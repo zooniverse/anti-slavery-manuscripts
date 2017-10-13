@@ -27,7 +27,7 @@ const ProjectHeader = ({ showTitle }) =>
       <Link
         activeClassName="project-header__link--active"
         className="project-header__link"
-        to="/about-the-collection"
+        to="/about"
       >
         About
       </Link>
