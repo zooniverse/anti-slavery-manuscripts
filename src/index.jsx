@@ -6,11 +6,9 @@ import oauth from 'panoptes-client/lib/oauth';
 
 import App from './components/App';
 import Home from './components/Home';
-import About from './components/About';
 import AboutTheCollection from './components/AboutTheCollection';
 import AboutTheProject from './components/AboutTheProject';
 import Classifier from './containers/ClassifierContainer';
-import ClassifierTester from './containers/ClassifierTester';
 import { config } from './config';
 import configureStore from './store';
 import './lib/split-config.js';
@@ -30,9 +28,7 @@ oauth.init(config.panoptesAppId)
           <Route path="/" component={App}>
             <IndexRoute component={Home} />
             <Route path="/classify" component={Classifier} />
-            <Route path="/classify-tester" component={ClassifierTester} />
-            <Route path="/about" component={About} />
-            <Route path="/about-the-collection" component={AboutTheCollection} />
+            <Route path="/about" component={AboutTheCollection} />
             <Route path="/about-the-project" component={AboutTheProject} />
             <Route path="*" component={null} />
           </Route>
