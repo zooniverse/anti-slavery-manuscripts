@@ -119,6 +119,10 @@ const subjectReducer = (state = initialState, action) => {
       }
       return Object.assign({}, state, {
         annotations: filteredAnnotations,
+        //Note: delete_selected_annotation also performs unselect_annotation.
+        annotationPanePosition: null,
+        selectedAnnotation: null,
+        selectedAnnotationIndex: null,
       });
 
     default:

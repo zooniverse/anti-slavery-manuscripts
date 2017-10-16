@@ -131,14 +131,11 @@ class SelectedAnnotation extends React.Component {
           </div>
 
           <div className="selected-annotation__buttons">
-            {(this.props.annotation.previousAnnotation) ? null :
-              <span>
-                <button onClick={this.deleteAnnotation}>DELETE DELETE DELETE</button>
-                {' | '}
-              </span>
-            }
             <button onClick={this.saveText}>Done</button>
             <button onClick={this.props.onClose}>Cancel</button>
+            {(this.props.annotation.previousAnnotation) ? null :
+              <button onClick={this.deleteAnnotation}>Delete</button>
+            }
           </div>
         </div>
       </Rnd>
@@ -171,7 +168,7 @@ class SelectedAnnotation extends React.Component {
   
   deleteAnnotation() {
     this.props.dispatch(deleteSelectedAnnotation());
-    this.props.onClose();
+    this.props.onClose();  //Note that deleteSelectedAnnotation() also runs unselectAnnotation(), but this needs to be called anyway to inform the parent component.
   }
 
   onTextUpdate() {
