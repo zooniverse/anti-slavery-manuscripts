@@ -1,17 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '../images/img_divider.png';
+import { getSubjectLocation, getThumbnailSource } from '../lib/get-subject-location';
 
-const SocialSection = ({ classifications, completedSubjects, percentComplete, project, subjects, volunteers }) =>
+const SocialSection = ({ classifications, completedSubjects, percentComplete, project, subjects, subjectsOfNote, volunteers }) =>
   <div className="home-page__social-section">
-    <h2 className="main-title">Subjects<i>of</i>  Note</h2>
-    <img role="presentation" className="divider" src={Divider} />
-    <div className="home-page__subject-row flex-row">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+
+    {subjectsOfNote.length && (
+      <div>
+        <h2 className="main-title">Subjects<i>of</i>  Note</h2>
+        <img role="presentation" className="divider" src={Divider} />
+        <div className="home-page__subject-row flex-row">
+
+          {subjectsOfNote.map((subject, i) => {
+            const location = getSubjectLocation(subject);
+            const thumbnail = getThumbnailSource(location.src);
+            return (
+              <div key={i}>
+                <img src={thumbnail} />
+              </div>
+            )
+          })}
+
+        </div>
+      </div>
+    )}
+
     <h2 className="main-title">Community</h2>
     <img role="presentation" className="divider" src={Divider} />
     <div className="home-page__project-stats flex-row">
@@ -84,6 +98,7 @@ SocialSection.defaultProps = {
     researcher_quote: ''
   },
   subjects: 0,
+  subjectsOfNote: [],
   volunteers: 0,
 };
 
@@ -95,6 +110,7 @@ SocialSection.propTypes = {
     researcher_quote: ''
   }),
   subjects: PropTypes.number,
+  subjectsOfNote: PropTypes.arrayOf(PropTypes.object),
   volunteers: PropTypes.number,
 };
 
