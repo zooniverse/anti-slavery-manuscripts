@@ -9,38 +9,30 @@
 
 .selected-annotation
   @extend .body-copy
-  border-top: 0.25em solid $success
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
   display: flex
   flex-direction: column
+  font-size: 0.9em
   height: 100%
   overflow: hidden
-  padding: 0.25em 1em 1em 1em
+  padding: 1em
 
   h2
-    font-size: 0.8em
+    letter-spacing: 0.06em
 
   p
     display: flex
     margin-bottom: 0
 
     button
-      background: $light-grey
-      border-top: 2px solid $dark-grey
-      border-right: 2px solid $dark-grey
-      border-bottom: 2px solid $dark-grey
+      border-top: 2px solid $mid-grey
+      border-right: 2px solid $mid-grey
+      border-bottom: 2px solid $mid-grey
+      color: $mid-grey
       width: 3em
 
-    span
-      vertical-align: bottom
-
-    i
-      color: $success
-      margin-left: 0.25em
-
   span
-    line-height: 1.25em
-    margin-bottom: 1em
+    line-height: 1.5em
 
   button
     background: transparent
@@ -48,38 +40,45 @@
     float: right
 
   input[type=text]
-    border: 2px solid $dark-grey
+    border: 2px solid $mid-grey
+    border-right: none
     font-family: inherit
     font-size: inherit
     width: 100%
     padding: 0.5em
 
   &__options
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
     display: flex
     flex-direction: column
     margin-bottom: 0.5em
 
     button
-      background: $light-grey
-      border-bottom: 2px solid $dark-grey
-      border-left: 2px solid $dark-grey
-      border-right: 2px solid $dark-grey
+      background: $sandy
+      border-bottom: 2px solid $mid-grey
+      border-left: 2px solid $mid-grey
+      border-right: 2px solid $mid-grey
+      padding: 0.5em
       float: left
+      font-family: $sans-font
       text-align: left
 
   &__markup
-    margin-top: 0.5em
+    display: inherit
+    margin: 1em 0
+
+    p
+      text-transform: uppercase
 
     button
       float: left
-      margin-right: 0.5em
+      font-size: 0.9em
+      font-family: $sans-font
+      margin-left: 0.5em
 
   &__buttons button
-      border: 1px solid $teal-blue
+      background-color: $aqua-marine
       font-family: $sans-font
-      font-size: 0.8em
-      margin: 0.5em
+      margin-top: 1em
       padding: 0.5em 3.5em
 
       &:hover, &:focus

@@ -99,22 +99,28 @@ class SelectedAnnotation extends React.Component {
         <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
           <div>
             <h2>Transcribe</h2>
-            <button className="fa fa-close close-button" onClick={this.props.onClose}></button>
+            <button onClick={this.props.onClose}>X</button>
           </div>
           <span>
             Enter the words you marked in the order you marked them. Open the
             dropdown menu to use previous volunteers' transcriptions as a starting
             point.
           </span>
+
+          <div className="selected-annotation__markup">
+            <p>Text Modifiers</p>
+            <button>[insertion]</button>
+            <button>[deletion]</button>
+            <button>[unclear]</button>
+            <button>[underline]</button>
+          </div>
+
           <p>
             <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
 
             {this.props.annotation.previousAnnotation && (
               <button onClick={this.toggleShowAnnotations}>
-                <span>
-                  {this.props.annotation.textOptions.length}
-                </span>
-                <i className="fa fa-caret-down fa-lg"/>
+                &#9660;
               </button>
             )}
 
@@ -123,12 +129,6 @@ class SelectedAnnotation extends React.Component {
           {this.state.showAnnotationOptions && (
             this.renderAnnotationOptions()
           )}
-
-          <div className="selected-annotation__markup">
-            <button>[insertion]</button>
-            <button>[deletion]</button>
-            <button>[unclear]</button>
-          </div>
 
           <div className="selected-annotation__buttons">
             <button onClick={this.saveText}>Done</button>
@@ -165,7 +165,7 @@ class SelectedAnnotation extends React.Component {
     }
     this.props.onClose();
   }
-  
+
   deleteAnnotation() {
     this.props.dispatch(reenablePreviousAnnotation());
     this.props.dispatch(deleteSelectedAnnotation());
