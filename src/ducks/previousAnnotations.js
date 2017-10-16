@@ -99,6 +99,7 @@ const constructAnnotations = (reductions, frame) => {
         const textOptions = constructText(annotation, i);
         const data = {
           points, frame, textOptions,
+          consensusReached: annotation.consensus_score >= 3,
           previousAnnotation: true,
           hasCollaborated: false,
         };
