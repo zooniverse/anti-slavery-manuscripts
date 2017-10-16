@@ -2,7 +2,7 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { collaborateWithAnnotation, updateText } from '../ducks/annotations';
+import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from '../ducks/annotations';
 import { updatePreviousAnnotation } from '../ducks/previousAnnotations';
 
 const PANE_WIDTH = 800;
@@ -19,6 +19,7 @@ class SelectedAnnotation extends React.Component {
     this.onTextUpdate = this.onTextUpdate.bind(this);
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
+    this.deleteAnnotation = this.deleteAnnotation.bind(this);
 
     this.state = {
       annotationText: '',
@@ -59,7 +60,7 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
-    if (!this.props.annotation) return null;
+    if (!this.props.annotation || !this.props.annotationPanePosition) return null;
 
     const panePosition = this.props.annotationPanePosition;
     const rotation = -this.props.rotation / 180 * Math.PI;
@@ -130,6 +131,12 @@ class SelectedAnnotation extends React.Component {
           </div>
 
           <div className="selected-annotation__buttons">
+            {(this.props.annotation.previousAnnotation) ? null :
+              <span>
+                <button onClick={this.deleteAnnotation}>DELETE DELETE DELETE</button>
+                {' | '}
+              </span>
+            }
             <button onClick={this.saveText}>Done</button>
             <button onClick={this.props.onClose}>Cancel</button>
           </div>
@@ -159,6 +166,11 @@ class SelectedAnnotation extends React.Component {
     } else {
       this.props.dispatch(updateText(this.state.annotationText));
     }
+    this.props.onClose();
+  }
+  
+  deleteAnnotation() {
+    this.props.dispatch(deleteSelectedAnnotation());
     this.props.onClose();
   }
 

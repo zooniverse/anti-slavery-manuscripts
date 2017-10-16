@@ -11,6 +11,7 @@ const ADD_ANNOTATION_POINT = 'ADD_ANNOTATION_POINT';
 const COMPLETE_ANNOTATION = 'COMPLETE_ANNOTATION';
 const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
 const UNSELECT_ANNOTATION = 'UNSELECT_ANNOTATION';
+const DELETE_SELECTED_ANNOTATION = 'DELETE_SELECTED_ANNOTATION';
 const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
 const UPDATE_TEXT = 'UPDATE_TEXT';
 const SAVE_TEXT = 'SAVE_TEXT';
@@ -108,6 +109,17 @@ const subjectReducer = (state = initialState, action) => {
         selectedAnnotation: null,
         selectedAnnotationIndex: null
       });
+    
+    case DELETE_SELECTED_ANNOTATION:
+      let filteredAnnotations = [];
+      if (state.annotations && state.selectedAnnotationIndex !== null) {
+        filteredAnnotations = state.annotations.filter((item, index) => {
+          return index !== state.selectedAnnotationIndex;
+        });
+      }
+      return Object.assign({}, state, {
+        annotations: filteredAnnotations,
+      });
 
     default:
       return state;
@@ -151,6 +163,14 @@ const unselectAnnotation = () => {
   };
 };
 
+const deleteSelectedAnnotation = () => {
+  return (dispatch) => {
+    dispatch({
+      type: DELETE_SELECTED_ANNOTATION,
+    });
+  };
+};
+
 const completeAnnotation = () => {
   return (dispatch) => {
     dispatch({
@@ -186,6 +206,7 @@ export default subjectReducer;
 export {
   addAnnotationPoint, completeAnnotation,
   selectAnnotation, unselectAnnotation,
+  deleteSelectedAnnotation,
   collaborateWithAnnotation,
   updateText, ANNOTATION_STATUS
 };
