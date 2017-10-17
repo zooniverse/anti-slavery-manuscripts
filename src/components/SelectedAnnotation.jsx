@@ -3,7 +3,7 @@ import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from '../ducks/annotations';
-import { updatePreviousAnnotation } from '../ducks/previousAnnotations';
+import { updatePreviousAnnotation, reenablePreviousAnnotation } from '../ducks/previousAnnotations';
 
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
@@ -167,6 +167,7 @@ class SelectedAnnotation extends React.Component {
   }
   
   deleteAnnotation() {
+    this.props.dispatch(reenablePreviousAnnotation());
     this.props.dispatch(deleteSelectedAnnotation());
     this.props.onClose();  //Note that deleteSelectedAnnotation() also runs unselectAnnotation(), but this needs to be called anyway to inform the parent component.
   }
