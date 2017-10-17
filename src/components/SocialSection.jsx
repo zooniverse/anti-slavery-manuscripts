@@ -6,7 +6,7 @@ import { getSubjectLocation, getThumbnailSource } from '../lib/get-subject-locat
 const SocialSection = ({ classifications, completedSubjects, percentComplete, project, subjects, subjectsOfNote, volunteers }) =>
   <div className="home-page__social-section">
 
-    {subjectsOfNote.length && (
+    {subjectsOfNote && subjectsOfNote.length && (
       <div>
         <h2 className="main-title">Subjects<i>of</i>  Note</h2>
         <img role="presentation" className="divider" src={Divider} />
