@@ -10,6 +10,7 @@ import {
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
+import { fetchGuide } from '../ducks/field-guide';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { toggleOverride } from '../ducks/splits';
@@ -27,6 +28,7 @@ import ShowMetadata from '../components/ShowMetadata';
 import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
 import Divider from '../images/img_divider.png';
+import FieldGuide from '../components/FieldGuide';
 
 const ROTATION_STEP = 90;
 
@@ -47,6 +49,7 @@ class ClassifierContainer extends React.Component {
     this.completeClassification = this.completeClassification.bind(this);
     this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
+    this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
 
     this.state = {
       popup: null,
@@ -63,6 +66,9 @@ class ClassifierContainer extends React.Component {
 
   componentWillUnmount() {
     Split.clear();
+
+  componentDidMount() {
+    this.props.dispatch(fetchGuide());
   }
 
   render() {
@@ -85,7 +91,7 @@ class ClassifierContainer extends React.Component {
             </p>
           </div>
           <div className="help-buttons">
-            <button href="#" className="white-red button">Field Guide</button>
+            <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             <button href="#" className="white-red button">Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
             <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
@@ -242,6 +248,11 @@ class ClassifierContainer extends React.Component {
       <ShowMetadata metadata={this.props.currentSubject.metadata} />));
   }
 
+  toggleFieldGuide() {
+    this.props.dispatch(toggleDialog(
+      <FieldGuide guide={this.props.guide} icons={this.props.icons} />));
+  }
+
   showCollections() {
     this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> })
   }
@@ -258,6 +269,7 @@ ClassifierContainer.propTypes = {
   project: PropTypes.shape({
     id: PropTypes.string,
   }),
+  rotation: PropTypes.number,
   scaling: PropTypes.number,
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
@@ -270,6 +282,8 @@ ClassifierContainer.propTypes = {
 ClassifierContainer.defaultProps = {
   adminOverride: false,
   previousAnnotations: [],
+  guide: null,
+  icons: null,
   project: null,
   rotation: 0,
   scaling: 1,
@@ -280,16 +294,18 @@ const mapStateToProps = (state, ownProps) => {
   return {
     adminOverride: state.splits.adminOverride,
     classification: state.classifications.classification,
-    user: state.login.user,
-    splits: state.splits.splits,
-    favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,
     previousAnnotations: state.previousAnnotations.marks,
+    favoriteSubject: state.subject.favorite,
+    guide: state.fieldGuide.guide,
+    icons: state.fieldGuide.icons,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
-    workflow: state.workflow.data,
+    splits: state.splits.splits,
+    user: state.login.user,
     viewerState: state.subjectViewer.viewerState,
+    workflow: state.workflow.data,
   };
 };
 export default connect(mapStateToProps)(ClassifierContainer);
