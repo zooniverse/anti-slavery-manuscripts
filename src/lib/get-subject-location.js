@@ -30,7 +30,15 @@ function getAllLocations(subject) {
   });
 }
 
+function getThumbnailSource(src) {
+  const origin = 'https://thumbnails.zooniverse.org';
+  let srcPath = src.split('//').pop();
+  srcPath = srcPath.replace('static.zooniverse.org/', '');
+  return (`${origin}/400x400/${srcPath}`);
+}
+
 export {
   getAllLocations,
-  getSubjectLocation
+  getSubjectLocation,
+  getThumbnailSource
 };

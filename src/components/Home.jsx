@@ -2,6 +2,9 @@ import React from 'react';
 import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import apiClient from 'panoptes-client/lib/api-client';
+import talkClient from 'panoptes-client/lib/talk-client';
+import { config } from '../config';
 import SocialSection from '../components/SocialSection';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
@@ -12,12 +15,15 @@ class Home extends React.Component {
     super();
     this.state = {
       backgroundHeight: 'auto',
+      subjectsOfNote: []
     };
     this.resizeBackground = this.resizeBackground.bind(this);
+    this.fetchRecentSubjects = this.fetchRecentSubjects.bind(this);
   }
 
   componentDidMount() {
     this.resizeBackground();
+    this.fetchRecentSubjects();
     addEventListener('resize', this.resizeBackground);
   }
 
@@ -34,6 +40,24 @@ class Home extends React.Component {
         this.setState({ backgroundHeight: sectionHeight });
       }
     }
+  }
+
+  fetchRecentSubjects() {
+    talkClient.type('comments').get({ section: `project-${config.zooniverseLinks.projectId}`, page_size: 10, sort: '-created_at', focus_type: 'Subject' })
+      .then((comments) => {
+        if (comments.length > 0) {
+          const subjectIds = comments.map(x => x.focus_id);
+          const uniqueSubjects = subjectIds.filter((el, i, arr) => { return arr.indexOf(el) === i; });
+          const newestSubjects = uniqueSubjects.slice(0, 4);
+          apiClient.type('subjects').get(newestSubjects)
+            .then((subjectsOfNote) => {
+              this.setState({ subjectsOfNote })
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      })
   }
 
   renderTopics() {
@@ -74,7 +98,7 @@ class Home extends React.Component {
             <img role="presentation" src={BostonLogo} />
           </a>
         </div>
-        <SocialSection project={this.props.project} />
+        <SocialSection project={this.props.project} subjectsOfNote={this.state.subjectsOfNote} />
         <div className="home-page__community">
         </div>
         <div className="home-page__zooniverse">
