@@ -1,5 +1,6 @@
 import { request } from 'graphql-request';
 import { constructCoordinates, constructText } from '../lib/construct-previous-annotations';
+import { CONSENSUS_SCORE } from '../config.js';
 
 const initialState = {
  data: null,
@@ -99,7 +100,7 @@ const constructAnnotations = (reductions, frame) => {
         const textOptions = constructText(annotation, i);
         const data = {
           points, frame, textOptions,
-          consensusReached: annotation.consensus_score >= 3,
+          consensusReached: annotation.consensus_score >= CONSENSUS_SCORE,
           previousAnnotation: true,
           hasCollaborated: false,
         };
