@@ -3,9 +3,11 @@ import apiClient from 'panoptes-client/lib/api-client.js';
 
 const FETCH_SPLIT = 'FETCH_SPLIT';
 const CLEAR_SPLITS = 'CLEAR_SPLITS';
+const TOGGLE_OVERRIDE = 'TOGGLE_OVERRIDE';
 
 const initialState = {
- data: null
+  adminOverride: false,
+  data: null
 };
 
 const splitReducer = (state = initialState, action) => {
@@ -13,6 +15,11 @@ const splitReducer = (state = initialState, action) => {
     case FETCH_SPLIT:
       return Object.assign({}, state, {
         data: action.splits,
+      });
+
+    case TOGGLE_OVERRIDE:
+      return Object.assign({}, state, {
+        adminOverride: action.option
       });
 
     case CLEAR_SPLITS:
@@ -46,10 +53,21 @@ const clearSplits = () => {
   };
 }
 
+const toggleOverride = () => {
+  return (dispatch, getState) => {
+    const option = !getState().splits.adminOverride;
+    dispatch({
+      type: TOGGLE_OVERRIDE,
+      option
+    });
+  };
+}
+
 // Exports
 export default splitReducer;
 
 export {
- fetchSplit,
- clearSplits
+  clearSplits,
+  fetchSplit,
+  toggleOverride
 };

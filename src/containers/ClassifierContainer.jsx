@@ -11,6 +11,7 @@ import {
 
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
+import { toggleOverride } from '../ducks/splits';
 import {
   createClassification, submitClassification
 } from '../ducks/classifications';
@@ -43,6 +44,7 @@ class ClassifierContainer extends React.Component {
     this.showCollections = this.showCollections.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.completeClassification = this.completeClassification.bind(this);
+    this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
 
     this.state = {
       popup: null,
@@ -62,6 +64,8 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
+    const isAdmin = this.props.user && this.props.user.admin;
+
     return (
       <main className="app-content classifier-page flex-row">
         <div className="project-background"></div>
@@ -156,6 +160,21 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Subject Info</span>
             </button>
+
+            {isAdmin && this.props.previousAnnotations.length && (
+              <label
+                className="admin-override"
+                title="Enter collaborative mode if not available"
+              >
+                <input
+                  onChange={this.toggleAdminOverride}
+                  type="checkbox"
+                  value={this.props.adminOverride}
+                />
+                <span>Show Previous Annotations</span>
+              </label>
+            )}
+
           </div>
         </section>
 
@@ -205,6 +224,10 @@ class ClassifierContainer extends React.Component {
     this.props.dispatch(toggleFavorite());
   }
 
+  toggleAdminOverride() {
+    this.props.dispatch(toggleOverride());
+  }
+
   showMetadata() {
     this.props.dispatch(toggleDialog(
       <ShowMetadata metadata={this.props.currentSubject.metadata} />));
@@ -216,11 +239,13 @@ class ClassifierContainer extends React.Component {
 }
 
 ClassifierContainer.propTypes = {
+  adminOverride: PropTypes.bool,
   currentSubject: PropTypes.shape({
     id: PropTypes.string,
   }),
   dispatch: PropTypes.func,
   rotation: PropTypes.number,
+  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   project: PropTypes.shape({
     id: PropTypes.string,
   }),
@@ -234,6 +259,8 @@ ClassifierContainer.propTypes = {
   })
 };
 ClassifierContainer.defaultProps = {
+  adminOverride: false,
+  previousAnnotations: [],
   project: null,
   rotation: 0,
   scaling: 1,
@@ -242,11 +269,13 @@ ClassifierContainer.defaultProps = {
 };
 const mapStateToProps = (state, ownProps) => {
   return {
+    adminOverride: state.splits.adminOverride,
     classification: state.classifications.classification,
     user: state.login.user,
     splits: state.splits.splits,
     favoriteSubject: state.subject.favorite,
     currentSubject: state.subject.currentSubject,
+    previousAnnotations: state.previousAnnotations.marks,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,

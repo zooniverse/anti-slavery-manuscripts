@@ -198,6 +198,8 @@ class AnnotationsPane extends React.Component {
         </g>
       );
 
+      if (previousAnnotations && this.props.adminOverride) { return renderedMarks; }
+
       if (this.props.splits && previousAnnotations) {
         return (
           <VisibilitySplit key={annotationPrefix + index} splits={this.props.splits} splitKey={'classifier.collaborative'} elementKey={'div'}>
@@ -221,6 +223,7 @@ AnnotationsPane.propTypes = {
     height: PropTypes.number,
   }),
   //--------
+  adminOverride: PropTypes.bool,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -258,6 +261,7 @@ AnnotationsPane.defaultProps = {
     height: 0,
   },
   //--------
+  adminOverride: false,
   annotationInProgress: null,
   annotations: [],
   previousAnnotations: [],
@@ -271,6 +275,7 @@ AnnotationsPane.defaultProps = {
 
 const mapStateToProps = (state) => {
   return {
+    adminOverride: state.splits.adminOverride,
     frame: state.subjectViewer.frame,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,

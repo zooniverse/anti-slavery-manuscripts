@@ -20,7 +20,7 @@ class App extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user && nextProps.user != this.props.user) {
+    if (nextProps.user && nextProps.user !== this.props.user) {
       this.props.dispatch(fetchSplit(nextProps.user));
     }
   }
