@@ -31,9 +31,9 @@ class AnnotationsPane extends React.Component {
     const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
       <g transform={imageOffset}>
-        {this.renderAnnotationInProgress()}
-        {this.renderUserAnnotations()}
         {this.renderPreviousAnnotations()}
+        {this.renderUserAnnotations()}
+        {this.renderAnnotationInProgress()}
       </g>
     );
   }
