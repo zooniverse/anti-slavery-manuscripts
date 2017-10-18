@@ -2,8 +2,8 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { collaborateWithAnnotation, updateText } from '../ducks/annotations';
-import { updatePreviousAnnotation } from '../ducks/previousAnnotations';
+import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from '../ducks/annotations';
+import { updatePreviousAnnotation, reenablePreviousAnnotation } from '../ducks/previousAnnotations';
 
 const PANE_WIDTH = 800;
 const PANE_HEIGHT = 260;
@@ -19,6 +19,7 @@ class SelectedAnnotation extends React.Component {
     this.onTextUpdate = this.onTextUpdate.bind(this);
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
+    this.deleteAnnotation = this.deleteAnnotation.bind(this);
 
     this.state = {
       annotationText: '',
@@ -59,7 +60,7 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
-    if (!this.props.annotation) return null;
+    if (!this.props.annotation || !this.props.annotationPanePosition) return null;
 
     const panePosition = this.props.annotationPanePosition;
     const rotation = -this.props.rotation / 180 * Math.PI;
@@ -132,6 +133,9 @@ class SelectedAnnotation extends React.Component {
           <div className="selected-annotation__buttons">
             <button onClick={this.saveText}>Done</button>
             <button onClick={this.props.onClose}>Cancel</button>
+            {(this.props.annotation.previousAnnotation) ? null :
+              <button onClick={this.deleteAnnotation}>Delete</button>
+            }
           </div>
         </div>
       </Rnd>
@@ -160,6 +164,12 @@ class SelectedAnnotation extends React.Component {
       this.props.dispatch(updateText(this.state.annotationText));
     }
     this.props.onClose();
+  }
+  
+  deleteAnnotation() {
+    this.props.dispatch(reenablePreviousAnnotation());
+    this.props.dispatch(deleteSelectedAnnotation());
+    this.props.onClose();  //Note that deleteSelectedAnnotation() also runs unselectAnnotation(), but this needs to be called anyway to inform the parent component.
   }
 
   onTextUpdate() {
