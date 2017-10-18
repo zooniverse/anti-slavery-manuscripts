@@ -131,7 +131,7 @@ class SelectedAnnotation extends React.Component {
           )}
 
           <div className="selected-annotation__buttons">
-            <button onClick={this.saveText}>Done</button>
+            <button className="done-button" onClick={this.saveText}>Done</button>
             <button onClick={this.props.onClose}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
