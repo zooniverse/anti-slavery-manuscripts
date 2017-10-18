@@ -83,7 +83,7 @@ class AboutTheProject extends React.Component {
             the United States.
           </span>
           <span>
-            The collection includes a full run of William Lloyd Garrison's "The Liberator",
+            The collection includes a full run of William Lloyd Garrison's <i>The Liberator</i>,
             a newspaper that was published continuously for 35 years, from 1831 to 1866. This
             newspaper, published by Garrison, was the official organ of the abolitionist movement.
           </span>

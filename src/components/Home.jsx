@@ -79,7 +79,7 @@ class Home extends React.Component {
           <h1 className="secondary-head">Presented <i className="secondary-conjunctions">by the</i> Boston Public Library</h1>
           <img role="presentation" className="divider" src={Divider} />
           <div className="home-page__body-text">
-            <b className="body-copy-first-word">Welcome</b> to Anti-Slavery Manuscripts.{' '}
+            <b className="body-copy-first-word">Welcome.</b>{' '}
             {this.props.project.description}
           </div>
           <h3 className="transcribe">Transcribe Random &#8608;</h3>

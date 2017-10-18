@@ -22,9 +22,9 @@ class AboutTheCollection extends React.Component {
               <Link to="/">Anti-Slavery Manuscripts</Link>
               <h3>About <i>the</i> Collection</h3>
               <span className="about-the-collection__content">
-                The Boston Public Library's Anti-Slavery collection-one of the largest
+                The Boston Public Library's Anti-Slavery collection &mdash; one of the largest
                 and most important collections of abolitionists material in the United
-                States-contains roughly 40,000 pieces of correspondence, broadsides,
+                States &mdash; contains roughly 40,000 pieces of correspondence, broadsides,
                 newspapers, pamphlets, books, and memorabilia from the 1830s through
                 the 1870s.
               </span><br />
@@ -51,7 +51,7 @@ class AboutTheCollection extends React.Component {
                   The extensive body of correspondence records interactions among
                   leading abolitionists in the United States and Great Britain over
                   a fifty year period, thus creating an archive that comprehensively
-                  documents the history of the 19-century anti-slavery movement in Boston
+                  documents the history of the 19th century anti-slavery movement in Boston
                   as well as abroad through the end of the American Civil War and the
                   abolition of slavery.
                 </div>
@@ -77,7 +77,7 @@ class AboutTheCollection extends React.Component {
           <div className="about-the-collection__attribution">
             <span className="about-the-collection__content">
               "Through the participation of citizen historians, we now stand on the
-              threshold of having available-free to all-the entire contents of the
+              threshold of having available &mdash; free to all &mdash; the entire contents of the
               Boston Public Library's extraordinary Anti-Slavery Manuscripts
               collection: the personal papers of women and men who joined together,
               across barriers of race and class, in the Abolitionist crusade."
@@ -119,9 +119,9 @@ class AboutTheCollection extends React.Component {
               <h2 className="about-the-collection__sub-head">Notable Figures</h2>
               <span className="about-the-collection__content">
                 Letters from and to leading representatives of the abolitionist
-                movement in the Boston area, most notable <i>Liberator</i> editor
+                movement in the Boston area &mdash; most notable <i>Liberator</i> editor
                 William Lloyd Garrison (1805-1879) and the Weston sisters of Weymouth,
-                Massachusetts, form the most significant component of the correspondence.
+                Massachusetts &mdash; form the most significant component of the correspondence.
               </span>
               <span className="about-the-collection__content">
                 Other major holdings include the papers of American abolitionists
