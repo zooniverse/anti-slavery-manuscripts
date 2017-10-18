@@ -33,9 +33,10 @@
   width: 100%
 
   .dialog-content
+    min-height: 100%
+
     button
       color: black
-      float: right
 
 .popup
   display: flex
@@ -49,12 +50,10 @@
     flex: 0 1 auto
     background: $white
     color: $text-color
-    min-height: 100%
     overflow: auto
     padding: 0.5em 1em
 
   button
-    background: $aqua-marine
     border: none
 
 .popup-content::-webkit-scrollbar
@@ -62,3 +61,6 @@
 
 .popup-content::-webkit-scrollbar-thumb
   background: $dark-grey
+
+.step-through-controls
+  text-align: center

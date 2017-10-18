@@ -1,8 +1,42 @@
 .field-guide
   background-color: white
+  display: flex
+  flex-wrap: wrap
   height: 100%
   width: 100%
 
+  div
+    height: 8.5em
+    padding: 0.25em
+    width: 20%
+
+    button
+      background: $dark-grey
+      padding: 0
+
+    p
+      color: white
+      font-size: 0.6em
+      text-align: center
+
   img
-    max-height: 5em
-    max-width: 5em
+    height: 5em
+    width: 5em
+    object-fit: cover
+
+.field-guide-title
+  background-color: $zooniverse-teal
+  margin-bottom: 0.25em
+
+.active-card
+  button
+    margin: 0.5em
+    padding: 0.25em
+
+  div
+    text-align: center
+
+  img
+    max-height: 4em
+    max-width: 4em
+    object-fit: cover

@@ -20,7 +20,7 @@ class Dialog extends React.Component {
 
   render() {
     const width = 600;
-    const height = 400;
+    const height = 425;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2) + window.scrollY;
 
