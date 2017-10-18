@@ -12,7 +12,7 @@ class FieldGuide extends React.Component {
 
   renderItem(icon) {
     return (
-      <div>
+      <div className="field-guide">
         <p>hello</p>
         <img src={icon.src} />
       </div>
@@ -22,7 +22,6 @@ class FieldGuide extends React.Component {
   render() {
     return (
       <StepThrough>
-        <span>Hello World</span>
         {Object.keys(this.props.icons).map((icon) => {
 
           return this.renderItem(this.props.icons[icon])
