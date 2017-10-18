@@ -136,13 +136,21 @@ class AnnotationsPane extends React.Component {
 
     return annotations.map((annotation, index) => {
       if (annotation.hasCollaborated === true) { return null; }
+      if (annotation.frame !== this.props.frame) return null;
 
+      let onSelectAnnotation = this.props.onSelectAnnotation;
       let fillColor = previousAnnotations ? "#c33" : "#00CED1";
+      let style = { cursor: 'pointer' };
 
       const selectedAnnotation = this.determineGreenLine(annotation, index);
-      if (selectedAnnotation) { fillColor = "#5cb85c"; }
 
-      if (annotation.frame !== this.props.frame) return null;
+      if (selectedAnnotation) { fillColor = "#5cb85c"; }
+      if (previousAnnotations && annotation.consensusReached) {
+        onSelectAnnotation = () => {};
+        fillColor = "#979797";
+        style.cursor = 'inherit';
+      }
+
       let svgLinePrefix = `ANNOTATION_${index}_LINE_`;
       let svgPointPrefix = `ANNOTATION_${index}_POINT_`;
       if (previousAnnotations) {
@@ -179,10 +187,10 @@ class AnnotationsPane extends React.Component {
         <g
           className="annotation"
           key={annotationPrefix + index}
-          style={{cursor: 'pointer'}}
+          style={style}
           onClick={(e) => {
-            if (this.props.onSelectAnnotation) {
-              this.props.onSelectAnnotation(index, previousAnnotations);
+            if (onSelectAnnotation) {
+              onSelectAnnotation(index, previousAnnotations);
             }
             return Utility.stopEvent(e);
           }}

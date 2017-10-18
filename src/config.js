@@ -11,6 +11,7 @@ By default, this is the development environment, but this can be changed either 
  */
 
 var DEFAULT_ENV = 'development';
+var CONSENSUS_SCORE = 3;
 var envFromBrowser = locationMatch(/\W?env=(\w+)/);
 var envFromShell = process.env.NODE_ENV;
 var env = envFromBrowser || envFromShell || DEFAULT_ENV;
@@ -40,7 +41,7 @@ const baseConfig = {
 baseConfig.staging = baseConfig.development;  //staging === development, as far as we're concerned.
 
 const config = baseConfig[env];
-export { env, config };
+export { env, config, CONSENSUS_SCORE };
 
 // Try and match the location.search property against a regex. Basically mimics
 // the CoffeeScript existential operator, in case we're not in a browser.
