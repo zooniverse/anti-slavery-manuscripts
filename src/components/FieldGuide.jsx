@@ -57,7 +57,7 @@ class FieldGuide extends React.Component {
                 {src && (
                   <img src={src} />
                 )}
-                <p>{item.title}</p>
+                <span className="instructions">{item.title}</span>
               </button>
             </div>
           )
@@ -73,21 +73,26 @@ class FieldGuide extends React.Component {
 
     return (
       <div className="active-card">
-        <button onClick={this.deactivateCard}>
-          Back
+        <button className="field-guide-title" onClick={this.deactivateCard}>
+          <i className="fa fa-arrow-left" /> Back
         </button>
 
-        <div>
-          {src && (
-            <img src={src} />
-          )}
-          {card.title && (
-            <h2>{card.title}</h2>
-          )}
+        <div className="active-card__content">
+          <div>
+            {card.title && (
+              <h2>{card.title}</h2>
+            )}
 
-          {card.content && (
-            <Markdown content={card.content} />
-          )}
+            {card.content && (
+              <Markdown content={card.content} />
+            )}
+          </div>
+
+          <div>
+            {src && (
+              <img src={src} />
+            )}
+          </div>
         </div>
       </div>
     )

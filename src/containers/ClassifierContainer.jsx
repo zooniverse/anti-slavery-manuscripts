@@ -250,7 +250,7 @@ class ClassifierContainer extends React.Component {
 
   toggleFieldGuide() {
     this.props.dispatch(toggleDialog(
-      <FieldGuide guide={this.props.guide} icons={this.props.icons} />));
+      <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false));
   }
 
   showCollections() {

@@ -1,3 +1,5 @@
+@import "font-groups.styl"
+
 .field-guide
   background-color: white
   display: flex
@@ -6,37 +8,63 @@
   width: 100%
 
   div
-    height: 8.5em
+    height: 8em
     padding: 0.25em
     width: 20%
 
     button
       background: $dark-grey
+      display: flex
+      flex-direction: column
       padding: 0
 
-    p
+    span
       color: white
       font-size: 0.6em
-      text-align: center
+      height: 4em
+      max-width: 10.75em
+      overflow: hidden
+      padding: 0.5em
+      text-align: left
 
   img
-    height: 5em
-    width: 5em
+    height: 4.5em
+    width: 6.5em
     object-fit: cover
 
 .field-guide-title
-  background-color: $zooniverse-teal
-  margin-bottom: 0.25em
+  font-family: $playfair-display
+  font-size: 0.75em
+  letter-spacing: 0.25em
+  margin-bottom: 1em
+  text-transform: uppercase
 
 .active-card
   button
+    background-color: transparent
+    font-size: 0.6em
     margin: 0.5em
     padding: 0.25em
 
-  div
-    text-align: center
+  &__content
+    display: flex
+    padding: 0 1em
 
-  img
-    max-height: 4em
-    max-width: 4em
-    object-fit: cover
+    div:first-child
+      flex: 5
+
+      h2
+        font-family: $playfair-display
+        font-weight: 300
+        margin-bottom: 0.75em
+
+      p
+        font-family: $playfair-display
+        font-size: 0.75em
+
+    div:nth-child(2)
+      flex: 2
+
+    img
+      max-height: 100%
+      max-width: 100%
