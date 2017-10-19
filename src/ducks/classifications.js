@@ -4,6 +4,7 @@ import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
 import { resetAnnotations } from './annotations';
+import { resetPreviousAnnotations } from './previousAnnotations';
 import { resetView } from './subject-viewer';
 
 //Action Types
@@ -37,8 +38,10 @@ const classificationReducer = (state = initialState, action) => {
         status: CLASSIFICATION_STATUS.SENDING,
       });
 
+    //Submitting Classification also resets the store.
     case SUBMIT_CLASSIFICATION_SUCCESS:
       return Object.assign({}, state,{
+        classification: null,
         status: CLASSIFICATION_STATUS.SUCCESS,
       });
 
@@ -124,6 +127,7 @@ const submitClassification = () => {
       //Reset values in preparation for the next Subject.
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
       dispatch(resetAnnotations());
+      dispatch(resetPreviousAnnotations());
       dispatch(resetView());
     })
 

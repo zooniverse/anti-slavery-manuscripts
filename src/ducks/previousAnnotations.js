@@ -3,15 +3,16 @@ import { constructCoordinates, constructText } from '../lib/construct-previous-a
 import { CONSENSUS_SCORE } from '../config.js';
 
 const initialState = {
- data: null,
- marks: [],
- selectedPreviousAnnotation: null
+  data: null,
+  marks: [],
+  selectedPreviousAnnotation: null
 };
 
 const TEMP_WORKFLOW_ID = '3017';
 const TEMP_SUBJECT_ID = '72815';
 const CAESAR_HOST = 'https://caesar-staging.zooniverse.org/graphql';
 
+const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
 const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const UPDATE_FRAME ='UPDATE_FRAME';
 const UPDATE_PREVIOUS_ANNOTATION = 'UPDATE_PREVIOUS_ANNOTATION';
@@ -19,6 +20,9 @@ const REENABLE_PREVIOUS_ANNOTATION = 'REENABLE_PREVIOUS_ANNOTATION';
 
 const previousAnnotationsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_PREVIOUS_ANNOTATIONS:
+      return initialState;
+      
     case FETCH_ANNOTATIONS:
       return Object.assign({}, state, {
         data: action.data,
@@ -71,6 +75,12 @@ const previousAnnotationsReducer = (state = initialState, action) => {
    default:
      return state;
  };
+};
+
+const resetPreviousAnnotations = () => {
+  return (dispatch) => {
+    dispatch({ type: RESET_PREVIOUS_ANNOTATIONS });
+  };
 };
 
 const fetchAnnotations = () => {
@@ -157,6 +167,7 @@ const constructAnnotations = (reductions, frame) => {
 export default previousAnnotationsReducer;
 
 export {
+  resetPreviousAnnotations,
   changeFrameData,
   fetchAnnotations,
   updatePreviousAnnotation,

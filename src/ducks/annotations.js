@@ -142,7 +142,7 @@ const resetAnnotations = () => {
   return (dispatch) => {
     dispatch({ type: RESET_ANNOTATIONS });
   };
-}
+};
 
 const addAnnotationPoint = (x, y, frame) => {
   return (dispatch) => {
