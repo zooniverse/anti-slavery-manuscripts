@@ -5,10 +5,20 @@ import { Split } from 'seven-ten';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
+const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
+const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
+
+const CLASSIFICATION_STATUS = {
+  IDLE: 'classification_status_idle',
+  SENDING: 'classification_status_sending',
+  SUCCESS: 'classification_status_success',
+  ERROR: 'classification_status_error',
+};
 
 const initialState = {
   classification: null,
+  status: CLASSIFICATION_STATUS.status,
 };
 
 const classificationReducer = (state = initialState, action) => {
@@ -16,43 +26,22 @@ const classificationReducer = (state = initialState, action) => {
     case CREATE_CLASSIFICATION:
       return Object.assign({}, state, {
         classification: action.classification,
+        status: CLASSIFICATION_STATUS.IDLE,
       });
 
     case SUBMIT_CLASSIFICATION:
-      const classification = state.classification;
-      classification.annotations.push(action.annotations);
+      return Object.assign({}, state,{
+        status: CLASSIFICATION_STATUS.SENDING,
+      });
 
-      classification.update({
-        completed: true,
-        'metadata.finished_at': (new Date()).toISOString(),
-        'metadata.viewport': {
-          width: innerWidth,
-          height: innerHeight
-        },
-        'metadata.subject_dimensions': action.subject_dimensions || [],
-      })
-      .save()
-      
-      //Successful save: reset everything, then get the next Subject.
-      .then(() => {
-        //Log
-        console.log('Submit classification: Success');
-        Split.classificationCreated(classification);
-        
-        //Reset values in preparation for the next Subject.
-        return Object.assign({}, state, {
-          classification: null,
-        });
-      })
-      
-      //Unsuccessful save
-      .catch((err) => {
-        //TODO: Proper error handling
-        console.error('Submit classification: Error - ', err);
-        alert('ERROR: Could not submit Classification');
-        
-        //Change nothing
-        return Object.assign({}, state);
+    case SUBMIT_CLASSIFICATION_SUCCESS:
+      return Object.assign({}, state,{
+        status: CLASSIFICATION_STATUS.SUCCESS,
+      });
+
+    case SUBMIT_CLASSIFICATION_ERROR:
+      return Object.assign({}, state,{
+        status: CLASSIFICATION_STATUS.ERROR,
       });
 
     default:
@@ -106,15 +95,42 @@ const submitClassification = () => {
       value: getState().annotations.annotations,
     }
 
-    let subject = getState().subject;
-    let subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
+    const subject = getState().subject;
+    const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
+    const classification = getState().classifications.classification;
+    
+    dispatch({ type: SUBMIT_CLASSIFICATION });
+    classification.annotations.push(annotations);
+    classification.update({
+      completed: true,
+      'metadata.finished_at': (new Date()).toISOString(),
+      'metadata.viewport': {
+        width: innerWidth,
+        height: innerHeight,
+      },
+      'metadata.subject_dimensions': subject_dimensions || [],
+    })
+    .save()
 
-    dispatch({
-      annotations,
-      type: SUBMIT_CLASSIFICATION,
-      task,
-      subject_dimensions,
+    //Successful save: reset everything, then get the next Subject.
+    .then(() => {
+      //Log
+      console.log('Submit classification: Success');
+      Split.classificationCreated(classification);
+
+      //Reset values in preparation for the next Subject.
+      dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
+    })
+
+    //Unsuccessful save
+    .catch((err) => {
+      //TODO: Proper error handling
+      console.error('Submit classification: Error - ', err);
+      alert('ERROR: Could not submit Classification');
+
+      dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
     });
+
   };
 };
 
