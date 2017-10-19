@@ -66,6 +66,7 @@ class ClassifierContainer extends React.Component {
 
   componentWillUnmount() {
     Split.clear();
+  }
 
   componentDidMount() {
     this.props.dispatch(fetchGuide());
