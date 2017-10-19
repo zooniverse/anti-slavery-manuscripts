@@ -1,22 +1,22 @@
 const LetterGroups = [
   {
-    title: '1820-1840',
+    title: '1800-1839',
     workflow: '',
   },
   {
-    title: '1841-1850',
+    title: '1840-1849',
     workflow: '',
   },
   {
-    title: '1851-1860',
+    title: '1850-1859',
     workflow: '',
   },
   {
-    title: '1861-1870',
+    title: '1860-1869',
     workflow: '',
   },
   {
-    title: '1871-1900',
+    title: '1870-1900',
     workflow: '',
   }
 ];

@@ -12,8 +12,11 @@
   &__content
     display: flex
     flex-direction: column
-    padding: 0 2em 5em 2em
+    padding: 2.5em 2em 5em 2em
     text-align: center
+
+    .divider
+      margin: 3em auto
 
     h1
       word-wrap: break-word
@@ -25,7 +28,7 @@
     background: $light-eggplant
     display: flex
     flex-wrap: nowrap
-    height: 2em
+    height: 1.5em
     width: 100%
 
     .completed
@@ -40,12 +43,8 @@
 
   &__body-text
     @extend .body-copy
-    columns: 2
     margin: 0 22% 4em 22%
     text-align: left
-
-    @media(max-width: 500px)
-      columns: 1
 
   &__topic-select
     flex-wrap: wrap
@@ -183,6 +182,9 @@
     span
       margin: auto 0
 
+    .secondary-head
+      font-weight: 300
+
     div
       display: flex
       flex-direction: column
@@ -219,7 +221,7 @@
     color: $white
     display: flex
     flex-direction: column
-    padding: 2em 22%
+    padding: 4.5em 22%
     text-align: center
 
     .zooniverse-logo
