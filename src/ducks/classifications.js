@@ -30,13 +30,29 @@ const classificationReducer = (state = initialState, action) => {
           height: innerHeight
         },
         'metadata.subject_dimensions': action.subject_dimensions || [],
-      }).save();
-
-      Split.classificationCreated(classification);
-      // classification.metadata.session = getSessionID();
-
-      return Object.assign({}, state, {
-        classification: null,
+      })
+      .save()
+      
+      //Successful save: reset everything, then get the next Subject.
+      .then(() => {
+        //Log
+        console.log('Submit classification: Success');
+        Split.classificationCreated(classification);
+        
+        //Reset values in preparation for the next Subject.
+        return Object.assign({}, state, {
+          classification: null,
+        });
+      })
+      
+      //Unsuccessful save
+      .catch((err) => {
+        //TODO: Proper error handling
+        console.error('Submit classification: Error - ', err);
+        alert('ERROR: Could not submit Classification');
+        
+        //Change nothing
+        return Object.assign({}, state);
       });
 
     default:
