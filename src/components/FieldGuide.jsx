@@ -46,13 +46,13 @@ class FieldGuide extends React.Component {
 
   renderItem(items, index) {
     return (
-      <div className="field-guide" key={index}>
+      <div className="field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
         {items.map((item, i) => {
           const resource = item.icon;
           const src = this.props.icons[resource].src;
 
           return (
-            <div key={i}>
+            <div key={`FIELD_GUIDE_CARD_${index}-${i}`}>
               <button onClick={this.activateCard.bind(this, item)}>
                 {src && (
                   <img src={src} />
@@ -88,11 +88,11 @@ class FieldGuide extends React.Component {
             )}
           </div>
 
-          <div>
-            {src && (
+          {src && (
+            <div>
               <img src={src} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     )
