@@ -3,6 +3,9 @@ import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
+import { resetAnnotations } from './annotations';
+import { resetView } from './subject-viewer';
+
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
@@ -120,6 +123,8 @@ const submitClassification = () => {
 
       //Reset values in preparation for the next Subject.
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
+      dispatch(resetAnnotations());
+      dispatch(resetView());
     })
 
     //Unsuccessful save
