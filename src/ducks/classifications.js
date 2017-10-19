@@ -4,7 +4,8 @@ import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
 import { resetAnnotations } from './annotations';
-import { resetPreviousAnnotations } from './previousAnnotations';
+import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotations';
+import { fetchSubject } from './subject';
 import { resetView } from './subject-viewer';
 
 //Action Types
@@ -128,6 +129,8 @@ const submitClassification = () => {
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
       dispatch(resetAnnotations());
       dispatch(resetPreviousAnnotations());
+      dispatch(fetchSubject());
+      dispatch(fetchAnnotations());
       dispatch(resetView());
     })
 

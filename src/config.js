@@ -28,6 +28,8 @@ const baseConfig = {
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
     },
+    defaultWorkflowId: '3017',
+    defaultSubjectId: '72815',
   },
   production: {
     panoptesAppId: '064a5a32a9d2d389eeb876a8b7cb0fbe596fd80d7a040566f14965446d34c541',  //Anti-Slavery Manuscripts
@@ -36,6 +38,8 @@ const baseConfig = {
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
     },
+    defaultWorkflowId: '',
+    defaultSubjectId: '',
   }
 };
 baseConfig.staging = baseConfig.development;  //staging === development, as far as we're concerned.

@@ -8,6 +8,7 @@ project.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
+import { config } from '../config';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -15,7 +16,6 @@ const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 
-const TEMPORARY_HARDCODED_WORKFLOW_ID = '3017';
 const SUBJECT_STATUS = {
   IDLE: 'subject_status_idle',
   FETCHING: 'subject_status_fetching',
@@ -131,7 +131,7 @@ const setImageMetadata = (frameId, metadata) => {
   };
 }
 
-const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
+const fetchSubject = (id = config.defaultWorkflowId) => {
   return (dispatch, getState) => {
 
     dispatch({

@@ -1,6 +1,6 @@
 import { request } from 'graphql-request';
 import { constructCoordinates, constructText } from '../lib/construct-previous-annotations';
-import { CONSENSUS_SCORE } from '../config.js';
+import { config, CONSENSUS_SCORE } from '../config.js';
 
 const initialState = {
   data: null,
@@ -8,8 +8,6 @@ const initialState = {
   selectedPreviousAnnotation: null
 };
 
-const TEMP_WORKFLOW_ID = '3017';
-const TEMP_SUBJECT_ID = '72815';
 const CAESAR_HOST = 'https://caesar-staging.zooniverse.org/graphql';
 
 const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
@@ -85,8 +83,8 @@ const resetPreviousAnnotations = () => {
 
 const fetchAnnotations = () => {
   const query = `{
-    workflow(id: ${TEMP_WORKFLOW_ID}) {
-      reductions(subjectId: ${TEMP_SUBJECT_ID}) {
+    workflow(id: ${config.defaultWorkflowId}) {
+      reductions(subjectId: ${config.defaultSubjectId}) {
         data
       }
     }
