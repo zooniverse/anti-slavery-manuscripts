@@ -1,14 +1,15 @@
 import React from 'react';
-import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import PropTypes from 'prop-types';
 import apiClient from 'panoptes-client/lib/api-client';
 import talkClient from 'panoptes-client/lib/talk-client';
-import { config } from '../config';
+import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components';
+import { config, subjectSets } from '../config';
 import SocialSection from '../components/SocialSection';
+import { selectSubjectSet } from '../ducks/subject';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
-import LetterGroups from '../lib/letter-groups';
 
 class Home extends React.Component {
   constructor() {
@@ -19,6 +20,7 @@ class Home extends React.Component {
     };
     this.resizeBackground = this.resizeBackground.bind(this);
     this.fetchRecentSubjects = this.fetchRecentSubjects.bind(this);
+    this.renderTopics = this.renderTopics.bind(this);
   }
 
   componentDidMount() {
@@ -61,13 +63,17 @@ class Home extends React.Component {
   }
 
   renderTopics() {
-    return LetterGroups.map((group, i) => {
+    return subjectSets.map((set, i) => {
       return (
-        <div key={i}>
-          <span>{group.title}</span>
+        <div key={`Subject_Set_${i}`}>
+          <Link onClick={this.setSubjectSet.bind(this, set.id)} to="/classify">{set.title}</Link>
         </div>
       )
     });
+  }
+
+  setSubjectSet(id) {
+    this.props.dispatch(selectSubjectSet(id));
   }
 
   render() {
@@ -80,11 +86,15 @@ class Home extends React.Component {
           <img role="presentation" className="divider" src={Divider} />
           <div className="home-page__body-text">
             <b className="body-copy-first-word">Welcome.</b>{' '}
-            {this.props.project.description}
+            {this.props.project && this.props.project.description}
           </div>
-          <h3 className="transcribe">Transcribe Random &#8608;</h3>
+
+          <h3 className="transcribe">
+            <Link onClick={this.setSubjectSet.bind(this, null)} to="/classify">Transcribe Random &#8608;</Link>
+          </h3>
+
           <span className="instructions">
-            Click the button above to start with a random document, or choose a topic:
+            Click the button above to start with a random document, or choose a subject set:
           </span>
           <div className="home-page__topic-select flex-row">
             {this.renderTopics()}

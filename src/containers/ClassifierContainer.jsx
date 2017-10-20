@@ -65,7 +65,6 @@ class ClassifierContainer extends React.Component {
 
   render() {
     const isAdmin = this.props.user && this.props.user.admin;
-    console.log('DONE AGAIN');
 
     return (
       <main className="app-content classifier-page flex-row">

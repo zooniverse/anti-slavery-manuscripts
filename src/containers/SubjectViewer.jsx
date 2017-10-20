@@ -74,7 +74,6 @@ class SubjectViewer extends React.Component {
 
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
-    this.fetchSubject = this.fetchSubject.bind(this);
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
@@ -188,8 +187,7 @@ class SubjectViewer extends React.Component {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
-    this.fetchSubject();
-    this.props.dispatch(fetchAnnotations());
+    this.props.dispatch(fetchSubject());
   }
 
   componentWillReceiveProps(next) {
@@ -198,15 +196,15 @@ class SubjectViewer extends React.Component {
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
       });
     }
+
+    if (this.props.currentSubject !== next.currentSubject) {
+      this.props.dispatch(fetchAnnotations(next.currentSubject));
+    }
   }
 
   componentWillUnmount() {
     //Cleanup
     window.removeEventListener('resize', this.updateSize);
-  }
-
-  fetchSubject() {
-    this.props.dispatch(fetchSubject());
   }
 
   //----------------------------------------------------------------

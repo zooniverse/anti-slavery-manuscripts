@@ -1,10 +1,10 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
+import { config } from '../config.js';
 
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
 const FETCH_WORKFLOW_ERROR = 'FETCH_WORKFLOW_ERROR';
 
-const TEMPORARY_HARDCODED_WORKFLOW_ID = '3017';
 const WORKFLOW_STATUS = {
   IDLE: 'workflow_status_idle',
   FETCHING: 'workflow_status_fetching',
@@ -44,7 +44,7 @@ const workflowReducer = (state = initialState, action) => {
   };
 };
 
-const fetchWorkflow = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
+const fetchWorkflow = (id = config.zooniverseLinks.workflowId) => {
   return (dispatch) => {
 
     dispatch({
