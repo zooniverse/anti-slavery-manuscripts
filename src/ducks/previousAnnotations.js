@@ -82,6 +82,8 @@ const resetPreviousAnnotations = () => {
 };
 
 const fetchAnnotations = (subject) => {
+  if (!subject) return () => {};
+  
   const query = `{
     workflow(id: ${config.zooniverseLinks.workflowId}) {
       reductions(subjectId: ${subject.id}) {
