@@ -79,6 +79,7 @@ class SelectedAnnotation extends React.Component {
     inputY = inputY * this.props.scaling + (this.props.translationY * this.props.scaling);
     inputY = inputY + this.props.viewerSize.height / 2;
 
+    const inputClass = this.props.annotation.previousAnnotation ? "selected-annotation__previous" : "selected-annotation__user";
 
     const defaultPosition = {
       x: inputX - (PANE_WIDTH / 2),
@@ -116,7 +117,7 @@ class SelectedAnnotation extends React.Component {
           </div>
 
           <p>
-            <input type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
+            <input className={inputClass} type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
 
             {this.props.annotation.previousAnnotation && (
               <button onClick={this.toggleShowAnnotations}>

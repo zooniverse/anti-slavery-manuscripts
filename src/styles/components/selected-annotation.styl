@@ -40,12 +40,19 @@
     float: right
 
   input[type=text]
-    border: 2px solid $mid-grey
-    border-right: none
+    border-top: 2px solid $mid-grey
+    border-left: 2px solid $mid-grey
+    border-bottom: 2px solid $mid-grey
     font-family: inherit
     font-size: inherit
     width: 100%
     padding: 0.5em
+
+  &__user
+    border-right: 2px solid $mid-grey
+
+  &__previous
+    border-right: none
 
   &__options
     display: flex
