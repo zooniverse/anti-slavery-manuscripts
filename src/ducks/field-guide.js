@@ -2,10 +2,20 @@ import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
 
 const FETCH_GUIDE = 'FETCH_GUIDE';
+const FETCH_GUIDE_SUCCESS = 'FETCH_GUIDE_SUCCESS';
+const FETCH_GUIDE_ERROR = 'FETCH_GUIDE_ERROR';
+
+const GUIDE_STATUS = {
+  IDLE: 'guide_status_idle',
+  FETCHING: 'guide_status_fetching',
+  READY: 'guide_status_ready',
+  ERROR: 'guide_status_error',
+};
 
 const initialState = {
-  icons: null,
-  guide: null
+  status: GUIDE_STATUS.IDLE,
+  icons: {},
+  guide: {}
 };
 
 const fieldGuideReducer = (state = initialState, action) => {
@@ -13,8 +23,19 @@ const fieldGuideReducer = (state = initialState, action) => {
 
     case FETCH_GUIDE:
       return Object.assign({}, state, {
+        status: GUIDE_STATUS.FETCHING
+      });
+
+    case FETCH_GUIDE_SUCCESS:
+      return Object.assign({}, state, {
+        status: GUIDE_STATUS.READY,
         guide: action.guide,
         icons: action.icons
+      });
+
+    case FETCH_GUIDE_ERROR:
+      return Object.assign({}, state, {
+        status: GUIDE_STATUS.ERROR
       });
 
     default:
@@ -24,6 +45,11 @@ const fieldGuideReducer = (state = initialState, action) => {
 
 const fetchGuide = () => {
   return (dispatch, getState) => {
+
+    dispatch({
+      type: FETCH_GUIDE,
+    });
+
     apiClient.type('field_guides').get({ project_id: `${config.zooniverseLinks.projectId}` }).then(([guide]) => {
       let icons = {};
 
@@ -36,10 +62,13 @@ const fetchGuide = () => {
       }
 
       dispatch({
-        type: FETCH_GUIDE,
+        type: FETCH_GUIDE_SUCCESS,
         icons,
         guide
       });
+    })
+    .catch((err) => {
+      dispatch({ type: FETCH_GUIDE_ERROR });
     });
   };
 };
@@ -48,4 +77,5 @@ export default fieldGuideReducer;
 
 export {
   fetchGuide,
+  GUIDE_STATUS
 };

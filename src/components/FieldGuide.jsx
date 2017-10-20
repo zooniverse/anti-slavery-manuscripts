@@ -49,7 +49,11 @@ class FieldGuide extends React.Component {
       <div className="field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
         {items.map((item, i) => {
           const resource = item.icon;
-          const src = this.props.icons[resource].src;
+          let src;
+
+          if (this.props.icons[resource]) {
+            src = this.props.icons[resource].src;
+          }
 
           return (
             <div key={`FIELD_GUIDE_CARD_${index}-${i}`}>
@@ -69,7 +73,11 @@ class FieldGuide extends React.Component {
   renderActiveCard() {
     if (!this.state.activeCard) { return null; }
     const card = this.state.activeCard;
-    const src = this.props.icons[card.icon].src;
+    let src;
+
+    if (this.props.icons[card.icon]) {
+      src = this.props.icons[card.icon].src;
+    }
 
     return (
       <div className="active-card">

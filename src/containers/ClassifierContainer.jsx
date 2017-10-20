@@ -10,7 +10,7 @@ import {
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
-import { fetchGuide } from '../ducks/field-guide';
+import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { toggleOverride } from '../ducks/splits';
@@ -92,7 +92,7 @@ class ClassifierContainer extends React.Component {
             </p>
           </div>
           <div className="help-buttons">
-            {this.props.guide && (
+            {this.props.guide && GUIDE_STATUS.READY && (
               <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
             <button href="#" className="white-red button">Your Crib Sheet</button>
@@ -267,6 +267,8 @@ ClassifierContainer.propTypes = {
     id: PropTypes.string,
   }),
   dispatch: PropTypes.func,
+  guide: PropTypes.object,
+  guideStatus: PropTypes.string,
   rotation: PropTypes.number,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   project: PropTypes.shape({
@@ -286,6 +288,7 @@ ClassifierContainer.defaultProps = {
   adminOverride: false,
   previousAnnotations: [],
   guide: null,
+  guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
   project: null,
   rotation: 0,
@@ -301,6 +304,7 @@ const mapStateToProps = (state, ownProps) => {
     previousAnnotations: state.previousAnnotations.marks,
     favoriteSubject: state.subject.favorite,
     guide: state.fieldGuide.guide,
+    guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
