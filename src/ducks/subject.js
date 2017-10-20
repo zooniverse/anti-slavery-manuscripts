@@ -8,14 +8,15 @@ project.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
+import { config } from '../config.js';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
 const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
+const SET_SUBJECT_SET = 'SET_SUBJECT_SET';
 
-const TEMPORARY_HARDCODED_WORKFLOW_ID = '3017';
 const SUBJECT_STATUS = {
   IDLE: 'subject_status_idle',
   FETCHING: 'subject_status_fetching',
@@ -27,6 +28,7 @@ const initialState = {
   currentSubject: null,
   imageMetadata: [],  //metadata for each image in the Subject; a single image is defined by subject.location.
   id: null,
+  subjectSet: null,
   status: SUBJECT_STATUS.IDLE,
   queue: [],
   favorite: false
@@ -50,6 +52,11 @@ const subjectReducer = (state = initialState, action) => {
         favorite: action.favorite,
       });
 
+    case SET_SUBJECT_SET:
+      return Object.assign({}, state, {
+        subjectSet: action.id
+      });
+
     case FETCH_SUBJECT_ERROR:
       return Object.assign({}, state, {
         status: SUBJECT_STATUS.ERROR,
@@ -59,17 +66,17 @@ const subjectReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         favorite: action.favorite,
       });
-      
-    case SET_IMAGE_METADATA:      
+
+    case SET_IMAGE_METADATA:
       let imageMetadata = state.imageMetadata.slice();
       if (action.frameId !== null) {
         imageMetadata[action.frameId] = Object.assign({}, imageMetadata[action.frameId], action.metadata);
       }
-      
+
       return Object.assign({}, state, {
         imageMetadata
       });
-      
+
 
     default:
       return state;
@@ -131,7 +138,16 @@ const setImageMetadata = (frameId, metadata) => {
   };
 }
 
-const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
+const selectSubjectSet = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBJECT_SET,
+      id
+    });
+  };
+}
+
+const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
   return (dispatch, getState) => {
 
     dispatch({
@@ -142,10 +158,15 @@ const fetchSubject = (id = TEMPORARY_HARDCODED_WORKFLOW_ID) => {
       workflow_id: id,
     };
 
+    if (getState().subject.subjectSet) {
+      subjectQuery.subject_set_id = getState().subject.subjectSet;
+    }
+
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
           const currentSubject = queue.shift();
+          console.log(currentSubject);
           dispatch({
             currentSubject,
             id: currentSubject.id,
@@ -177,6 +198,7 @@ export default subjectReducer;
 export {
   toggleFavorite,
   fetchSubject,
+  selectSubjectSet,
   setImageMetadata,
   SUBJECT_STATUS,
 };
