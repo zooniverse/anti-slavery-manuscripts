@@ -29,8 +29,6 @@ const baseConfig = {
       projectSlug: 'wgranger-test/anti-slavery-testing',
       workflowId: '3017'
     },
-    defaultWorkflowId: '3017',
-    defaultSubjectId: '72815',
   },
   production: {
     panoptesAppId: '064a5a32a9d2d389eeb876a8b7cb0fbe596fd80d7a040566f14965446d34c541',  //Anti-Slavery Manuscripts
@@ -40,8 +38,6 @@ const baseConfig = {
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
       workflowId: '5219'
     },
-    defaultWorkflowId: '',
-    defaultSubjectId: '',
   }
 };
 
