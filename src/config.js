@@ -27,6 +27,7 @@ const baseConfig = {
       host: 'https://master.pfe-preview.zooniverse.org/',
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
+      workflowId: '3017'
     },
     defaultWorkflowId: '3017',
     defaultSubjectId: '72815',
@@ -37,15 +38,38 @@ const baseConfig = {
       host: 'https://www.zooniverse.org/',
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
+      workflowId: '5219'
     },
     defaultWorkflowId: '',
     defaultSubjectId: '',
   }
 };
+
+const baseSubjectSets = {
+  development: [
+    { title: '1800-1839', id: '4420' },
+    { title: '1840-1849', id: '4422' },
+    { title: '1850-1859', id: '4423' },
+    { title: '1860-1869', id: '4424' },
+    { title: '1870-1900', id: '4425' }
+  ],
+  production: [
+    { title: '1800-1839', id: '15582' },
+    { title: '1840-1849', id: '15583' },
+    { title: '1850-1859', id: '15584' },
+    { title: '1860-1869', id: '15585' },
+    { title: '1870-1900', id: '15526' }
+  ]
+};
+
+
 baseConfig.staging = baseConfig.development;  //staging === development, as far as we're concerned.
+baseSubjectSets.staging = baseSubjectSets.development;
 
 const config = baseConfig[env];
-export { env, config, CONSENSUS_SCORE };
+const subjectSets = baseSubjectSets[env];
+
+export { env, config, CONSENSUS_SCORE, subjectSets };
 
 // Try and match the location.search property against a regex. Basically mimics
 // the CoffeeScript existential operator, in case we're not in a browser.

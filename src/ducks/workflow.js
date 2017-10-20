@@ -44,7 +44,7 @@ const workflowReducer = (state = initialState, action) => {
   };
 };
 
-const fetchWorkflow = (id = config.defaultWorkflowId) => {
+const fetchWorkflow = (id = config.zooniverseLinks.workflowId) => {
   return (dispatch) => {
 
     dispatch({

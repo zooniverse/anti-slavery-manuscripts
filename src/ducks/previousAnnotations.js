@@ -40,7 +40,7 @@ const previousAnnotationsReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         marks
       });
-    
+
     case REENABLE_PREVIOUS_ANNOTATION:
       //Find the Previous (Aggregated) Annotation that matches the Selected Annotation, then reenable it.
       const reenabledMarks = state.marks.map((item) => {
@@ -48,24 +48,24 @@ const previousAnnotationsReducer = (state = initialState, action) => {
           item.hasCollaborated && item.points &&
           action.selectedAnnotation && action.selectedAnnotation.points &&
           item.points.length === action.selectedAnnotation.points.length;
-        
+
         if (isAMatch) {  //Second check: do all the x-y coordinates that make the line match up?
           item.points.map((a, index) => {
             const b = action.selectedAnnotation.points[index];
             isAMatch = isAMatch && a.x === b.x && a.y === b.y;
           });
         }
-        
+
         //Finally, reenable the Previous Annotation if it's a match.
         if (isAMatch) item.hasCollaborated = false;
-        
+
         //WARNING: This is a fairly primitive method of reenabling the previous
         //Annotation, and will not work if the user-created Annotation can have
         //its x-y coordinates edited.
-        
+
         return item;
       });
-      
+
       return Object.assign({}, state, {
         marks: reenabledMarks,
       });
@@ -81,10 +81,10 @@ const resetPreviousAnnotations = () => {
   };
 };
 
-const fetchAnnotations = () => {
+const fetchAnnotations = (subject) => {
   const query = `{
-    workflow(id: ${config.defaultWorkflowId}) {
-      reductions(subjectId: ${config.defaultSubjectId}) {
+    workflow(id: ${config.zooniverseLinks.workflowId}) {
+      reductions(subjectId: ${subject.id}) {
         data
       }
     }

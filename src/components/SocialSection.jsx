@@ -71,7 +71,7 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, pr
       <div>
         <h3 className="main-title">Message from the researchers</h3>
         <span>
-          {project.researcher_quote}
+          {project && project.researcher_quote}
         </span>
       </div>
       <div className="home-page__news-section flex-row">
