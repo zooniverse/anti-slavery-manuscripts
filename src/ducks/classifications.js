@@ -130,7 +130,6 @@ const submitClassification = () => {
       dispatch(resetAnnotations());
       dispatch(resetPreviousAnnotations());
       dispatch(fetchSubject());
-      dispatch(fetchAnnotations());
       dispatch(resetView());
     })
 
