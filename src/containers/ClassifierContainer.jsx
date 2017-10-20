@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
+import { config } from '../config';
 
 import {
   setRotation, setContrast, resetView,
@@ -87,7 +88,9 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="white-red button">Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
             <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
-            <button href="#" className="green button" onClick={this.completeClassification}>Done &amp; Talk</button>
+            <button href="#" className="green button" onClick={this.completeClassification}>
+              <a href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk'} target="_blank">Done &amp; Talk</a>
+            </button>
           </div>
         </section>
 
