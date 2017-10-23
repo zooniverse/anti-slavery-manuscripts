@@ -100,7 +100,7 @@ class SelectedAnnotation extends React.Component {
         <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
           <div>
             <h2>Transcribe</h2>
-            <button onClick={this.props.onClose}>X</button>
+            <button className="close-button" onClick={this.props.onClose}>X</button>
           </div>
           <span>
             Enter the words you marked in the order you marked them. Open the
