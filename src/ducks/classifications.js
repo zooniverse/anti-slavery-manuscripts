@@ -129,6 +129,7 @@ const submitClassification = () => {
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
       dispatch(resetAnnotations());
       dispatch(resetPreviousAnnotations());
+      dispatch(createClassification());
       dispatch(fetchSubject());
       dispatch(resetView());
     })
