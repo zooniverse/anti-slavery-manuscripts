@@ -106,6 +106,9 @@ const submitClassification = () => {
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
     
+    //TODO: Better error handling
+    if (!classification) { alert('ERROR: Could not create Classification.'); return; }
+    
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.annotations.push(annotations);
     classification.update({
@@ -129,6 +132,7 @@ const submitClassification = () => {
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
       dispatch(resetAnnotations());
       dispatch(resetPreviousAnnotations());
+      dispatch(createClassification());
       dispatch(fetchSubject());
       dispatch(resetView());
     })
