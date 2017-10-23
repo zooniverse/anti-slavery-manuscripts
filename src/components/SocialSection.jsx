@@ -94,6 +94,7 @@ SocialSection.defaultProps = {
   percentComplete: 0,
   project: {
     classifiers_count: 0,
+    completeness: 0,
     researcher_quote: '',
     retired_subjects_count: 0,
     subjects_count: 0
@@ -105,6 +106,7 @@ SocialSection.propTypes = {
   percentComplete: PropTypes.number,
   project: PropTypes.shape({
     classifiers_count: PropTypes.number,
+    completeness: PropTypes.number,
     researcher_quote: PropTypes.string,
     retired_subjects_count: PropTypes.number,
     subjects_count: PropTypes.number,
