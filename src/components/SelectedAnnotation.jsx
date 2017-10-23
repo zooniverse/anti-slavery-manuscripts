@@ -20,7 +20,7 @@ class SelectedAnnotation extends React.Component {
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
-    this.markUnclear = this.markUnclear.bind(this);
+    this.textModifier = this.textModifier.bind(this);
 
     this.state = {
       annotationText: '',
@@ -60,8 +60,7 @@ class SelectedAnnotation extends React.Component {
     this.setState({ annotationText, showAnnotationOptions: false });
   }
 
-  markUnclear(e) {
-    let textTag = 'unclear';
+  textModifier(textTag) {
     let value;
     let textAfter;
     let textInBetween;
