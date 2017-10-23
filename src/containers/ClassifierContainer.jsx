@@ -45,6 +45,7 @@ class ClassifierContainer extends React.Component {
     this.showCollections = this.showCollections.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.completeClassification = this.completeClassification.bind(this);
+    this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
 
     this.state = {
@@ -88,8 +89,8 @@ class ClassifierContainer extends React.Component {
             <button href="#" className="white-red button">Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
             <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
-            <button href="#" className="green button" onClick={this.completeClassification}>
-              <a href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk'} target="_blank">Done &amp; Talk</a>
+            <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
+              Done &amp; Talk
             </button>
           </div>
         </section>
@@ -205,6 +206,11 @@ class ClassifierContainer extends React.Component {
 
   completeClassification() {
     this.props.dispatch(submitClassification())
+  }
+
+  submitClassificationAndRedirect() {
+    this.completeClassification();
+    window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
 
   useRotate90() {
