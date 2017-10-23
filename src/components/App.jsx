@@ -12,10 +12,25 @@ import LoadingSpinner from './LoadingSpinner';
 
 import { PROJECT_STATUS } from '../ducks/project';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
+import GoogleLogger from '../lib/GoogleLogger';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.googleLogger = null;
+  }
+
   returnSomething(something) { // eslint-disable-line class-methods-use-this
     return something;
+  }
+
+  getChildContext() {
+    return ({ googleLogger: this.googleLogger });
+  }
+
+  componentWillMount() {
+    this.googleLogger = new GoogleLogger;
   }
 
   componentDidMount() {
@@ -81,6 +96,10 @@ App.defaultProps = {
   projectStatus: PROJECT_STATUS.IDLE,
   workflowStatus: WORKFLOW_STATUS.IDLE,
 };
+
+App.childContextTypes = {
+  googleLogger: PropTypes.object
+}
 
 const mapStateToProps = (state) => {
   return {
