@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Divider from '../images/img_divider.png';
 import { getSubjectLocation, getThumbnailSource } from '../lib/get-subject-location';
 
-const SocialSection = ({ classifications, completedSubjects, percentComplete, project, subjects, subjectsOfNote, volunteers }) =>
+const SocialSection = ({ project, subjectsOfNote }) =>
   <div className="home-page__social-section">
 
     {subjectsOfNote && subjectsOfNote.length && (
@@ -35,9 +35,9 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, pr
           Check back for updated stats on Anti-Slavery Manuscripts.
         </span>
         <div className="home-page__progress-bar">
-          <div className="completed" style={{ minWidth: "2em", width: `${percentComplete}%` }}>
+          <div className="completed" style={{ minWidth: "2em", width: `${project.completeness || 0}%` }}>
             <span>
-              {percentComplete}%
+              {project.completeness || 0}%
             </span>
           </div>
         </div>
@@ -47,21 +47,21 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, pr
       <div className="home-page__numbers">
         <div>
           <span className="secondary-head">
-            <p>{volunteers}</p>
+            <p>{project.classifiers_count && project.classifiers_count.toLocaleString()}</p>
             Volunteers
           </span>
           <span className="secondary-head">
-            <p>{subjects}</p>
+            <p>{project.subjects_count && project.subjects_count.toLocaleString()}</p>
             Subjects
           </span>
         </div>
         <div>
           <span className="secondary-head">
-            <p>{classifications}</p>
+            <p>{project.classifications_count && project.classifications_count.toLocaleString()}</p>
             Classifications
           </span>
           <span className="secondary-head">
-            <p>{completedSubjects}</p>
+            <p>{project.retired_subjects_count && project.retired_subjects_count.toLocaleString()}</p>
             Completed Subjects
           </span>
         </div>
@@ -91,27 +91,26 @@ const SocialSection = ({ classifications, completedSubjects, percentComplete, pr
   </div>;
 
 SocialSection.defaultProps = {
-  classifications: 0,
-  completedSubjects: 0,
   percentComplete: 0,
   project: {
-    researcher_quote: ''
+    classifiers_count: 0,
+    researcher_quote: '',
+    retired_subjects_count: 0,
+    subjects_count: 0
   },
-  subjects: 0,
   subjectsOfNote: [],
-  volunteers: 0,
 };
 
 SocialSection.propTypes = {
-  classifications: PropTypes.number,
-  completedSubjects: PropTypes.number,
   percentComplete: PropTypes.number,
   project: PropTypes.shape({
-    researcher_quote: ''
+    classifiers_count: PropTypes.number,
+    researcher_quote: PropTypes.string,
+    retired_subjects_count: PropTypes.number,
+    subjects_count: PropTypes.number,
+
   }),
-  subjects: PropTypes.number,
   subjectsOfNote: PropTypes.arrayOf(PropTypes.object),
-  volunteers: PropTypes.number,
 };
 
 export default SocialSection;
