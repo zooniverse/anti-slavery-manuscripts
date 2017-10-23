@@ -143,10 +143,10 @@ class SelectedAnnotation extends React.Component {
 
           <div className="selected-annotation__markup">
             <p>Text Modifiers</p>
-            <button>[insertion]</button>
-            <button>[deletion]</button>
-            <button>[unclear]</button>
-            <button>[underline]</button>
+            <button onClick={this.textModifier.bind(this, 'insertion')}>[insertion]</button>
+            <button onClick={this.textModifier.bind(this, 'deletion')}>[deletion]</button>
+            <button onClick={this.textModifier.bind(this, 'unclear')}>[unclear]</button>
+            <button onClick={this.textModifier.bind(this, 'underline')}>[underline]</button>
           </div>
 
           <p>
