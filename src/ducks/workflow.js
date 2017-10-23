@@ -1,5 +1,5 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
-import { config } from '../config.js';
+import { config } from '../config';
 
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';

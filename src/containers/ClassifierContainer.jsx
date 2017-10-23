@@ -161,7 +161,7 @@ class ClassifierContainer extends React.Component {
               <span>Subject Info</span>
             </button>
 
-            {isAdmin && this.props.previousAnnotations.length && (
+            {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
               <label
                 className="admin-override"
                 title="Enter collaborative mode if not available"

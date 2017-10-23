@@ -7,6 +7,7 @@ Redux Duck: Annotations
  */
 
 //Action Types
+const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
 const ADD_ANNOTATION_POINT = 'ADD_ANNOTATION_POINT';
 const COMPLETE_ANNOTATION = 'COMPLETE_ANNOTATION';
 const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
@@ -44,6 +45,9 @@ const initialState = {
 
 const subjectReducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_ANNOTATIONS:
+      return initialState;
+      
     case ADD_ANNOTATION_POINT:
       const annotationInProgress = (state.annotationInProgress)
         ? Object.assign({}, state.annotationInProgress) //Create a copy, don't modify the existing object.
@@ -133,6 +137,13 @@ const subjectReducer = (state = initialState, action) => {
 //------------------------------------------------------------------------------
 
 //Action Creators
+
+const resetAnnotations = () => {
+  return (dispatch) => {
+    dispatch({ type: RESET_ANNOTATIONS });
+  };
+};
+
 const addAnnotationPoint = (x, y, frame) => {
   return (dispatch) => {
     dispatch({
@@ -208,6 +219,7 @@ export default subjectReducer;
 //Exports
 
 export {
+  resetAnnotations,
   addAnnotationPoint, completeAnnotation,
   selectAnnotation, unselectAnnotation,
   deleteSelectedAnnotation,

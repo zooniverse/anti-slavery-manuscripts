@@ -8,7 +8,7 @@ project.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
-import { config } from '../config.js';
+import { config } from '../config';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
