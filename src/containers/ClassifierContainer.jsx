@@ -274,6 +274,12 @@ class ClassifierContainer extends React.Component {
   }
 
   toggleFieldGuide() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({
+        type: 'open-field-guide'
+      });
+    }
+
     this.props.dispatch(toggleDialog(
       <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false));
   }
