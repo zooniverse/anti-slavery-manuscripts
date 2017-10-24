@@ -69,6 +69,10 @@ class ClassifierContainer extends React.Component {
     if (nextProps.tutorial !== this.props.tutorial) {
       Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, nextProps.preferences);
     }
+
+    // if (nextProps.currentSubject !== this.props.currentSubject && this.context.googleLogger) {
+    //   this.context.googleLogger.remember({ subjectID: nextProps.currentSubject.id });
+    // }
   }
 
   componentWillUnmount() {
@@ -224,11 +228,19 @@ class ClassifierContainer extends React.Component {
   }
 
   completeClassification() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.makeHandler('complete-classification');
+    }
+
     this.props.dispatch(submitClassification())
   }
 
   submitClassificationAndRedirect() {
-    this.completeClassification();
+    if (this.context.googleLogger) {
+      this.context.googleLogger.makeHandler('complete-classification-and-talk');
+    }
+
+    this.props.dispatch(submitClassification())
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
 
@@ -318,6 +330,11 @@ ClassifierContainer.defaultProps = {
   workflow: null,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
+
+ClassifierContainer.contextTypes = {
+  googleLogger: PropTypes.object
+};
+
 const mapStateToProps = (state, ownProps) => {
   return {
     adminOverride: state.splits.adminOverride,

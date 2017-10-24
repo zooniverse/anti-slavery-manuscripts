@@ -343,6 +343,10 @@ class SubjectViewer extends React.Component {
   onSelectAnnotation(indexOfAnnotation, isPreviousAnnotation) {
     //Don't allow an annotation to be selected if there's one in progress,
     //otherwise it gets confusing.
+    if (isPreviousAnnotation && this.context.googleLogger) {
+      this.context.googleLogger.makeHandler('click-previous-annotation');
+    }
+
     if (this.props.annotationInProgress === null) {
       this.props.dispatch(selectAnnotation(indexOfAnnotation, isPreviousAnnotation));
     }
@@ -506,6 +510,11 @@ SubjectViewer.defaultProps = {
   splits: null,
   user: null
 };
+
+SubjectViewer.contextTypes = {
+  googleLogger: PropTypes.object
+};
+
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   const sv = state.subjectViewer;
   const anno = state.annotations;

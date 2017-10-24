@@ -1,6 +1,12 @@
+// import LoggerClient 'loggerClient'; this will be added once the client is ready
+
 class GoogleLogger {
   constructor() {
-    this.tokens = ['wgranger-test/anti-slavery-testing'];
+    this.tokens = ['wgranger-test/anti-slavery-testing']; // this will need to be changed once ready for production
+  }
+
+  instance() {
+    return this.logger || this.makeLogger('wgranger-test/anti-slavery-testing');
   }
 
   getEnv() {
@@ -19,6 +25,15 @@ class GoogleLogger {
     return shell_env || browser_env || 'staging';
   }
 
+  makeLogger(slug) {
+    // new LoggerClient ({
+    //   env: this.getEnv(),
+    //   projectToken: slug || this.keys.projectToken,
+    //   zooUserIDGetter: () => { this.keys.userID },
+    //   subjectGetter: () => { this.keys.subjectID }
+    // });
+  }
+
   makeHandler(defType) {
     return (eventData, eventType) => {
 
@@ -31,14 +46,15 @@ class GoogleLogger {
   }
 
   logEvent(logEntry) {
-    const newEntry = Object.assign({}. logEntry, this.keys);
-
-    if (GeordiLogger.tokens.indexOf(newEntry.projectToken) > -1) {
-      this.instance().logEvent(newEntry);
-      if (!this.instance().logEvent) {
-        console.warn('No logger available for event', JSON.stringify(logEvent));
-      }
-    }
+    console.log(logEntry);
+    // const newEntry = Object.assign({}. logEntry, this.keys);
+    //
+    // if (GeordiLogger.tokens.indexOf(newEntry.projectToken) > -1) {
+    //   this.instance().logEvent(newEntry);
+    //   if (!this.instance().logEvent) {
+    //     console.warn('No logger available for event', JSON.stringify(logEvent));
+    //   }
+    // }
   }
 
   remember(eventData) {

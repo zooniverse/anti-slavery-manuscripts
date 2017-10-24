@@ -36,6 +36,10 @@ class App extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchProject());
     this.props.dispatch(fetchWorkflow());
+    // this.googleLogger.remember({ projectToken: ['wgranger-test/anti-slavery-testing'] });
+    // if (this.props.user) {
+    //   this.googleLogger.remember({ userID: user.id });
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
