@@ -10,6 +10,7 @@ import previousAnnotations from './previousAnnotations';
 import workflow from './workflow';
 import classifications from './classifications';
 import splits from './splits';
+import fieldGuide from './field-guide';
 
 export default combineReducers({
   login,
@@ -22,5 +23,6 @@ export default combineReducers({
   previousAnnotations,
   workflow,
   classifications,
-  splits
+  splits,
+  fieldGuide
 });

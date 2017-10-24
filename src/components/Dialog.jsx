@@ -19,24 +19,26 @@ class Dialog extends React.Component {
   }
 
   render() {
-    const width = 600;
-    const height = 400;
+    const width = 800;
+    const height = 425;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2) + window.scrollY;
 
     const defaultPosition = { x, y, height, width };
+    const enableResize = this.props.enableResize ? { bottomRight: true } : false;
+    const resizeClass = this.props.enableResize ? { bottomRight: "drag-handler" } : false;
 
     return (
       <Rnd
         default={defaultPosition}
-        enableResizing={{ bottomRight: true }}
+        enableResizing={enableResize}
         minHeight={400}
         minWidth={400}
-        resizeHandlerClasses={{ bottomRight: "drag-handler" }}
+        resizeHandlerClasses={resizeClass}
       >
         <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
           <div className="popup-content dialog-content">
-            <button className="fa fa-close close-button" onClick={this.close}></button>
+            <button className="close-button" onClick={this.close}>X</button>
             {this.props.children}
           </div>
         </div>
@@ -58,8 +60,17 @@ class Dialog extends React.Component {
   }
 }
 
-Dialog.propTypes = {
-  dispatch: PropTypes.func
+Dialog.defaultProps = {
+  enableResize: true
 }
 
-export default connect()(Dialog);
+Dialog.propTypes = {
+  dispatch: PropTypes.func,
+  enableResize: PropTypes.bool
+}
+
+const mapStateToProps = (state) => ({
+  enableResize: state.dialog.enableResize
+});
+
+export default connect(mapStateToProps)(Dialog);

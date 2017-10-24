@@ -86,5 +86,8 @@ module.exports = {
       loader: 'file-loader?name=[name].[ext]',
     }],
   },
+  node: {
+    fs: "empty"
+  }
 
 };

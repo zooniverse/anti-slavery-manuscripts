@@ -29,13 +29,19 @@
     margin: 0 25vw 20vh 25vw
 
 .dialog
+  border-top: 8px solid $light-grey
   box-shadow: 5px 5px 20px #888888
   width: 100%
 
+  .close-button
+    font-family: $playfair-display
+    font-size: 0.75em
+
   .dialog-content
+    min-height: 100%
+
     button
       color: black
-      float: right
 
 .popup
   display: flex
@@ -53,7 +59,6 @@
     padding: 0.5em 1em
 
   button
-    background: $aqua-marine
     border: none
 
 .popup-content::-webkit-scrollbar
@@ -61,3 +66,6 @@
 
 .popup-content::-webkit-scrollbar-thumb
   background: $dark-grey
+
+.step-through-controls
+  text-align: center

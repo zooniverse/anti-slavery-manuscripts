@@ -1,5 +1,6 @@
 const initialState = {
- data: null
+ data: null,
+ enableResize: true
 };
 
 const SET_POPUP = 'SET_POPUP';
@@ -8,18 +9,21 @@ const dialogReducer = (state = initialState, action) => {
  switch (action.type) {
    case SET_POPUP:
      return {
-       data: action.dialog
+       data: action.dialog,
+       enableResize: action.resize
      };
+
    default:
      return state;
  };
 };
 
-const toggleDialog = (dialog) => {
+const toggleDialog = (dialog, resize = true) => {
  return (dispatch) => {
    dispatch({
      type: SET_POPUP,
      dialog,
+     resize
    });
  };
 };
