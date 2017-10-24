@@ -166,7 +166,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
           const currentSubject = queue.shift();
-          console.log(currentSubject);
+
           dispatch({
             currentSubject,
             id: currentSubject.id,

@@ -35,9 +35,9 @@ const SocialSection = ({ project, subjectsOfNote }) =>
           Check back for updated stats on Anti-Slavery Manuscripts.
         </span>
         <div className="home-page__progress-bar">
-          <div className="completed" style={{ minWidth: "2em", width: `${project.completeness || 0}%` }}>
+          <div className="completed" style={{ minWidth: "2em", width: `${project || project.completeness || 0}%` }}>
             <span>
-              {project.completeness || 0}%
+              {project && project.completeness || 0}%
             </span>
           </div>
         </div>
@@ -47,21 +47,21 @@ const SocialSection = ({ project, subjectsOfNote }) =>
       <div className="home-page__numbers">
         <div>
           <span className="secondary-head">
-            <p>{project.classifiers_count && project.classifiers_count.toLocaleString()}</p>
+            <p>{project && project.classifiers_count && project.classifiers_count.toLocaleString()}</p>
             Volunteers
           </span>
           <span className="secondary-head">
-            <p>{project.subjects_count && project.subjects_count.toLocaleString()}</p>
+            <p>{project && project.subjects_count && project.subjects_count.toLocaleString()}</p>
             Subjects
           </span>
         </div>
         <div>
           <span className="secondary-head">
-            <p>{project.classifications_count && project.classifications_count.toLocaleString()}</p>
+            <p>{project && project.classifications_count && project.classifications_count.toLocaleString()}</p>
             Classifications
           </span>
           <span className="secondary-head">
-            <p>{project.retired_subjects_count && project.retired_subjects_count.toLocaleString()}</p>
+            <p>{project && project.retired_subjects_count && project.retired_subjects_count.toLocaleString()}</p>
             Completed Subjects
           </span>
         </div>

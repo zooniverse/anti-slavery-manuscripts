@@ -11,6 +11,7 @@ import workflow from './workflow';
 import classifications from './classifications';
 import splits from './splits';
 import fieldGuide from './field-guide';
+import tutorial from './tutorial';
 
 export default combineReducers({
   login,
@@ -24,5 +25,6 @@ export default combineReducers({
   workflow,
   classifications,
   splits,
-  fieldGuide
+  fieldGuide,
+  tutorial
 });
