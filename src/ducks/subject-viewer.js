@@ -14,6 +14,7 @@ const SUBJECTVIEWER_STATE = {
   IDLE: 'idle',  //Eh, doing nothing.
   NAVIGATING: 'navigating',  //User wants to use the mouse to navigate the Subject.
   ANNOTATING: 'annotating',  //User has started, or is in the process of, adding annotations to the Subject.
+  CROPPING: 'cropping'
 }
 const MIN_SCALING = 0.1;
 const MAX_SCALING = 10;

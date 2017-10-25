@@ -58,6 +58,7 @@ class ClassifierContainer extends React.Component {
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.toggleCribDraw = this.toggleCribDraw.bind(this);
 
     this.state = {
       popup: null,
@@ -126,8 +127,7 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            {/*TEMPORARILY REMOVED: CRIBSHEET
-            <button className="white-red button">Your Crib Sheet</button>*/}
+            <button href="#" className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
 
             {this.props.user && (
@@ -324,6 +324,10 @@ class ClassifierContainer extends React.Component {
 
   useResetImage() {
     this.props.dispatch(resetView());
+  }
+
+  toggleCribDraw() {
+    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
   }
 
   togglePreviousMarks() {

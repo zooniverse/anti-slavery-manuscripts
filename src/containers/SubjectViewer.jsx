@@ -87,6 +87,13 @@ class SubjectViewer extends React.Component {
       state: INPUT_STATE.IDLE,
     };
 
+    //Mouse or touch rectangle
+    this.rectangle = {
+      start: { x: 0, y: 0 },
+      now: { x: 0, y: 0 },
+      state: INPUT_STATE.IDLE,
+    };
+
     //Misc
     this.tmpTransform = null;
 
@@ -293,6 +300,11 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      const pointerXY = this.getPointerXY(e);
+      this.rectangle.start = { x: pointerXY.x, y: pointerXY.y };
+
+      return Utility.stopEvent(e);
     }
   }
 
@@ -306,7 +318,7 @@ class SubjectViewer extends React.Component {
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
-      
+
       //The second added point should automatically complete the annotation.
       //As of Dec 2017 we've moved from multi-point lines to a line consisting
       //of a start and end point, only.
@@ -314,9 +326,12 @@ class SubjectViewer extends React.Component {
           this.props.annotationInProgress.points.length >= 1) {
         this.props.dispatch(completeAnnotation());
       }
-      
+
       //TODO: Check if there's an issue with addAnnotationPoint() completing AFTER completeAnnotation();
       //I don't trust Redux.dispatch() to be synchronous given the weirdness we've seen. (@shaun 20171215)
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      return Utility.stopEvent(e);
     }
   }
 
@@ -334,6 +349,12 @@ class SubjectViewer extends React.Component {
           this.tmpTransform.translateY + pointerDelta.y / this.tmpTransform.scale,
         ));
       }
+      return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      const pointerXY = this.getPointerXY(e);
+
+      this.rectangle.now = { x: pointerXY.x, y: pointerXY.y };
+
       return Utility.stopEvent(e);
     }
 
