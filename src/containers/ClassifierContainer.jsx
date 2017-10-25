@@ -66,8 +66,8 @@ class ClassifierContainer extends React.Component {
       this.props.dispatch(createClassification());
     }
 
-    if (this.props.workflow && this.props.tutorialStatus === TUTORIAL_STATUS.IDLE) {
-      this.props.dispatch(fetchTutorial(this.props.workflow));
+    if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
+      this.props.dispatch(fetchTutorial(nextProps.workflow));
     }
 
     if (nextProps.tutorial !== this.props.tutorial) {

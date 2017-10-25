@@ -119,6 +119,17 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
             preferences
           });
         });
+      } else if (project) {
+        Promise.resolve(apiClient.type('project_preferences').create({
+          id: 'GUEST_PREFERENCES_DO_NOT_SAVE',
+          links: { project: project.id },
+          preferences: {}
+        })).then((preferences) => {
+          dispatch({
+            type: FETCH_PREFERENCES,
+            preferences
+          });
+        });
       };
     }
   };
