@@ -186,7 +186,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
           });
         
           //Once we have a Subject, create an empty Classification to go with it.
-          dispatch(createClassification(createClassification()));
+          dispatch(createClassification());
         })
         .catch(() => {
           dispatch({ type: FETCH_SUBJECT_ERROR });
@@ -206,7 +206,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       });
       
       //Once we have a Subject, create an empty Classification to go with it.
-      dispatch(createClassification(createClassification()));
+      dispatch(createClassification());
     }
   };
 };
