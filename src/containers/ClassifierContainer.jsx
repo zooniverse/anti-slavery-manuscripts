@@ -31,6 +31,7 @@ import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
+import SubmitClassificationForm from '../components/SubmitClassificationForm';
 
 const ROTATION_STEP = 90;
 
@@ -49,6 +50,7 @@ class ClassifierContainer extends React.Component {
     this.showCollections = this.showCollections.bind(this);
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
     this.completeClassification = this.completeClassification.bind(this);
     this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
@@ -107,10 +109,16 @@ class ClassifierContainer extends React.Component {
             )}
             <button href="#" className="white-red button">Your Crib Sheet</button>
             <img className="divider" role="presentation" src={Divider} />
+            
+            
+            <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Done</button>
+            
+            {/*
             <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
             <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
               Done &amp; Talk
             </button>
+            */}
           </div>
         </section>
 
@@ -222,6 +230,10 @@ class ClassifierContainer extends React.Component {
   useAnnotationTool() {
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
+  
+  prepareSubmitClassificationForm() {
+    this.setState({ popup: <SubmitClassificationForm closePopup={this.closePopup} /> });
+  }
 
   completeClassification() {
     this.props.dispatch(submitClassification())
@@ -273,7 +285,7 @@ class ClassifierContainer extends React.Component {
   }
 
   showCollections() {
-    this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> })
+    this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> });
   }
 }
 
