@@ -6,7 +6,7 @@ import { getSubjectLocation, getThumbnailSource } from '../lib/get-subject-locat
 const SocialSection = ({ project, subjectsOfNote }) =>
   <div className="home-page__social-section">
 
-    {subjectsOfNote && subjectsOfNote.length && (
+    {subjectsOfNote.length ? (
       <div>
         <h2 className="main-title">Subjects<i>of</i>  Note</h2>
         <img role="presentation" className="divider" src={Divider} />
@@ -24,7 +24,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
 
         </div>
       </div>
-    )}
+    ) : false}
 
     <h2 className="main-title">Community</h2>
     <img role="presentation" className="divider" src={Divider} />
@@ -74,17 +74,41 @@ const SocialSection = ({ project, subjectsOfNote }) =>
           {project && project.researcher_quote}
         </span>
       </div>
-      <div className="home-page__news-section flex-row">
-        <div className="social-bar fa-2x">
-          <a href="https://twitter.com/BPLBoston" target="_blank"><i className="fa fa-twitter"/></a>
-          <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank"><i className="fa fa-facebook"/></a>
-          <a href="https://www.instagram.com/bplboston" target="_blank"><i className="fa fa-instagram"/></a>
-        </div>
+      <div className="home-page__news-section">
         <div>
           <h3 className="main-title">In the News</h3>
           <span>
-            Check back for updates on Anti-Slavery Manuscripts.
+            Connect on social media for updates
           </span>
+        </div>
+        <div className="social-bar">
+          <div>
+            <a href="https://twitter.com/BPLBoston" target="_blank">
+              <i className="fa fa-twitter fa-2x"/>
+              <div>
+                <span>Twitter</span>
+                <span>@BPLBostom</span>
+              </div>
+            </a>
+          </div>
+          <div>
+            <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank">
+              <i className="fa fa-facebook fa-2x"/>
+              <div>
+                <span>Facebook</span>
+                <span>@bostonpubliclibrary</span>
+              </div>
+            </a>
+          </div>
+          <div>
+            <a href="https://www.instagram.com/bplboston" target="_blank">
+              <i className="fa fa-instagram fa-2x"/>
+              <div>
+                <span>Instagram</span>
+                <span>@bplboston</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>

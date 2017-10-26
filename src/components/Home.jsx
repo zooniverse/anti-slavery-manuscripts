@@ -10,6 +10,9 @@ import SocialSection from '../components/SocialSection';
 import { selectSubjectSet } from '../ducks/subject';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
+import IMLSLogo from '../images/imls_logo.png';
+
+const BUFFER = 50;
 
 class Home extends React.Component {
   constructor() {
@@ -35,9 +38,10 @@ class Home extends React.Component {
 
   resizeBackground() {
     const content = document.getElementById('home-logos');
+    const scroll = window.pageYOffset;
     if (content) {
-      const contentBottom = content.getBoundingClientRect().top;
-      const sectionHeight = document.body.scrollTop + contentBottom;
+      const contentBottom = content.getBoundingClientRect().top + BUFFER;
+      const sectionHeight = scroll + contentBottom;
       if (this.state.backgroundHeight !== sectionHeight) {
         this.setState({ backgroundHeight: sectionHeight });
       }
@@ -106,6 +110,9 @@ class Home extends React.Component {
           </a>
           <a href="https://www.bpl.org">
             <img role="presentation" src={BostonLogo} />
+          </a>
+          <a href="https://www.imls.gov/">
+            <img role="presentation" src={IMLSLogo} />
           </a>
         </div>
         <SocialSection project={this.props.project} subjectsOfNote={this.state.subjectsOfNote} />
