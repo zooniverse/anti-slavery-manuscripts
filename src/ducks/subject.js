@@ -8,7 +8,7 @@ project.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
-import { config } from '../config';
+import { config, subjectSets } from '../config';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -154,8 +154,18 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       type: FETCH_SUBJECT,
     });
 
+    let randomSubjectSet;
+    const workflow = getState().workflow.data;
+    if (workflow && workflow.links.subject_sets.length) {
+      const linkedSets = workflow.links.subject_sets;
+      randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
+    } else {
+      randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
+    }
+
     const subjectQuery = {
       workflow_id: id,
+      subject_set_id: randomSubjectSet
     };
 
     if (getState().subject.subjectSet) {
@@ -166,7 +176,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
           const currentSubject = queue.shift();
-          console.log(currentSubject);
+
           dispatch({
             currentSubject,
             id: currentSubject.id,
