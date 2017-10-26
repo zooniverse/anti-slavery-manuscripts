@@ -71,7 +71,7 @@ class ClassifierContainer extends React.Component {
     }
 
     if (nextProps.tutorial !== this.props.tutorial) {
-      Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, this.props.preferences);
+      Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, nextProps.preferences);
     }
   }
 
