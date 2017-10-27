@@ -51,8 +51,8 @@ class ClassifierContainer extends React.Component {
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
-    this.completeClassification = this.completeClassification.bind(this);
-    this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
+    //this.completeClassification = this.completeClassification.bind(this);
+    //this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
 
@@ -235,14 +235,14 @@ class ClassifierContainer extends React.Component {
     this.setState({ popup: <SubmitClassificationForm closePopup={this.closePopup} /> });
   }
 
-  completeClassification() {
+  /*completeClassification() {
     this.props.dispatch(submitClassification())
   }
 
   submitClassificationAndRedirect() {
     this.completeClassification();
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
-  }
+  }*/
 
   useRotate90() {
     this.props.dispatch(setRotation(this.props.rotation + ROTATION_STEP));
