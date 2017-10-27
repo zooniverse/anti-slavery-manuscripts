@@ -1,9 +1,6 @@
 /*
 Redux Duck: Annotations
 -------------------
-
-...
-
  */
 
 //Action Types
@@ -14,6 +11,7 @@ const SELECT_ANNOTATION = 'SELECT_ANNOTATION';
 const UNSELECT_ANNOTATION = 'UNSELECT_ANNOTATION';
 const DELETE_SELECTED_ANNOTATION = 'DELETE_SELECTED_ANNOTATION';
 const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
+const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
 const UPDATE_TEXT = 'UPDATE_TEXT';
 const SAVE_TEXT = 'SAVE_TEXT';
 
@@ -41,6 +39,7 @@ const initialState = {
   annotations: [],  //Completed annotations.
   selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
   selectedAnnotationIndex: null,
+  subjectCompletionAnswers: null,
 };
 
 const subjectReducer = (state = initialState, action) => {
@@ -128,6 +127,11 @@ const subjectReducer = (state = initialState, action) => {
         selectedAnnotation: null,
         selectedAnnotationIndex: null,
       });
+    
+    case SET_SUBJECT_COMPLETION_ANSWERS:
+      return Object.assign({}, state, {
+        subjectCompletionAnswers: action.answers,
+      });
 
     default:
       return state;
@@ -208,6 +212,15 @@ const collaborateWithAnnotation = (annotation, text) => {
     dispatch({
       type: COLLABORATE_WITH_ANNOTATION,
       annotation, text
+    });
+  };
+};
+
+const setSubjectCompletionAnswers = (answers) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBJECT_COMPLETION_ANSWERS,
+      answers,
     });
   };
 };
