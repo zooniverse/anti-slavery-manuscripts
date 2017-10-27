@@ -13,6 +13,7 @@ const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
 const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
+const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
 
 const CLASSIFICATION_STATUS = {
   IDLE: 'classification_status_idle',
@@ -24,6 +25,7 @@ const CLASSIFICATION_STATUS = {
 const initialState = {
   classification: null,
   status: CLASSIFICATION_STATUS.status,
+  subjectCompletionAnswers: null,
 };
 
 const classificationReducer = (state = initialState, action) => {
@@ -49,6 +51,11 @@ const classificationReducer = (state = initialState, action) => {
     case SUBMIT_CLASSIFICATION_ERROR:
       return Object.assign({}, state,{
         status: CLASSIFICATION_STATUS.ERROR,
+      });
+    
+    case SET_SUBJECT_COMPLETION_ANSWERS:
+      return Object.assign({}, state, {
+        subjectCompletionAnswers: action.answers,
       });
 
     default:
@@ -148,6 +155,15 @@ const submitClassification = () => {
   };
 };
 
+const setSubjectCompletionAnswers = (answers) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBJECT_COMPLETION_ANSWERS,
+      answers,
+    });
+  };
+};
+
 export default classificationReducer;
 
 //------------------------------------------------------------------------------
@@ -157,4 +173,5 @@ export default classificationReducer;
 export {
   createClassification,
   submitClassification,
+  setSubjectCompletionAnswers,
 };
