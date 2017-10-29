@@ -9,6 +9,9 @@ import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
 
+import { PROJECT_STATUS } from '../ducks/project';
+import { WORKFLOW_STATUS } from '../ducks/workflow';
+
 class App extends React.Component {
   returnSomething(something) { // eslint-disable-line class-methods-use-this
     return something;
@@ -26,6 +29,11 @@ class App extends React.Component {
   }
 
   render() {
+    if (this.props.projectStatus !== PROJECT_STATUS.READY ||
+        this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
+      return <div>Loading...</div>;
+    }  //TODO: Consider what to do for STATUS: ERROR
+    
     const path = this.props.location.pathname;
     const showTitle = path === '/classify';
 
@@ -51,24 +59,35 @@ class App extends React.Component {
 
 App.propTypes = {
   children: PropTypes.node,
-  dialog: PropTypes.node,
   dispatch: PropTypes.func,
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }),
+  //--------
+  user: PropTypes.object,
+  dialog: PropTypes.node,
+  projectStatus: PropTypes.string,
+  workflowStatus: PropTypes.string,
 };
 
 App.defaultProps = {
   children: null,
   dialog: null,
   location: {},
+  //--------
+  user: null,
+  dialog: null,
+  projectStatus: PROJECT_STATUS.IDLE,
+  workflowStatus: WORKFLOW_STATUS.IDLE,
 };
 
 const mapStateToProps = (state) => {
   return {
+    user: state.login.user,
     dialog: state.dialog.data,
-    project: state.project,
-    user: state.login.user
+    //--------
+    projectStatus: state.project.status,
+    workflowStatus: state.workflow.status,
   };
 };
 

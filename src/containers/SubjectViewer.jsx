@@ -187,7 +187,7 @@ class SubjectViewer extends React.Component {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
-    this.props.dispatch(fetchSubject());
+    this.props.dispatch(fetchSubject());  //Fetch the first subject.
   }
 
   componentWillReceiveProps(next) {
