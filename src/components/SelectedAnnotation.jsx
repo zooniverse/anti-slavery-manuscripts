@@ -89,6 +89,9 @@ class SelectedAnnotation extends React.Component {
       }
     }
 
+    const regex1 = new RegExp("\[" + textTag + "\]\s*", "ig");
+    const regex2 = new RegExp("\s*\[\/" + textTag + "\]", "ig");
+    value.replace(regex1, `[${textTag}]`).replace(regex2, `[/${textTag}]`).replace(/\s+/g, ' ');
     this.inputText.value = value;
   }
 
