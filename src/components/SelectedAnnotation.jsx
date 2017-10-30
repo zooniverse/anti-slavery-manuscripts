@@ -89,10 +89,16 @@ class SelectedAnnotation extends React.Component {
       }
     }
 
-    const regex1 = new RegExp("\[" + textTag + "\]\s*", "ig");
-    const regex2 = new RegExp("\s*\[\/" + textTag + "\]", "ig");
-    value.replace(regex1, `[${textTag}]`).replace(regex2, `[/${textTag}]`).replace(/\s+/g, ' ');
-    this.inputText.value = value;
+    const startReg = `(?=\\w*)\\[${textTag}\\]\\s*`;
+    const endReg = `\\s*\\[\\/${textTag}\\](?=\\w*)`;
+    const unclearReg = `(?=\\w*)\\[unclear\\](?=\\w*)`;
+
+    const padStart = new RegExp(startReg, 'ig');
+    const padEnd = new RegExp(endReg, 'ig');
+    const unclearPad = new RegExp(unclearReg, 'ig');
+
+    const paddedText = value.replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(unclearPad, ' [unclear] ').replace(/\s+/g, ' ');
+    this.inputText.value = paddedText;
   }
 
   render() {
