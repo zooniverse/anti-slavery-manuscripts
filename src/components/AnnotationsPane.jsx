@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
 import { VisibilitySplit } from 'seven-ten';
+import PendingAnnotation from './PendingAnnotation';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -28,9 +29,18 @@ class AnnotationsPane extends React.Component {
   //----------------------------------------------------------------
 
   render() {
+    const pendingLine = this.props.mouseInViewer && this.props.annotationInProgress !== null;
     const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
       <g transform={imageOffset}>
+        {pendingLine && (
+          <PendingAnnotation
+            angleDegree={this.props.angleDegree}
+            annotationInProgress={this.props.annotationInProgress}
+            getPointerXY={this.props.getPointerXY}
+            mouseInViewer={this.props.mouseInViewer}
+          />
+        )}
         {this.renderPreviousAnnotations()}
         {this.renderUserAnnotations()}
         {this.renderAnnotationInProgress()}
@@ -232,6 +242,7 @@ AnnotationsPane.propTypes = {
   }),
   //--------
   adminOverride: PropTypes.bool,
+  angleDegree: PropTypes.func,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
