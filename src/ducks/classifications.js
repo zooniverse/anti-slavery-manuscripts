@@ -105,14 +105,15 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
-    
+
     //TODO: Better error handling
     if (!classification) { alert('ERROR: Could not create Classification.'); return; }
-    
+
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.annotations.push(annotations);
     classification.update({
       completed: true,
+      'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
       'metadata.viewport': {
         width: innerWidth,
