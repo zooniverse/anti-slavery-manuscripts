@@ -43,6 +43,7 @@
 
   &__body-text
     @extend .body-copy
+    font-size: 1.1em
     margin: 0 22% 4em 22%
     text-align: left
 
@@ -140,8 +141,6 @@
       margin: 1em
       max-width: 100%
       min-width: 15em
-
-    > div:first-child
       padding: 2em
 
     span
@@ -171,7 +170,7 @@
     flex-wrap: wrap
     flex: 3 1 10em
     display: flex
-    padding-left: 2.5em
+    padding-left: 3.1em
 
     @media(max-width: 650px)
       border-left: none
@@ -198,23 +197,36 @@
         margin: 0.25em 0
 
   &__news-section
-    .social-bar
+    display: flex
+    flex-direction: column
+
+  .social-bar
+    display: flex
+    flex-wrap: wrap
+    margin: auto 0
+
+    div
+      margin: 0.5em auto
+
+    a
       align-items: center
-      background: $light-eggplant
       display: flex
-      flex-direction: column
-      justify-content: space-around
-      max-width: 3em
 
-      i
-        color: white
-        margin: 0.5em 0.8em
+    span
+      font-family: $playfair-display
+      font-size: 0.7em
+      margin: 0
 
-      div
-        margin: 0 !important
+    span:first-child
+      @extend .secondary-head
+      font-size: 0.7em
+      font-weight: 600
+      letter-spacing: 0.2em
+      line-height: 1.2em
 
-    div:nth-child(2)
-      padding: 2em
+    i
+      color: $light-eggplant
+      margin: 0 0.25em
 
   &__zooniverse
     background: $black

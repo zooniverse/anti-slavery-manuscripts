@@ -75,7 +75,7 @@ export default class SVGImage extends React.Component {
       return (
         <image className="svg-image"
           style={invertFilter}
-          href={this.image.src}
+          xlinkHref={this.image.src}
           width={this.image.width}
           height={this.image.height}
           x={(this.image.width * -0.5)+'px'}

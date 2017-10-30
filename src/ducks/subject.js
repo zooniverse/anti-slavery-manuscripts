@@ -8,7 +8,8 @@ project.
 
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
-import { config } from '../config';
+import { config, subjectSets } from '../config';
+import { createClassification } from './classifications';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -154,8 +155,18 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       type: FETCH_SUBJECT,
     });
 
+    let randomSubjectSet;
+    const workflow = getState().workflow.data;
+    if (workflow && workflow.links.subject_sets.length) {
+      const linkedSets = workflow.links.subject_sets;
+      randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
+    } else {
+      randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
+    }
+
     const subjectQuery = {
       workflow_id: id,
+      subject_set_id: randomSubjectSet
     };
 
     if (getState().subject.subjectSet) {
@@ -166,7 +177,6 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
           const currentSubject = queue.shift();
-
           dispatch({
             currentSubject,
             id: currentSubject.id,
@@ -174,6 +184,9 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,
           });
+        
+          //Once we have a Subject, create an empty Classification to go with it.
+          dispatch(createClassification());
         })
         .catch(() => {
           dispatch({ type: FETCH_SUBJECT_ERROR });
@@ -186,9 +199,14 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       const currentSubject = getState().subject.queue.shift();
       dispatch({
         currentSubject,
+        id: currentSubject.id,
         queue: getState().subject.queue,
         type: FETCH_SUBJECT_SUCCESS,
+        favorite: currentSubject.favorite || false,
       });
+      
+      //Once we have a Subject, create an empty Classification to go with it.
+      dispatch(createClassification());
     }
   };
 };
