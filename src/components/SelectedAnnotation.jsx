@@ -22,9 +22,11 @@ class SelectedAnnotation extends React.Component {
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.textModifier = this.textModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
+    this.renderWordCount = this.renderWordCount.bind(this);
 
     this.state = {
       annotationText: '',
+      disableSubmit: true,
       previousTranscriptionAgreement: false,
       previousTranscriptionSelection: false,
       showAnnotationOptions: false
@@ -188,8 +190,12 @@ class SelectedAnnotation extends React.Component {
             this.renderAnnotationOptions()
           )}
 
+          {!this.state.showAnnotationOptions && (
+            this.renderWordCount()
+          )}
+
           <div className="selected-annotation__buttons">
-            <button className="done-button" onClick={this.saveText}>Done</button>
+            <button className="done-button" disabled={this.state.disableSubmit} onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
@@ -219,6 +225,21 @@ class SelectedAnnotation extends React.Component {
           );
         })}
       </div>
+    )
+  }
+
+  renderWordCount() {
+    const expectedWords = this.props.selectedAnnotation.points.length - 1;
+    const text = this.inputText ? this.inputText.value : "";
+    const cleaned_text = text.replace(/\s+/g, ' ').trim();
+    const number_of_words = cleaned_text ? cleaned_text.split(' ').length : 0;
+    const style = expectedWords === number_of_words ? "selected-annotation--green" : "selected-annotation--red";
+
+    return (
+      <span className={style}>
+        {number_of_words} of {expectedWords} words typed.
+        Your word count must match the number of dots minus one.
+      </span>
     )
   }
 
@@ -258,6 +279,21 @@ class SelectedAnnotation extends React.Component {
       annotationText: this.inputText.value,
       previousTranscriptionAgreement: false,
     });
+
+    this.wordCount(this.inputText.value);
+  }
+
+  wordCount(text) {
+    const cleaned_text = text.replace(/\s+/g, ' ').trim();
+    const number_of_words = cleaned_text.split(' ').length;
+    const dots = this.props.selectedAnnotation.points.length;
+    const correctLength = number_of_words === dots - 1;
+    if (correctLength) {
+      this.setState({ disableSubmit: false });
+    }
+    else if (!this.state.disableSubmit && !correctLength) {
+      this.setState({ disableSubmit: true });
+    }
   }
 }
 
