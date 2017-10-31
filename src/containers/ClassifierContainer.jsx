@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
+import { Tutorial } from 'zooniverse-react-components';
 import { config } from '../config';
 
 import {
@@ -11,6 +12,7 @@ import {
 } from '../ducks/subject-viewer';
 
 import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
+import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { toggleOverride } from '../ducks/splits';
@@ -45,6 +47,7 @@ class ClassifierContainer extends React.Component {
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.showMetadata = this.showMetadata.bind(this);
     this.showCollections = this.showCollections.bind(this);
+    this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.completeClassification = this.completeClassification.bind(this);
     this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
@@ -57,6 +60,16 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
+      this.props.dispatch(fetchTutorial(nextProps.workflow));
+    }
+
+    if (nextProps.tutorial !== this.props.tutorial) {
+      Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, nextProps.preferences);
+    }
+  }
 
   componentWillUnmount() {
     Split.clear();
@@ -86,7 +99,10 @@ class ClassifierContainer extends React.Component {
             </p>
           </div>
           <div className="help-buttons">
-            {this.props.guide && GUIDE_STATUS.READY && (
+            {this.props.tutorial && this.props.tutorialStatus === TUTORIAL_STATUS.READY && (
+              <button href="#" className="white-red button" onClick={this.showTutorial}>Tutorial</button>
+            )}
+            {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
             <button href="#" className="white-red button">Your Crib Sheet</button>
@@ -250,6 +266,12 @@ class ClassifierContainer extends React.Component {
       <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false));
   }
 
+  showTutorial() {
+    if (this.props.tutorial) {
+      Tutorial.start(Tutorial, this.props.tutorial, this.props.user, this.props.preferences);
+    }
+  }
+
   showCollections() {
     this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> })
   }
@@ -270,6 +292,10 @@ ClassifierContainer.propTypes = {
   }),
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  tutorial: PropTypes.shape({
+    steps: PropTypes.array
+  }),
+  tutorialStatus: PropTypes.string,
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
     id: PropTypes.string,
@@ -287,6 +313,8 @@ ClassifierContainer.defaultProps = {
   project: null,
   rotation: 0,
   scaling: 1,
+  tutorial: null,
+  tutorialStatus: TUTORIAL_STATUS.IDLE,
   workflow: null,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
@@ -300,10 +328,13 @@ const mapStateToProps = (state, ownProps) => {
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
+    preferences: state.project.userPreferences,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
     splits: state.splits.splits,
+    tutorial: state.tutorial.data,
+    tutorialStatus: state.tutorial.status,
     user: state.login.user,
     viewerState: state.subjectViewer.viewerState,
     workflow: state.workflow.data,

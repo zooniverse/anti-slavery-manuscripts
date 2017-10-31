@@ -14,6 +14,7 @@ import { config } from '../config.js';
 const FETCH_PROJECT = 'FETCH_PROJECT';
 const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
+const FETCH_PREFERENCES = 'FETCH_PREFERENCES';
 
 //Misc Constants
 const PROJECT_STATUS = {
@@ -31,6 +32,7 @@ const initialState = {
   status: PROJECT_STATUS.IDLE,
   id: null,
   data: {},
+  userPreferences: null
 };
 
 const classifierReducer = (state = initialState, action) => {
@@ -55,6 +57,11 @@ const classifierReducer = (state = initialState, action) => {
     case FETCH_PROJECT_ERROR:
       return Object.assign({}, state, {
         status: PROJECT_STATUS.ERROR,
+      });
+
+    case FETCH_PREFERENCES:
+      return Object.assign({}, state, {
+        userPreferences: action.preferences,
       });
 
     default:
@@ -89,6 +96,7 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
         type: FETCH_PROJECT_SUCCESS,
         data: project,
       });
+      dispatch(fetchPreferences(project));
 
     })
     .catch((err) => {
@@ -99,6 +107,32 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
     });
   };
 }
+
+  const fetchPreferences = (project) => {
+    return (dispatch, getState) => {
+      const user = getState().login.user;
+      if (project && user) {
+        user.get('project_preferences', { project_id: project.id })
+        .then(([preferences]) => {
+          dispatch({
+            type: FETCH_PREFERENCES,
+            preferences
+          });
+        });
+      } else if (project) {
+        Promise.resolve(apiClient.type('project_preferences').create({
+          id: 'GUEST_PREFERENCES_DO_NOT_SAVE',
+          links: { project: project.id },
+          preferences: {}
+        })).then((preferences) => {
+          dispatch({
+            type: FETCH_PREFERENCES,
+            preferences
+          });
+        });
+      };
+    }
+  };
 
 //------------------------------------------------------------------------------
 
