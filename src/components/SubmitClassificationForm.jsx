@@ -58,8 +58,6 @@ class SubmitClassificationForm extends React.Component {
   renderSubjectCompletionQuestions() {
     if (!this.props.workflowData) return null;
     
-    console.log('== WORKFLOW ==\n', this.props.workflowData);
-    
     //Display all question tasks, except for the first task.
     const tasks = (this.props.workflowData.tasks)
       ? Object.keys(this.props.workflowData.tasks)
@@ -78,8 +76,6 @@ class SubmitClassificationForm extends React.Component {
         })
       : [];
     
-    console.log('== TASKS ==', tasks);
-    
     return (
       <div className="tasks">
         {tasks.map((task, taskIndex) =>{
@@ -91,6 +87,9 @@ class SubmitClassificationForm extends React.Component {
               <div className="question">{task.question}</div>
               <div className="answers">
                 {task.answers.map((answer, answerIndex) => {
+                  const answerValue = answer.label;
+                  const checked = this.props.subjectCompletionAnswers &&
+                    this.props.subjectCompletionAnswers[task.taskId] === answerValue;
                   return (
                     <label
                       className="single-answer"
@@ -98,14 +97,13 @@ class SubmitClassificationForm extends React.Component {
                     >
                       <input
                         type="radio"
-                        value={answerIndex}
-                        checked={false}
+                        value={answerValue}
+                        checked={checked}
                         onChange={() => {
-                          const answerValue = answer.label;
                           this.props.dispatch(setSubjectCompletionAnswers(task.taskId, answerValue));
                         }}
                       />
-                      {answer.label}
+                      <span>{answer.label}</span>
                     </label>
                   );
                 })}

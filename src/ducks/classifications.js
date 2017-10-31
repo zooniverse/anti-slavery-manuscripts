@@ -128,10 +128,18 @@ const submitClassification = () => {
     classification.annotations.push(annotations);
     //----------------
     
-    //Record the other tasks
-    //Each annotation in classification.annotations[] is in the form of
-    //{ task: "T1", value: 123 || "abc" || ['a','b'] }
+    //Record the other tasks.
+    //Note that each annotation in classification.annotations[] is in the form
+    //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
     //----------------
+    const sca = getState().classifications.subjectCompletionAnswers;
+    Object.keys(sca).map((taskId) => {
+      const answerForTask = {
+        task: taskId,
+        value: sca[taskId].value,
+      };
+      classification.annotations.push(answerForTask);
+    });
     //----------------
     
     //Save the classification
