@@ -22,7 +22,7 @@ if (!env.match(/^(production|staging|development)$/)) {
 
 const baseConfig = {
   development: {
-    panoptesAppId: '24ad5676d5d25c6aa850dc5d5f63ec8c03dbc7ae113b6442b8571fce6c5b974c', // test-rog project for dev
+    panoptesAppId: '974cc8da2448bac692703f0b364a6b41a7662d91a5a3a1acb064eb703a01e6df', // ASM on Staging
     zooniverseLinks: {
       host: 'https://master.pfe-preview.zooniverse.org/',
       projectId: '1764',
