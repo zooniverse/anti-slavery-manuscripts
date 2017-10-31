@@ -1,0 +1,45 @@
+@keyframes loading-indicator
+  0%
+    transform: rotate(0)
+  100%
+    transform: rotate(360deg)
+
+.loading-spinner
+    &::before,
+    &::after
+      animation: loading-indicator .8s linear infinite
+      content: ''
+      box-sizing: border-box
+      position: absolute
+      top: 40%
+      left: 50%
+      width: 40px
+      height: 40px
+      margin-top: -20px
+      margin-left: -20px
+      border-radius: 70%
+      border: 2px solid #7B5969
+      border-top-color: #C5AFB9
+
+.loading
+  background-color: #F4F0E7
+  position: absolute
+  text-align: center
+  width: 100%
+
+  hr
+    margin: 0 auto
+    width: 1em
+
+.words
+  margin: auto 0
+
+h1
+  font-family: $playfair-display
+  font-size: 18px
+  font-weight: 400
+  color: #333
+  text-transform: uppercase
+  letter-spacing: .65em
+  margin-top: 25px
+  margin-bottom: 20px
