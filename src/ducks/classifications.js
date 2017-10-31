@@ -25,7 +25,7 @@ const CLASSIFICATION_STATUS = {
 const initialState = {
   classification: null,
   status: CLASSIFICATION_STATUS.status,
-  subjectCompletionAnswers: null,
+  subjectCompletionAnswers: {},  //Simple Q&A object is structured as {"T2": "thunder", "T7": "cats"}
 };
 
 const classificationReducer = (state = initialState, action) => {
@@ -34,6 +34,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         classification: action.classification,
         status: CLASSIFICATION_STATUS.IDLE,
+        subjectCompletionAnswers: {},
       });
 
     case SUBMIT_CLASSIFICATION:
@@ -46,6 +47,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state,{
         classification: null,
         status: CLASSIFICATION_STATUS.SUCCESS,
+        subjectCompletionAnswers: {},
       });
 
     case SUBMIT_CLASSIFICATION_ERROR:
@@ -54,8 +56,10 @@ const classificationReducer = (state = initialState, action) => {
       });
     
     case SET_SUBJECT_COMPLETION_ANSWERS:
+      const sca = Object.assign({}, state.subjectCompletionAnswers);
+      sca[action.taskId] = action.answerValue;
       return Object.assign({}, state, {
-        subjectCompletionAnswers: action.answers,
+        subjectCompletionAnswers: sca,
       });
 
     default:
@@ -171,11 +175,11 @@ const submitClassification = () => {
   };
 };
 
-const setSubjectCompletionAnswers = (answers) => {
+const setSubjectCompletionAnswers = (taskId, answerValue) => {
   return (dispatch) => {
     dispatch({
       type: SET_SUBJECT_COMPLETION_ANSWERS,
-      answers,
+      taskId, answerValue,
     });
   };
 };

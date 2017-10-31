@@ -101,7 +101,8 @@ class SubmitClassificationForm extends React.Component {
                         value={answerIndex}
                         checked={false}
                         onChange={() => {
-                          alert(`${task.taskId} - ${answer.label}`);
+                          const answerValue = answer.label;
+                          this.props.dispatch(setSubjectCompletionAnswers(task.taskId, answerValue));
                         }}
                       />
                       {answer.label}
