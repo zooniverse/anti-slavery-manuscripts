@@ -20,6 +20,7 @@ class SelectedAnnotation extends React.Component {
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
+    this.textModifier = this.textModifier.bind(this);
 
     this.state = {
       annotationText: '',
@@ -57,6 +58,47 @@ class SelectedAnnotation extends React.Component {
 
   chooseAnnotationText(annotationText) {
     this.setState({ annotationText, showAnnotationOptions: false });
+  }
+
+  textModifier(textTag) {
+    let value;
+    let textAfter;
+    let textInBetween;
+
+    const startTag = '[' + textTag + ']';
+    const endTag = '[/' + textTag + ']';
+    const text = this.inputText;
+    const textAreaValue = text.value;
+    const selectionStart = text.selectionStart;
+    const selectionEnd = text.selectionEnd;
+    const textBefore = textAreaValue.substring(0, selectionStart);
+    if (selectionStart === selectionEnd) {
+      textAfter = textAreaValue.substring(selectionStart, textAreaValue.length);
+      if (textTag === 'unclear') {
+        value = textBefore + startTag + textAfter;
+      } else {
+        value = textBefore + startTag + endTag + textAfter;
+      }
+    } else {
+      textInBetween = textAreaValue.substring(selectionStart, selectionEnd);
+      textAfter = textAreaValue.substring(selectionEnd, textAreaValue.length);
+      if (textTag === 'unclear') {
+        value = textBefore + startTag + textInBetween + textAfter;
+      } else {
+        value = textBefore + startTag + textInBetween + endTag + textAfter;
+      }
+    }
+
+    const startReg = `(?=\\w*)\\[${textTag}\\]\\s*`;
+    const endReg = `\\s*\\[\\/${textTag}\\](?=\\w*)`;
+    const unclearReg = `(?=\\w*)\\[unclear\\](?=\\w*)`;
+
+    const padStart = new RegExp(startReg, 'ig');
+    const padEnd = new RegExp(endReg, 'ig');
+    const unclearPad = new RegExp(unclearReg, 'ig');
+
+    const paddedText = value.replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(unclearPad, ' [unclear] ').replace(/\s+/g, ' ');
+    this.inputText.value = paddedText;
   }
 
   render() {
@@ -110,10 +152,10 @@ class SelectedAnnotation extends React.Component {
 
           <div className="selected-annotation__markup">
             <p>Text Modifiers</p>
-            <button>[insertion]</button>
-            <button>[deletion]</button>
-            <button>[unclear]</button>
-            <button>[underline]</button>
+            <button onClick={this.textModifier.bind(this, 'insertion')}>[insertion]</button>
+            <button onClick={this.textModifier.bind(this, 'deletion')}>[deletion]</button>
+            <button onClick={this.textModifier.bind(this, 'unclear')}>[unclear]</button>
+            <button onClick={this.textModifier.bind(this, 'underline')}>[underline]</button>
           </div>
 
           <p>
