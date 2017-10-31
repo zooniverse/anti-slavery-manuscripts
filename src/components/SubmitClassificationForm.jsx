@@ -53,6 +53,9 @@ class SubmitClassificationForm extends React.Component {
   
   renderSubjectCompletionQuestions() {
     if (!this.props.workflowData) return null;
+    
+    
+    
 
     return (
       <div>

@@ -98,9 +98,21 @@ const createClassification = () => {
 
 const submitClassification = () => {
   return (dispatch, getState) => {
+    //Initialise
+    //----------------
+    const subject = getState().subject;
+    const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
+    const classification = getState().classifications.classification;
+    
+    //TODO: Better error handling
+    if (!classification) { alert('ERROR: Could not create Classification.'); return; }
+    //----------------
+    
+    //Record the first task
+    //----------------
     let task = "T0";
     if (getState().workflow.data) {
-      task = getState().workflow.data.first_task;
+      task = getState().workflow.data.first_task;  //This should usually be T1.
     }
     const annotations = {
       _key: Math.random(),
@@ -108,16 +120,16 @@ const submitClassification = () => {
       task: task,
       value: getState().annotations.annotations,
     }
-
-    const subject = getState().subject;
-    const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
-    const classification = getState().classifications.classification;
-    
-    //TODO: Better error handling
-    if (!classification) { alert('ERROR: Could not create Classification.'); return; }
-    
-    dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.annotations.push(annotations);
+    //----------------
+    
+    //Record the other tasks
+    //----------------
+    //----------------
+    
+    //Save the classification
+    //----------------
+    dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
       completed: true,
       'metadata.finished_at': (new Date()).toISOString(),
@@ -151,6 +163,7 @@ const submitClassification = () => {
 
       dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
     });
+    //----------------
 
   };
 };
