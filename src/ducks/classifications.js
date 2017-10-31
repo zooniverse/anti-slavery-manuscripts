@@ -119,11 +119,13 @@ const submitClassification = () => {
       _toolIndex: 0,
       task: task,
       value: getState().annotations.annotations,
-    }
+    };
     classification.annotations.push(annotations);
     //----------------
     
     //Record the other tasks
+    //Each annotation in classification.annotations[] is in the form of
+    //{ task: "T1", value: 123 || "abc" || ['a','b'] }
     //----------------
     //----------------
     

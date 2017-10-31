@@ -23,10 +23,6 @@ class SubmitClassificationForm extends React.Component {
   //----------------------------------------------------------------
 
   render() {
-    console.log('== WORKFLOW ==\n', this.props.workflowData);
-    console.log('== CLASSIFICATION ==\n', this.props.classification);
-    console.log(this.props);
-    
     return (
       <div>
         {this.renderSubjectCompletionQuestions()}
@@ -54,9 +50,30 @@ class SubmitClassificationForm extends React.Component {
   renderSubjectCompletionQuestions() {
     if (!this.props.workflowData) return null;
     
+    console.log('== WORKFLOW ==\n', this.props.workflowData);
     
+    //Display all question tasks, except for the first task.
+    //IMPLICIT: The first task of this project must be the Annotation task, and
+    //is handled as a special case.
+    const tasks = (this.props.workflowData.tasks)
+      ? Object.keys(this.props.workflowData.tasks)
+        .map((taskId) => {
+          return Object.assign({},
+            this.props.workflowData.tasks[taskId],
+            { taskId }
+          );
+        })
+        .filter((task) => {
+          return (
+            task.taskId !== this.props.workflowData.first_task &&
+            task.type === 'single' &&  //Hardcoded: PFE 'single question' type
+            task.question && task.answers && task.answers.length > 0
+          );
+        })
+      : [];
     
-
+    console.log('== TASKS ==', tasks);
+    
     return (
       <div>
         ...
