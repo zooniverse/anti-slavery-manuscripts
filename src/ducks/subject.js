@@ -55,7 +55,8 @@ const subjectReducer = (state = initialState, action) => {
 
     case SET_SUBJECT_SET:
       return Object.assign({}, state, {
-        subjectSet: action.id
+        subjectSet: action.id,
+        queue: [],
       });
 
     case FETCH_SUBJECT_ERROR:
