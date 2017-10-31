@@ -24,10 +24,9 @@ class SubmitClassificationForm extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="submit-classification-form">
         {this.renderSubjectCompletionQuestions()}
-        
-        <div>
+        <div className="action-buttons">
           <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
           <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
             Done &amp; Talk
@@ -47,14 +46,21 @@ class SubmitClassificationForm extends React.Component {
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
   
+  /*  This function renders all the non-transcription Panoptes tasks (i.e.
+      questions) provided by the workflow.
+      A special note on the way that this Panoptes transcription project is
+      constructred is that the first task is IMPLICITLY the transcription
+      (i.e. mark all the lines of text on this page) task, and is treated in a
+      special manner.
+      This is fairly brittle, but functional for a custom front end project.
+      Worth improving in the future, though.
+   */
   renderSubjectCompletionQuestions() {
     if (!this.props.workflowData) return null;
     
     console.log('== WORKFLOW ==\n', this.props.workflowData);
     
     //Display all question tasks, except for the first task.
-    //IMPLICIT: The first task of this project must be the Annotation task, and
-    //is handled as a special case.
     const tasks = (this.props.workflowData.tasks)
       ? Object.keys(this.props.workflowData.tasks)
         .map((taskId) => {
@@ -75,8 +81,37 @@ class SubmitClassificationForm extends React.Component {
     console.log('== TASKS ==', tasks);
     
     return (
-      <div>
-        ...
+      <div className="tasks">
+        {tasks.map((task, taskIndex) =>{
+          return (
+            <div
+              className="single-task"
+              key={`submit-classification-form-task-${taskIndex}`}
+            >
+              <div className="question">{task.question}</div>
+              <div className="answers">
+                {task.answers.map((answer, answerIndex) => {
+                  return (
+                    <label
+                      className="single-answer"
+                      key={`submit-classification-form-task-${taskIndex}-answer-${answerIndex}`}
+                    >
+                      <input
+                        type="radio"
+                        value={answerIndex}
+                        checked={false}
+                        onChange={() => {
+                          alert(`${task.taskId} - ${answer.label}`);
+                        }}
+                      />
+                      {answer.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }

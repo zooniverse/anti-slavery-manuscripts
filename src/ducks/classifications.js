@@ -109,6 +109,7 @@ const submitClassification = () => {
     //----------------
     
     //Record the first task
+    //This is implicitly the 'transcription' task.
     //----------------
     let task = "T0";
     if (getState().workflow.data) {
