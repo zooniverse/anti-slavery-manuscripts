@@ -8,6 +8,7 @@ import { fetchSplit } from '../ducks/splits';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
+import LoadingSpinner from './LoadingSpinner';
 
 import { PROJECT_STATUS } from '../ducks/project';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
@@ -31,9 +32,9 @@ class App extends React.Component {
   render() {
     if (this.props.projectStatus !== PROJECT_STATUS.READY ||
         this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
-      return <div>Loading...</div>;
+      return <LoadingSpinner />
     }  //TODO: Consider what to do for STATUS: ERROR
-    
+
     const path = this.props.location.pathname;
     const showTitle = path === '/classify';
 
