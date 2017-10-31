@@ -12,6 +12,8 @@ import LoadingSpinner from './LoadingSpinner';
 
 import { PROJECT_STATUS } from '../ducks/project';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
+import { SPLIT_STATUS } from '../ducks/splits';
+import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 
 class App extends React.Component {
@@ -31,20 +33,23 @@ class App extends React.Component {
 
   componentWillMount() {
     this.googleLogger = new GoogleLogger;
+    this.googleLogger.subscribe(new GALogAdapter(window.ga));
   }
 
   componentDidMount() {
     this.props.dispatch(fetchProject());
     this.props.dispatch(fetchWorkflow());
-    // this.googleLogger.remember({ projectToken: ['wgranger-test/anti-slavery-testing'] });
-    // if (this.props.user) {
-    //   this.googleLogger.remember({ userID: user.id });
-    // }
+    this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user && nextProps.user !== this.props.user) {
       this.props.dispatch(fetchSplit(nextProps.user));
+      this.googleLogger.remember({ userID: nextProps.user.id });
+    }
+
+    if (nextProps.splitStatus === SPLIT_STATUS.READY && this.props.variant !== nextProps.variant) {
+      this.googleLogger.remember({ cohort: nextProps.variant, experiment: nextProps.splitID });
     }
   }
 
@@ -86,8 +91,11 @@ App.propTypes = {
   //--------
   user: PropTypes.object,
   dialog: PropTypes.node,
+  variant: PropTypes.string,
+  splitID: PropTypes.string,
   projectStatus: PropTypes.string,
   workflowStatus: PropTypes.string,
+  splitStatus: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -97,6 +105,9 @@ App.defaultProps = {
   //--------
   user: null,
   dialog: null,
+  variant: null,
+  splitID: null,
+  splitStatus: SPLIT_STATUS.IDLE,
   projectStatus: PROJECT_STATUS.IDLE,
   workflowStatus: WORKFLOW_STATUS.IDLE,
 };
@@ -110,8 +121,11 @@ const mapStateToProps = (state) => {
     user: state.login.user,
     dialog: state.dialog.data,
     //--------
+    splitID: state.splits.id,
     projectStatus: state.project.status,
+    splitStatus: state.splits.status,
     workflowStatus: state.workflow.status,
+    variant: state.splits.variant,
   };
 };
 

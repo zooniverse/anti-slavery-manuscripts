@@ -204,7 +204,8 @@ class SelectedAnnotation extends React.Component {
     if (this.props.onClose) { this.props.onClose() };
 
     if (this.context.googleLogger) {
-      this.context.googleLogger('cancel-transcription');
+      console.log('EYYY');
+      this.context.googleLogger.logEvent('cancel-transcription');
     }
   }
 

@@ -64,15 +64,19 @@ class ClassifierContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
       this.props.dispatch(fetchTutorial(nextProps.workflow));
+
+      if (this.context.googleLogger) {
+        this.context.googleLogger.remember({ workflowID: nextProps.workflow.id });
+      }
     }
 
     if (nextProps.tutorial !== this.props.tutorial) {
       Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, nextProps.preferences);
     }
 
-    // if (nextProps.currentSubject !== this.props.currentSubject && this.context.googleLogger) {
-    //   this.context.googleLogger.remember({ subjectID: nextProps.currentSubject.id });
-    // }
+    if (nextProps.currentSubject !== this.props.currentSubject && this.context.googleLogger) {
+      this.context.googleLogger.remember({ subjectID: nextProps.currentSubject.id });
+    }
   }
 
   componentWillUnmount() {
@@ -224,6 +228,10 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   useAnnotationTool() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'novel-transcription' });
+    }
+
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
 
@@ -237,7 +245,10 @@ class ClassifierContainer extends React.Component {
 
   submitClassificationAndRedirect() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.makeHandler('complete-classification-and-talk');
+      this.context.googleLogger.logEvent({
+        type: 'complete-classification-and-talk',
+        variant: this.props.variant
+      });
     }
 
     this.props.dispatch(submitClassification())
@@ -314,6 +325,7 @@ ClassifierContainer.propTypes = {
     steps: PropTypes.array
   }),
   tutorialStatus: PropTypes.string,
+  variant: PropTypes.string,
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
     id: PropTypes.string,
@@ -334,6 +346,7 @@ ClassifierContainer.defaultProps = {
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
   workflow: null,
+  variant: 'individual',
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
 
@@ -359,6 +372,7 @@ const mapStateToProps = (state, ownProps) => {
     tutorial: state.tutorial.data,
     tutorialStatus: state.tutorial.status,
     user: state.login.user,
+    variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
     workflow: state.workflow.data,
   };
