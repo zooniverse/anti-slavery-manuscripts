@@ -109,7 +109,7 @@ const submitClassification = () => {
     const classification = getState().classifications.classification;
     
     //TODO: Better error handling
-    if (!classification) { alert('ERROR: Could not create Classification.'); return; }
+    if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
     //----------------
     
     //Record the first task
@@ -136,7 +136,7 @@ const submitClassification = () => {
     Object.keys(sca).map((taskId) => {
       const answerForTask = {
         task: taskId,
-        value: sca[taskId].value,
+        value: sca[taskId],
       };
       classification.annotations.push(answerForTask);
     });
