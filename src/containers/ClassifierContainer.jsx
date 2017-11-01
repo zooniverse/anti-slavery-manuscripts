@@ -81,6 +81,7 @@ class ClassifierContainer extends React.Component {
 
   componentWillUnmount() {
     Split.clear();
+    this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
   }
 
   componentDidMount() {
