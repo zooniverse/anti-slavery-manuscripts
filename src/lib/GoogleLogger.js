@@ -26,7 +26,6 @@ class GoogleLogger {
 
   logEvent(logEntry) {
     const newEntry = Object.assign({}, this.keys, logEntry);
-    console.log(newEntry);
     this.adapters.forEach(adapter => adapter.logEvent(newEntry));
   }
 
