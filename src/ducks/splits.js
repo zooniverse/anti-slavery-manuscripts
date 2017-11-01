@@ -15,9 +15,14 @@ const SPLIT_STATUS = {
   ERROR: 'split_status_error',
 };
 
+const VARIANT_TYPES = {
+  INDIVIDUAL: 'individual',
+  COLLABORATIVE: 'collaborative'
+};
+
 const initialState = {
   adminOverride: false,
-  variant: 'individual',
+  variant: VARIANT_TYPES.INDIVIDUAL,
   data: null,
   id: null
 };
@@ -65,7 +70,7 @@ const fetchSplit = (user) => {
     });
 
     Split.load("wgranger-test/anti-slavery-testing").then((splits) => {
-      let variant = 'individual';
+      let variant = VARIANT_TYPES.INDIVIDUAL;
 
       const split = splits && splits['classifier.collaborative'];
       const id = split && split.id;
@@ -73,7 +78,7 @@ const fetchSplit = (user) => {
       const isShown = split && split.variant.value['div'];
 
       if (!split || isShown || !hasElementKey) {
-        variant = 'collaborative';
+        variant = VARIANT_TYPES.COLLABORATIVE;
       }
 
       dispatch({
@@ -112,5 +117,6 @@ export {
   clearSplits,
   fetchSplit,
   toggleOverride,
-  SPLIT_STATUS
+  SPLIT_STATUS,
+  VARIANT_TYPES
 };

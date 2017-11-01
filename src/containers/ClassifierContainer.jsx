@@ -15,7 +15,7 @@ import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
-import { toggleOverride } from '../ducks/splits';
+import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import {
   createClassification, submitClassification
 } from '../ducks/classifications';
@@ -346,7 +346,7 @@ ClassifierContainer.defaultProps = {
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
   workflow: null,
-  variant: 'individual',
+  variant: VARIANT_TYPES.INDIVIDUAL,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
 
