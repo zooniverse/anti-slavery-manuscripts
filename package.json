@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/zooniverse/liberating-the-liberator",
   "dependencies": {
-    "graphql-request": "^1.3.4",
     "counterpart": "^0.18.1",
+    "graphql-request": "^1.3.4",
     "history": "^4.6.1",
     "markdownz": "~7.3.1",
     "panoptes-client": "^2.7.2",
@@ -42,6 +42,7 @@
     "redux-thunk": "^2.1.0",
     "seven-ten": "^3.1.0",
     "zoo-grommet": "^0.2.1",
+    "zooniverse-geordi-client": "^1.4.0",
     "zooniverse-react-components": "github:zooniverse/Zooniverse-react-components#v0.6.3"
   },
   "devDependencies": {
