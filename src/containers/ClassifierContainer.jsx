@@ -237,7 +237,7 @@ class ClassifierContainer extends React.Component {
 
   completeClassification() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.makeHandler('complete-classification');
+      this.context.googleLogger.logEvent({ type: 'complete-classification' });
     }
 
     this.props.dispatch(submitClassification())
@@ -245,10 +245,7 @@ class ClassifierContainer extends React.Component {
 
   submitClassificationAndRedirect() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({
-        type: 'complete-classification-and-talk',
-        variant: this.props.variant
-      });
+      this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
     }
 
     this.props.dispatch(submitClassification())
@@ -286,9 +283,7 @@ class ClassifierContainer extends React.Component {
 
   toggleFieldGuide() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({
-        type: 'open-field-guide'
-      });
+      this.context.googleLogger.logEvent({ type: 'open-field-guide' });
     }
 
     this.props.dispatch(toggleDialog(
@@ -296,6 +291,10 @@ class ClassifierContainer extends React.Component {
   }
 
   showTutorial() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'open-tutorial' });
+    }
+
     if (this.props.tutorial) {
       Tutorial.start(Tutorial, this.props.tutorial, this.props.user, this.props.preferences);
     }

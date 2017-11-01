@@ -204,8 +204,7 @@ class SelectedAnnotation extends React.Component {
     if (this.props.onClose) { this.props.onClose() };
 
     if (this.context.googleLogger) {
-      console.log('EYYY');
-      this.context.googleLogger.logEvent('cancel-transcription');
+      this.context.googleLogger.logEvent({ type: 'cancel-transcription' });
     }
   }
 
@@ -232,14 +231,11 @@ class SelectedAnnotation extends React.Component {
     }
 
     if (this.context.googleLogger) {
-      this.context.googleLogger.makeHandler('finish-annotation');
+      this.context.googleLogger.logEvent({ type: 'finish-annotation' });
     }
 
     if (this.context.googleLogger && this.state.previousTranscriptionSelection) {
-      this.context.googleLogger.logEvent({
-        type: 'select-previous-annotation',
-        previousTranscriptionAgreement: this.state.previousTranscriptionAgreement
-      });
+      this.context.googleLogger.logEvent({ type: 'select-previous-annotation' });
     }
 
     this.props.onClose();

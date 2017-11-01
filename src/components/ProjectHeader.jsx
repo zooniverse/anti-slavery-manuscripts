@@ -13,17 +13,13 @@ class ProjectHeader extends React.Component {
 
   aboutClick() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({
-        type: 'header-about-click'
-      });
+      this.context.googleLogger.logEvent({ type: 'header-about-click' });
     }
   }
 
   talkClick() {
     if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({
-        type: 'header-talk-click'
-      });
+      this.context.googleLogger.logEvent({ type: 'header-talk-click' });
     }
   }
 

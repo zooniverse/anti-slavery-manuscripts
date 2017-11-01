@@ -344,7 +344,7 @@ class SubjectViewer extends React.Component {
     //Don't allow an annotation to be selected if there's one in progress,
     //otherwise it gets confusing.
     if (isPreviousAnnotation && this.context.googleLogger) {
-      this.context.googleLogger.makeHandler('click-previous-annotation');
+      this.context.googleLogger.logEvent({ type: 'click-previous-annotation' });
     }
 
     if (this.props.annotationInProgress === null) {
