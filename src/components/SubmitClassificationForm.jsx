@@ -87,7 +87,7 @@ class SubmitClassificationForm extends React.Component {
               <div className="question">{task.question}</div>
               <div className="answers">
                 {task.answers.map((answer, answerIndex) => {
-                  const answerValue = answer.label;
+                  const answerValue = answerIndex;  //For the aggregation system, the answer value of a Q&A task should be the answer's array index.
                   const checked = this.props.subjectCompletionAnswers &&
                     this.props.subjectCompletionAnswers[task.taskId] === answerValue;
                   return (
