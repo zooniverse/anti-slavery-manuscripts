@@ -36,7 +36,7 @@ const baseConfig = {
       host: 'https://www.zooniverse.org/',
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
-      workflowId: '5219'
+      workflowId: '5329'
     },
   }
 };
