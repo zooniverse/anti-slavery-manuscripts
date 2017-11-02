@@ -76,7 +76,6 @@ class SelectedAnnotation extends React.Component {
       showAnnotationOptions: false
     });
 
-    this.wordCount(annotationText);
     if (this.inputText) this.inputText.value = annotationText;
 
   }
@@ -149,6 +148,8 @@ class SelectedAnnotation extends React.Component {
       y: inputY + BUFFER,
       width: PANE_WIDTH,
     };
+    
+    const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
 
     return (
       <Rnd
@@ -195,11 +196,11 @@ class SelectedAnnotation extends React.Component {
           )}
 
           {!this.state.showAnnotationOptions && (
-            this.renderWordCount()
+            this.renderWordCount(this.state.annotationText)
           )}
 
           <div className="selected-annotation__buttons">
-            <button className="done-button" disabled={this.state.disableSubmit} onClick={this.saveText}>Done</button>
+            <button className="done-button" disabled={!wordCountMatchesDots} onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
@@ -232,9 +233,8 @@ class SelectedAnnotation extends React.Component {
     )
   }
 
-  renderWordCount() {
+  renderWordCount(text) {
     const expectedWords = this.props.selectedAnnotation.points.length - 1;
-    const text = this.inputText ? this.inputText.value : "";
     const cleaned_text = text.replace(/\s+/g, ' ').trim();
     const number_of_words = cleaned_text ? cleaned_text.split(' ').length : 0;
     const style = expectedWords === number_of_words ? "selected-annotation--green" : "selected-annotation--red";
@@ -245,6 +245,12 @@ class SelectedAnnotation extends React.Component {
         Your word count must match the number of dots minus one.
       </span>
     )
+  }
+  
+  doesWordCountMatchDots(text, dots) {
+    const cleaned_text = text.replace(/\s+/g, ' ').trim();
+    const number_of_words = cleaned_text.split(' ').length;
+    return number_of_words === dots - 1;
   }
 
   saveText() {
@@ -283,21 +289,6 @@ class SelectedAnnotation extends React.Component {
       annotationText: this.inputText.value,
       previousTranscriptionAgreement: false,
     });
-
-    this.wordCount(this.inputText.value);
-  }
-
-  wordCount(text) {
-    const cleaned_text = text.replace(/\s+/g, ' ').trim();
-    const number_of_words = cleaned_text.split(' ').length;
-    const dots = this.props.selectedAnnotation.points.length;
-    const correctLength = number_of_words === dots - 1;
-    if (correctLength) {
-      this.setState({ disableSubmit: false });
-    }
-    else if (!this.state.disableSubmit && !correctLength) {
-      this.setState({ disableSubmit: true });
-    }
   }
 }
 
