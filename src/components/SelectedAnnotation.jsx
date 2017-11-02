@@ -26,7 +26,6 @@ class SelectedAnnotation extends React.Component {
 
     this.state = {
       annotationText: '',
-      disableSubmit: true,
       previousTranscriptionAgreement: false,
       previousTranscriptionSelection: false,
       showAnnotationOptions: false
