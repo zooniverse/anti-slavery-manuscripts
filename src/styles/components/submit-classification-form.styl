@@ -1,0 +1,53 @@
+.submit-classification-form
+  padding: 0 1em
+  font-size: 0.8em
+  
+  h2
+    @extend .secondary-head
+    font-weight: 600
+    letter-spacing: 0.12em
+    margin-bottom: 0
+  
+  .tasks
+    margin-bottom: 1.5em
+    
+    .questions
+      margin-bottom: 1em
+    
+    .answers
+      .single-answer
+        display: block
+        margin-top: 0.5em
+        cursor: pointer
+        
+        input[type=radio]
+          margin-left: 0.5em
+          margin-right: 1em
+  
+  .action-buttons
+    display: flex
+    justify-content: center
+    margin-bottom: 1em
+    
+    button
+      flex: 1 1 auto
+      margin: 0 1em
+      border-radius: 0
+      font-size: 0.8em
+      box-shadow: none
+      
+      &:first-child
+        margin-left: 0
+      
+      &:last-child
+        margin-right: 0
+      
+      &.green.button
+        border: none
+      
+      &.white-green.button
+        border: 1px solid $dark-grey
+      
+      &.disabled.button
+        background-color: $light-grey
+        cursor: default

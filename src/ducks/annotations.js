@@ -1,9 +1,6 @@
 /*
 Redux Duck: Annotations
 -------------------
-
-...
-
  */
 
 //Action Types
@@ -43,7 +40,7 @@ const initialState = {
   selectedAnnotationIndex: null,
 };
 
-const subjectReducer = (state = initialState, action) => {
+const annotationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RESET_ANNOTATIONS:
       return initialState;
@@ -212,7 +209,7 @@ const collaborateWithAnnotation = (annotation, text) => {
   };
 };
 
-export default subjectReducer;
+export default annotationsReducer;
 
 //------------------------------------------------------------------------------
 

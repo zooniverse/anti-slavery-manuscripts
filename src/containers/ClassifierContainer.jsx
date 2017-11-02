@@ -31,6 +31,7 @@ import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
+import SubmitClassificationForm from '../components/SubmitClassificationForm';
 
 const ROTATION_STEP = 90;
 
@@ -49,8 +50,7 @@ class ClassifierContainer extends React.Component {
     this.showCollections = this.showCollections.bind(this);
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
-    this.completeClassification = this.completeClassification.bind(this);
-    this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
+    this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
 
@@ -99,8 +99,10 @@ class ClassifierContainer extends React.Component {
             <h2>directions</h2>
             <p>
               Using the Annotate tool, click under each word in a line of text,
-              then add your transcription. Clip common symbols or phrases to your
-              crib sheet for reference.
+              then add your transcription.
+              
+              {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
+              crib sheet for reference.*/}
             </p>
             <p>
               When you&apos;re finished, discuss the document on Talk, or move
@@ -114,12 +116,12 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            <button href="#" className="white-red button">Your Crib Sheet</button>
+            {/*TEMPORARILY REMOVED: CRIBSHEET 
+            <button href="#" className="white-red button">Your Crib Sheet</button>*/}
             <img className="divider" role="presentation" src={Divider} />
-            <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
-            <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
-              Done &amp; Talk
-            </button>
+            
+            
+            <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Done</button>
           </div>
         </section>
 
@@ -235,22 +237,9 @@ class ClassifierContainer extends React.Component {
 
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
-
-  completeClassification() {
-    if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({ type: 'complete-classification' });
-    }
-
-    this.props.dispatch(submitClassification())
-  }
-
-  submitClassificationAndRedirect() {
-    if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
-    }
-
-    this.props.dispatch(submitClassification())
-    window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
+  
+  prepareSubmitClassificationForm() {
+    this.setState({ popup: <SubmitClassificationForm closePopup={this.closePopup} /> });
   }
 
   useRotate90() {
@@ -302,7 +291,7 @@ class ClassifierContainer extends React.Component {
   }
 
   showCollections() {
-    this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> })
+    this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> });
   }
 }
 
