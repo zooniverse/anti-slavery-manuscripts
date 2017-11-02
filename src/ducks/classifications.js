@@ -13,6 +13,7 @@ const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
 const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
+const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
 
 const CLASSIFICATION_STATUS = {
   IDLE: 'classification_status_idle',
@@ -24,6 +25,7 @@ const CLASSIFICATION_STATUS = {
 const initialState = {
   classification: null,
   status: CLASSIFICATION_STATUS.status,
+  subjectCompletionAnswers: {},  //Simple Q&A object is structured as {"T2": "thunder", "T7": "cats"}
 };
 
 const classificationReducer = (state = initialState, action) => {
@@ -32,6 +34,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         classification: action.classification,
         status: CLASSIFICATION_STATUS.IDLE,
+        subjectCompletionAnswers: {},
       });
 
     case SUBMIT_CLASSIFICATION:
@@ -44,11 +47,19 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state,{
         classification: null,
         status: CLASSIFICATION_STATUS.SUCCESS,
+        subjectCompletionAnswers: {},
       });
 
     case SUBMIT_CLASSIFICATION_ERROR:
       return Object.assign({}, state,{
         status: CLASSIFICATION_STATUS.ERROR,
+      });
+    
+    case SET_SUBJECT_COMPLETION_ANSWERS:
+      const sca = Object.assign({}, state.subjectCompletionAnswers);
+      sca[action.taskId] = action.answerValue;
+      return Object.assign({}, state, {
+        subjectCompletionAnswers: sca,
       });
 
     default:
@@ -91,26 +102,49 @@ const createClassification = () => {
 
 const submitClassification = () => {
   return (dispatch, getState) => {
+    //Initialise
+    //----------------
+    const subject = getState().subject;
+    const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
+    const classification = getState().classifications.classification;
+    
+    //TODO: Better error handling
+    if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
+    //----------------
+    
+    //Record the first task
+    //This is implicitly the 'transcription' task.
+    //----------------
     let task = "T0";
     if (getState().workflow.data) {
-      task = getState().workflow.data.first_task;
+      task = getState().workflow.data.first_task;  //This should usually be T1.
     }
     const annotations = {
       _key: Math.random(),
       _toolIndex: 0,
       task: task,
       value: getState().annotations.annotations,
-    }
-
-    const subject = getState().subject;
-    const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
-    const classification = getState().classifications.classification;
-    
-    //TODO: Better error handling
-    if (!classification) { alert('ERROR: Could not create Classification.'); return; }
-    
-    dispatch({ type: SUBMIT_CLASSIFICATION });
+    };
     classification.annotations.push(annotations);
+    //----------------
+    
+    //Record the other tasks.
+    //Note that each annotation in classification.annotations[] is in the form
+    //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
+    //----------------
+    const sca = getState().classifications.subjectCompletionAnswers;
+    Object.keys(sca).map((taskId) => {
+      const answerForTask = {
+        task: taskId,
+        value: sca[taskId],
+      };
+      classification.annotations.push(answerForTask);
+    });
+    //----------------
+    
+    //Save the classification
+    //----------------
+    dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
       completed: true,
       'metadata.finished_at': (new Date()).toISOString(),
@@ -144,7 +178,17 @@ const submitClassification = () => {
 
       dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
     });
+    //----------------
 
+  };
+};
+
+const setSubjectCompletionAnswers = (taskId, answerValue) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBJECT_COMPLETION_ANSWERS,
+      taskId, answerValue,
+    });
   };
 };
 
@@ -157,4 +201,5 @@ export default classificationReducer;
 export {
   createClassification,
   submitClassification,
+  setSubjectCompletionAnswers,
 };
