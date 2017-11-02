@@ -48,6 +48,7 @@ const INPUT_STATE = {
 }
 
 const ZOOM_STEP = 0.1;
+const MAX_ANGLE = 8;
 
 //Add ?dev=1 to the URL to enable DEV_MODE
 const DEV_MODE = window.location && /(\?|&)dev(=|&|$)/ig.test(window.location.search);
@@ -67,6 +68,7 @@ class SubjectViewer extends React.Component {
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.useZoomIn = this.useZoomIn.bind(this);
     this.useZoomOut = this.useZoomOut.bind(this);
@@ -93,6 +95,7 @@ class SubjectViewer extends React.Component {
     //State
     this.state = {
       annotation: null,
+      mouseInViewer: false,
       pointerXYOnImage: null,
     };
   }
@@ -116,6 +119,7 @@ class SubjectViewer extends React.Component {
         <svg
           ref={(c)=>{this.svg=c}}
           viewBox="0 0 100 100"
+          onMouseEnter={this.onMouseEnter}
           onMouseDown={this.onMouseDown}
           onMouseUp={this.onMouseUp}
           onMouseMove={this.onMouseMove}
@@ -134,7 +138,10 @@ class SubjectViewer extends React.Component {
               imageSize={this.props.imageSize}
               annotationInProgress={this.props.annotationInProgress}
               annotations={this.props.annotations}
+              angleDegree={this.angleDegree}
               frame={this.props.frame}
+              getPointerXY={this.getPointerXYOnImage}
+              mouseInViewer={this.state.mouseInViewer}
               onCompleteAnnotation={this.onCompleteAnnotation}
               onSelectAnnotation={this.onSelectAnnotation}
               previousAnnotations={this.props.previousAnnotations}
@@ -297,6 +304,13 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
+      if (this.props.annotationInProgress && this.props.annotationInProgress.points.length >= 2) {
+        const i = this.props.annotationInProgress.points.length - 1;
+        const points = this.props.annotationInProgress.points;
+
+        const straight = this.angleDegree(pointerXYOnImage, points[i], points[i - 1]);
+        if (!straight) return Utility.stopEvent(e);
+      }
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
     }
   }
@@ -317,13 +331,32 @@ class SubjectViewer extends React.Component {
       }
       return Utility.stopEvent(e);
     }
+
+    if (!this.state.mouseInViewer) {
+      this.setState({ mouseInViewer: true });
+    }
   }
 
   onMouseLeave(e) {
+    this.setState({ mouseInViewer: false });
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       this.pointer.state = INPUT_STATE.IDLE;
       return Utility.stopEvent(e);
     }
+  }
+
+  onMouseEnter(e) {
+    this.setState({ mouseInViewer: true });
+    return Utility.stopEvent(e);
+  }
+
+  angleDegree(A,B,C) {
+    const AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));
+    const BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2));
+    const AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
+    const radians = Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
+    const degrees = radians * 180 / Math.PI;
+    return (180 - degrees) <= MAX_ANGLE;
   }
 
   /*  Triggers when the user clicks on the final node/point of an

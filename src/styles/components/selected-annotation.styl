@@ -17,6 +17,12 @@
   overflow: hidden
   padding: 1em
 
+  &--red
+    color: $warning
+
+  &--green
+    color: $success
+
   h2
     letter-spacing: 0.06em
 
@@ -93,6 +99,10 @@
 
   &__buttons .done-button
     background-color: $aqua-marine
+
+    &:disabled
+      background-color: $light-grey
+      cursor: default
 
 .close-button
   background: transparent

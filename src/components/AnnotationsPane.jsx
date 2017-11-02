@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
 import { VisibilitySplit } from 'seven-ten';
+import PendingAnnotation from './PendingAnnotation';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -28,9 +29,18 @@ class AnnotationsPane extends React.Component {
   //----------------------------------------------------------------
 
   render() {
+    const pendingLine = this.props.mouseInViewer && this.props.annotationInProgress !== null;
     const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
       <g transform={imageOffset}>
+        {pendingLine && (
+          <PendingAnnotation
+            angleDegree={this.props.angleDegree}
+            annotationInProgress={this.props.annotationInProgress}
+            getPointerXY={this.props.getPointerXY}
+            mouseInViewer={this.props.mouseInViewer}
+          />
+        )}
         {this.renderPreviousAnnotations()}
         {this.renderUserAnnotations()}
         {this.renderAnnotationInProgress()}
@@ -54,6 +64,7 @@ class AnnotationsPane extends React.Component {
       if (i === this.props.annotationInProgress.points.length-1) {  //Final node: click to finish annotation.
         svgPoints.push(
           <circle
+            id="pulsating"
             key={svgPointPrefix+i}
             cx={point.x} cy={point.y} r={10} fill="#00CED1"
             className="end"
@@ -96,6 +107,15 @@ class AnnotationsPane extends React.Component {
 
     return (
       <g className="annotation-in-progress">
+        <animate
+          xlinkHref="#pulsating"
+          attributeType="CSS" attributeName="opacity"
+          from="1" to="0.2" dur="1s" begin="0s"
+          begin="pulsating.mouseout"
+          end="pulsating.mouseover"
+          repeatCount="indefinite"
+          fill="freeze"
+         />
         {svgLines}
         {svgPoints}
       </g>
@@ -232,6 +252,7 @@ AnnotationsPane.propTypes = {
   }),
   //--------
   adminOverride: PropTypes.bool,
+  angleDegree: PropTypes.func,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
