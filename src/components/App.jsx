@@ -9,6 +9,7 @@ import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
 import LoadingSpinner from './LoadingSpinner';
+import { generateSessionID } from '../lib/get-session-id';
 
 import { PROJECT_STATUS } from '../ducks/project';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
@@ -41,6 +42,7 @@ class App extends React.Component {
     this.props.dispatch(fetchProject());
     this.props.dispatch(fetchWorkflow());
     this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
+    generateSessionID();
   }
 
   componentWillReceiveProps(nextProps) {

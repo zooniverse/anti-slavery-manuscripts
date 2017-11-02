@@ -147,6 +147,7 @@ const submitClassification = () => {
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
       completed: true,
+      'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
       'metadata.viewport': {
         width: innerWidth,
