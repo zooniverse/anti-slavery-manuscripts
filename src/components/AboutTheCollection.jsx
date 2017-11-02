@@ -12,7 +12,7 @@ import Divider from '../images/img_divider.png';
 
 class AboutTheCollection extends React.Component {
   render() {
-    const timelineSize = (window.innerWidth > 700) ? <Timeline /> : <MobileTimeline />;
+    const timelineSize = (window.innerWidth > 640) ? <Timeline /> : <MobileTimeline />;
 
     return (
       <main className="app-content about-the-collection">
