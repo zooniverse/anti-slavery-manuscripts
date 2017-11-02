@@ -23,14 +23,32 @@ class SubmitClassificationForm extends React.Component {
   //----------------------------------------------------------------
 
   render() {
+    let numberOfAnswersMatchQuestions = true;
+    
+    if (this.props.subjectCompletionAnswers && this.props.workflowData) {
+      const numberOfQuestions = Object.keys(this.props.workflowData.tasks)
+      .map((taskId) => {
+        return Object.assign({},
+          this.props.workflowData.tasks[taskId],
+          { taskId }
+        );
+      })
+      .filter((task) => {
+        return isAQuestionTask(task, this.props.workflowData);
+      })
+      .length;
+      const numberOfAnswers = Object.keys(this.props.subjectCompletionAnswers).length;
+      numberOfAnswersMatchQuestions = numberOfQuestions === numberOfAnswers;
+    }
+    
     return (
       <div className="submit-classification-form">
         <h2>Submit Classification</h2>
         {this.renderSubjectCompletionQuestions()}
         <div className="action-buttons">
           <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Cancel</button>
-          <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
-          <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
+          <button href="#" disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'white-green button' : 'disabled button'} onClick={this.completeClassification}>Done</button>
+          <button href="#" disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'green button' : 'disabled button'} onClick={this.submitClassificationAndRedirect}>
             Done &amp; Talk
           </button>
         </div>
@@ -79,11 +97,7 @@ class SubmitClassificationForm extends React.Component {
           );
         })
         .filter((task) => {
-          return (
-            task.taskId !== this.props.workflowData.first_task &&
-            task.type === 'single' &&  //Hardcoded: PFE 'single question' type
-            task.question && task.answers && task.answers.length > 0
-          );
+          return isAQuestionTask(task, this.props.workflowData);
         })
       : [];
     
@@ -125,7 +139,14 @@ class SubmitClassificationForm extends React.Component {
       </div>
     );
   }
+}
 
+function isAQuestionTask(task, workflow) {
+  return (
+    task.taskId !== workflow.first_task &&
+    task.type === 'single' &&  //Hardcoded: PFE 'single question' type
+    task.question && task.answers && task.answers.length > 0
+  );
 }
 
 SubmitClassificationForm.propTypes = {
