@@ -51,8 +51,6 @@ class ClassifierContainer extends React.Component {
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
-    //this.completeClassification = this.completeClassification.bind(this);
-    //this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
 
@@ -121,13 +119,6 @@ class ClassifierContainer extends React.Component {
             
             
             <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Done</button>
-            
-            {/*
-            <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
-            <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
-              Done &amp; Talk
-            </button>
-            */}
           </div>
         </section>
 
@@ -247,24 +238,6 @@ class ClassifierContainer extends React.Component {
   prepareSubmitClassificationForm() {
     this.setState({ popup: <SubmitClassificationForm closePopup={this.closePopup} /> });
   }
-
-  /*completeClassification() {
-  completeClassification() {
-    if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({ type: 'complete-classification' });
-    }
-
-    this.props.dispatch(submitClassification())
-  }
-
-  submitClassificationAndRedirect() {
-    if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
-    }
-
-    this.props.dispatch(submitClassification())
-    window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
-  }*/
 
   useRotate90() {
     this.props.dispatch(setRotation(this.props.rotation + ROTATION_STEP));

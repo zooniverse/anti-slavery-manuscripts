@@ -27,6 +27,7 @@ class SubmitClassificationForm extends React.Component {
       <div className="submit-classification-form">
         {this.renderSubjectCompletionQuestions()}
         <div className="action-buttons">
+          <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Done</button>
           <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
           <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
             Done &amp; Talk
@@ -37,12 +38,21 @@ class SubmitClassificationForm extends React.Component {
   }
   
   completeClassification() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'complete-classification' });
+    }
+    
     this.props.dispatch(submitClassification())
     this.props.closePopup && this.props.closePopup();
   }
 
   submitClassificationAndRedirect() {
-    this.completeClassification();
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
+    }
+    
+    this.props.dispatch(submitClassification())
+    this.props.closePopup && this.props.closePopup();
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
   
@@ -131,6 +141,10 @@ SubmitClassificationForm.defaultProps = {
   subjectCompletionAnswers: null,
   workflowData: null,
 };
+SubmitClassificationForm.contextTypes = {
+  googleLogger: PropTypes.object
+};
+
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   return {
     subjectCompletionAnswers: state.classifications.subjectCompletionAnswers,
