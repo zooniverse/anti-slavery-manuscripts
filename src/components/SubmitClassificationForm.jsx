@@ -25,6 +25,7 @@ class SubmitClassificationForm extends React.Component {
   render() {
     return (
       <div className="submit-classification-form">
+        <h2>Submit Classification</h2>
         {this.renderSubjectCompletionQuestions()}
         <div className="action-buttons">
           <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Cancel</button>
@@ -87,7 +88,7 @@ class SubmitClassificationForm extends React.Component {
       : [];
     
     return (
-      <div className="tasks">
+      <div className="tasks body-copy">
         {tasks.map((task, taskIndex) =>{
           return (
             <div
