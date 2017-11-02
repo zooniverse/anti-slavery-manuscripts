@@ -26,12 +26,19 @@
     letter-spacing: (0.9/15)em
     margin: 0.5rem 0rem 0rem 1.25rem
 
+    button
+      background: transparent
+      border: none
+      color: inherit
+      padding: inherit
+
     @media (max-width:1060px)
       margin-left: 0
 
     &--active, &:hover, &:focus
       border-bottom: 2px solid $eggplant
       color: $eggplant
+      padding: 0
 
     &:first-child
       margin-left: 0

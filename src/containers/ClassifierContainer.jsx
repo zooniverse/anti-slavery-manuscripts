@@ -15,7 +15,7 @@ import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
-import { toggleOverride } from '../ducks/splits';
+import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import {
   createClassification, submitClassification
 } from '../ducks/classifications';
@@ -66,15 +66,24 @@ class ClassifierContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
       this.props.dispatch(fetchTutorial(nextProps.workflow));
+
+      if (this.context.googleLogger) {
+        this.context.googleLogger.remember({ workflowID: nextProps.workflow.id });
+      }
     }
 
     if (nextProps.tutorial !== this.props.tutorial) {
       Tutorial.startIfNecessary(Tutorial, nextProps.tutorial, nextProps.user, nextProps.preferences);
     }
+
+    if (nextProps.currentSubject !== this.props.currentSubject && this.context.googleLogger) {
+      this.context.googleLogger.remember({ subjectID: nextProps.currentSubject.id });
+    }
   }
 
   componentWillUnmount() {
     Split.clear();
+    this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
   }
 
   componentDidMount() {
@@ -228,6 +237,10 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   useAnnotationTool() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'novel-transcription' });
+    }
+
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
   
@@ -236,11 +249,20 @@ class ClassifierContainer extends React.Component {
   }
 
   /*completeClassification() {
+  completeClassification() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'complete-classification' });
+    }
+
     this.props.dispatch(submitClassification())
   }
 
   submitClassificationAndRedirect() {
-    this.completeClassification();
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
+    }
+
+    this.props.dispatch(submitClassification())
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }*/
 
@@ -274,11 +296,19 @@ class ClassifierContainer extends React.Component {
   }
 
   toggleFieldGuide() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'open-field-guide' });
+    }
+
     this.props.dispatch(toggleDialog(
       <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false));
   }
 
   showTutorial() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'open-tutorial' });
+    }
+
     if (this.props.tutorial) {
       Tutorial.start(Tutorial, this.props.tutorial, this.props.user, this.props.preferences);
     }
@@ -308,6 +338,7 @@ ClassifierContainer.propTypes = {
     steps: PropTypes.array
   }),
   tutorialStatus: PropTypes.string,
+  variant: PropTypes.string,
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
     id: PropTypes.string,
@@ -328,8 +359,14 @@ ClassifierContainer.defaultProps = {
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
   workflow: null,
+  variant: VARIANT_TYPES.INDIVIDUAL,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
 };
+
+ClassifierContainer.contextTypes = {
+  googleLogger: PropTypes.object
+};
+
 const mapStateToProps = (state, ownProps) => {
   return {
     adminOverride: state.splits.adminOverride,
@@ -348,6 +385,7 @@ const mapStateToProps = (state, ownProps) => {
     tutorial: state.tutorial.data,
     tutorialStatus: state.tutorial.status,
     user: state.login.user,
+    variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
     workflow: state.workflow.data,
   };
