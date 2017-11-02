@@ -48,7 +48,7 @@ const INPUT_STATE = {
 }
 
 const ZOOM_STEP = 0.1;
-const MAX_ANGLE = 5;
+const MAX_ANGLE = 8;
 
 //Add ?dev=1 to the URL to enable DEV_MODE
 const DEV_MODE = window.location && /(\?|&)dev(=|&|$)/ig.test(window.location.search);
@@ -330,6 +330,10 @@ class SubjectViewer extends React.Component {
         ));
       }
       return Utility.stopEvent(e);
+    }
+
+    if (!this.state.mouseInViewer) {
+      this.setState({ mouseInViewer: true });
     }
   }
 

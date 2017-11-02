@@ -75,6 +75,9 @@ class SelectedAnnotation extends React.Component {
       previousTranscriptionSelection: true,
       showAnnotationOptions: false
     });
+
+    if (this.inputText) this.inputText.value = annotationText;
+
   }
 
   textModifier(textTag) {
