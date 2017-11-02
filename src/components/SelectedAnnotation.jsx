@@ -76,6 +76,7 @@ class SelectedAnnotation extends React.Component {
       showAnnotationOptions: false
     });
 
+    this.wordCount(annotationText);
     if (this.inputText) this.inputText.value = annotationText;
 
   }
