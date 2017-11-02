@@ -96,7 +96,7 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
         type: FETCH_PROJECT_SUCCESS,
         data: project,
       });
-      dispatch(fetchPreferences(project));
+      // dispatch(fetchPreferences(project));
 
     })
     .catch((err) => {
@@ -108,31 +108,31 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
   };
 }
 
-  const fetchPreferences = (project) => {
-    return (dispatch, getState) => {
-      const user = getState().login.user;
-      if (project && user) {
-        user.get('project_preferences', { project_id: project.id })
-        .then(([preferences]) => {
-          dispatch({
-            type: FETCH_PREFERENCES,
-            preferences
-          });
+const fetchPreferences = (user) => {
+  return (dispatch, getState) => {
+    const project = getState().project.data;
+    if (project && user) {
+      user.get('project_preferences', { project_id: project.id })
+      .then(([preferences]) => {
+        dispatch({
+          type: FETCH_PREFERENCES,
+          preferences
         });
-      } else if (project) {
-        Promise.resolve(apiClient.type('project_preferences').create({
-          id: 'GUEST_PREFERENCES_DO_NOT_SAVE',
-          links: { project: project.id },
-          preferences: {}
-        })).then((preferences) => {
-          dispatch({
-            type: FETCH_PREFERENCES,
-            preferences
-          });
+      });
+    } else if (project) {
+      Promise.resolve(apiClient.type('project_preferences').create({
+        id: 'GUEST_PREFERENCES_DO_NOT_SAVE',
+        links: { project: project.id },
+        preferences: {}
+      })).then((preferences) => {
+        dispatch({
+          type: FETCH_PREFERENCES,
+          preferences
         });
-      };
-    }
-  };
+      });
+    };
+  }
+};
 
 //------------------------------------------------------------------------------
 
@@ -142,5 +142,6 @@ export default classifierReducer;
 
 export {
   fetchProject,
+  fetchPreferences,
   PROJECT_STATUS,
 };
