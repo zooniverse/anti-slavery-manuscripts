@@ -99,8 +99,10 @@ class ClassifierContainer extends React.Component {
             <h2>directions</h2>
             <p>
               Using the Annotate tool, click under each word in a line of text,
-              then add your transcription. Clip common symbols or phrases to your
-              crib sheet for reference.
+              then add your transcription.
+              
+              {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
+              crib sheet for reference.*/}
             </p>
             <p>
               When you&apos;re finished, discuss the document on Talk, or move
@@ -114,7 +116,8 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            <button href="#" className="white-red button">Your Crib Sheet</button>
+            {/*TEMPORARILY REMOVED: CRIBSHEET 
+            <button href="#" className="white-red button">Your Crib Sheet</button>*/}
             <img className="divider" role="presentation" src={Divider} />
             <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
             <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
