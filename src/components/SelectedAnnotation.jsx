@@ -21,9 +21,12 @@ class SelectedAnnotation extends React.Component {
     this.saveText = this.saveText.bind(this);
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.textModifier = this.textModifier.bind(this);
+    this.cancelAnnotation = this.cancelAnnotation.bind(this);
 
     this.state = {
       annotationText: '',
+      previousTranscriptionAgreement: false,
+      previousTranscriptionSelection: false,
       showAnnotationOptions: false
     }
   }
@@ -52,12 +55,24 @@ class SelectedAnnotation extends React.Component {
   }
 
   toggleShowAnnotations() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({
+        type: 'click-dropdown',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     const showAnnotationOptions = !this.state.showAnnotationOptions;
     this.setState({ showAnnotationOptions });
   }
 
   chooseAnnotationText(annotationText) {
-    this.setState({ annotationText, showAnnotationOptions: false });
+    this.setState({
+      annotationText,
+      previousTranscriptionAgreement: true,
+      previousTranscriptionSelection: true,
+      showAnnotationOptions: false
+    });
   }
 
   textModifier(textTag) {
@@ -175,7 +190,7 @@ class SelectedAnnotation extends React.Component {
 
           <div className="selected-annotation__buttons">
             <button className="done-button" onClick={this.saveText}>Done</button>
-            <button onClick={this.props.onClose}>Cancel</button>
+            <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
             }
@@ -183,6 +198,14 @@ class SelectedAnnotation extends React.Component {
         </div>
       </Rnd>
     );
+  }
+
+  cancelAnnotation() {
+    if (this.props.onClose) { this.props.onClose() };
+
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'cancel-transcription' });
+    }
   }
 
   renderAnnotationOptions() {
@@ -206,6 +229,15 @@ class SelectedAnnotation extends React.Component {
     } else {
       this.props.dispatch(updateText(this.state.annotationText));
     }
+
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'finish-annotation' });
+    }
+
+    if (this.context.googleLogger && this.state.previousTranscriptionSelection) {
+      this.context.googleLogger.logEvent({ type: 'select-previous-annotation' });
+    }
+
     this.props.onClose();
   }
 
@@ -218,7 +250,14 @@ class SelectedAnnotation extends React.Component {
   onTextUpdate() {
     if (!this.inputText) return;
 
-    this.setState({ annotationText: this.inputText.value });
+    if (!this.inputText.value && this.state.previousTranscriptionSelection) {
+      this.setState({ previousTranscriptionSelection: false });
+    }
+
+    this.setState({
+      annotationText: this.inputText.value,
+      previousTranscriptionAgreement: false,
+    });
   }
 }
 
@@ -254,6 +293,10 @@ SelectedAnnotation.propTypes = {
     height: PropTypes.number,
   }),
 }
+
+SelectedAnnotation.contextTypes = {
+  googleLogger: PropTypes.object
+};
 
 const mapStateToProps = (state, ownProps) => {
   const sv = state.subjectViewer;
