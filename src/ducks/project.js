@@ -96,8 +96,6 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
         type: FETCH_PROJECT_SUCCESS,
         data: project,
       });
-      // dispatch(fetchPreferences(project));
-
     })
     .catch((err) => {
 
