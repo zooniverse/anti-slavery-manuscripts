@@ -27,7 +27,7 @@ class SubmitClassificationForm extends React.Component {
       <div className="submit-classification-form">
         {this.renderSubjectCompletionQuestions()}
         <div className="action-buttons">
-          <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Done</button>
+          <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Cancel</button>
           <button href="#" className="white-green button" onClick={this.completeClassification}>Done</button>
           <button href="#" className="green button" onClick={this.submitClassificationAndRedirect}>
             Done &amp; Talk
