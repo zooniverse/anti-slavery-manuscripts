@@ -9,6 +9,9 @@ const initialState = {
 };
 
 const CAESAR_HOST = 'https://caesar-staging.zooniverse.org/graphql';
+console.log(CAESAR_HOST);
+console.log(config.caesarHost);
+console.log(process.env);
 
 const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
 const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
@@ -20,7 +23,7 @@ const previousAnnotationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RESET_PREVIOUS_ANNOTATIONS:
       return initialState;
-      
+
     case FETCH_ANNOTATIONS:
       return Object.assign({}, state, {
         data: action.data,
@@ -83,7 +86,7 @@ const resetPreviousAnnotations = () => {
 
 const fetchAnnotations = (subject) => {
   if (!subject) return () => {};
-  
+
   const query = `{
     workflow(id: ${config.zooniverseLinks.workflowId}) {
       reductions(subjectId: ${subject.id}) {
@@ -93,7 +96,7 @@ const fetchAnnotations = (subject) => {
   }`;
 
   return (dispatch, getState) => {
-    request(CAESAR_HOST, query).then((data) => {
+    request(config.zooniverseLinks.caesarHost, query).then((data) => {
       const frame = getState().subjectViewer.frame;
       const reductions = data.workflow.reductions;
       const marks = constructAnnotations(reductions, frame);

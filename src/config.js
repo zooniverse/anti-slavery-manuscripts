@@ -25,6 +25,7 @@ const baseConfig = {
     panoptesAppId: '974cc8da2448bac692703f0b364a6b41a7662d91a5a3a1acb064eb703a01e6df', // ASM on Staging
     zooniverseLinks: {
       host: 'https://master.pfe-preview.zooniverse.org/',
+      caesarHost: 'https://caesar-staging.zooniverse.org/graphql',
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
       workflowId: '3017'
@@ -34,6 +35,7 @@ const baseConfig = {
     panoptesAppId: '064a5a32a9d2d389eeb876a8b7cb0fbe596fd80d7a040566f14965446d34c541',  //Anti-Slavery Manuscripts
     zooniverseLinks: {
       host: 'https://www.zooniverse.org/',
+      caesarHost: 'https://caesar.zooniverse.org/graphql',
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
       workflowId: '5329'
