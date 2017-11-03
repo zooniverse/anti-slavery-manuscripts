@@ -4,7 +4,7 @@
   "description": "Anti-Slavery Manuscripts invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zooniverse/liberating-the-liberator"
+    "url": "https://github.com/zooniverse/anti-slavery-manuscripts"
   },
   "keywords": [
     "zooniverse"
@@ -20,9 +20,9 @@
   "author": "Zooniverse",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zooniverse/liberating-the-liberator"
+    "url": "https://github.com/zooniverse/anti-slavery-manuscripts"
   },
-  "homepage": "https://github.com/zooniverse/liberating-the-liberator",
+  "homepage": "https://www.antislaverymanuscripts.org/",
   "dependencies": {
     "counterpart": "^0.18.1",
     "graphql-request": "^1.3.4",
