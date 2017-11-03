@@ -70,7 +70,7 @@ const fetchSplit = (user) => {
       type: FETCH_SPLIT,
     });
 
-    Split.load(config.projectSlug).then((splits) => {
+    Split.load(config.zooniverseLinks.projectSlug).then((splits) => {
       let variant = VARIANT_TYPES.INDIVIDUAL;
 
       const split = splits && splits['classifier.collaborative'];
