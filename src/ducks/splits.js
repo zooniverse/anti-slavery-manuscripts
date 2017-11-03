@@ -1,5 +1,6 @@
 import { Split } from 'seven-ten';
 import apiClient from 'panoptes-client/lib/api-client.js';
+import { config } from '../config';
 
 const FETCH_SPLIT = 'FETCH_SPLIT';
 const FETCH_SPLIT_SUCCESS = 'FETCH_SPLIT_SUCCESS';
@@ -69,7 +70,7 @@ const fetchSplit = (user) => {
       type: FETCH_SPLIT,
     });
 
-    Split.load("wgranger-test/anti-slavery-testing").then((splits) => {
+    Split.load(config.zooniverseLinks.projectSlug).then((splits) => {
       let variant = VARIANT_TYPES.INDIVIDUAL;
 
       const split = splits && splits['classifier.collaborative'];
