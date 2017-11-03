@@ -8,11 +8,6 @@ const initialState = {
   selectedPreviousAnnotation: null
 };
 
-const CAESAR_HOST = 'https://caesar-staging.zooniverse.org/graphql';
-console.log(CAESAR_HOST);
-console.log(config.caesarHost);
-console.log(process.env);
-
 const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
 const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const UPDATE_FRAME ='UPDATE_FRAME';
