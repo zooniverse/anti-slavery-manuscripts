@@ -8,23 +8,42 @@ const initialState = {
   selectedPreviousAnnotation: null
 };
 
-const CAESAR_HOST = 'https://caesar-staging.zooniverse.org/graphql';
+const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
+const FETCH_ANNOTATIONS_SUCCESS = 'FETCH_ANNOTATIONS_SUCCESS';
+const FETCH_ANNOTATIONS_ERROR = 'FETCH_ANNOTATIONS_ERROR';
 
 const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
-const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const UPDATE_FRAME ='UPDATE_FRAME';
 const UPDATE_PREVIOUS_ANNOTATION = 'UPDATE_PREVIOUS_ANNOTATION';
 const REENABLE_PREVIOUS_ANNOTATION = 'REENABLE_PREVIOUS_ANNOTATION';
+
+const PREVIOUS_ANNOTATION_STATUS = {
+  IDLE: 'previous_annotation_status_idle',
+  FETCHING: 'previous_annotation_status_fetching',
+  READY: 'previous_annotation_status_ready',
+  ERROR: 'previous_annotation_status_error',
+};
 
 const previousAnnotationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RESET_PREVIOUS_ANNOTATIONS:
       return initialState;
-      
+
     case FETCH_ANNOTATIONS:
       return Object.assign({}, state, {
+        status: PREVIOUS_ANNOTATION_STATUS.FETCHING
+      });
+
+    case FETCH_ANNOTATIONS_SUCCESS:
+      return Object.assign({}, state, {
         data: action.data,
-        marks: action.marks
+        marks: action.marks,
+        status: PREVIOUS_ANNOTATION_STATUS.READY
+      });
+
+    case FETCH_ANNOTATIONS_ERROR:
+      return Object.assign({}, state, {
+        status: PREVIOUS_ANNOTATION_STATUS.ERROR
       });
 
     case UPDATE_FRAME:
@@ -83,7 +102,7 @@ const resetPreviousAnnotations = () => {
 
 const fetchAnnotations = (subject) => {
   if (!subject) return () => {};
-  
+
   const query = `{
     workflow(id: ${config.zooniverseLinks.workflowId}) {
       reductions(subjectId: ${subject.id}) {
@@ -93,16 +112,23 @@ const fetchAnnotations = (subject) => {
   }`;
 
   return (dispatch, getState) => {
-    request(CAESAR_HOST, query).then((data) => {
+    dispatch({
+      type: FETCH_ANNOTATIONS
+    });
+
+    request(config.zooniverseLinks.caesarHost, query).then((data) => {
       const frame = getState().subjectViewer.frame;
       const reductions = data.workflow.reductions;
       const marks = constructAnnotations(reductions, frame);
 
       dispatch({
-        type: FETCH_ANNOTATIONS,
+        type: FETCH_ANNOTATIONS_SUCCESS,
         data: data.workflow.reductions,
         marks
       });
+    })
+    .catch((err) => {
+      dispatch({ type: FETCH_ANNOTATIONS_ERROR });
     });
   };
 };
