@@ -10,6 +10,7 @@ project.
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config, subjectSets } from '../config';
 import { createClassification } from './classifications';
+import { changeFrame } from './subject-viewer'
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -185,7 +186,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,
           });
-        
+
           //Once we have a Subject, create an empty Classification to go with it.
           dispatch(createClassification());
         })
@@ -205,9 +206,10 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
         type: FETCH_SUBJECT_SUCCESS,
         favorite: currentSubject.favorite || false,
       });
-      
+
       //Once we have a Subject, create an empty Classification to go with it.
       dispatch(createClassification());
+      dispatch(changeFrame(0));
     }
   };
 };

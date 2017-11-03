@@ -116,7 +116,7 @@ class SelectedAnnotation extends React.Component {
     const padEnd = new RegExp(endReg, 'ig');
     const unclearPad = new RegExp(unclearReg, 'ig');
 
-    const paddedText = value.replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(unclearPad, ' [unclear] ').replace(/\s+/g, ' ');
+    const paddedText = value.replace(unclearPad, ' [unclear] ').replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(/\s+/g, ' ');
     this.inputText.value = paddedText;
   }
 
@@ -147,7 +147,7 @@ class SelectedAnnotation extends React.Component {
       y: inputY + BUFFER,
       width: PANE_WIDTH,
     };
-    
+
     const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
 
     return (
@@ -245,7 +245,7 @@ class SelectedAnnotation extends React.Component {
       </span>
     )
   }
-  
+
   doesWordCountMatchDots(text, dots) {
     const cleaned_text = text.replace(/\s+/g, ' ').trim();
     const number_of_words = cleaned_text.split(' ').length;
