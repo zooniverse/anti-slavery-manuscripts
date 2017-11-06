@@ -15,6 +15,7 @@ import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
 import { VisibilitySplit } from 'seven-ten';
 import PendingAnnotation from './PendingAnnotation';
+import { VARIANT_TYPES } from '../ducks/splits';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -131,7 +132,6 @@ class AnnotationsPane extends React.Component {
   }
 
   renderPreviousAnnotations() {
-    if (!this.props.previousAnnotations || !this.props.splits) return null;
     return this.renderAnnotations(this.props.previousAnnotations, true);
   }
 
@@ -153,6 +153,12 @@ class AnnotationsPane extends React.Component {
     if (!this.props.showPreviousMarks) return null;
 
     const annotationPrefix = 'ANNOTATION_';
+
+    if (previousAnnotations && this.props.variant === VARIANT_TYPES.INDIVIDUAL) {
+      annotations = annotations.filter((annotation) => {
+        return annotation.consensusReached;
+      });
+    }
 
     return annotations.map((annotation, index) => {
       if (annotation.hasCollaborated === true) { return null; }
@@ -228,7 +234,7 @@ class AnnotationsPane extends React.Component {
 
       if (previousAnnotations && this.props.adminOverride) { return renderedMarks; }
 
-      if (this.props.splits && previousAnnotations) {
+      if (this.props.variant === VARIANT_TYPES.COLLABORATIVE && previousAnnotations) {
         return (
           <VisibilitySplit key={annotationPrefix + index} splits={this.props.splits} splitKey={'classifier.collaborative'} elementKey={'div'}>
             {renderedMarks}
@@ -276,7 +282,8 @@ AnnotationsPane.propTypes = {
   }),
   selectedAnnotationIndex: PropTypes.number,
   showPreviousMarks: PropTypes.bool,
-  splits: PropTypes.object
+  splits: PropTypes.object,
+  variant: PropTypes.string
 };
 
 AnnotationsPane.defaultProps = {
@@ -299,7 +306,8 @@ AnnotationsPane.defaultProps = {
   },
   selectedAnnotationIndex: 0,
   showPreviousMarks: true,
-  splits: null
+  splits: null,
+  variant: VARIANT_TYPES.INDIVIDUAL
 };
 
 const mapStateToProps = (state) => {
@@ -308,7 +316,8 @@ const mapStateToProps = (state) => {
     frame: state.subjectViewer.frame,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
-    splits: state.splits.data
+    splits: state.splits.data,
+    variant: state.splits.variant
   };
 };
 
