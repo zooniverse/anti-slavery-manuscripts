@@ -2,6 +2,7 @@
 Redux Duck: Annotations
 -------------------
  */
+import { SUBJECTVIEWER_STATE, setViewerState } from './subject-viewer';
 
 //Action Types
 const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
@@ -44,7 +45,7 @@ const annotationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RESET_ANNOTATIONS:
       return initialState;
-      
+
     case ADD_ANNOTATION_POINT:
       const annotationInProgress = (state.annotationInProgress)
         ? Object.assign({}, state.annotationInProgress) //Create a copy, don't modify the existing object.
@@ -110,7 +111,7 @@ const annotationsReducer = (state = initialState, action) => {
         selectedAnnotation: null,
         selectedAnnotationIndex: null
       });
-    
+
     case DELETE_SELECTED_ANNOTATION:
       let filteredAnnotations = [];
       if (state.annotations && state.selectedAnnotationIndex !== null) {
@@ -164,6 +165,8 @@ const selectAnnotation = (index, previousAnnotation) => {
       annotation,
       index,
     });
+
+    dispatch(setViewerState(SUBJECTVIEWER_STATE.IDLE));
   };
 };
 
@@ -172,6 +175,8 @@ const unselectAnnotation = () => {
     dispatch({
       type: UNSELECT_ANNOTATION,
     });
+
+    dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   };
 };
 
@@ -188,6 +193,8 @@ const completeAnnotation = () => {
     dispatch({
       type: COMPLETE_ANNOTATION,
     });
+
+    dispatch(setViewerState(SUBJECTVIEWER_STATE.IDLE));
   };
 };
 

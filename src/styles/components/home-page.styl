@@ -1,6 +1,10 @@
 @import "font-groups.styl"
 
 .home-page
+  a
+    &:hover, &:focus
+      color: $eggplant
+
   .transcribe
     @extend .secondary-head
     font-weight: 600
@@ -80,6 +84,10 @@
     img, svg
       margin: 4em 2em
       max-height: 4em
+
+    a
+      &:hover, &:focus
+        color: inherit
 
   &__social-section
     background: $sandy

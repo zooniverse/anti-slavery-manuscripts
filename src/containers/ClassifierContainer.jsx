@@ -100,7 +100,7 @@ class ClassifierContainer extends React.Component {
             <p>
               Using the Annotate tool, click under each word in a line of text,
               then add your transcription.
-              
+
               {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
               crib sheet for reference.*/}
             </p>
@@ -116,12 +116,12 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            {/*TEMPORARILY REMOVED: CRIBSHEET 
+            {/*TEMPORARILY REMOVED: CRIBSHEET
             <button href="#" className="white-red button">Your Crib Sheet</button>*/}
             <img className="divider" role="presentation" src={Divider} />
-            
-            
-            <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Done</button>
+
+
+            <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
           </div>
         </section>
 
@@ -237,7 +237,7 @@ class ClassifierContainer extends React.Component {
 
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
-  
+
   prepareSubmitClassificationForm() {
     this.setState({ popup: <SubmitClassificationForm closePopup={this.closePopup} /> });
   }

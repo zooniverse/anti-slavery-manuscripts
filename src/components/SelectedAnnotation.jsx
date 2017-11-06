@@ -44,6 +44,7 @@ class SelectedAnnotation extends React.Component {
     this.inputText.addEventListener('mouseup', () => {
       this.dialog.className = ENABLE_DRAG;
     });
+    this.inputText.focus();
   }
 
   componentWillUnmount() {
@@ -147,7 +148,7 @@ class SelectedAnnotation extends React.Component {
       y: inputY + BUFFER,
       width: PANE_WIDTH,
     };
-    
+
     const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
 
     return (
@@ -245,7 +246,7 @@ class SelectedAnnotation extends React.Component {
       </span>
     )
   }
-  
+
   doesWordCountMatchDots(text, dots) {
     const cleaned_text = text.replace(/\s+/g, ' ').trim();
     const number_of_words = cleaned_text.split(' ').length;
