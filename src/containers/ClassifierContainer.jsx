@@ -8,7 +8,7 @@ import { config } from '../config';
 import {
   setRotation, setContrast, resetView,
   togglePreviousMarks, setViewerState,
-  SUBJECTVIEWER_STATE,
+  MARKS_STATE, SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
@@ -90,6 +90,8 @@ class ClassifierContainer extends React.Component {
 
   render() {
     const isAdmin = this.props.user && this.props.user.admin;
+    const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? "fa fa-eye" :
+      (MARKS_STATE.USER === this.props.shownMarks) ? "fa fa-eye-slash" : "fa fa-eye-slash grey";
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -163,7 +165,7 @@ class ClassifierContainer extends React.Component {
 
             <button className="flat-button block" onClick={this.togglePreviousMarks}>
               <span className="classifier-toolbar__icon">
-                <i className="fa fa-eye" />
+                <i className={shownMarksClass} />
               </span>
               <span>Toggle Prev. Marks</span>
             </button>
@@ -310,6 +312,7 @@ ClassifierContainer.propTypes = {
   }),
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  shownMarks: PropTypes.number,
   tutorial: PropTypes.shape({
     steps: PropTypes.array
   }),
@@ -332,6 +335,7 @@ ClassifierContainer.defaultProps = {
   project: null,
   rotation: 0,
   scaling: 1,
+  shownMarks: 0,
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
   workflow: null,
@@ -357,6 +361,7 @@ const mapStateToProps = (state, ownProps) => {
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
+    shownMarks: state.subjectViewer.shownMarks,
     splits: state.splits.splits,
     tutorial: state.tutorial.data,
     tutorialStatus: state.tutorial.status,

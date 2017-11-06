@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { VisibilitySplit } from 'seven-ten';
 import PendingAnnotation from './PendingAnnotation';
 import { VARIANT_TYPES } from '../ducks/splits';
+import { MARKS_STATE } from '../ducks/subject-viewer';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -42,8 +43,14 @@ class AnnotationsPane extends React.Component {
             mouseInViewer={this.props.mouseInViewer}
           />
         )}
-        {this.renderPreviousAnnotations()}
-        {this.renderUserAnnotations()}
+        {this.props.shownMarks === MARKS_STATE.ALL && (
+          this.renderPreviousAnnotations()
+        )}
+
+        {this.props.shownMarks !== MARKS_STATE.NONE && (
+          this.renderUserAnnotations()
+        )}
+        
         {this.renderAnnotationInProgress()}
       </g>
     );
@@ -150,7 +157,6 @@ class AnnotationsPane extends React.Component {
 
   renderAnnotations(annotations, previousAnnotations = false) {
     if (!annotations) return null;
-    if (!this.props.showPreviousMarks) return null;
 
     const annotationPrefix = 'ANNOTATION_';
 
@@ -281,7 +287,7 @@ AnnotationsPane.propTypes = {
     previousAnnotation: PropTypes.bool
   }),
   selectedAnnotationIndex: PropTypes.number,
-  showPreviousMarks: PropTypes.bool,
+  shownMarks: PropTypes.number,
   splits: PropTypes.object,
   variant: PropTypes.string
 };
@@ -305,7 +311,7 @@ AnnotationsPane.defaultProps = {
     previousAnnotation: false
   },
   selectedAnnotationIndex: 0,
-  showPreviousMarks: true,
+  shownMarks: 0,
   splits: null,
   variant: VARIANT_TYPES.INDIVIDUAL
 };
@@ -316,6 +322,7 @@ const mapStateToProps = (state) => {
     frame: state.subjectViewer.frame,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
+    shownMarks: state.subjectViewer.shownMarks,
     splits: state.splits.data,
     variant: state.splits.variant
   };

@@ -145,7 +145,6 @@ class SubjectViewer extends React.Component {
               onCompleteAnnotation={this.onCompleteAnnotation}
               onSelectAnnotation={this.onSelectAnnotation}
               previousAnnotations={this.props.previousAnnotations}
-              showPreviousMarks={this.props.showPreviousMarks}
             />
           </g>
           {(!DEV_MODE) ? null :
@@ -502,7 +501,6 @@ SubjectViewer.propTypes = {
       })),
     })
   ),
-  showPreviousMarks: PropTypes.bool,
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -539,7 +537,6 @@ SubjectViewer.defaultProps = {
   annotationsStatus: ANNOTATION_STATUS.IDLE,
   annotationInProgress: null,
   annotations: [],
-  showPreviousMarks: true,
   splits: null,
   user: null
 };
@@ -568,7 +565,6 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
-    showPreviousMarks: sv.showPreviousMarks,
     selectedAnnotation: state.annotations.selectedAnnotation,
     splits: state.splits.data,
     user: state.login.user
