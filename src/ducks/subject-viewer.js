@@ -6,6 +6,8 @@ This duck (collection of redux actions + reducers) is used to control the view
 options/settings of the SubjectViewer component.
 
  */
+import { CONSENSUS_SCORE } from '../config';
+import { VARIANT_TYPES } from '../ducks/splits';
 
 //Misc Constants
 const SUBJECTVIEWER_STATE = {
@@ -16,6 +18,12 @@ const SUBJECTVIEWER_STATE = {
 const MIN_SCALING = 0.1;
 const MAX_SCALING = 10;
 
+const MARKS_STATE = {
+  ALL: 0,
+  USER: 1,
+  NONE: 2,
+};
+
 //Initial State
 const initialState = {
   //Image transformations
@@ -23,7 +31,7 @@ const initialState = {
   frame: 0,
   rotation: 0,
   scaling: 1,
-  showPreviousMarks: true,
+  shownMarks: MARKS_STATE.ALL,
   translationX: 0,
   translationY: 0,
 
@@ -68,10 +76,8 @@ const subjectViewerReducer = (state = initialState, action) => {
       });
 
     case TOGGLE_MARKS:
-      const visibleMarks = !state.showPreviousMarks;
-
       return Object.assign({}, state, {
-        showPreviousMarks: visibleMarks
+        shownMarks: action.shownMarks
       });
 
     case SET_SCALING:
@@ -184,9 +190,21 @@ const resetView = () => {
 };
 
 const togglePreviousMarks = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const annotations = getState().previousAnnotations.marks;
+    const variant = getState().splits.variant;
+    const consensusAnnotation = annotations.some(annotation => { return annotation.consensusReached; })
+    const previousAnnotationsPresent = consensusAnnotation || (annotations.length && variant === VARIANT_TYPES.COLLABORATIVE);
+    const numberOfStates = Object.keys(MARKS_STATE).length;
+
+    let shownMarks = (getState().subjectViewer.shownMarks + 1) % numberOfStates;
+    if (!previousAnnotationsPresent && shownMarks === MARKS_STATE.USER) {
+      shownMarks = MARKS_STATE.NONE;
+    }
+
     dispatch({
       type: TOGGLE_MARKS,
+      shownMarks
     });
   }
 };
@@ -244,5 +262,6 @@ export {
   togglePreviousMarks,
   updateViewerSize,
   updateImageSize,
+  MARKS_STATE,
   SUBJECTVIEWER_STATE,
 };

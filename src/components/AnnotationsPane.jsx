@@ -15,6 +15,8 @@ import { Utility } from '../lib/Utility';
 import { connect } from 'react-redux';
 import { VisibilitySplit } from 'seven-ten';
 import PendingAnnotation from './PendingAnnotation';
+import { VARIANT_TYPES } from '../ducks/splits';
+import { MARKS_STATE } from '../ducks/subject-viewer';
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -41,8 +43,14 @@ class AnnotationsPane extends React.Component {
             mouseInViewer={this.props.mouseInViewer}
           />
         )}
-        {this.renderPreviousAnnotations()}
-        {this.renderUserAnnotations()}
+        {this.props.shownMarks === MARKS_STATE.ALL && (
+          this.renderPreviousAnnotations()
+        )}
+
+        {this.props.shownMarks !== MARKS_STATE.NONE && (
+          this.renderUserAnnotations()
+        )}
+        
         {this.renderAnnotationInProgress()}
       </g>
     );
@@ -131,7 +139,6 @@ class AnnotationsPane extends React.Component {
   }
 
   renderPreviousAnnotations() {
-    if (!this.props.previousAnnotations || !this.props.splits) return null;
     return this.renderAnnotations(this.props.previousAnnotations, true);
   }
 
@@ -150,9 +157,14 @@ class AnnotationsPane extends React.Component {
 
   renderAnnotations(annotations, previousAnnotations = false) {
     if (!annotations) return null;
-    if (!this.props.showPreviousMarks) return null;
 
     const annotationPrefix = 'ANNOTATION_';
+
+    if (previousAnnotations && this.props.variant === VARIANT_TYPES.INDIVIDUAL) {
+      annotations = annotations.filter((annotation) => {
+        return annotation.consensusReached;
+      });
+    }
 
     return annotations.map((annotation, index) => {
       if (annotation.hasCollaborated === true) { return null; }
@@ -228,7 +240,7 @@ class AnnotationsPane extends React.Component {
 
       if (previousAnnotations && this.props.adminOverride) { return renderedMarks; }
 
-      if (this.props.splits && previousAnnotations) {
+      if (this.props.variant === VARIANT_TYPES.COLLABORATIVE && previousAnnotations) {
         return (
           <VisibilitySplit key={annotationPrefix + index} splits={this.props.splits} splitKey={'classifier.collaborative'} elementKey={'div'}>
             {renderedMarks}
@@ -275,8 +287,9 @@ AnnotationsPane.propTypes = {
     previousAnnotation: PropTypes.bool
   }),
   selectedAnnotationIndex: PropTypes.number,
-  showPreviousMarks: PropTypes.bool,
-  splits: PropTypes.object
+  shownMarks: PropTypes.number,
+  splits: PropTypes.object,
+  variant: PropTypes.string
 };
 
 AnnotationsPane.defaultProps = {
@@ -298,8 +311,9 @@ AnnotationsPane.defaultProps = {
     previousAnnotation: false
   },
   selectedAnnotationIndex: 0,
-  showPreviousMarks: true,
-  splits: null
+  shownMarks: 0,
+  splits: null,
+  variant: VARIANT_TYPES.INDIVIDUAL
 };
 
 const mapStateToProps = (state) => {
@@ -308,7 +322,9 @@ const mapStateToProps = (state) => {
     frame: state.subjectViewer.frame,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
-    splits: state.splits.data
+    shownMarks: state.subjectViewer.shownMarks,
+    splits: state.splits.data,
+    variant: state.splits.variant
   };
 };
 
