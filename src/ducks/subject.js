@@ -191,7 +191,8 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
           dispatch(createClassification());
           dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           dispatch({ type: FETCH_SUBJECT_ERROR });
         });
     };

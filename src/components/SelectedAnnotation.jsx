@@ -20,7 +20,7 @@ class SelectedAnnotation extends React.Component {
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
-    this.textModifier = this.textModifier.bind(this);
+    this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
     this.renderWordCount = this.renderWordCount.bind(this);
 
@@ -74,12 +74,9 @@ class SelectedAnnotation extends React.Component {
       previousTranscriptionSelection: true,
       showAnnotationOptions: false
     });
-
-    if (this.inputText) this.inputText.value = annotationText;
-
   }
 
-  textModifier(textTag) {
+  insertTextModifier(textTag) {
     let value;
     let textAfter;
     let textInBetween;
@@ -117,7 +114,10 @@ class SelectedAnnotation extends React.Component {
     const unclearPad = new RegExp(unclearReg, 'ig');
 
     const paddedText = value.replace(unclearPad, ' [unclear] ').replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(/\s+/g, ' ');
-    this.inputText.value = paddedText;
+    
+    this.setState({
+      annotationText: paddedText
+    });
   }
 
   render() {
@@ -173,10 +173,10 @@ class SelectedAnnotation extends React.Component {
 
           <div className="selected-annotation__markup">
             <p>Text Modifiers</p>
-            <button onClick={this.textModifier.bind(this, 'insertion')}>[insertion]</button>
-            <button onClick={this.textModifier.bind(this, 'deletion')}>[deletion]</button>
-            <button onClick={this.textModifier.bind(this, 'unclear')}>[unclear]</button>
-            <button onClick={this.textModifier.bind(this, 'underline')}>[underline]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'insertion')}>[insertion]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'deletion')}>[deletion]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'unclear')}>[unclear]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'underline')}>[underline]</button>
           </div>
 
           <p>
