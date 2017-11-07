@@ -51,7 +51,7 @@ class ProjectHeader extends React.Component {
             className="project-header__link"
             to="/about"
           >
-            <button onClick={this.aboutClick}>
+            <button onClick={this.aboutClick} tabIndex="-1">
               About
             </button>
           </Link>
@@ -67,7 +67,7 @@ class ProjectHeader extends React.Component {
             href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk'}
             target="_blank"
           >
-            <button onClick={this.talkClick}>
+            <button onClick={this.talkClick} tabIndex="-1">
               Talk
             </button>
           </a>
