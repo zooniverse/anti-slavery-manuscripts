@@ -189,6 +189,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
 
           //Once we have a Subject, create an empty Classification to go with it.
           dispatch(createClassification());
+          dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
         })
         .catch(() => {
           dispatch({ type: FETCH_SUBJECT_ERROR });
@@ -209,7 +210,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
 
       //Once we have a Subject, create an empty Classification to go with it.
       dispatch(createClassification());
-      dispatch(changeFrame(0));
+      dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
     }
   };
 };
