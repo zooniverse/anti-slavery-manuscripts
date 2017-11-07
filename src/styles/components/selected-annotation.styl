@@ -7,6 +7,15 @@
 .drag-handler:before
   content: "\21F2"
 
+.word-count
+  text-align: right
+
+  &--red
+    color: $warning
+
+  &--green
+    color: $success
+
 .selected-annotation
   @extend .body-copy
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
@@ -16,12 +25,6 @@
   height: 100%
   overflow: hidden
   padding: 1em
-
-  &--red
-    color: $warning
-
-  &--green
-    color: $success
 
   h2
     letter-spacing: 0.06em

@@ -110,17 +110,17 @@ class SelectedAnnotation extends React.Component {
       annotationText: this.cleanText(value),
     });
   }
-  
+
   /*  cleanText() makes the user's transcription text more palatable to the
       aggregation engine.
-      
+
       NOTE: cleanText() can be added to onTextUpdate() to create an
       "auto-correct as you type" feature, but boy oh boy we need to be careful
       about messing around with standard user input. (@shaun 20171107)
    */
   cleanText(text) {
     return text
-  
+
     //Generic tags
     .replace(/(\[\w+\])/g, ' $1')  //When  we see [tag], add a space in front of it.
     .replace(/(\[\/\w+\])/g, ' $1')  //When  we see [/tag], add a space after it.
@@ -128,7 +128,7 @@ class SelectedAnnotation extends React.Component {
     .replace(/([^\]])\s*(\[\/\w+\])/g, '$1$2')  //When we see word___[/tag], change it to word[/tag]
     .replace(/\[(\w+\])\s*(\S*)\s*\[\/(\1)/g, '[$1$2[/$3')  //When we see [tag]   whatever_or_nothing   [/tag], change it to [tag]whatever_or_nothing[/tag]
     //WARNING: This code does NOT handle [tag1][tag2]nested metatags[/tag2][/tag1] properly, except for the special case.
-    
+
     //TODO: verify if the following handles nested metatags:
     //.replace(/(\[\w+\])\s+(\[\w+\])/g, '$1$2')  //When we see opening tags like [tag1] [tag2], bring them together like [tag1][tag2]
     //.replace(/(\[\/\w+\])\s+(\[\/\w+\])/g, '$1$2')  //When we see closing tags like [/tag1] [/tag2], bring them together like [/tag1][/tag2]
@@ -138,7 +138,7 @@ class SelectedAnnotation extends React.Component {
     .replace(/(\[\w+\])\s*(\[unclear\])/g, '$1$2')  //If [unclear] is between [tags][/tags], make sure there's no space before...
     .replace(/(\[unclear\])\s*(\[\/\w+\])/g, '$1$2')  //...or after it. So [tag] [unclear] [tag] becomes [tag][unclear][/tag]
     .replace(/\[unclear\]\[unclear\]/g, '[unclear] [unclear]')  //Why do you even have multiple consecutive [unclear]s? Well, we're accounting for it anyway.
-    
+
     //General cleanup
     .trim()  //Remove useless spaces at the start and the end of the lines.
     .replace(/\s+/g, ' ');  //No multiple spaces.
@@ -260,12 +260,12 @@ class SelectedAnnotation extends React.Component {
     const expectedWords = this.props.selectedAnnotation.points.length - 1;
     const cleaned_text = text.replace(/\s+/g, ' ').trim();
     const number_of_words = cleaned_text ? cleaned_text.split(' ').length : 0;
-    const style = expectedWords === number_of_words ? "selected-annotation--green" : "selected-annotation--red";
+    const style = expectedWords === number_of_words ? "word-count--green" :
+      expectedWords < number_of_words ? "word-count--red" : "";
 
     return (
-      <span className={style}>
-        {number_of_words} of {expectedWords} words typed.
-        Your word count must match the number of dots minus one.
+      <span className={`word-count ${style}`}>
+        {number_of_words} &#47; {expectedWords} words
       </span>
     )
   }
