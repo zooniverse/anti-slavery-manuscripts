@@ -31,7 +31,7 @@ const initialState = {
   frame: 0,
   rotation: 0,
   scaling: 1,
-  shownMarks: 0,
+  shownMarks: MARKS_STATE.ALL,
   translationX: 0,
   translationY: 0,
 
@@ -195,8 +195,9 @@ const togglePreviousMarks = () => {
     const variant = getState().splits.variant;
     const consensusAnnotation = annotations.some(annotation => { return annotation.consensusReached; })
     const previousAnnotationsPresent = consensusAnnotation || (annotations.length && variant === VARIANT_TYPES.COLLABORATIVE);
+    const numberOfStates = Object.keys(MARKS_STATE).length;
 
-    let shownMarks = (getState().subjectViewer.shownMarks + 1) % 3;
+    let shownMarks = (getState().subjectViewer.shownMarks + 1) % numberOfStates;
     if (!previousAnnotationsPresent && shownMarks === MARKS_STATE.USER) {
       shownMarks = MARKS_STATE.NONE;
     }
