@@ -20,7 +20,7 @@ class SelectedAnnotation extends React.Component {
     this.toggleShowAnnotations = this.toggleShowAnnotations.bind(this);
     this.saveText = this.saveText.bind(this);
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
-    this.textModifier = this.textModifier.bind(this);
+    this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
     this.renderWordCount = this.renderWordCount.bind(this);
 
@@ -75,12 +75,9 @@ class SelectedAnnotation extends React.Component {
       previousTranscriptionSelection: true,
       showAnnotationOptions: false
     });
-
-    if (this.inputText) this.inputText.value = annotationText;
-
   }
 
-  textModifier(textTag) {
+  insertTextModifier(textTag) {
     let value;
     let textAfter;
     let textInBetween;
@@ -109,16 +106,42 @@ class SelectedAnnotation extends React.Component {
       }
     }
 
-    const startReg = `(?=\\w*)\\[${textTag}\\]\\s*`;
-    const endReg = `\\s*\\[\\/${textTag}\\](?=\\w*)`;
-    const unclearReg = `(?=\\w*)\\[unclear\\](?=\\w*)`;
+    this.setState({
+      annotationText: this.cleanText(value),
+    });
+  }
+  
+  /*  cleanText() makes the user's transcription text more palatable to the
+      aggregation engine.
+      
+      NOTE: cleanText() can be added to onTextUpdate() to create an
+      "auto-correct as you type" feature, but boy oh boy we need to be careful
+      about messing around with standard user input. (@shaun 20171107)
+   */
+  cleanText(text) {
+    return text
+  
+    //Generic tags
+    .replace(/(\[\w+\])/g, ' $1')  //When  we see [tag], add a space in front of it.
+    .replace(/(\[\/\w+\])/g, ' $1')  //When  we see [/tag], add a space after it.
+    .replace(/(\[\w+\])\s*([^\[])/g, '$1$2')  //When we see [tag]__word, change it to [tag]word
+    .replace(/([^\]])\s*(\[\/\w+\])/g, '$1$2')  //When we see word___[/tag], change it to word[/tag]
+    .replace(/\[(\w+\])\s*(\S*)\s*\[\/(\1)/g, '[$1$2[/$3')  //When we see [tag]   whatever_or_nothing   [/tag], change it to [tag]whatever_or_nothing[/tag]
+    //WARNING: This code does NOT handle [tag1][tag2]nested metatags[/tag2][/tag1] properly, except for the special case.
+    
+    //TODO: verify if the following handles nested metatags:
+    //.replace(/(\[\w+\])\s+(\[\w+\])/g, '$1$2')  //When we see opening tags like [tag1] [tag2], bring them together like [tag1][tag2]
+    //.replace(/(\[\/\w+\])\s+(\[\/\w+\])/g, '$1$2')  //When we see closing tags like [/tag1] [/tag2], bring them together like [/tag1][/tag2]
 
-    const padStart = new RegExp(startReg, 'ig');
-    const padEnd = new RegExp(endReg, 'ig');
-    const unclearPad = new RegExp(unclearReg, 'ig');
-
-    const paddedText = value.replace(padStart, ` [${textTag}]`).replace(padEnd, `[/${textTag}] `).replace(unclearPad, ' [unclear] ').replace(/\s+/g, ' ');
-    this.inputText.value = paddedText;
+    //Special case: [unclear]
+    .replace(/(\[unclear\])/g, ' $1 ') //Add spaces before/after [unclear]
+    .replace(/(\[\w+\])\s*(\[unclear\])/g, '$1$2')  //If [unclear] is between [tags][/tags], make sure there's no space before...
+    .replace(/(\[unclear\])\s*(\[\/\w+\])/g, '$1$2')  //...or after it. So [tag] [unclear] [tag] becomes [tag][unclear][/tag]
+    .replace(/\[unclear\]\[unclear\]/g, '[unclear] [unclear]')  //Why do you even have multiple consecutive [unclear]s? Well, we're accounting for it anyway.
+    
+    //General cleanup
+    .trim()  //Remove useless spaces at the start and the end of the lines.
+    .replace(/\s+/g, ' ');  //No multiple spaces.
   }
 
   render() {
@@ -174,10 +197,10 @@ class SelectedAnnotation extends React.Component {
 
           <div className="selected-annotation__markup">
             <p>Text Modifiers</p>
-            <button onClick={this.textModifier.bind(this, 'insertion')}>[insertion]</button>
-            <button onClick={this.textModifier.bind(this, 'deletion')}>[deletion]</button>
-            <button onClick={this.textModifier.bind(this, 'unclear')}>[unclear]</button>
-            <button onClick={this.textModifier.bind(this, 'underline')}>[underline]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'insertion')}>[insertion]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'deletion')}>[deletion]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'unclear')}>[unclear]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'underline')}>[underline]</button>
           </div>
 
           <p>
