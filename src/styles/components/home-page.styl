@@ -28,6 +28,15 @@
       @media(max-width: 500px)
         font-size: 3em
 
+    a
+      @extend .secondary-head-link
+      border-bottom: 2px solid transparent
+      font-size: 0.85em
+      margin: auto
+
+      &:hover, &:focus
+        border-bottom: 2px solid $eggplant
+
   &__progress-bar
     background: $light-eggplant
     display: flex

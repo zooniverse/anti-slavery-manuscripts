@@ -28,7 +28,8 @@ const baseConfig = {
       caesarHost: 'https://caesar-staging.zooniverse.org/graphql',
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
-      workflowId: '3017'
+      workflowId: '3017',
+      betaSet: '4375'
     },
   },
   production: {
@@ -38,7 +39,8 @@ const baseConfig = {
       caesarHost: 'https://caesar.zooniverse.org/graphql',
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
-      workflowId: '5329'
+      workflowId: '5329',
+      betaSet: '16228'
     },
   }
 };

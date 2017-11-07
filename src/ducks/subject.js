@@ -157,23 +157,24 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
       type: FETCH_SUBJECT,
     });
 
-    let randomSubjectSet;
-    const workflow = getState().workflow.data;
-    if (workflow && workflow.links.subject_sets.length) {
-      const linkedSets = workflow.links.subject_sets;
-      randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
-    } else {
-      randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
-    }
+    // NOTE: Remove Subject Selection While in Beta
+    // let randomSubjectSet;
+    // const workflow = getState().workflow.data;
+    // if (workflow && workflow.links.subject_sets.length) {
+    //   const linkedSets = workflow.links.subject_sets;
+    //   randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
+    // } else {
+    //   randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
+    // }
 
     const subjectQuery = {
       workflow_id: id,
-      subject_set_id: randomSubjectSet
+      subject_set_id: config.zooniverseLinks.betaSet
     };
 
-    if (getState().subject.subjectSet) {
-      subjectQuery.subject_set_id = getState().subject.subjectSet;
-    }
+    // if (getState().subject.subjectSet) {
+    //   subjectQuery.subject_set_id = getState().subject.subjectSet;
+    // }
 
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
