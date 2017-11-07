@@ -1,5 +1,6 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
+import { VARIANT_TYPES } from './splits';
 
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
@@ -44,9 +45,12 @@ const workflowReducer = (state = initialState, action) => {
   };
 };
 
-const fetchWorkflow = (id = config.zooniverseLinks.workflowId) => {
-  return (dispatch) => {
+const fetchWorkflow = (variant = VARIANT_TYPES.INDIVIDUAL) => {
+  const id = variant === VARIANT_TYPES.COLLABORATIVE ?
+    config.zooniverseLinks.collabWorkflowId :
+    config.zooniverseLinks.workflowId;
 
+  return (dispatch) => {
     dispatch({
       type: FETCH_WORKFLOW,
       id,

@@ -17,12 +17,18 @@ import { SPLIT_STATUS } from '../ducks/splits';
 import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 import GeordiLogAdapter from '../lib/geordi-log-adapter';
+import { checkLoginUser } from '../ducks/login';
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.googleLogger = null;
+
+    if (!props.initialised) {
+      props.dispatch(checkLoginUser());
+    }
   }
 
   returnSomething(something) { // eslint-disable-line class-methods-use-this
@@ -40,14 +46,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(fetchProject());
-    this.props.dispatch(fetchWorkflow());
     this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
     generateSessionID();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user && nextProps.user !== this.props.user) {
-      this.props.dispatch(fetchSplit(nextProps.user));
       this.googleLogger.remember({ userID: nextProps.user.id });
     }
 

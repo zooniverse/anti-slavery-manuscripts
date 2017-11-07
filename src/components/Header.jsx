@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { ZooHeader, LoginButton, LogoutButton, UserMenu } from 'zooniverse-react-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { checkLoginUser, loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
+import { loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
 import AuthContainer from '../containers/AuthContainer';
 import SiteNavItems from '../lib/site-nav-items';
 
@@ -12,9 +12,6 @@ class Header extends React.Component {
     super(props);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-    if (!props.initialised) {
-      props.dispatch(checkLoginUser());
-    }
   }
 
   login() {
