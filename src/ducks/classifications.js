@@ -52,7 +52,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state,{
         status: CLASSIFICATION_STATUS.ERROR,
       });
-    
+
     case SET_SUBJECT_COMPLETION_ANSWERS:
       const sca = Object.assign({}, state.subjectCompletionAnswers);
       sca[action.taskId] = action.answerValue;
@@ -71,6 +71,9 @@ const createClassification = () => {
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
+
+    const user = getState().login.user;
+    console.log(user);
 
     const classification = apiClient.type('classifications').create({
       annotations: [],
@@ -105,11 +108,11 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
-    
+
     //TODO: Better error handling
     if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
     //----------------
-    
+
     //Record the first task
     //This is implicitly the 'transcription' task.
     //----------------
@@ -125,7 +128,7 @@ const submitClassification = () => {
     };
     classification.annotations.push(annotations);
     //----------------
-    
+
     //Record the other tasks.
     //Note that each annotation in classification.annotations[] is in the form
     //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
@@ -139,7 +142,7 @@ const submitClassification = () => {
       classification.annotations.push(answerForTask);
     });
     //----------------
-    
+
     //Save the classification
     //----------------
     dispatch({ type: SUBMIT_CLASSIFICATION });
@@ -157,6 +160,7 @@ const submitClassification = () => {
 
     //Successful save: reset everything, then get the next Subject.
     .then(() => {
+      localStorage.removeItem('classificationID');
       //Log
       console.log('Submit classification: Success');
       Split.classificationCreated(classification);
@@ -189,6 +193,36 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
   };
 };
 
+const saveClassification = () => {
+  return (dispatch, getState) => {
+    let task = "T0";
+    if (getState().workflow.data) {
+      task = getState().workflow.data.first_task;  //This should usually be T1.
+    }
+
+    const annotations = {
+      _key: Math.random(),
+      _toolIndex: 0,
+      task: task,
+      value: getState().annotations.annotations,
+    };
+
+    const classification = getState().classifications.classification;
+    classification.annotations.push(annotations);
+    // classification.update({
+    //   completed: false,
+    //   'metadata.session': getSessionID(),
+    //   'metadata.finished_at': (new Date()).toISOString(),
+    // }).save()
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+    //   .then((classification) => {
+    //     localStorage.setItem('classificationID', classification.id);
+    //   });
+  };
+};
+
 export default classificationReducer;
 
 //------------------------------------------------------------------------------
@@ -198,5 +232,6 @@ export default classificationReducer;
 export {
   createClassification,
   submitClassification,
+  saveClassification,
   setSubjectCompletionAnswers,
 };
