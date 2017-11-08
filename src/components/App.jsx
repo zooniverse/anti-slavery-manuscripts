@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
 import { fetchWorkflow } from '../ducks/workflow';
-import { fetchSplit } from '../ducks/splits';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
