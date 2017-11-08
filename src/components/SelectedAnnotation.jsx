@@ -235,7 +235,23 @@ class SelectedAnnotation extends React.Component {
   }
 
   cancelAnnotation() {
-    if (this.props.onClose) { this.props.onClose() };
+    //If the initial Annotation text is empty, it means this Annotation was
+    //_just created._ If the user Cancels a _just created_ Annotation, it
+    //implies that the user didn't create the Annotation line correctly and
+    //wants to try again. More importantly, this prevents users from using
+    //'Cancel' to submit new Annotations with no text.
+    //This check ignores the current value of this.inputText as it has no
+    //bearing to the logic.
+    const initialAnnotationText =
+      (this.props.selectedAnnotation && this.props.selectedAnnotation.details &&
+       this.props.selectedAnnotation.details[0] && this.props.selectedAnnotation.details[0].value)
+      ? this.props.selectedAnnotation.details[0].value : '';
+
+    if (initialAnnotationText.trim().length === 0) {
+      this.deleteAnnotation();  //Cancel this action and delete the newly created Annotation.
+    } else {
+      if (this.props.onClose) { this.props.onClose() };  //Cancel this action; make no updates to the existing (and valid) Annotation.
+    }
 
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'cancel-transcription' });
