@@ -187,7 +187,7 @@ class SelectedAnnotation extends React.Component {
         <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
           <div>
             <h2>Transcribe</h2>
-            <button className="close-button" onClick={this.props.onClose}>X</button>
+            <button className="close-button" onClick={this.cancelAnnotation}>X</button>
           </div>
           <span>
             Enter the words you marked in the order you marked them. Open the
@@ -235,7 +235,17 @@ class SelectedAnnotation extends React.Component {
   }
 
   cancelAnnotation() {
-    if (this.props.onClose) { this.props.onClose() };
+    //Cancelling a new Annotation (i.e. it starts off with empty text) should also delete it.
+    const initialAnnotationText =
+      (this.props.selectedAnnotation && this.props.selectedAnnotation.details &&
+       this.props.selectedAnnotation.details[0] && this.props.selectedAnnotation.details[0].value)
+      ? this.props.selectedAnnotation.details[0].value : '';
+
+    if (initialAnnotationText.trim().length === 0) {
+      this.deleteAnnotation();  //Cancel this action and delete this newly created Annotation.
+    } else {
+      if (this.props.onClose) { this.props.onClose() };  //Cancel this action and make no updates to the existing (and valid) Annotation.
+    }
 
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'cancel-transcription' });
