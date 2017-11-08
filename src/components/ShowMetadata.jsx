@@ -9,7 +9,7 @@ const ShowMetadata = ({ metadata }) => {
       <img role="presentation" className="divider" src={Divider} />
       <table width="100%">
         {Object.keys(metadata).map((key, i) => {
-          const isHidden = key.charAt(0) === "#";
+          const isHidden = /^\s*#|(\/\/)|!/g.test(key);
           if (metadata[key] && !isHidden) {
             return (
               <tr key={i}>
