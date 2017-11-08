@@ -113,17 +113,17 @@ class ClassifierContainer extends React.Component {
           </div>
           <div className="help-buttons">
             {this.props.tutorial && this.props.tutorialStatus === TUTORIAL_STATUS.READY && (
-              <button href="#" className="white-red button" onClick={this.showTutorial}>Tutorial</button>
+              <button className="white-red button" onClick={this.showTutorial}>Tutorial</button>
             )}
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
-              <button href="#" className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
+              <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
             {/*TEMPORARILY REMOVED: CRIBSHEET
-            <button href="#" className="white-red button">Your Crib Sheet</button>*/}
+            <button className="white-red button">Your Crib Sheet</button>*/}
             <img className="divider" role="presentation" src={Divider} />
 
 
-            <button href="#" className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
+            <button className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
           </div>
         </section>
 
