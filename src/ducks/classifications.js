@@ -1,16 +1,23 @@
+import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
+import { resetAnnotations, setAnnotations } from './annotations';
+import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotations';
 import { fetchSubject } from './subject';
 import { resetView } from './subject-viewer';
+
+import { toggleDialog } from '../ducks/dialog';
+import ClassificationPrompt from '../components/ClassificationPrompt';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
 const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
+const CREATE_CLASSIFICATION_ERROR = 'CREATE_CLASSIFICATION_ERROR';
 const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
 
 const CLASSIFICATION_STATUS = {
@@ -33,6 +40,11 @@ const classificationReducer = (state = initialState, action) => {
         classification: action.classification,
         status: CLASSIFICATION_STATUS.IDLE,
         subjectCompletionAnswers: {},
+      });
+
+    case CREATE_CLASSIFICATION_ERROR:
+      return Object.assign({}, state, {
+        status: CLASSIFICATION_STATUS.ERROR
       });
 
     case SUBMIT_CLASSIFICATION:
@@ -67,37 +79,46 @@ const classificationReducer = (state = initialState, action) => {
 
 const createClassification = () => {
   return (dispatch, getState) => {
+    let savedClassificationPrompt = false;
     let workflow_version = '';
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
 
     const user = getState().login.user;
-    console.log(user);
+    if (user) {
+      const savedClassification = localStorage.getItem('classificationID');
+      if (savedClassification) savedClassificationPrompt = true;
+    }
 
-    const classification = apiClient.type('classifications').create({
-      annotations: [],
-      metadata: {
-        workflow_version,
-        started_at: (new Date).toISOString(),
-        user_agent: navigator.userAgent,
-        user_language: counterpart.getLocale(),
-        utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
-        subject_dimensions: [],
-      },
-      links: {
-        project: getState().project.id,
-        workflow: getState().workflow.id,
-        subjects: [getState().subject.id]
-      }
-    });
-    classification._workflow = getState().workflow.data;
-    classification._subjects = [getState().subject.currentSubject];
+    if (savedClassificationPrompt) {
+      dispatch(toggleDialog(<ClassificationPrompt />));
+    } else {
+      const classification = apiClient.type('classifications').create({
+        annotations: [],
+        metadata: {
+          workflow_version,
+          started_at: (new Date).toISOString(),
+          user_agent: navigator.userAgent,
+          user_language: counterpart.getLocale(),
+          utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
+          subject_dimensions: [],
+        },
+        links: {
+          project: getState().project.id,
+          workflow: getState().workflow.id,
+          subjects: [getState().subject.id]
+        }
+      });
+      classification._workflow = getState().workflow.data;
+      classification._subjects = [getState().subject.currentSubject];
 
-    dispatch({
-      type: CREATE_CLASSIFICATION,
-      classification
-    });
+      dispatch({
+        type: CREATE_CLASSIFICATION,
+        classification
+      });
+    }
+
   };
 };
 
@@ -193,6 +214,29 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
   };
 };
 
+const retrieveClassification = (id) => {
+  return (dispatch) => {
+    apiClient.type('classifications/incomplete').get({ id })
+    .then(([classification]) => {
+      const subjectId = classification.links.subjects.shift();
+      const annotations = classification.annotations.shift();
+      dispatch(setAnnotations(annotations.value));
+
+      dispatch({
+        type: CREATE_CLASSIFICATION,
+        classification,
+        status: CLASSIFICATION_STATUS.IDLE,
+        subjectCompletionAnswers: {},
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: CREATE_CLASSIFICATION_ERROR
+      })
+    });
+  };
+};
+
 const saveClassification = () => {
   return (dispatch, getState) => {
     let task = "T0";
@@ -233,5 +277,6 @@ export {
   createClassification,
   submitClassification,
   saveClassification,
+  retrieveClassification,
   setSubjectCompletionAnswers,
 };

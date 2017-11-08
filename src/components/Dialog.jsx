@@ -27,6 +27,9 @@ class Dialog extends React.Component {
     const defaultPosition = { x, y, height, width };
     const enableResize = this.props.enableResize ? { bottomRight: true } : false;
     const resizeClass = this.props.enableResize ? { bottomRight: "drag-handler" } : false;
+    const children = React.Children.map(this.props.children, (child) => {
+      return React.cloneElement(child, { onClose: this.close });
+    });
 
     return (
       <Rnd
@@ -39,7 +42,7 @@ class Dialog extends React.Component {
         <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
           <div className="popup-content dialog-content">
             <button className="close-button" onClick={this.close}>X</button>
-            {this.props.children}
+            {children}
           </div>
         </div>
       </Rnd>
