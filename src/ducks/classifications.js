@@ -3,7 +3,6 @@ import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
-import { fetchAnnotations } from './previousAnnotations';
 import { fetchSubject } from './subject';
 import { resetView } from './subject-viewer';
 
