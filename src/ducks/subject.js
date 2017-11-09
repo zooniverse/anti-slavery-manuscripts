@@ -165,13 +165,14 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     dispatch({
       type: FETCH_SUBJECT,
     });
-    
+
     //BETA_ONLY
     //----------------
-    const subjectQuery = {
+    let subjectQuery = {
       workflow_id: id,
       subject_set_id: config.zooniverseLinks.betaSubjectSet,
     };
+
     //----------------
 
     //Removed for //BETA_ONLY
@@ -196,6 +197,11 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     }
     */
     //----------------
+
+    const gsMode = getState().workflow.goldStandardMode;
+    if (gsMode) {
+      subjectQuery = { workflow_id: config.zooniverseLinks.gsWorkflow };
+    }
 
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
