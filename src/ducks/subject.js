@@ -9,7 +9,10 @@ project.
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config, subjectSets } from '../config';
+
 import { createClassification } from './classifications';
+import { resetAnnotations } from './annotations';
+import { resetPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer'
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
@@ -200,9 +203,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
             favorite: currentSubject.favorite || false,
           });
 
-          //Once we have a Subject, create an empty Classification to go with it.
-          dispatch(createClassification());
-          dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
+          prepareForNewSubject(dispatch);
         })
         .catch((err) => {
           console.error(err);
@@ -222,11 +223,20 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
         favorite: currentSubject.favorite || false,
       });
 
-      //Once we have a Subject, create an empty Classification to go with it.
-      dispatch(createClassification());
-      dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
+      prepareForNewSubject(dispatch);
     }
   };
+};
+
+/*  In preparation for a new Subject being successfully loaded, reset all
+    existing Annotations, reset all Previous Annotations, create a new
+    Classification, and set the viewer back to page 1.
+ */
+const prepareForNewSubject = (dispatch) => {
+  dispatch(resetAnnotations());
+  dispatch(resetPreviousAnnotations());
+  dispatch(createClassification());
+  dispatch(changeFrame(0));
 };
 
 export default subjectReducer;
