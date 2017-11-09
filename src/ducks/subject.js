@@ -12,7 +12,7 @@ import { config, subjectSets } from '../config';
 
 import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
-import { resetPreviousAnnotations } from './previousAnnotations';
+import { fetchPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer'
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
@@ -229,12 +229,12 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
 };
 
 /*  In preparation for a new Subject being successfully loaded, reset all
-    existing Annotations, reset all Previous Annotations, create a new
-    Classification, and set the viewer back to page 1.
+    existing Annotations, (reset then) fetch the corresponding Previous
+    Annotations, create a new Classification, and set the viewer back to page 1.
  */
 const prepareForNewSubject = (dispatch) => {
   dispatch(resetAnnotations());
-  dispatch(resetPreviousAnnotations());
+  dispatch(fetchPreviousAnnotations());
   dispatch(createClassification());
   dispatch(changeFrame(0));
 };

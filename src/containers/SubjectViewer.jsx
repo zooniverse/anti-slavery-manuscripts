@@ -29,7 +29,6 @@ import { Utility } from '../lib/Utility';
 import { fetchSubject, setImageMetadata, SUBJECT_STATUS } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
-import { fetchAnnotations } from '../ducks/previousAnnotations';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -201,10 +200,6 @@ class SubjectViewer extends React.Component {
       this.setState({
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
       });
-    }
-
-    if (this.props.currentSubject !== next.currentSubject) {
-      this.props.dispatch(fetchAnnotations(next.currentSubject));
     }
   }
 
