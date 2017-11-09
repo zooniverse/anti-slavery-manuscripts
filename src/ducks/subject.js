@@ -156,7 +156,18 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
     dispatch({
       type: FETCH_SUBJECT,
     });
+    
+    //BETA_ONLY
+    //----------------
+    const subjectQuery = {
+      workflow_id: id,
+      subject_set_id: config.zooniverseLinks.betaSubjectSet,
+    };
+    //----------------
 
+    //Removed for //BETA_ONLY
+    //----------------
+    /*
     let randomSubjectSet;
     const workflow = getState().workflow.data;
     if (workflow && workflow.links.subject_sets.length) {
@@ -174,6 +185,8 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
     if (getState().subject.subjectSet) {
       subjectQuery.subject_set_id = getState().subject.subjectSet;
     }
+    */
+    //----------------
 
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
