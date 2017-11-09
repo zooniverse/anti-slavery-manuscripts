@@ -29,8 +29,8 @@ const baseConfig = {
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
       workflowId: '3017',
-      betaSet: '4375',
       collabWorkflowId: '3085',
+      betaSubjectSet: '4375',  //BETA_ONLY
     },
   },
   production: {
@@ -41,8 +41,8 @@ const baseConfig = {
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
       workflowId: '5329',
-      betaSet: '16228',
       collabWorkflowId: '5339',
+      betaSubjectSet: '16228',  //BETA_ONLY
     },
   }
 };
@@ -63,7 +63,6 @@ const baseSubjectSets = {
     { title: '1870-1900', id: '15526' }
   ]
 };
-
 
 baseConfig.staging = baseConfig.development;  //staging === development, as far as we're concerned.
 baseSubjectSets.staging = baseSubjectSets.development;

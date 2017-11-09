@@ -94,7 +94,9 @@ class Home extends React.Component {
           </div>
 
           <Link to="/classify">Start Transcribing</Link>
-{/*       NOTE: Hide Subject Set Selection During Beta Launch.
+          {/*
+          //BETA_ONLY
+          NOTE: Hide Subject Set Selection During Beta Launch.
           <h3 className="transcribe">
             <Link onClick={this.setSubjectSet.bind(this, null)} to="/classify">Transcribe Random &#8608;</Link>
           </h3>
@@ -104,7 +106,8 @@ class Home extends React.Component {
           </span>
           <div className="home-page__topic-select flex-row">
             {this.renderTopics()}
-          </div> */}
+          </div>
+          */}
         </div>
         <div id="home-logos" className="home-page__logos flex-row">
           <a href="https://www.zooniverse.org">
