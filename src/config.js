@@ -29,7 +29,8 @@ const baseConfig = {
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
       workflowId: '3017',
-      betaSet: '4375'
+      betaSet: '4375',
+      collabWorkflowId: '3085',
     },
   },
   production: {
@@ -40,7 +41,8 @@ const baseConfig = {
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
       workflowId: '5329',
-      betaSet: '16228'
+      betaSet: '16228',
+      collabWorkflowId: '5339',
     },
   }
 };

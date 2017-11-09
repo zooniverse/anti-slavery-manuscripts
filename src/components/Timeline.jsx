@@ -26,6 +26,7 @@ class Timeline extends React.Component {
     this.renderEvent = this.renderEvent.bind(this);
     this.renderText = this.renderText.bind(this);
     this.renderGroups = this.renderGroups.bind(this);
+    this.handleOnBlur = this.handleOnBlur.bind(this);
 
     this.state = {
       activeEvent: null,
@@ -72,13 +73,23 @@ class Timeline extends React.Component {
     this.setState({ clickIndex: null })
   }
 
+  handleKeyPress(data, e) {
+    if (e.keyCode === 13) {
+      this.handleMouseEnter(data);
+    }
+  }
+
+  handleOnBlur() {
+    this.setState({ activeEvent: null });
+  }
+
   renderEvent(event, i) {
     const position = this.dateFinder(event.year);
     const clicked = this.state.clickIndex == i ? true : false;
     const data = { x: position.placement, event: event, i };
 
     return (
-      <g key={i} transform={`translate(${position.placement}, ${60})`} onMouseDown={this.handleMouseEnter.bind(this, data)} >
+      <g key={i} tabIndex={0} onKeyUp={this.handleKeyPress.bind(this, data)} onBlur={this.handleOnBlur} transform={`translate(${position.placement}, ${60})`} onMouseDown={this.handleMouseEnter.bind(this, data)} >
         <line
           ref={(c) => {this.test = c;} }
           className="event-line"

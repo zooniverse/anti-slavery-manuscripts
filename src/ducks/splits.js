@@ -1,6 +1,7 @@
 import { Split } from 'seven-ten';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
+import { fetchWorkflow } from './workflow';
 
 const FETCH_SPLIT = 'FETCH_SPLIT';
 const FETCH_SPLIT_SUCCESS = 'FETCH_SPLIT_SUCCESS';
@@ -65,31 +66,42 @@ const splitReducer = (state = initialState, action) => {
 
 const fetchSplit = (user) => {
   return (dispatch) => {
+    let variant = VARIANT_TYPES.INDIVIDUAL;
 
     dispatch({
       type: FETCH_SPLIT,
     });
 
-    Split.load(config.zooniverseLinks.projectSlug).then((splits) => {
-      let variant = VARIANT_TYPES.INDIVIDUAL;
+    if (user) {
+      Split.load(config.zooniverseLinks.projectSlug).then((splits) => {
+        const split = splits && splits['classifier.collaborative'];
+        const id = split && split.id;
+        const hasElementKey = split && 'div' in split.variant.value;
+        const isShown = split && split.variant.value['div'];
 
-      const split = splits && splits['classifier.collaborative'];
-      const id = split && split.id;
-      const hasElementKey = split && 'div' in split.variant.value;
-      const isShown = split && split.variant.value['div'];
+        if (!split || isShown || !hasElementKey) {
+          variant = VARIANT_TYPES.COLLABORATIVE;
+        }
 
-      if (!split || isShown || !hasElementKey) {
-        variant = VARIANT_TYPES.COLLABORATIVE;
-      }
-
+        dispatch({
+          type: FETCH_SPLIT_SUCCESS,
+          id, variant, splits
+        });
+        dispatch(fetchWorkflow(variant));
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_SPLIT_ERROR });
+        dispatch(fetchWorkflow(variant));
+      })
+    } else {
       dispatch({
         type: FETCH_SPLIT_SUCCESS,
-        id, variant, splits
+        id: null,
+        variant: VARIANT_TYPES.INDIVIDUAL,
+        data: null
       });
-    })
-    .catch((err) => {
-      dispatch({ type: FETCH_SPLIT_ERROR });
-    })
+      dispatch(fetchWorkflow(variant));
+    }
   }
 };
 

@@ -15,7 +15,7 @@ import {
 class SubmitClassificationForm extends React.Component {
   constructor(props) {
     super(props);
-  
+
     this.completeClassification = this.completeClassification.bind(this);
     this.submitClassificationAndRedirect = this.submitClassificationAndRedirect.bind(this);
   }
@@ -24,7 +24,7 @@ class SubmitClassificationForm extends React.Component {
 
   render() {
     let numberOfAnswersMatchQuestions = true;
-    
+
     if (this.props.subjectCompletionAnswers && this.props.workflowData) {
       const numberOfQuestions = Object.keys(this.props.workflowData.tasks)
       .map((taskId) => {
@@ -40,27 +40,27 @@ class SubmitClassificationForm extends React.Component {
       const numberOfAnswers = Object.keys(this.props.subjectCompletionAnswers).length;
       numberOfAnswersMatchQuestions = numberOfQuestions === numberOfAnswers;
     }
-    
+
     return (
       <div className="submit-classification-form">
         <h2>Submit Classification</h2>
         {this.renderSubjectCompletionQuestions()}
         <div className="action-buttons">
-          <button href="#" className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Cancel</button>
-          <button href="#" disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'white-green button' : 'disabled button'} onClick={this.completeClassification}>Done</button>
-          <button href="#" disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'green button' : 'disabled button'} onClick={this.submitClassificationAndRedirect}>
+          <button className="white-green button" onClick={() => { this.props.closePopup && this.props.closePopup(); }}>Cancel</button>
+          <button disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'white-green button' : 'disabled button'} onClick={this.completeClassification}>Done</button>
+          <button disabled={!numberOfAnswersMatchQuestions} className={(numberOfAnswersMatchQuestions) ? 'green button' : 'disabled button'} onClick={this.submitClassificationAndRedirect}>
             Done &amp; Talk
           </button>
         </div>
       </div>
     );
   }
-  
+
   completeClassification() {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'complete-classification' });
     }
-    
+
     this.props.dispatch(submitClassification())
     this.props.closePopup && this.props.closePopup();
   }
@@ -69,12 +69,12 @@ class SubmitClassificationForm extends React.Component {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
     }
-    
+
     this.props.dispatch(submitClassification())
     this.props.closePopup && this.props.closePopup();
     window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
-  
+
   /*  This function renders all the non-transcription Panoptes tasks (i.e.
       questions) provided by the workflow.
       A special note on the way that this Panoptes transcription project is
@@ -86,7 +86,7 @@ class SubmitClassificationForm extends React.Component {
    */
   renderSubjectCompletionQuestions() {
     if (!this.props.workflowData) return null;
-    
+
     //Display all question tasks, except for the first task.
     const tasks = (this.props.workflowData.tasks)
       ? Object.keys(this.props.workflowData.tasks)
@@ -100,7 +100,7 @@ class SubmitClassificationForm extends React.Component {
           return isAQuestionTask(task, this.props.workflowData);
         })
       : [];
-    
+
     return (
       <div className="tasks body-copy">
         {tasks.map((task, taskIndex) =>{
