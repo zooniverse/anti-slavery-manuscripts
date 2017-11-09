@@ -203,7 +203,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
             favorite: currentSubject.favorite || false,
           });
 
-          prepareForNewSubject(dispatch);
+          prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
           console.error(err);
@@ -223,7 +223,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
         favorite: currentSubject.favorite || false,
       });
 
-      prepareForNewSubject(dispatch);
+      prepareForNewSubject(dispatch, currentSubject);
     }
   };
 };
@@ -232,9 +232,9 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
     existing Annotations, (reset then) fetch the corresponding Previous
     Annotations, create a new Classification, and set the viewer back to page 1.
  */
-const prepareForNewSubject = (dispatch) => {
+const prepareForNewSubject = (dispatch, subject) => {
   dispatch(resetAnnotations());
-  dispatch(fetchPreviousAnnotations());
+  dispatch(fetchPreviousAnnotations(subject));
   dispatch(createClassification());
   dispatch(changeFrame(0));
 };
