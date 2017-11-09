@@ -89,7 +89,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const isExpert = this.props.userRoles.indexOf(EXPERT || OWNER) >= 0;
+    const isExpert = this.props.userRoles.some(role => { return role === EXPERT || role === OWNER });
 
     return (
       <main className="app-content home-page">
@@ -119,7 +119,7 @@ class Home extends React.Component {
           </div>
           */}
           {isExpert && (
-            <div>
+            <div className="gold-standard-toggle">
               <input type="checkbox" onClick={this.toggleGoldStandard} id="goldStandard" checked={this.props.goldStandardMode} />
               <label htmlFor="goldStandard">Gold Standard Mode</label>
             </div>
