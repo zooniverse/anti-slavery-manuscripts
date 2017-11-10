@@ -6,7 +6,7 @@ import { Split } from 'seven-ten';
 
 import { resetAnnotations, setAnnotations } from './annotations';
 import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotations';
-import { fetchSubject } from './subject';
+import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
 
 import { toggleDialog } from '../ducks/dialog';
@@ -221,6 +221,7 @@ const retrieveClassification = (id) => {
       const subjectId = classification.links.subjects.shift();
       const annotations = classification.annotations.shift();
       dispatch(setAnnotations(annotations.value));
+      dispatch(fetchSavedSubject(subjectId));
 
       dispatch({
         type: CREATE_CLASSIFICATION,

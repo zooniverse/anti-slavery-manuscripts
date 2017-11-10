@@ -53,7 +53,7 @@ const subjectReducer = (state = initialState, action) => {
         imageMetadata: [],
         status: SUBJECT_STATUS.READY,
         id: action.id,
-        queue: action.queue,
+        queue: action.queue || state.queue,
         favorite: action.favorite,
       });
 
@@ -165,7 +165,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     dispatch({
       type: FETCH_SUBJECT,
     });
-    
+
     //BETA_ONLY
     //----------------
     const subjectQuery = {
@@ -245,11 +245,30 @@ const prepareForNewSubject = (dispatch, subject) => {
   dispatch(changeFrame(0));
 };
 
+const fetchSavedSubject = (id) => {
+  return (dispatch) => {
+    apiClient.type('subjects').get(id)
+    .then((currentSubject) => {
+      dispatch(changeFrame(0));
+      dispatch({
+        type: FETCH_SUBJECT_SUCCESS,
+        favorite: currentSubject.favorite || false,
+        currentSubject, id,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      dispatch({ type: FETCH_SUBJECT_ERROR });
+    })
+  };
+};
+
 export default subjectReducer;
 
 export {
   toggleFavorite,
   fetchSubject,
+  fetchSavedSubject,
   selectSubjectSet,
   setImageMetadata,
   SUBJECT_STATUS,
