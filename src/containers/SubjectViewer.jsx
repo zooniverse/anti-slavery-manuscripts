@@ -547,7 +547,7 @@ SubjectViewer.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   //--------
-  selectedAnnotations: null,
+  selectedAnnotation: null,
 };
 
 SubjectViewer.contextTypes = {
