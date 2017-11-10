@@ -457,14 +457,18 @@ class SubjectViewer extends React.Component {
 SubjectViewer.propTypes = {
   dispatch: PropTypes.func,
   //--------
+  splits: PropTypes.object,
+  user: PropTypes.shape({
+    id: PropTypes.string
+  }),
+  //--------
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
+  subjectStatus: PropTypes.string,
+  //--------
   contrast: PropTypes.bool,
-  dispatch: PropTypes.func,
   frame: PropTypes.number,
-  imageSize: PropTypes.object,
-  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -478,6 +482,8 @@ SubjectViewer.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
+  //--------
+  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   //--------
   annotationsStatus: PropTypes.string,
   annotationInProgress: PropTypes.shape({
@@ -496,6 +502,7 @@ SubjectViewer.propTypes = {
       })),
     })
   ),
+  //--------
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -503,17 +510,16 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
-  splits: PropTypes.object,
-  user: PropTypes.shape({
-    id: PropTypes.string
-  })
 };
 SubjectViewer.defaultProps = {
-  contrast: false,
+  splits: null,
+  user: null,
+  //-------
   currentSubject: null,
+  subjectStatus: SUBJECT_STATUS.IDLE,
+  //-------
+  contrast: false,
   frame: 0,
-  //--------
-  previousAnnotations: [],
   rotation: 0,
   scaling: 1,
   selectedAnnotation: null,
@@ -529,11 +535,13 @@ SubjectViewer.defaultProps = {
     height: 0,
   },
   //--------
+  previousAnnotations: [],
+  //--------
   annotationsStatus: ANNOTATION_STATUS.IDLE,
   annotationInProgress: null,
   annotations: [],
-  splits: null,
-  user: null
+  //--------
+  selectedAnnotations: null,
 };
 
 SubjectViewer.contextTypes = {
@@ -544,11 +552,14 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
   const sv = state.subjectViewer;
   const anno = state.annotations;
   return {
-    currentSubject: state.subject.currentSubject,
-    contrast: sv.contrast,
+    splits: state.splits.data,
+    user: state.login.user,
     //--------
+    currentSubject: state.subject.currentSubject,
+    subjectStatus: state.subject.status,
+    //--------
+    contrast: sv.contrast,
     frame: sv.frame,
-    previousAnnotations: state.previousAnnotations.marks,
     rotation: sv.rotation,
     scaling: sv.scaling,
     translationX: sv.translationX,
@@ -557,12 +568,13 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     viewerSize: sv.viewerSize,
     imageSize: sv.imageSize,
     //--------
+    previousAnnotations: state.previousAnnotations.marks,
+    //--------
     annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
+    //--------
     selectedAnnotation: state.annotations.selectedAnnotation,
-    splits: state.splits.data,
-    user: state.login.user
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store
