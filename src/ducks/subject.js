@@ -9,7 +9,10 @@ project.
  */
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config, subjectSets } from '../config';
+
 import { createClassification } from './classifications';
+import { resetAnnotations } from './annotations';
+import { fetchPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer'
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
@@ -150,8 +153,14 @@ const selectSubjectSet = (id) => {
   };
 }
 
-const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
+/*  Fetches a Subject from Panoptes, based on the specified/default Panoptes
+    Workflow ID. If `initialFetch` is true, then this call to fetchSubject() is
+    meant to be the first fetchSubject of the user's session. Hence, the Subject
+    will ONLY be fetched IF no Subject has previously been fetched.
+ */
+const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
   return (dispatch, getState) => {
+    if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
 
     dispatch({
       type: FETCH_SUBJECT,
@@ -200,9 +209,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
             favorite: currentSubject.favorite || false,
           });
 
-          //Once we have a Subject, create an empty Classification to go with it.
-          dispatch(createClassification());
-          dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
+          prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
           console.error(err);
@@ -222,11 +229,20 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
         favorite: currentSubject.favorite || false,
       });
 
-      //Once we have a Subject, create an empty Classification to go with it.
-      dispatch(createClassification());
-      dispatch(changeFrame(0));  //...and reset the Subject Viewer back to page 1.
+      prepareForNewSubject(dispatch, currentSubject);
     }
   };
+};
+
+/*  In preparation for a new Subject being successfully loaded, reset all
+    existing Annotations, (reset then) fetch the corresponding Previous
+    Annotations, create a new Classification, and set the viewer back to page 1.
+ */
+const prepareForNewSubject = (dispatch, subject) => {
+  dispatch(resetAnnotations());
+  dispatch(fetchPreviousAnnotations(subject));
+  dispatch(createClassification());
+  dispatch(changeFrame(0));
 };
 
 export default subjectReducer;

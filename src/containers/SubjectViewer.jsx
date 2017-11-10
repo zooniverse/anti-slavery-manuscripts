@@ -26,10 +26,9 @@ import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
 import { Utility } from '../lib/Utility';
-import { fetchSubject, setImageMetadata, SUBJECT_STATUS } from '../ducks/subject';
+import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
-import { fetchAnnotations } from '../ducks/previousAnnotations';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -193,18 +192,22 @@ class SubjectViewer extends React.Component {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
-    this.props.dispatch(fetchSubject());  //Fetch the first subject.
+    
+    //Fetch the first subject, IF no subject has yet been loaded.
+    //Fetching a subject will also ensure a clean slate for Annotations,
+    //Previous Annotations, and Classifications.
+    this.props.dispatch(fetchSubject(
+      undefined,  //JS Quirk: this ensures we're fetching the default value for the 'id' parameter (as defined in fetchSubject())
+      true,  //Initial fetch only, meaning ignore this action call if a Subject is already being fetch/has already been loaded.
+    ));
   }
 
   componentWillReceiveProps(next) {
+    //An annotation was just selected.
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />
       });
-    }
-
-    if (this.props.currentSubject !== next.currentSubject) {
-      this.props.dispatch(fetchAnnotations(next.currentSubject));
     }
   }
 
@@ -462,14 +465,17 @@ class SubjectViewer extends React.Component {
 SubjectViewer.propTypes = {
   dispatch: PropTypes.func,
   //--------
+  splits: PropTypes.object,
+  user: PropTypes.shape({
+    id: PropTypes.string
+  }),
+  //--------
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
+  //--------
   contrast: PropTypes.bool,
-  dispatch: PropTypes.func,
   frame: PropTypes.number,
-  imageSize: PropTypes.object,
-  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   rotation: PropTypes.number,
   scaling: PropTypes.number,
   translationX: PropTypes.number,
@@ -483,6 +489,8 @@ SubjectViewer.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
+  //--------
+  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   //--------
   annotationsStatus: PropTypes.string,
   annotationInProgress: PropTypes.shape({
@@ -501,6 +509,7 @@ SubjectViewer.propTypes = {
       })),
     })
   ),
+  //--------
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -508,17 +517,15 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
-  splits: PropTypes.object,
-  user: PropTypes.shape({
-    id: PropTypes.string
-  })
 };
 SubjectViewer.defaultProps = {
-  contrast: false,
+  splits: null,
+  user: null,
+  //-------
   currentSubject: null,
+  //-------
+  contrast: false,
   frame: 0,
-  //--------
-  previousAnnotations: [],
   rotation: 0,
   scaling: 1,
   selectedAnnotation: null,
@@ -534,11 +541,13 @@ SubjectViewer.defaultProps = {
     height: 0,
   },
   //--------
+  previousAnnotations: [],
+  //--------
   annotationsStatus: ANNOTATION_STATUS.IDLE,
   annotationInProgress: null,
   annotations: [],
-  splits: null,
-  user: null
+  //--------
+  selectedAnnotation: null,
 };
 
 SubjectViewer.contextTypes = {
@@ -549,11 +558,13 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
   const sv = state.subjectViewer;
   const anno = state.annotations;
   return {
-    currentSubject: state.subject.currentSubject,
-    contrast: sv.contrast,
+    splits: state.splits.data,
+    user: state.login.user,
     //--------
+    currentSubject: state.subject.currentSubject,
+    //--------
+    contrast: sv.contrast,
     frame: sv.frame,
-    previousAnnotations: state.previousAnnotations.marks,
     rotation: sv.rotation,
     scaling: sv.scaling,
     translationX: sv.translationX,
@@ -562,12 +573,13 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     viewerSize: sv.viewerSize,
     imageSize: sv.imageSize,
     //--------
+    previousAnnotations: state.previousAnnotations.marks,
+    //--------
     annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
+    //--------
     selectedAnnotation: state.annotations.selectedAnnotation,
-    splits: state.splits.data,
-    user: state.login.user
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

@@ -3,8 +3,6 @@ import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
-import { resetAnnotations } from './annotations';
-import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotations';
 import { fetchSubject } from './subject';
 import { resetView } from './subject-viewer';
 
@@ -165,9 +163,7 @@ const submitClassification = () => {
 
       //Reset values in preparation for the next Subject.
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
-      dispatch(resetAnnotations());
-      dispatch(resetPreviousAnnotations());
-      dispatch(fetchSubject());  //Note: fetching a Subject will also create an empty Classification.
+      dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
       dispatch(resetView());
     })
 

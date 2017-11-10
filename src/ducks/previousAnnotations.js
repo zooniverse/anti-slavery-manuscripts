@@ -2,17 +2,10 @@ import { request } from 'graphql-request';
 import { constructCoordinates, constructText } from '../lib/construct-previous-annotations';
 import { config, CONSENSUS_SCORE } from '../config.js';
 
-const initialState = {
-  data: null,
-  marks: [],
-  selectedPreviousAnnotation: null
-};
-
 const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const FETCH_ANNOTATIONS_SUCCESS = 'FETCH_ANNOTATIONS_SUCCESS';
 const FETCH_ANNOTATIONS_ERROR = 'FETCH_ANNOTATIONS_ERROR';
 
-const RESET_PREVIOUS_ANNOTATIONS = 'RESET_PREVIOUS_ANNOTATIONS';
 const UPDATE_FRAME ='UPDATE_FRAME';
 const UPDATE_PREVIOUS_ANNOTATION = 'UPDATE_PREVIOUS_ANNOTATION';
 const REENABLE_PREVIOUS_ANNOTATION = 'REENABLE_PREVIOUS_ANNOTATION';
@@ -24,13 +17,20 @@ const PREVIOUS_ANNOTATION_STATUS = {
   ERROR: 'previous_annotation_status_error',
 };
 
+const initialState = {
+  data: null,
+  marks: [],
+  selectedPreviousAnnotation: null,
+  status: PREVIOUS_ANNOTATION_STATUS.IDLE,
+};
+
 const previousAnnotationsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case RESET_PREVIOUS_ANNOTATIONS:
-      return initialState;
-
     case FETCH_ANNOTATIONS:
       return Object.assign({}, state, {
+        data: null,  //Reset
+        marks: [],  //Reset
+        selectedPreviousAnnotation: null,  //Reset
         status: PREVIOUS_ANNOTATION_STATUS.FETCHING
       });
 
@@ -94,13 +94,7 @@ const previousAnnotationsReducer = (state = initialState, action) => {
  };
 };
 
-const resetPreviousAnnotations = () => {
-  return (dispatch) => {
-    dispatch({ type: RESET_PREVIOUS_ANNOTATIONS });
-  };
-};
-
-const fetchAnnotations = (subject) => {
+const fetchPreviousAnnotations = (subject) => {
   if (!subject) return () => {};
 
   const query = `{
@@ -193,9 +187,8 @@ const constructAnnotations = (reductions, frame) => {
 export default previousAnnotationsReducer;
 
 export {
-  resetPreviousAnnotations,
   changeFrameData,
-  fetchAnnotations,
+  fetchPreviousAnnotations,
   updatePreviousAnnotation,
   reenablePreviousAnnotation,
 };
