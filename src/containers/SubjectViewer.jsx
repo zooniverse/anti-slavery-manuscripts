@@ -192,10 +192,18 @@ class SubjectViewer extends React.Component {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
-    this.props.dispatch(fetchSubject());  //Fetch the first subject. This will also ensure a clean slate for Annotations, Previous Annotations, and Classifications.
+    
+    //Fetch the first subject, IF no subject has yet been loaded.
+    //Fetching a subject will also ensure a clean slate for Annotations,
+    //Previous Annotations, and Classifications.
+    this.props.dispatch(fetchSubject(
+      undefined,  //JS Quirk: this ensures we're fetching the default value for the 'id' parameter (as defined in fetchSubject())
+      true,  //Initial fetch only, meaning ignore this action call if a Subject is already being fetch/has already been loaded.
+    ));
   }
 
   componentWillReceiveProps(next) {
+    //An annotation was just selected.
     if (!this.props.selectedAnnotation && next.selectedAnnotation) {
       this.setState({
         annotation: <SelectedAnnotation annotation={next.selectedAnnotation} onClose={this.closeAnnotation} />

@@ -153,8 +153,14 @@ const selectSubjectSet = (id) => {
   };
 }
 
-const fetchSubject = (id = config.zooniverseLinks.workflowId) => {
+/*  Fetches a Subject from Panoptes, based on the specified/default Panoptes
+    Workflow ID. If `initialFetch` is true, then this call to fetchSubject() is
+    meant to be the first fetchSubject of the user's session. Hence, the Subject
+    will ONLY be fetched IF no Subject has previously been fetched.
+ */
+const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
   return (dispatch, getState) => {
+    if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
 
     dispatch({
       type: FETCH_SUBJECT,
