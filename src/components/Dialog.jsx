@@ -19,7 +19,7 @@ class Dialog extends React.Component {
   }
 
   render() {
-    const width = 800;
+    const width = this.props.isPrompt ? 400 : 800;
     const height = 425;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2) + window.scrollY;
@@ -41,7 +41,9 @@ class Dialog extends React.Component {
       >
         <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
           <div className="popup-content dialog-content">
-            <button className="close-button" onClick={this.close}>X</button>
+            {!this.props.isPrompt && (
+              <button className="close-button" onClick={this.close}>X</button>
+            )}
             {children}
           </div>
         </div>
@@ -64,16 +66,19 @@ class Dialog extends React.Component {
 }
 
 Dialog.defaultProps = {
-  enableResize: true
+  enableResize: true,
+  isPrompt: false
 }
 
 Dialog.propTypes = {
   dispatch: PropTypes.func,
-  enableResize: PropTypes.bool
+  enableResize: PropTypes.bool,
+  isPrompt: PropTypes.bool
 }
 
 const mapStateToProps = (state) => ({
-  enableResize: state.dialog.enableResize
+  enableResize: state.dialog.enableResize,
+  isPrompt: state.dialog.isPrompt
 });
 
 export default connect(mapStateToProps)(Dialog);

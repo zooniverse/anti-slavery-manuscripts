@@ -9,9 +9,6 @@ import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotation
 import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
 
-import { toggleDialog } from '../ducks/dialog';
-import ClassificationPrompt from '../components/ClassificationPrompt';
-
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
@@ -79,45 +76,34 @@ const classificationReducer = (state = initialState, action) => {
 
 const createClassification = () => {
   return (dispatch, getState) => {
-    let savedClassificationPrompt = false;
     let workflow_version = '';
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
 
-    const user = getState().login.user;
-    if (user) {
-      const savedClassification = localStorage.getItem('classificationID');
-      if (savedClassification) savedClassificationPrompt = true;
-    }
+    const classification = apiClient.type('classifications').create({
+      annotations: [],
+      metadata: {
+        workflow_version,
+        started_at: (new Date).toISOString(),
+        user_agent: navigator.userAgent,
+        user_language: counterpart.getLocale(),
+        utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
+        subject_dimensions: [],
+      },
+      links: {
+        project: getState().project.id,
+        workflow: getState().workflow.id,
+        subjects: [getState().subject.id]
+      }
+    });
+    classification._workflow = getState().workflow.data;
+    classification._subjects = [getState().subject.currentSubject];
 
-    if (savedClassificationPrompt) {
-      dispatch(toggleDialog(<ClassificationPrompt />));
-    } else {
-      const classification = apiClient.type('classifications').create({
-        annotations: [],
-        metadata: {
-          workflow_version,
-          started_at: (new Date).toISOString(),
-          user_agent: navigator.userAgent,
-          user_language: counterpart.getLocale(),
-          utc_offset: ((new Date).getTimezoneOffset() * 60).toString(),
-          subject_dimensions: [],
-        },
-        links: {
-          project: getState().project.id,
-          workflow: getState().workflow.id,
-          subjects: [getState().subject.id]
-        }
-      });
-      classification._workflow = getState().workflow.data;
-      classification._subjects = [getState().subject.currentSubject];
-
-      dispatch({
-        type: CREATE_CLASSIFICATION,
-        classification
-      });
-    }
+    dispatch({
+      type: CREATE_CLASSIFICATION,
+      classification
+    });
 
   };
 };
@@ -129,6 +115,7 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
+    const user = getState().login.user;
 
     //TODO: Better error handling
     if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
@@ -181,7 +168,9 @@ const submitClassification = () => {
 
     //Successful save: reset everything, then get the next Subject.
     .then(() => {
-      localStorage.removeItem('classificationID');
+      if (user) {
+        localStorage.removeItem(`${user.id}.classificationID`);
+      }
       //Log
       console.log('Submit classification: Success');
       Split.classificationCreated(classification);
@@ -244,6 +233,7 @@ const saveClassification = () => {
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
     }
+    const user = getState().login.user;
 
     const annotations = {
       _key: Math.random(),
@@ -254,17 +244,19 @@ const saveClassification = () => {
 
     const classification = getState().classifications.classification;
     classification.annotations.push(annotations);
-    // classification.update({
-    //   completed: false,
-    //   'metadata.session': getSessionID(),
-    //   'metadata.finished_at': (new Date()).toISOString(),
-    // }).save()
-    //   .catch((err) => {
-    //     console.log(err);
-    //   })
-    //   .then((classification) => {
-    //     localStorage.setItem('classificationID', classification.id);
-    //   });
+    classification.update({
+      completed: false,
+      'metadata.session': getSessionID(),
+      'metadata.finished_at': (new Date()).toISOString(),
+    }).save()
+      .catch((err) => {
+        console.log(err);
+      })
+      .then((classification) => {
+        if (user) {
+          localStorage.setItem(`${user.id}.classificationID`, classification.id);
+        }
+      });
   };
 };
 

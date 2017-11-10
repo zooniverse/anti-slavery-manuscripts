@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
 import { config } from '../config';
+import { browserHistory } from 'react-router';
 
 import {
   setRotation, setContrast, resetView,
@@ -302,6 +303,7 @@ class ClassifierContainer extends React.Component {
   }
 
   saveCurrentClassification() {
+    browserHistory.push('/');
     this.props.dispatch(saveClassification());
   }
 }

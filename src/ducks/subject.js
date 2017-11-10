@@ -7,6 +7,7 @@ Zooniverse Panoptes API service, allowing us to retrieve subjects from a given
 project.
 
  */
+import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config, subjectSets } from '../config';
 
@@ -14,6 +15,8 @@ import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
 import { fetchPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer'
+import { toggleDialog } from './dialog';
+import ClassificationPrompt from '../components/ClassificationPrompt';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -160,7 +163,17 @@ const selectSubjectSet = (id) => {
  */
 const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
   return (dispatch, getState) => {
+
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
+
+    let savedClassificationPrompt = false;
+    const user = getState().login.user;
+
+    if (user) {
+      const savedClassification = localStorage.getItem(`${user.id}.classificationID`);
+      if (savedClassification) savedClassificationPrompt = true;
+    }
+
 
     dispatch({
       type: FETCH_SUBJECT,
@@ -217,7 +230,9 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
         });
     };
 
-    if (!getState().subject.queue.length) {
+    if (savedClassificationPrompt) {
+      dispatch(toggleDialog(<ClassificationPrompt />, false, true));
+    } else if (!getState().subject.queue.length) {
       fetchQueue();
     } else {
       const currentSubject = getState().subject.queue.shift();

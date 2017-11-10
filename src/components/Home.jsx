@@ -30,6 +30,7 @@ class Home extends React.Component {
     this.resizeBackground();
     this.fetchRecentSubjects();
     addEventListener('resize', this.resizeBackground);
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {
