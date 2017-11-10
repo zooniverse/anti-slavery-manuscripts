@@ -26,7 +26,7 @@ import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
 import { Utility } from '../lib/Utility';
-import { fetchSubject, setImageMetadata, SUBJECT_STATUS } from '../ducks/subject';
+import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 
@@ -473,7 +473,6 @@ SubjectViewer.propTypes = {
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
   }),
-  subjectStatus: PropTypes.string,
   //--------
   contrast: PropTypes.bool,
   frame: PropTypes.number,
@@ -524,7 +523,6 @@ SubjectViewer.defaultProps = {
   user: null,
   //-------
   currentSubject: null,
-  subjectStatus: SUBJECT_STATUS.IDLE,
   //-------
   contrast: false,
   frame: 0,
@@ -564,7 +562,6 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     user: state.login.user,
     //--------
     currentSubject: state.subject.currentSubject,
-    subjectStatus: state.subject.status,
     //--------
     contrast: sv.contrast,
     frame: sv.frame,
