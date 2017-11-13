@@ -6,14 +6,30 @@
 
   h2
     @extend .secondary-head
+    text-align: center
 
   span
     @extend .body-copy
     display: block
-    margin: 3em 1em
+    margin: 2em 0.5em
+
+    i
+      font-weight: 700
 
   div
     text-align: center
 
-  button
-    margin: 1em
+    button
+      border: 1px solid $teal
+      font-size: 0.8em
+      margin: 2em 1em
+      padding: 1em 1.75em
+
+      &:hover, &:focus
+        background: $forest-green
+
+    button:nth-child(2)
+      background: $aqua-marine
+
+      &:hover, &:focus
+        background: $forest-green

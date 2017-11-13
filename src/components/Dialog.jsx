@@ -19,7 +19,7 @@ class Dialog extends React.Component {
   }
 
   render() {
-    const width = this.props.isPrompt ? 400 : 800;
+    const width = this.props.isPrompt ? 450 : 800;
     const height = 425;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2) + window.scrollY;

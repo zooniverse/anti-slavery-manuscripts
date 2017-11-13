@@ -40,13 +40,16 @@ class ClassificationPrompt extends React.Component {
       <div className="classification-prompt">
         <h2>We found your saved work!</h2>
         <span>
-          Would you like to continue where you left off or begin working on a
-          new manuscript? <i>Note:</i> If you select "No", you will lose this
+          Would you like to continue your saved transcription or begin working on a
+          new manuscript?
+        </span>
+        <span>
+          <i>Note:</i> If you select "No", you will lose any
           saved work from a previous manuscript.
         </span>
         <div>
-          <button className="button" onClick={this.loadClassification}>Yes</button>
-          <button className="button" onClick={this.cancelClassification}>No</button>
+          <button className="button" onClick={this.cancelClassification}>New Manuscript</button>
+          <button className="button" onClick={this.loadClassification}>Continue Saved</button>
         </div>
       </div>
     );
