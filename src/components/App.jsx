@@ -54,7 +54,7 @@ class App extends React.Component {
       this.googleLogger.remember({ userID: nextProps.user.id });
     }
 
-    if (nextProps.splitStatus === SPLIT_STATUS.READY && this.props.variant !== nextProps.variant) {
+    if (nextProps.splitStatus !== this.props.splitStatus && nextProps.splitStatus === SPLIT_STATUS.READY) {
       this.googleLogger.remember({ cohort: nextProps.variant, experiment: nextProps.splitID });
     }
 
