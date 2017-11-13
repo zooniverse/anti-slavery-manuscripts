@@ -1,6 +1,7 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
 import { fetchSplit, setVariant, VARIANT_TYPES } from './splits';
+import { clearQueue } from './subject';
 
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
@@ -94,6 +95,7 @@ const setGoldStandard = () => {
     if (isActive) {
       dispatch(setVariant(VARIANT_TYPES.INDIVIDUAL));
       dispatch(retrieveWorkflow(config.zooniverseLinks.gsWorkflow));
+      dispatch(clearQueue());
     } else {
       dispatch(fetchSplit(user));
     }
