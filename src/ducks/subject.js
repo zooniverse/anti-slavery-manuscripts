@@ -163,7 +163,6 @@ const selectSubjectSet = (id) => {
  */
 const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
   return (dispatch, getState) => {
-
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
 
     let savedClassificationPrompt = false;

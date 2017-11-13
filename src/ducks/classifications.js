@@ -1,11 +1,9 @@
-import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
-import { resetAnnotations, setAnnotations } from './annotations';
-import { resetPreviousAnnotations, fetchAnnotations } from './previousAnnotations';
+import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
 
@@ -104,7 +102,6 @@ const createClassification = () => {
       type: CREATE_CLASSIFICATION,
       classification
     });
-
   };
 };
 

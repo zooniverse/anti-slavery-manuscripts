@@ -73,7 +73,7 @@ class App extends React.Component {
     const showTitle = path === '/classify';
 
     return (
-      <div style={{ "position": "relative" }}>
+      <div>
         <Header />
         <ProjectHeader showTitle={showTitle} />
         {this.props.children}
