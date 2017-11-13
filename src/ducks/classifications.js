@@ -93,7 +93,7 @@ const createClassification = () => {
 
     const isGS = getState().workflow.goldStandardMode;
     if (isGS) {
-      classification.gold_standard = true;
+      classification.update({ gold_standard: true });
     }
 
     dispatch({
