@@ -146,7 +146,7 @@ class ClassifierContainer extends React.Component {
               onClick={this.useAnnotationTool}
             >
               <span className="classifier-toolbar__icon">
-                <i className={`fa fa-plus-circle ${disableAnnotate ? 'disable-icon' : ''}`} />
+                <i className={`fa fa-plus-circle ${disableAnnotate && 'disable-icon'}`} />
               </span>
               <span>Annotate</span>
             </button>
