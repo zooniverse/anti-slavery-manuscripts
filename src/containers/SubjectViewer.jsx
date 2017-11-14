@@ -121,6 +121,9 @@ class SubjectViewer extends React.Component {
 
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
+        <div className="notification">
+          You&apos;ve already seen this subject. What's this?
+        </div>
 
         {(this.state.popup === null) ? null :
           <Popup className="annotation-reminder" onClose={this.closePopup.bind(this)}>
