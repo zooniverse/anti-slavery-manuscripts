@@ -27,8 +27,9 @@ class ProjectHeader extends React.Component {
   }
 
   feedbackVariant() {
-    return this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
-      'http://bit.ly/2mqvwvJ' : 'http://bit.ly/2zYLumx';
+    return this.props.variant === VARIANT_TYPES.INDIVIDUAL
+      ? 'https://goo.gl/forms/x0zAhMiS2KlzAMlE3'  //Individual-type users.
+      : 'https://goo.gl/forms/SfBPc0QyjGNkeWcK2';  //Collaborative-type users.
   }
 
   render() {
