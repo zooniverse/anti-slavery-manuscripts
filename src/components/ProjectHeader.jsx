@@ -71,6 +71,9 @@ class ProjectHeader extends React.Component {
               Talk
             </button>
           </a>
+          <a className="project-header__link" href="#">
+            Feedback
+          </a>
         </nav>
       </div>
     )
