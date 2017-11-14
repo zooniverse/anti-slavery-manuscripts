@@ -8,6 +8,7 @@ const FETCH_SPLIT_SUCCESS = 'FETCH_SPLIT_SUCCESS';
 const FETCH_SPLIT_ERROR = 'FETCH_SPLIT_ERROR';
 const CLEAR_SPLITS = 'CLEAR_SPLITS';
 const TOGGLE_OVERRIDE = 'TOGGLE_OVERRIDE';
+const SET_VARIANT = 'SET_VARIANT';
 
 
 const SPLIT_STATUS = {
@@ -57,6 +58,11 @@ const splitReducer = (state = initialState, action) => {
     case CLEAR_SPLITS:
       return Object.assign({}, state, {
         data: null
+      });
+
+    case SET_VARIANT:
+      return Object.assign({}, state, {
+        variant: action.variant
       });
 
     default:
@@ -123,6 +129,15 @@ const toggleOverride = () => {
   };
 }
 
+const setVariant = (variant) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_VARIANT,
+      variant
+    });
+  };
+}
+
 // Exports
 export default splitReducer;
 
@@ -130,6 +145,7 @@ export {
   clearSplits,
   fetchSplit,
   toggleOverride,
+  setVariant,
   SPLIT_STATUS,
   VARIANT_TYPES
 };

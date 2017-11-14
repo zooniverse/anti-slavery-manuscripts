@@ -8,11 +8,14 @@ import { ZooniverseLogotype, ZooniverseLogo } from 'zooniverse-react-components'
 import { config, subjectSets } from '../config';
 import SocialSection from '../components/SocialSection';
 import { selectSubjectSet } from '../ducks/subject';
+import { setGoldStandard } from '../ducks/workflow';
 import Divider from '../images/img_divider.png';
 import BostonLogo from '../images/BPL_logo.jpg';
 import IMLSLogo from '../images/imls_logo.png';
 
 const BUFFER = 50;
+const EXPERT = 'expert';
+const OWNER = 'owner';
 
 class Home extends React.Component {
   constructor() {
@@ -24,6 +27,7 @@ class Home extends React.Component {
     this.resizeBackground = this.resizeBackground.bind(this);
     this.fetchRecentSubjects = this.fetchRecentSubjects.bind(this);
     this.renderTopics = this.renderTopics.bind(this);
+    this.toggleGoldStandard = this.toggleGoldStandard.bind(this);
   }
 
   componentDidMount() {
@@ -67,6 +71,10 @@ class Home extends React.Component {
       })
   }
 
+  toggleGoldStandard() {
+    this.props.dispatch(setGoldStandard());
+  }
+
   renderTopics() {
     return subjectSets.map((set, i) => {
       return (
@@ -82,6 +90,8 @@ class Home extends React.Component {
   }
 
   render() {
+    const isExpert = this.props.userRoles.some(role => { return role === EXPERT || role === OWNER });
+
     return (
       <main className="app-content home-page">
         <div className="project-background" style={{ height: this.state.backgroundHeight }} />
@@ -109,6 +119,12 @@ class Home extends React.Component {
             {this.renderTopics()}
           </div>
           */}
+          {isExpert && (
+            <div className="gold-standard-toggle">
+              <input type="checkbox" onClick={this.toggleGoldStandard} id="goldStandard" checked={this.props.goldStandardMode} />
+              <label htmlFor="goldStandard">Gold Standard Mode</label>
+            </div>
+          )}
         </div>
         <div id="home-logos" className="home-page__logos flex-row">
           <a href="https://www.zooniverse.org">
@@ -141,20 +157,26 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
+  goldStandardMode: PropTypes.bool,
   project: PropTypes.shape({
     description: PropTypes.string
-  })
+  }),
+  userRoles: PropTypes.arrayOf(PropTypes.string)
 };
 
 Home.defaultProps = {
+  goldStandardMode: false,
   project: {
     description: ''
-  }
+  },
+  userRoles: []
 };
 
 const mapStateToProps = (state) => {
   return {
+    goldStandardMode: state.workflow.goldStandardMode,
     project: state.project.data,
+    userRoles: state.project.userRoles
   };
 };
 

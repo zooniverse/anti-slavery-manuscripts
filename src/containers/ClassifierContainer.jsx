@@ -92,6 +92,7 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
+    const disableAnnotate = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? "fa fa-eye" :
       (MARKS_STATE.USER === this.props.shownMarks) ? "fa fa-eye-slash" : "fa fa-eye-slash grey";
@@ -138,6 +139,12 @@ class ClassifierContainer extends React.Component {
         <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
           <div>
+            {this.props.goldStandardMode && (
+              <div className="gold-standard">
+                <i className="fa fa-star" />
+                <span>Gold Standard Mode</span>
+              </div>
+            )}
             <h2>Navigator</h2>
             <Navigator />
           </div>
@@ -146,11 +153,12 @@ class ClassifierContainer extends React.Component {
             <h2>Toolbar</h2>
 
             <button
+              disabled={disableAnnotate}
               className={(this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) ? 'flat-button block selected' : 'flat-button block'}
               onClick={this.useAnnotationTool}
             >
               <span className="classifier-toolbar__icon">
-                <i className="fa fa-plus-circle" />
+                <i className={`fa fa-plus-circle ${disableAnnotate && 'disable-icon'}`} />
               </span>
               <span>Annotate</span>
             </button>
@@ -314,6 +322,7 @@ ClassifierContainer.propTypes = {
     id: PropTypes.string,
   }),
   dispatch: PropTypes.func,
+  goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
@@ -323,6 +332,9 @@ ClassifierContainer.propTypes = {
   }),
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  selectedAnnotation: PropTypes.shape({
+    status: PropTypes.string
+  }),
   shownMarks: PropTypes.number,
   tutorial: PropTypes.shape({
     steps: PropTypes.array
@@ -340,12 +352,14 @@ ClassifierContainer.propTypes = {
 ClassifierContainer.defaultProps = {
   adminOverride: false,
   previousAnnotations: [],
+  goldStandardMode: false,
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
   project: null,
   rotation: 0,
   scaling: 1,
+  selectedAnnotation: null,
   shownMarks: 0,
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
@@ -363,6 +377,7 @@ const mapStateToProps = (state, ownProps) => {
     adminOverride: state.splits.adminOverride,
     classification: state.classifications.classification,
     currentSubject: state.subject.currentSubject,
+    goldStandardMode: state.workflow.goldStandardMode,
     previousAnnotations: state.previousAnnotations.marks,
     favoriteSubject: state.subject.favorite,
     guide: state.fieldGuide.guide,
@@ -372,6 +387,7 @@ const mapStateToProps = (state, ownProps) => {
     project: state.project.data,
     rotation: state.subjectViewer.rotation,
     scaling: state.subjectViewer.scaling,
+    selectedAnnotation: state.annotations.selectedAnnotation,
     shownMarks: state.subjectViewer.shownMarks,
     splits: state.splits.splits,
     tutorial: state.tutorial.data,

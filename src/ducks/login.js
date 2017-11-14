@@ -1,6 +1,8 @@
+import apiClient from 'panoptes-client/lib/api-client.js';
 import oauth from 'panoptes-client/lib/oauth';
-import { fetchPreferences } from './project';
+import { fetchPreferences, setUserRoles } from './project';
 import { fetchSplit } from './splits';
+import { config } from '../config';
 
 // Action Types
 const SET_LOGIN_USER = 'project/user/SET_LOGIN_USER';
@@ -51,6 +53,18 @@ const logoutFromPanoptes = () => {
 
 const setLoginUser = (user) => {
  return (dispatch) => {
+   if (user) {
+     apiClient.type('project_roles').get({ project_id: config.zooniverseLinks.projectId, user_id: user.id })
+     .then(([userRoles]) => {
+       if (userRoles) {
+         dispatch(setUserRoles(userRoles.roles));
+       }
+     })
+     .catch((err) => {
+       console.warn(err);
+     })
+   };
+
    dispatch({
      type: SET_LOGIN_USER,
      user,

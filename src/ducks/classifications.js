@@ -98,6 +98,11 @@ const createClassification = () => {
     classification._workflow = getState().workflow.data;
     classification._subjects = [getState().subject.currentSubject];
 
+    const isGS = getState().workflow.goldStandardMode;
+    if (isGS) {
+      classification.update({ gold_standard: true });
+    }
+
     dispatch({
       type: CREATE_CLASSIFICATION,
       classification
