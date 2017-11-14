@@ -34,6 +34,7 @@ import KeyboardShortcuts from '../components/KeyboardShortcuts';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
 import SubmitClassificationForm from '../components/SubmitClassificationForm';
+import CribSheet from '../components/CribSheet';
 
 const ROTATION_STEP = 90;
 
@@ -327,6 +328,7 @@ class ClassifierContainer extends React.Component {
   }
 
   toggleCribDraw() {
+    this.props.dispatch(toggleDialog(<CribSheet />));
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
   }
 
