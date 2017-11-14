@@ -21,6 +21,7 @@ const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 const SET_SUBJECT_SET = 'SET_SUBJECT_SET';
+const CLEAR_QUEUE = 'CLEAR_QUEUE';
 
 const SUBJECT_STATUS = {
   IDLE: 'subject_status_idle',
@@ -55,6 +56,13 @@ const subjectReducer = (state = initialState, action) => {
         id: action.id,
         queue: action.queue,
         favorite: action.favorite,
+      });
+
+    case CLEAR_QUEUE:
+      return Object.assign({}, state, {
+        queue: [],
+        status: action.status,
+        currentSubject: action.currentSubject
       });
 
     case SET_SUBJECT_SET:
@@ -165,13 +173,14 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     dispatch({
       type: FETCH_SUBJECT,
     });
-    
+
     //BETA_ONLY
     //----------------
-    const subjectQuery = {
+    let subjectQuery = {
       workflow_id: id,
       subject_set_id: config.zooniverseLinks.betaSubjectSet,
     };
+
     //----------------
 
     //Removed for //BETA_ONLY
@@ -196,6 +205,11 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     }
     */
     //----------------
+
+    const gsMode = getState().workflow.goldStandardMode;
+    if (gsMode) {
+      subjectQuery = { workflow_id: config.zooniverseLinks.gsWorkflow };
+    }
 
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
@@ -245,9 +259,20 @@ const prepareForNewSubject = (dispatch, subject) => {
   dispatch(changeFrame(0));
 };
 
+const clearQueue = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_QUEUE,
+      status: SUBJECT_STATUS.IDLE,
+      currentSubject: null
+    });
+  }
+}
+
 export default subjectReducer;
 
 export {
+  clearQueue,
   toggleFavorite,
   fetchSubject,
   selectSubjectSet,

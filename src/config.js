@@ -31,6 +31,7 @@ const baseConfig = {
       workflowId: '3017',
       collabWorkflowId: '3085',
       betaSubjectSet: '4375',  //BETA_ONLY
+      gsWorkflow: '3087'
     },
   },
   production: {
@@ -43,6 +44,7 @@ const baseConfig = {
       workflowId: '5329',
       collabWorkflowId: '5339',
       betaSubjectSet: '16228',  //BETA_ONLY
+      gsWorkflow: '5356'
     },
   }
 };

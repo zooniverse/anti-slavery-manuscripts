@@ -1,10 +1,12 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
-import { VARIANT_TYPES } from './splits';
+import { fetchSplit, setVariant, VARIANT_TYPES } from './splits';
+import { clearQueue } from './subject';
 
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
 const FETCH_WORKFLOW_ERROR = 'FETCH_WORKFLOW_ERROR';
+const SET_GOLD_STANDARD = 'SET_GOLD_STANDARD';
 
 const WORKFLOW_STATUS = {
   IDLE: 'workflow_status_idle',
@@ -17,6 +19,7 @@ const initialState = {
   status: WORKFLOW_STATUS.IDLE,
   id: null,
   data: null,
+  goldStandardMode: false
 };
 
 const workflowReducer = (state = initialState, action) => {
@@ -40,6 +43,11 @@ const workflowReducer = (state = initialState, action) => {
         status: WORKFLOW_STATUS.ERROR,
       });
 
+    case SET_GOLD_STANDARD:
+      return Object.assign({}, state, {
+        goldStandardMode: action.gs
+      });
+
     default:
       return state;
   };
@@ -50,6 +58,12 @@ const fetchWorkflow = (variant = VARIANT_TYPES.INDIVIDUAL) => {
     config.zooniverseLinks.collabWorkflowId :
     config.zooniverseLinks.workflowId;
 
+  return (dispatch) => {
+    dispatch(retrieveWorkflow(id));
+  };
+}
+
+const retrieveWorkflow = (id) => {
   return (dispatch) => {
     dispatch({
       type: FETCH_WORKFLOW,
@@ -73,9 +87,26 @@ const fetchWorkflow = (variant = VARIANT_TYPES.INDIVIDUAL) => {
   };
 }
 
+const setGoldStandard = () => {
+  return (dispatch, getState) => {
+    const isActive = !getState().workflow.goldStandardMode;
+    const user = getState().login.user;
+
+    if (isActive) {
+      dispatch(setVariant(VARIANT_TYPES.INDIVIDUAL));
+      dispatch(retrieveWorkflow(config.zooniverseLinks.gsWorkflow));
+      dispatch(clearQueue());
+    } else {
+      dispatch(fetchSplit(user));
+    }
+    dispatch({ type: SET_GOLD_STANDARD, gs: isActive });
+  };
+};
+
 export default workflowReducer;
 
 export {
   fetchWorkflow,
+  setGoldStandard,
   WORKFLOW_STATUS,
 };

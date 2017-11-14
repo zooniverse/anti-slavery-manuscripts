@@ -132,6 +132,12 @@ class ClassifierContainer extends React.Component {
         <SubjectViewer currentSubject={this.props.currentSubject} />
         <section className="classifier-controls">
           <div>
+            {this.props.goldStandardMode && (
+              <div className="gold-standard">
+                <i className="fa fa-star" />
+                <span>Gold Standard Mode</span>
+              </div>
+            )}
             <h2>Navigator</h2>
             <Navigator />
           </div>
@@ -303,6 +309,7 @@ ClassifierContainer.propTypes = {
     id: PropTypes.string,
   }),
   dispatch: PropTypes.func,
+  goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
@@ -329,6 +336,7 @@ ClassifierContainer.propTypes = {
 ClassifierContainer.defaultProps = {
   adminOverride: false,
   previousAnnotations: [],
+  goldStandardMode: false,
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
@@ -352,6 +360,7 @@ const mapStateToProps = (state, ownProps) => {
     adminOverride: state.splits.adminOverride,
     classification: state.classifications.classification,
     currentSubject: state.subject.currentSubject,
+    goldStandardMode: state.workflow.goldStandardMode,
     previousAnnotations: state.previousAnnotations.marks,
     favoriteSubject: state.subject.favorite,
     guide: state.fieldGuide.guide,

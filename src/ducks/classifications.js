@@ -52,7 +52,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state,{
         status: CLASSIFICATION_STATUS.ERROR,
       });
-    
+
     case SET_SUBJECT_COMPLETION_ANSWERS:
       const sca = Object.assign({}, state.subjectCompletionAnswers);
       sca[action.taskId] = action.answerValue;
@@ -91,6 +91,11 @@ const createClassification = () => {
     classification._workflow = getState().workflow.data;
     classification._subjects = [getState().subject.currentSubject];
 
+    const isGS = getState().workflow.goldStandardMode;
+    if (isGS) {
+      classification.update({ gold_standard: true });
+    }
+
     dispatch({
       type: CREATE_CLASSIFICATION,
       classification
@@ -105,11 +110,11 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
-    
+
     //TODO: Better error handling
     if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
     //----------------
-    
+
     //Record the first task
     //This is implicitly the 'transcription' task.
     //----------------
@@ -125,7 +130,7 @@ const submitClassification = () => {
     };
     classification.annotations.push(annotations);
     //----------------
-    
+
     //Record the other tasks.
     //Note that each annotation in classification.annotations[] is in the form
     //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
@@ -139,7 +144,7 @@ const submitClassification = () => {
       classification.annotations.push(answerForTask);
     });
     //----------------
-    
+
     //Save the classification
     //----------------
     dispatch({ type: SUBMIT_CLASSIFICATION });

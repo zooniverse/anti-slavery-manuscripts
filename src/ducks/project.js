@@ -15,6 +15,7 @@ const FETCH_PROJECT = 'FETCH_PROJECT';
 const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
 const FETCH_PREFERENCES = 'FETCH_PREFERENCES';
+const SET_USER_ROLES = 'SET_USER_ROLES';
 
 //Misc Constants
 const PROJECT_STATUS = {
@@ -32,7 +33,8 @@ const initialState = {
   status: PROJECT_STATUS.IDLE,
   id: null,
   data: {},
-  userPreferences: null
+  userPreferences: null,
+  userRoles: []
 };
 
 const classifierReducer = (state = initialState, action) => {
@@ -62,6 +64,11 @@ const classifierReducer = (state = initialState, action) => {
     case FETCH_PREFERENCES:
       return Object.assign({}, state, {
         userPreferences: action.preferences,
+      });
+
+    case SET_USER_ROLES:
+      return Object.assign({}, state, {
+        userRoles: action.roles
       });
 
     default:
@@ -132,6 +139,15 @@ const fetchPreferences = (user) => {
   }
 };
 
+const setUserRoles = (roles) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_USER_ROLES,
+      roles
+    })
+  };
+};
+
 //------------------------------------------------------------------------------
 
 //Exports
@@ -141,5 +157,6 @@ export default classifierReducer;
 export {
   fetchProject,
   fetchPreferences,
+  setUserRoles,
   PROJECT_STATUS,
 };
