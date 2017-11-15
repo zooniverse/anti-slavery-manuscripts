@@ -16,6 +16,7 @@ import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 import GeordiLogAdapter from '../lib/geordi-log-adapter';
 import { checkLoginUser } from '../ducks/login';
+import Banner from './Banner';
 
 
 class App extends React.Component {
@@ -74,6 +75,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
+        <Banner />
         <ProjectHeader showTitle={showTitle} />
         {this.props.children}
         <div className="grommet">
