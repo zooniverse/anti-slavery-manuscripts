@@ -329,7 +329,6 @@ class ClassifierContainer extends React.Component {
 
   toggleCribDraw() {
     this.props.dispatch(toggleDialog(<CribSheet />));
-    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
   }
 
   togglePreviousMarks() {

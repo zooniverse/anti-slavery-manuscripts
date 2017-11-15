@@ -331,6 +331,7 @@ class SubjectViewer extends React.Component {
       //I don't trust Redux.dispatch() to be synchronous given the weirdness we've seen. (@shaun 20171215)
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
       this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      console.log(this.rectangle);
       return Utility.stopEvent(e);
     }
   }

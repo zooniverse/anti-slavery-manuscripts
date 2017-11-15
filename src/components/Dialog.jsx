@@ -37,6 +37,10 @@ class Dialog extends React.Component {
       return React.cloneElement(child, { onClose: this.close });
     });
 
+    const children = React.Children.map(this.props.children, (child) => {
+      return React.cloneElement(child, { onClose: this.close });
+    });
+
     return (
       <Rnd
         default={defaultPosition}
