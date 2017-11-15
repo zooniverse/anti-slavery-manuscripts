@@ -87,7 +87,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
               <i className="fa fa-twitter fa-2x"/>
               <div>
                 <span>Twitter</span>
-                <span>@BPLBostom</span>
+                <span>@BPLBoston</span>
               </div>
             </a>
           </div>
