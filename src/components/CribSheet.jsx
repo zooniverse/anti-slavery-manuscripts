@@ -49,10 +49,4 @@ class CribSheet extends React.Component {
   }
 }
 
-CribSheet.propTypes = {
-}
-
-const mapStateToProps = (state) => ({
-});
-
-export default connect(mapStateToProps)(CribSheet);
+export default connect()(CribSheet);

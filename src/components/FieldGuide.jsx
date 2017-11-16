@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StepThrough } from 'zooniverse-react-components';
 import { Markdown } from "markdownz";
-import { getSubjectLocation } from '../lib/get-subject-location';
 
 class FieldGuide extends React.Component {
   constructor(props) {
