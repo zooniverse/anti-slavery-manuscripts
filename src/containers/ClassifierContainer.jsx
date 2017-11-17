@@ -128,7 +128,10 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            <button href="#" className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
+            {this.props.user && (
+              <button href="#" className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
+            )}
+
             <img className="divider" role="presentation" src={Divider} />
 
             {this.props.user && (

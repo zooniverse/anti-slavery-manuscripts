@@ -16,12 +16,20 @@ class CribSheet extends React.Component {
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
   }
 
+  deleteItem(i) {
+    const cribCopy = this.props.preferences.preferences.cribsheet.slice();
+    cribCopy.splice(i, 1);
+    this.props.preferences.update({ 'preferences.cribsheet': cribCopy }).save();
+    this.forceUpdate();
+  }
+
   renderItem(snippet, i) {
     return (
       <div className="crib-sheet__item" key={`SNIPPET_${i}`}>
+        <button className="crib-sheet__delete" onClick={this.deleteItem.bind(this, i)}><i className="fa fa-times" /></button>
         <button>
           {snippet.cropUrl && (
-            <img src={snippet.cropUrl} />
+            <img role="presentation" src={snippet.cropUrl} />
           )}
           <span className="crib-sheet__label">
             {snippet.name}
