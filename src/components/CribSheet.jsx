@@ -16,12 +16,15 @@ class CribSheet extends React.Component {
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
   }
 
-  renderItem() {
+  renderItem(snippet, i) {
     return (
-      <div className="crib-sheet__item">
+      <div className="crib-sheet__item" key={`SNIPPET_${i}`}>
         <button>
+          {snippet.cropUrl && (
+            <img src={snippet.cropUrl} />
+          )}
           <span className="crib-sheet__label">
-            Item notes
+            {snippet.name}
           </span>
         </button>
       </div>
@@ -29,15 +32,20 @@ class CribSheet extends React.Component {
   }
 
   render() {
+    const cribsheet = this.props.preferences.preferences.cribsheet;
     return (
-      <div className="crib-sheet">
+      <div className="handle crib-sheet">
         <h3>Crib Sheet</h3>
-        <span>Save images and notes for reference.</span>
+        <span className="crib-sheet__instructions">Save images and notes for reference.</span>
         <div className="crib-sheet__content">
-          {this.renderItem()}
-          <div className="crib-sheet__item">
+          {cribsheet && (
+            cribsheet.map((snippet, i) => {
+              return this.renderItem(snippet, i);
+            })
+          )}
+          <div className="crib-sheet__add-item">
             <button onClick={this.activateCrop}>
-              <i className="fa fa-plus" />
+              <i className="fa fa-plus fa-3x" />
               <span className="crib-sheet__label">
                 Add New Item
               </span>
@@ -49,4 +57,20 @@ class CribSheet extends React.Component {
   }
 }
 
-export default connect()(CribSheet);
+CribSheet.defaultProps = {
+  preferences: null,
+};
+
+CribSheet.propTypes = {
+  preferences: PropTypes.shape({
+    preferences: PropTypes.object,
+  }),
+};
+
+const mapStateToProps = (state) => {
+  return {
+    preferences: state.project.userPreferences,
+  };
+};
+
+export default connect(mapStateToProps)(CribSheet);

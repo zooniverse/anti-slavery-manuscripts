@@ -45,6 +45,7 @@ class Dialog extends React.Component {
       <Rnd
         default={defaultPosition}
         enableResizing={enableResize}
+        dragHandlerClassName={'.handle'}
         minHeight={400}
         minWidth={400}
         resizeHandlerClasses={resizeClass}

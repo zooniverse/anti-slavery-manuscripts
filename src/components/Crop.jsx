@@ -49,9 +49,8 @@ class Crop extends React.Component {
 
   render() {
     const points = this.findPoints();
-    const imageOffset = `translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`;
     return (
-      <g transform={imageOffset}>
+      <g transform={`translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`}>
         <rect
           x={points.x}
           y={points.y}
@@ -72,7 +71,7 @@ Crop.propTypes = {
   }),
   mouseInViewer: PropTypes.bool,
   rectangleStart: PropTypes.object,
-  subjectID: PropTypes.string
+  subjectID: PropTypes.string,
 };
 
 Crop.defaultProps = {

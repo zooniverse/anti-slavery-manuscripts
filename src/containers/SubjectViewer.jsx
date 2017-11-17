@@ -153,7 +153,7 @@ class SubjectViewer extends React.Component {
           </g>
 
           {this.state.cropping === INPUT_STATE.ACTIVE && (
-            <g transform={`scale(${this.props.scaling})`}>
+            <g transform={transform}>
               <Crop
                 getPointerXY={this.getPointerXYOnImage}
                 imageSize={this.props.imageSize}

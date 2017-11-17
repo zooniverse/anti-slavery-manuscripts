@@ -1,2 +1,72 @@
+@import "font-groups.styl"
+
 .crib-sheet
   color: black
+  font-family: playfair-display
+
+  h3
+    @extend .secondary-head
+    line-height: 2em
+
+  button
+    cursor: default
+
+  i
+    color: white
+    margin: 0.2em auto 0 auto
+
+  &__instructions
+    @extend .body-copy
+
+  &__add-item
+    button
+      cursor: pointer
+      height: 6.9em
+      margin-right: 1em
+      width: 6.5em
+
+    span
+      margin: auto 0 1em 0
+      width: 11em
+
+.save-snippet
+  align-items: center
+  display: flex
+  margin: 1em
+  flex-direction: column
+
+  h3
+    @extend .secondary-head
+
+  input
+    font-family: playfair-display
+    font-size: 0.8em
+    padding: 0.5em
+
+  &__image
+    text-align: center
+    margin: 1em
+    height: 8em
+    width: 8em
+
+    img
+      object-fit: contain
+      overflow: hidden
+      height: 100%
+      width: 100%
+
+  &__buttons
+    font-size: 0.7em
+
+    button:nth-child(2)
+      background-color: $aqua-marine
+
+    button
+      background-color: white
+      border: 1px solid $teal !important
+      margin: 1.5em
+      width: 7em
+      padding: 0.5em 1.5em
+
+      &:hover, &:focus
+        background-color: $teal
