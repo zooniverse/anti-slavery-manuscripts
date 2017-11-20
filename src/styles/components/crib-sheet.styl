@@ -4,8 +4,18 @@
   color: black
   font-family: playfair-display
 
+  &__content
+    background-color: rgba(255, 255, 255, 0.5) !important
+
   &__item
     position: relative
+
+    .crib-sheet__delete
+      visibility: hidden
+
+    &:hover, &:focus
+      .crib-sheet__delete
+        visibility: visible
 
   &__delete
     border-radius: 50%
@@ -58,12 +68,13 @@
     font-family: playfair-display
     font-size: 0.8em
     padding: 0.5em
+    width: 15em
 
   &__image
     text-align: center
-    margin: 1em
-    height: 8em
-    width: 8em
+    margin: 0.5em
+    height: 9em
+    width: 9em
 
     img
       object-fit: contain

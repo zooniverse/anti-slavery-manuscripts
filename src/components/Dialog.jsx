@@ -28,7 +28,7 @@ class Dialog extends React.Component {
     const width = this.props.isPrompt ? 450 : 800;
     const height = 425;
     const x = (window.innerWidth / 2) - (width / 2);
-    const y = (window.innerHeight / 2) - ((height / 2) + window.pageYOffset);
+    const y = (window.innerHeight / 2) - height / 2 + window.pageYOffset;
 
     const defaultPosition = { x, y, height, width };
     const enableResize = this.props.enableResize ? { bottomRight: true } : false;

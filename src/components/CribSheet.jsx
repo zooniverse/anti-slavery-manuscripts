@@ -53,7 +53,7 @@ class CribSheet extends React.Component {
     return (
       <div className="handle crib-sheet">
         <h3>Crib Sheet</h3>
-        <span className="crib-sheet__instructions">Save images and notes for reference.</span>
+        <span className="crib-sheet__instructions">Save images with description for reference.</span>
         <div className="crib-sheet__content">
           {cribsheet && (
             cribsheet.map((snippet, i) => {

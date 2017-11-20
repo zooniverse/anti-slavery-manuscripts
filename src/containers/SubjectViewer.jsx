@@ -80,6 +80,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
+    this.escapeCrop = this.escapeCrop.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -208,6 +209,7 @@ class SubjectViewer extends React.Component {
   componentDidMount() {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
+    document.addEventListener('keyup', this.escapeCrop);
     this.updateSize();
 
     //Fetch the first subject, IF no subject has yet been loaded.
@@ -230,6 +232,7 @@ class SubjectViewer extends React.Component {
   componentWillUnmount() {
     //Cleanup
     window.removeEventListener('resize', this.updateSize);
+    document.removeEventListener('keyup', this.escapeCrop);
   }
 
   //----------------------------------------------------------------
@@ -257,6 +260,12 @@ class SubjectViewer extends React.Component {
     const svgW = boundingBox.width;
     const svgH = boundingBox.height;
     this.props.dispatch(updateViewerSize(svgW, svgH));
+  }
+
+  escapeCrop(e) {
+    if (e.keyCode === 27 && this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+    }
   }
 
   /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.

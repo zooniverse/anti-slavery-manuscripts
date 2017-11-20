@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleDialog } from '../ducks/dialog';
 import SaveClip from '../components/SaveClip';
+import { setViewerState, SUBJECTVIEWER_STATE } from '../ducks/subject-viewer';
+
+const MINIMUM_SIZE = 10;
 
 class Crop extends React.Component {
   constructor(props) {
@@ -10,6 +13,7 @@ class Crop extends React.Component {
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.findPoints = this.findPoints.bind(this);
+    this.cancelCrop = this.cancelCrop.bind(this);
     this.state = {
       rectangleNow: null,
     };
@@ -21,8 +25,14 @@ class Crop extends React.Component {
 
   componentWillUnmount() {
     const points = this.findPoints();
-    this.props.dispatch(toggleDialog(<SaveClip points={points} />));
+    if (points.width > MINIMUM_SIZE && points.height > MINIMUM_SIZE) {
+      this.props.dispatch(toggleDialog(<SaveClip points={points} />, false, true));
+    }
     document.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  cancelCrop() {
+    this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
 
   handleMouseMove(e) {
