@@ -10,6 +10,8 @@ import { resetView } from './subject-viewer';
 import { toggleDialog } from './dialog';
 import SaveSuccess from '../components/SaveSuccess';
 
+const FAILED_CLASSIFICATION_QUEUE_NAME = 'failed-classifications';
+
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
@@ -88,7 +90,7 @@ const createClassification = () => {
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
-    
+
     console.info('ducks/classifications.js createClassification()');
     const classification = apiClient.type('classifications').create({
       annotations: [],
@@ -121,10 +123,80 @@ const createClassification = () => {
   };
 };
 
+const saveAllQueuedClassifications = (dispatch) => {
+  const queue = JSON.parse(localStorage.getItem(FAILED_CLASSIFICATION_QUEUE_NAME));
+  if (queue && queue.length !== 0) {
+    console.log('Saving queued classifications:', queue.length);
+    queue.forEach((classificationData) => {
+      apiClient.type('classifications').create(classificationData).save()
+        .then((actualClassification) => {
+          console.log('Saved classification', actualClassification.id);
+
+          try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
+            Split.classificationCreated(actualClassification);
+          } catch (err) { console.error('Split.classificationCreated() error: ', err); }
+
+          actualClassification.destroy();
+          const indexInQueue = queue.indexOf(classificationData);
+          queue.splice(indexInQueue, 1);
+          try {
+            localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
+            console.info('Saved a queued classification, remaining:', queue.length);
+            console.info('ducks/classifications.js submitClassification() success');
+            dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
+            if (user) {
+              localStorage.removeItem(`${user.id}.classificationID`);
+            }
+          } catch (error) {
+            console.error('Failed to update classification queue:', error);
+          }
+          const { workflow, subjects } = actualClassification.links;
+          dispatch(addAlreadySeen(workflow, subjects));
+
+        })
+        .catch((error) => {
+          console.error('Failed to save a queued classification:', error);
+          console.error('ducks/classifications.js submitClassification() error: ', err);
+          Rollbar && Rollbar.error &&
+          Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
+          alert('ERROR: Could not submit Classification');  //TODO: better messaging
+          dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
+          switch (error.status) {
+            case 422: {
+              const indexInQueue = queue.indexOf(classificationData);
+              queue.splice(indexInQueue, 1);
+              try {
+                localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
+              } catch (err) {
+                console.error('Failed to update classification queue:', err);
+              }
+              break;
+            }
+            default:
+              return null;
+          }
+        });
+    });
+  }
+  dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
+  dispatch(resetView());
+};
+
+const queueClassification = (classification) => {
+  const queue = JSON.parse(localStorage.getItem(FAILED_CLASSIFICATION_QUEUE_NAME)) || [];
+  queue.push(classification);
+  try {
+    localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
+    console.info('Queued classifications:', queue.length);
+  } catch (error) {
+    console.error('Failed to queue classification:', error);
+  }
+};
+
 const submitClassification = () => {
   return (dispatch, getState) => {
     console.info('ducks/classifications.js submitClassification()');
-    
+
     //Initialise
     //----------------
     const subject = getState().subject;
@@ -186,38 +258,9 @@ const submitClassification = () => {
         height: innerHeight,
       },
       'metadata.subject_dimensions': subject_dimensions || [],
-    })
-      .save()
-
-      //Successful save: reset everything, then get the next Subject.
-      .then(() => {
-        if (user) {
-          localStorage.removeItem(`${user.id}.classificationID`);
-        }
-
-        try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
-          Split.classificationCreated(classification);
-        } catch (err) { console.error('Split.classificationCreated() error: ', err); }
-
-        //Reset values in preparation for the next Subject.
-        console.info('ducks/classifications.js submitClassification() success');
-        dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
-        dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
-        dispatch(resetView());
-      })
-
-      //Unsuccessful save
-      .catch((err) => {
-        console.error('ducks/classifications.js submitClassification() error: ', err);
-        Rollbar && Rollbar.error &&
-        Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
-        alert('ERROR: Could not submit Classification');  //TODO: better messaging
-        dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
-      });
-    //----------------
-
-    const { workflow, subjects } = classification.links;
-    dispatch(addAlreadySeen(workflow, subjects));
+    });
+    queueClassification(classification);
+    saveAllQueuedClassifications(dispatch);
   };
 };
 
@@ -233,7 +276,7 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
 const retrieveClassification = (id) => {
   return (dispatch) => {
     console.info('ducks/classifications.js retrieveClassification()');
-    
+
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         const subjectId = (classification.links && classification.links.subjects && classification.links.subjects.length > 0)
@@ -241,7 +284,7 @@ const retrieveClassification = (id) => {
         const annotations = (classification.annotations)
           ? classification.annotations[0] : { value: [] };
         if (subjectId === null) { throw 'Subject ID could not be determined.'; }
-      
+
         console.info('ducks/classifications.js submitClassification() success');
         dispatch(setAnnotations(annotations.value));
         dispatch(fetchSavedSubject(subjectId));
@@ -266,7 +309,7 @@ const retrieveClassification = (id) => {
 const saveClassificationInProgress = () => {
   return (dispatch, getState) => {
     console.info('ducks/classifications.js saveClassificationInProgressClassification()');
-    
+
     let task = "T0";
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
@@ -283,7 +326,7 @@ const saveClassificationInProgress = () => {
     const classification = getState().classifications.classification;
 
     console.info('ducks/classifications.js saveClassificationInProgressClassification() checkpoint');
-    
+
     classification.update({
       annotations: [annotations],
       completed: false,
