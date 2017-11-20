@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setViewerState, SUBJECTVIEWER_STATE } from '../ducks/subject-viewer'
+import { setViewerState, SUBJECTVIEWER_STATE } from '../ducks/subject-viewer';
 
 class CribSheet extends React.Component {
   constructor(props) {
@@ -12,21 +12,29 @@ class CribSheet extends React.Component {
   }
 
   activateCrop(e) {
-    this.props.onClose && this.props.onClose(e);
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.CROPPING));
+    this.props.onClose && this.props.onClose(e);
   }
 
   deleteItem(i) {
-    const cribCopy = this.props.preferences.preferences.cribsheet.slice();
-    cribCopy.splice(i, 1);
-    this.props.preferences.update({ 'preferences.cribsheet': cribCopy }).save();
-    this.forceUpdate();
+    if (this.props.preferences.preferences && this.props.preferences.preferences.cribsheet) {
+      const cribCopy = this.props.preferences.preferences.cribsheet.slice();
+      cribCopy.splice(i, 1);
+      this.props.preferences.update({ 'preferences.cribsheet': cribCopy }).save();
+      this.forceUpdate();
+    }
   }
 
   renderItem(snippet, i) {
     return (
       <div className="crib-sheet__item" key={`SNIPPET_${i}`}>
-        <button className="crib-sheet__delete" onClick={this.deleteItem.bind(this, i)}><i className="fa fa-times" /></button>
+        <button
+          className="crib-sheet__delete"
+          onClick={this.deleteItem.bind(this, i)}
+        >
+          <i className="fa fa-times" />
+        </button>
+
         <button>
           {snippet.cropUrl && (
             <img role="presentation" src={snippet.cropUrl} />
@@ -35,8 +43,9 @@ class CribSheet extends React.Component {
             {snippet.name}
           </span>
         </button>
+
       </div>
-    )
+    );
   }
 
   render() {
@@ -70,8 +79,11 @@ CribSheet.defaultProps = {
 };
 
 CribSheet.propTypes = {
+  dispatch: PropTypes.func,
+  onClose: PropTypes.func,
   preferences: PropTypes.shape({
     preferences: PropTypes.object,
+    update: PropTypes.func,
   }),
 };
 

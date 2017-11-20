@@ -4,11 +4,6 @@ import { connect } from 'react-redux';
 import { toggleDialog } from '../ducks/dialog';
 import SaveClip from '../components/SaveClip';
 
-const INPUT_STATE = {
-  IDLE: 0,
-  ACTIVE: 1,
-}
-
 class Crop extends React.Component {
   constructor(props) {
     super(props);
@@ -16,8 +11,8 @@ class Crop extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.findPoints = this.findPoints.bind(this);
     this.state = {
-      rectangleNow: null
-    }
+      rectangleNow: null,
+    };
   }
 
   componentWillMount() {
@@ -43,14 +38,14 @@ class Crop extends React.Component {
       x: Math.min(this.props.rectangleStart.x, rectangleNow.x),
       y: Math.min(this.props.rectangleStart.y, rectangleNow.y),
       width: Math.abs(this.props.rectangleStart.x - rectangleNow.x),
-      height: Math.abs(this.props.rectangleStart.y - rectangleNow.y)
-    }
+      height: Math.abs(this.props.rectangleStart.y - rectangleNow.y),
+    };
   }
 
   render() {
     const points = this.findPoints();
     return (
-      <g transform={`translate(${-this.props.imageSize.width/2}, ${-this.props.imageSize.height/2})`}>
+      <g transform={`translate(${-this.props.imageSize.width / 2}, ${-this.props.imageSize.height / 2})`}>
         <rect
           x={points.x}
           y={points.y}
@@ -64,14 +59,17 @@ class Crop extends React.Component {
 }
 
 Crop.propTypes = {
+  dispatch: PropTypes.func,
   getPointerXY: PropTypes.func,
   imageSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
   }),
   mouseInViewer: PropTypes.bool,
-  rectangleStart: PropTypes.object,
-  subjectID: PropTypes.string,
+  rectangleStart: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+  }),
 };
 
 Crop.defaultProps = {

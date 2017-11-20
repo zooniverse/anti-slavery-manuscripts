@@ -129,7 +129,7 @@ class ClassifierContainer extends React.Component {
               <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
             {this.props.user && (
-              <button href="#" className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
+              <button className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
             )}
 
             <img className="divider" role="presentation" src={Divider} />

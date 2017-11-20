@@ -26,7 +26,6 @@ class AnnotationsPane extends React.Component {
     this.renderPreviousAnnotations = this.renderPreviousAnnotations.bind(this);
     this.renderUserAnnotations = this.renderUserAnnotations.bind(this);
     this.determineGreenLine = this.determineGreenLine.bind(this);
-    this.renderCrop = this.renderCrop.bind(this);
   }
 
   //----------------------------------------------------------------
@@ -64,10 +63,6 @@ class AnnotationsPane extends React.Component {
 
       </g>
     );
-  }
-
-  renderCrop() {
-    if (!this.props.cropRectangle) return null;
   }
 
   /*  Renders the annotation that the user is currently making, if there is one.

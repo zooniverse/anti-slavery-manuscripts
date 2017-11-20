@@ -25,9 +25,9 @@ const MARKS_STATE = {
   NONE: 2,
 };
 
-//Initial State
+// Initial State
 const initialState = {
-  //Image transformations
+  // Image transformations
   contrast: false,
   frame: 0,
   rotation: 0,
@@ -36,7 +36,7 @@ const initialState = {
   translationX: 0,
   translationY: 0,
 
-  //Viewer settings
+  // Viewer settings
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
   viewerSize: { width: 0, height: 0 },
   imageSize: { width: 0, height: 0 },

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import apiClient from 'panoptes-client/lib/api-client';
 import { connect } from 'react-redux';
 import { getSubjectLocation } from '../lib/get-subject-location';
 
@@ -42,7 +41,7 @@ class SaveClip extends React.Component {
   }
 
   saveClip(e) {
-    let query;
+    let newCribsheet;
     const prefs = this.props.preferences;
     const clip = {
       cropUrl: this.cropUrl(),
@@ -59,14 +58,14 @@ class SaveClip extends React.Component {
 
     if (prefs) {
       if (!prefs.preferences.cribsheet) {
-        query = [clip];
+        newCribsheet = [clip];
       } else {
         const copied = prefs.preferences.cribsheet.slice();
         copied.push(clip);
-        query = copied;
+        newCribsheet = copied;
       }
     }
-    prefs.update({ 'preferences.cribsheet': query }).save();
+    prefs.update({ 'preferences.cribsheet': newCribsheet }).save();
     this.props.onClose && this.props.onClose(e);
   }
 
