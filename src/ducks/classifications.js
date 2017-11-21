@@ -212,13 +212,10 @@ const retrieveClassification = (id) => {
   return (dispatch) => {
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
-        console.log(classification);
         const subjectId = classification.links.subjects.shift();
         const annotations = classification.annotations.shift();
         dispatch(setAnnotations(annotations.value));
         dispatch(fetchSavedSubject(subjectId));
-        console.log(classification);
-        console.log(annotations);
         dispatch({
           type: CREATE_CLASSIFICATION,
           classification,

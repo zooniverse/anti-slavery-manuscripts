@@ -15,7 +15,6 @@ class ClassificationPrompt extends React.Component {
 
   loadClassification(e) {
     const id = localStorage.getItem(`${this.props.user.id}.classificationID`);
-    console.log(id);
 
     this.props.dispatch(retrieveClassification(id));
     this.props.onClose && this.props.onClose(e);
