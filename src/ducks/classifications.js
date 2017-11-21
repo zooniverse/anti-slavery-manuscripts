@@ -1,3 +1,4 @@
+import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
@@ -6,6 +7,8 @@ import { Split } from 'seven-ten';
 import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
+import { toggleDialog } from './dialog';
+import SaveSuccess from '../components/SaveSuccess';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
@@ -133,7 +136,7 @@ const submitClassification = () => {
     const annotations = {
       _key: Math.random(),
       _toolIndex: 0,
-      task: task,
+      task,
       value: getState().annotations.annotations,
     };
     classification.annotations.push(annotations);
@@ -208,24 +211,26 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
 const retrieveClassification = (id) => {
   return (dispatch) => {
     apiClient.type('classifications/incomplete').get({ id })
-    .then(([classification]) => {
-      const subjectId = classification.links.subjects.shift();
-      const annotations = classification.annotations.shift();
-      dispatch(setAnnotations(annotations.value));
-      dispatch(fetchSavedSubject(subjectId));
-
-      dispatch({
-        type: CREATE_CLASSIFICATION,
-        classification,
-        status: CLASSIFICATION_STATUS.IDLE,
-        subjectCompletionAnswers: {},
-      });
-    })
-    .catch((err) => {
-      dispatch({
-        type: CREATE_CLASSIFICATION_ERROR
+      .then(([classification]) => {
+        console.log(classification);
+        const subjectId = classification.links.subjects.shift();
+        const annotations = classification.annotations.shift();
+        dispatch(setAnnotations(annotations.value));
+        dispatch(fetchSavedSubject(subjectId));
+        console.log(classification);
+        console.log(annotations);
+        dispatch({
+          type: CREATE_CLASSIFICATION,
+          classification,
+          status: CLASSIFICATION_STATUS.IDLE,
+          subjectCompletionAnswers: {},
+        });
       })
-    });
+      .catch((err) => {
+        dispatch({
+          type: CREATE_CLASSIFICATION_ERROR
+        })
+      });
   };
 };
 
@@ -240,13 +245,13 @@ const saveClassification = () => {
     const annotations = {
       _key: Math.random(),
       _toolIndex: 0,
-      task: task,
+      task,
       value: getState().annotations.annotations,
     };
 
     const classification = getState().classifications.classification;
-    classification.annotations.push(annotations);
     classification.update({
+      annotations: [annotations],
       completed: false,
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
@@ -254,10 +259,11 @@ const saveClassification = () => {
       .catch((err) => {
         console.log(err);
       })
-      .then((classification) => {
+      .then((savedClassification) => {
         if (user) {
-          localStorage.setItem(`${user.id}.classificationID`, classification.id);
+          localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
         }
+        dispatch(toggleDialog(<SaveSuccess />, false, true));
       });
   };
 };

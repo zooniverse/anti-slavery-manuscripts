@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
 import { config } from '../config';
-import { browserHistory } from 'react-router';
 
 import {
   setRotation, setContrast, resetView,
@@ -127,7 +126,7 @@ class ClassifierContainer extends React.Component {
             <img className="divider" role="presentation" src={Divider} />
 
             {this.props.user && (
-              <button href="#" className="white-green button" onClick={this.saveCurrentClassification}>Save &amp; Close</button>
+              <button className="white-green button" onClick={this.saveCurrentClassification}>Save Progress</button>
             )}
 
             <button className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
@@ -311,7 +310,6 @@ class ClassifierContainer extends React.Component {
   }
 
   saveCurrentClassification() {
-    browserHistory.push('/');
     this.props.dispatch(saveClassification());
   }
 }

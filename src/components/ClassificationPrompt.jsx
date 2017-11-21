@@ -15,6 +15,7 @@ class ClassificationPrompt extends React.Component {
 
   loadClassification(e) {
     const id = localStorage.getItem(`${this.props.user.id}.classificationID`);
+    console.log(id);
 
     this.props.dispatch(retrieveClassification(id));
     this.props.onClose && this.props.onClose(e);
@@ -25,12 +26,12 @@ class ClassificationPrompt extends React.Component {
     localStorage.removeItem(`${this.props.user.id}.classificationID`);
 
     apiClient.type('classifications/incomplete').get({ id })
-    .then(([classification]) => {
-      classification.delete();
-    })
-    .catch((err) => {
-      console.warn(err);
-    })
+      .then(([classification]) => {
+        classification.delete();
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
     this.props.dispatch(fetchSubject());
     this.props.onClose && this.props.onClose(e);
   }
@@ -44,7 +45,7 @@ class ClassificationPrompt extends React.Component {
           new manuscript?
         </span>
         <span>
-          <i>Note:</i> If you select "No", you will lose any
+          <i>Note:</i> If you select &quot;New Manuscript&quot;&#44;, you will lose any
           saved work from a previous manuscript.
         </span>
         <div>
@@ -54,18 +55,19 @@ class ClassificationPrompt extends React.Component {
       </div>
     );
   }
-};
-
-ClassificationPrompt.defaultProps = {
-  user: null
 }
 
+ClassificationPrompt.defaultProps = {
+  user: null,
+};
+
 ClassificationPrompt.propTypes = {
+  dispatch: PropTypes.func,
   onClose: PropTypes.func,
   user: PropTypes.shape({
     id: PropTypes.string,
-  })
-}
+  }),
+};
 
 const mapStateToProps = (state) => {
   return {
