@@ -28,11 +28,6 @@ class App extends React.Component {
     if (!props.initialised) {  //NOTE: This should almost always trigger, since when
       props.dispatch(checkLoginUser());
     }
-    
-    //BETA_ONLY
-    this.state = {
-      showBetaSignInPlease: false,
-    };
   }
 
   returnSomething(something) { // eslint-disable-line class-methods-use-this
@@ -66,11 +61,6 @@ class App extends React.Component {
     if (!nextProps.user && nextProps.user !== this.props.user) {
       this.googleLogger.forget(['userID']);
     }
-    
-    //BETA_ONLY: Prompt user to login
-    if (!this.props.initialised && nextProps.initialised && !this.props.user) {
-      this.setState({ showBetaSignInPlease: true });
-    }
   }
 
   render() {
@@ -82,8 +72,6 @@ class App extends React.Component {
     const path = this.props.location.pathname;
     const showTitle = path === '/classify';
     
-    console.log('-'.repeat(80), '\n', this.props, this.props.initialised, this.props.user);
-
     return (
       <div>
         <Header />
@@ -104,14 +92,6 @@ class App extends React.Component {
             {this.props.dialog}
           </Dialog>
         }
-        
-        {/*//BETA_ONLY: Prompt user to login*/}
-        {(!this.showBetaSignInPlease) ? null :
-          <Dialog>
-            ...
-          </Dialog>
-        }
-
       </div>
     );
   }
