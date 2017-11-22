@@ -25,9 +25,14 @@ class App extends React.Component {
 
     this.googleLogger = null;
 
-    if (!props.initialised) {
+    if (!props.initialised) {  //NOTE: This should almost always trigger, since when
       props.dispatch(checkLoginUser());
     }
+    
+    //BETA_ONLY
+    this.state = {
+      showBetaSignInPlease: false,
+    };
   }
 
   returnSomething(something) { // eslint-disable-line class-methods-use-this
@@ -61,6 +66,11 @@ class App extends React.Component {
     if (!nextProps.user && nextProps.user !== this.props.user) {
       this.googleLogger.forget(['userID']);
     }
+    
+    //BETA_ONLY: Prompt user to login
+    if (!this.props.initialised && nextProps.initialised && !this.props.user) {
+      this.setState({ showBetaSignInPlease: true });
+    }
   }
 
   render() {
@@ -71,11 +81,18 @@ class App extends React.Component {
 
     const path = this.props.location.pathname;
     const showTitle = path === '/classify';
+    
+    console.log('-'.repeat(80), '\n', this.props, this.props.initialised, this.props.user);
 
     return (
       <div>
         <Header />
-        <Banner />
+        
+        {/*//BETA_ONLY: Prompt user to login*/}
+        {(this.props.initialised && !this.props.user)
+          ? <Banner /> : null
+        }
+        
         <ProjectHeader showTitle={showTitle} />
         {this.props.children}
         <div className="grommet">
@@ -85,6 +102,13 @@ class App extends React.Component {
         {(this.props.dialog === null) ? null :
           <Dialog>
             {this.props.dialog}
+          </Dialog>
+        }
+        
+        {/*//BETA_ONLY: Prompt user to login*/}
+        {(!this.showBetaSignInPlease) ? null :
+          <Dialog>
+            ...
           </Dialog>
         }
 
@@ -101,7 +125,10 @@ App.propTypes = {
   }),
   //--------
   user: PropTypes.object,
+  initialised: PropTypes.boolean,
+  //--------
   dialog: PropTypes.node,
+  //--------
   variant: PropTypes.string,
   splitID: PropTypes.string,
   projectStatus: PropTypes.string,
@@ -111,16 +138,18 @@ App.propTypes = {
 
 App.defaultProps = {
   children: null,
-  dialog: null,
   location: {},
   //--------
   user: null,
+  initialised: false,
+  //--------
   dialog: null,
+  //--------
   variant: null,
   splitID: null,
-  splitStatus: SPLIT_STATUS.IDLE,
   projectStatus: PROJECT_STATUS.IDLE,
   workflowStatus: WORKFLOW_STATUS.IDLE,
+  splitStatus: SPLIT_STATUS.IDLE,
 };
 
 App.childContextTypes = {
@@ -130,13 +159,15 @@ App.childContextTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.login.user,
+    initialised: state.login.initialised,
+    //--------
     dialog: state.dialog.data,
     //--------
+    variant: state.splits.variant,
     splitID: state.splits.id,
     projectStatus: state.project.status,
-    splitStatus: state.splits.status,
     workflowStatus: state.workflow.status,
-    variant: state.splits.variant,
+    splitStatus: state.splits.status,
   };
 };
 
