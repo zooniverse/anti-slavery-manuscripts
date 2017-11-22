@@ -1,4 +1,4 @@
-.beta-top-banner  /*  //BETA_ONLY  */
+.beta-top-banner  //BETA_ONLY
   background-color: $teal
   color: white
   height: auto
@@ -10,10 +10,16 @@
   h2
     margin: 0
 
-.popup.beta-popup-sign-in-prompt
+.popup.beta-popup-sign-in-prompt  //BETA_ONLY
+  z-index: 100  //Place the prompt above the ZRC Tutorial.
+  
   .popup-content
     background: $teal
     color: white
     padding: 2em
     border-radius: 0.5em
     border: 1px solid white
+    
+    .button
+      display: block
+      margin: 1em auto 0 auto

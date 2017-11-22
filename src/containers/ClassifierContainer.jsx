@@ -5,6 +5,8 @@ import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
 import { config } from '../config';
 
+import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
+
 import {
   setRotation, setContrast, resetView,
   togglePreviousMarks, setViewerState,
@@ -233,7 +235,24 @@ class ClassifierContainer extends React.Component {
         { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
         (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
           <Popup className="beta-popup-sign-in-prompt" onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
-            Thanks for participating in our beta test. Please click on the "Sign in" button at top right to login or create an account.
+            <div>
+              Thanks for participating in our beta test. 
+              Before you begin transcribing, please sign in or create an account by clicking the button below:
+            </div>
+            <div>
+              <button
+                className="white-green button"
+                onClick={()=>{
+                  const computeRedirectURL = (window) => {
+                    const { location } = window;
+                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+                  };
+                  oauth.signIn(computeRedirectURL(window));
+                }}
+              >
+                Sign In
+              </button>
+            </div>
           </Popup>
         }
 
