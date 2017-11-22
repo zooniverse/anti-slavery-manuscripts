@@ -241,7 +241,7 @@ class ClassifierContainer extends React.Component {
             </div>
             <div>
               <button
-                className="white-green button"
+                className="green sign-in button"
                 onClick={()=>{
                   const computeRedirectURL = (window) => {
                     const { location } = window;
@@ -252,6 +252,13 @@ class ClassifierContainer extends React.Component {
               >
                 Sign In
               </button>
+              <a
+                className="continue"
+                onClick={()=>{ this.setState({ showBetaSignInPrompt: false })}}
+                href="#"
+              >
+                Continue without signing in
+              </a>
             </div>
           </Popup>
         }
