@@ -231,7 +231,6 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
         
-        {console.log('='.repeat(80), '\n', this.props, this.state)}
         { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
         (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
           <Popup className="beta-popup-sign-in-prompt" onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
