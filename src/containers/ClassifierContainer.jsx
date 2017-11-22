@@ -56,6 +56,7 @@ class ClassifierContainer extends React.Component {
 
     this.state = {
       popup: null,
+      showBetaSignInPrompt: true,
     }
   }
 
@@ -227,6 +228,14 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
+        
+        {console.log('='.repeat(80), '\n', this.props, this.state)}
+        { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
+        (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
+          <Popup onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
+            Thanks for participating in our beta test. Please click on the "Sign in" button at top right to login or create an account.
+          </Popup>
+        }
 
       </main>
     );
@@ -313,6 +322,7 @@ ClassifierContainer.propTypes = {
   dispatch: PropTypes.func,
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
+  initialised: PropTypes.bool,  //BETA_ONLY
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
@@ -345,6 +355,7 @@ ClassifierContainer.defaultProps = {
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
+  initialised: false,  //BETA_ONLY
   project: null,
   rotation: 0,
   scaling: 1,
@@ -372,6 +383,7 @@ const mapStateToProps = (state, ownProps) => {
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
+    initialised: state.login.initialised,  //BETA_ONLY
     preferences: state.project.userPreferences,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,

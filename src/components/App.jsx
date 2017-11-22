@@ -25,7 +25,7 @@ class App extends React.Component {
 
     this.googleLogger = null;
 
-    if (!props.initialised) {  //NOTE: This should almost always trigger, since when
+    if (!props.initialised) {  //NOTE: This should almost always trigger, since App.constructor() triggers exactly once, on the website loading, when all initial values are at their default.
       props.dispatch(checkLoginUser());
     }
   }
@@ -105,7 +105,7 @@ App.propTypes = {
   }),
   //--------
   user: PropTypes.object,
-  initialised: PropTypes.boolean,
+  initialised: PropTypes.bool,
   //--------
   dialog: PropTypes.node,
   //--------
