@@ -10,7 +10,7 @@ class Popup extends React.Component {
 
   render() {
     return (
-      <div className="popup modal" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
+      <div className={`popup modal ${this.props.className}`} ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
         <div className="popup-title modal-title">
           <button className="fa fa-close close-button" onClick={this.close}></button>
         </div>
@@ -37,10 +37,12 @@ class Popup extends React.Component {
 
 Popup.propTypes = {
   onClose: PropTypes.func,
+  className: PropTypes.string,
 };
 
 Popup.defaultProps = {
   onClose: null,
+  className: '',
 };
 
 export default Popup;

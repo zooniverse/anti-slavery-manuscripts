@@ -1,8 +1,9 @@
+//BETA_ONLY
 import React from 'react';
 
 const Banner = () => {
   return (
-    <div className="top-banner">
+    <div className="beta-top-banner">
       <h2>
         Thanks for participating in our beta test.
         Please click on the "Sign in" button at top right
