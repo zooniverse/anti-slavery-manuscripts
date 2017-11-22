@@ -98,6 +98,7 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
+    const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
     const disableAnnotate = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
@@ -129,7 +130,7 @@ class ClassifierContainer extends React.Component {
               <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
             {this.props.user && (
-              <button className="white-red button" onClick={this.toggleCribDraw}>Your Crib Sheet</button>
+              <button className={`${activeCrop} white-red button`} onClick={this.toggleCribDraw}>Your Crib Sheet</button>
             )}
 
             <img className="divider" role="presentation" src={Divider} />
