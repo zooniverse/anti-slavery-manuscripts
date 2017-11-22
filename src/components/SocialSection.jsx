@@ -37,7 +37,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
         <div className="home-page__progress-bar">
           <div className="completed" style={{ minWidth: "2em", width: `${project || project.completeness || 0}%` }}>
             <span>
-              {project && project.completeness || 0}%
+              {project && Math.floor(project.completeness * 100) || 0}%
             </span>
           </div>
         </div>
