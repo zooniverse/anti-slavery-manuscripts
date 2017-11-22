@@ -25,7 +25,7 @@ import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
-import { Utility } from '../lib/Utility';
+import { Utility, KEY_CODES } from '../lib/Utility';
 import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
@@ -263,8 +263,9 @@ class SubjectViewer extends React.Component {
   }
 
   escapeCrop(e) {
-    if (e.keyCode === 27 && this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+    if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE && this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
       this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      this.setState({ cropping: INPUT_STATE.IDLE });
     }
   }
 
