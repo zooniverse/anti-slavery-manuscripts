@@ -5,6 +5,8 @@ import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
 import { config } from '../config';
 
+import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
+
 import {
   setRotation, setContrast, resetView,
   togglePreviousMarks, setViewerState,
@@ -58,6 +60,7 @@ class ClassifierContainer extends React.Component {
 
     this.state = {
       popup: null,
+      showBetaSignInPrompt: true,
     }
   }
 
@@ -232,6 +235,37 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
+        
+        { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
+        (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
+          <Popup className="beta-popup-sign-in-prompt" onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
+            <div>
+              Thanks for participating in our beta test. 
+              Before you begin transcribing, please sign in or create an account by clicking the button below:
+            </div>
+            <div>
+              <button
+                className="green sign-in button"
+                onClick={()=>{
+                  const computeRedirectURL = (window) => {
+                    const { location } = window;
+                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+                  };
+                  oauth.signIn(computeRedirectURL(window));
+                }}
+              >
+                Sign In
+              </button>
+              <a
+                className="continue"
+                onClick={()=>{ this.setState({ showBetaSignInPrompt: false })}}
+                href="#"
+              >
+                Continue without signing in
+              </a>
+            </div>
+          </Popup>
+        }
 
       </main>
     );
@@ -322,6 +356,7 @@ ClassifierContainer.propTypes = {
   dispatch: PropTypes.func,
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
+  initialised: PropTypes.bool,  //BETA_ONLY
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
@@ -354,6 +389,7 @@ ClassifierContainer.defaultProps = {
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
+  initialised: false,  //BETA_ONLY
   project: null,
   rotation: 0,
   scaling: 1,
@@ -381,6 +417,7 @@ const mapStateToProps = (state, ownProps) => {
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
+    initialised: state.login.initialised,  //BETA_ONLY
     preferences: state.project.userPreferences,
     project: state.project.data,
     rotation: state.subjectViewer.rotation,

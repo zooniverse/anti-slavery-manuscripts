@@ -37,7 +37,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
         <div className="home-page__progress-bar">
           <div className="completed" style={{ minWidth: "2em", width: `${project || project.completeness || 0}%` }}>
             <span>
-              {project && project.completeness || 0}%
+              {project && Math.floor(project.completeness * 100) || 0}%
             </span>
           </div>
         </div>
@@ -87,7 +87,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
               <i className="fa fa-twitter fa-2x"/>
               <div>
                 <span>Twitter</span>
-                <span>@BPLBostom</span>
+                <span>@BPLBoston</span>
               </div>
             </a>
           </div>

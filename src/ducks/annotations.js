@@ -166,6 +166,11 @@ const selectAnnotation = (index, previousAnnotation) => {
     } else {
       annotation = getState().annotations.annotations[index];
     }
+
+    // If an Annotation is already selected, don't allow a new Annotation to be selected over it.
+    // Instead, use unselectAnnotation() to get a clean slate first.
+    if (annotation && getState().annotations.selectedAnnotation) return;
+
     dispatch({
       type: SELECT_ANNOTATION,
       annotation,
