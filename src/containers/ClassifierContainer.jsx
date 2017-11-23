@@ -19,7 +19,7 @@ import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import {
-  createClassification, saveClassification,
+  createClassification, saveClassificationInProgress,
   submitClassification
 } from '../ducks/classifications';
 
@@ -344,7 +344,7 @@ class ClassifierContainer extends React.Component {
   }
 
   saveCurrentClassification() {
-    this.props.dispatch(saveClassification());
+    this.props.dispatch(saveClassificationInProgress());
   }
 }
 

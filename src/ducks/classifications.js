@@ -17,6 +17,7 @@ const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
 const CREATE_CLASSIFICATION_ERROR = 'CREATE_CLASSIFICATION_ERROR';
 const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
+const UPDATE_CLASSIFICATION = 'UPDATE_CLASSIFICATION';
 
 const CLASSIFICATION_STATUS = {
   IDLE: 'classification_status_idle',
@@ -68,6 +69,11 @@ const classificationReducer = (state = initialState, action) => {
       sca[action.taskId] = action.answerValue;
       return Object.assign({}, state, {
         subjectCompletionAnswers: sca,
+      });
+    
+    case UPDATE_CLASSIFICATION:  //Useful when the Classification object is changed, and we need to get a 'fresh one' from Panoptes.
+      return Object.assign({}, state, {
+        classification: action.classification,
       });
 
     default:
@@ -159,9 +165,7 @@ const submitClassification = () => {
 
     //Save the classification
     //----------------
-    
     dispatch({ type: SUBMIT_CLASSIFICATION });
-    
     classification.update({
       completed: true,
       'metadata.session': getSessionID(),
@@ -234,7 +238,7 @@ const retrieveClassification = (id) => {
   };
 };
 
-const saveClassification = () => {
+const saveClassificationInProgress = () => {
   return (dispatch, getState) => {
     let task = "T0";
     if (getState().workflow.data) {
@@ -263,6 +267,11 @@ const saveClassification = () => {
         localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
       }
       dispatch(toggleDialog(<SaveSuccess />, false, true));
+      
+      //Refresh our Classification object with the newer, fresher version from
+      //Panoptes. If we don't, all future .save() and .update() actions on the
+      //(old) Classification object will start going wonky.
+      dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
     })
     .catch((err) => {
       console.log(err);
@@ -279,7 +288,7 @@ export default classificationReducer;
 export {
   createClassification,
   submitClassification,
-  saveClassification,
+  saveClassificationInProgress,
   retrieveClassification,
   setSubjectCompletionAnswers,
 };

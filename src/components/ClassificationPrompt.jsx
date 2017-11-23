@@ -44,7 +44,7 @@ class ClassificationPrompt extends React.Component {
           new manuscript?
         </span>
         <span>
-          <i>Note:</i> If you select &quot;New Manuscript&quot;&#44;, you will lose any
+          <i>Note:</i> If you select &quot;New Manuscript&quot;, you will lose any
           saved work from a previous manuscript.
         </span>
         <div>
