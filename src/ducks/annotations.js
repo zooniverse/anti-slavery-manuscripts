@@ -14,7 +14,6 @@ const DELETE_SELECTED_ANNOTATION = 'DELETE_SELECTED_ANNOTATION';
 const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
 const UPDATE_TEXT = 'UPDATE_TEXT';
 const SAVE_TEXT = 'SAVE_TEXT';
-const SET_ANNOTATIONS = 'SET_ANNOTATIONS';
 
 //Misc Constants
 const ANNOTATION_STATUS = {
@@ -94,11 +93,6 @@ const annotationsReducer = (state = initialState, action) => {
 
       return Object.assign({}, state, {
         annotations: userAnnotations
-      });
-
-    case SET_ANNOTATIONS:
-      return Object.assign({}, state, {
-        annotations: action.annotations
       });
 
     case UPDATE_TEXT:
@@ -227,15 +221,6 @@ const collaborateWithAnnotation = (annotation, text) => {
   };
 };
 
-const setAnnotations = (annotations) => {
-  return(dispatch) => {
-    dispatch({
-      type: SET_ANNOTATIONS,
-      annotations
-    });
-  };
-};
-
 export default annotationsReducer;
 
 //------------------------------------------------------------------------------
@@ -243,7 +228,7 @@ export default annotationsReducer;
 //Exports
 
 export {
-  resetAnnotations, setAnnotations,
+  resetAnnotations,
   addAnnotationPoint, completeAnnotation,
   selectAnnotation, unselectAnnotation,
   deleteSelectedAnnotation,
