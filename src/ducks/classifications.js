@@ -146,6 +146,7 @@ const submitClassification = () => {
     //Note that each annotation in classification.annotations[] is in the form
     //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
     //----------------
+    
     const sca = getState().classifications.subjectCompletionAnswers;
     Object.keys(sca).map((taskId) => {
       const answerForTask = {
@@ -158,7 +159,9 @@ const submitClassification = () => {
 
     //Save the classification
     //----------------
+    
     dispatch({ type: SUBMIT_CLASSIFICATION });
+    
     classification.update({
       completed: true,
       'metadata.session': getSessionID(),
@@ -245,23 +248,25 @@ const saveClassification = () => {
       task,
       value: getState().annotations.annotations,
     };
-
+    
     const classification = getState().classifications.classification;
+    
     classification.update({
       annotations: [annotations],
       completed: false,
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
-    }).save()
-      .catch((err) => {
-        console.log(err);
-      })
-      .then((savedClassification) => {
-        if (user) {
-          localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
-        }
-        dispatch(toggleDialog(<SaveSuccess />, false, true));
-      });
+    })
+    .save()
+    .then((savedClassification) => {
+      if (user) {
+        localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
+      }
+      dispatch(toggleDialog(<SaveSuccess />, false, true));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 };
 
