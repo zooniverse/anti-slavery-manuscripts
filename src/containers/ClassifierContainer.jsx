@@ -19,8 +19,7 @@ import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import {
-  createClassification, saveClassification,
-  submitClassification
+  createClassification, submitClassification
 } from '../ducks/classifications';
 
 import SubjectViewer from './SubjectViewer';
@@ -56,7 +55,6 @@ class ClassifierContainer extends React.Component {
     this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
-    this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
 
     this.state = {
       popup: null,
@@ -128,9 +126,6 @@ class ClassifierContainer extends React.Component {
             <button className="white-red button">Your Crib Sheet</button>*/}
             <img className="divider" role="presentation" src={Divider} />
 
-            {this.props.user && (
-              <button className="white-green button" onClick={this.saveCurrentClassification}>Save Progress</button>
-            )}
 
             <button className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
           </div>
@@ -341,10 +336,6 @@ class ClassifierContainer extends React.Component {
 
   showCollections() {
     this.setState({ popup: <CollectionsContainer closePopup={this.closePopup} /> });
-  }
-
-  saveCurrentClassification() {
-    this.props.dispatch(saveClassification());
   }
 }
 
