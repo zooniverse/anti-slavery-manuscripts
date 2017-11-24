@@ -169,41 +169,35 @@ const selectSubjectSet = (id) => {
 const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
   return (dispatch, getState) => {
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
+    const workflow_id = getState().workflow.id || id;
 
     dispatch({
       type: FETCH_SUBJECT,
     });
 
-    //BETA_ONLY
+    // BETA_ONLY
     //----------------
     let subjectQuery = {
-      workflow_id: id,
+      workflow_id,
       subject_set_id: config.zooniverseLinks.betaSubjectSet,
     };
 
     //----------------
-
-    //Removed for //BETA_ONLY
-    //----------------
-    /*
     let randomSubjectSet;
     const workflow = getState().workflow.data;
     if (workflow && workflow.links.subject_sets.length) {
       const linkedSets = workflow.links.subject_sets;
-      randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
+      randomSubjectSet = linkedSets[Math.floor(Math.random() * linkedSets.length)];
     } else {
-      randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
+      randomSubjectSet = subjectSets[Math.floor(Math.random() * subjectSets.length)].id;
     }
 
-    const subjectQuery = {
-      workflow_id: id,
-      subject_set_id: randomSubjectSet
-    };
+    subjectQuery.subject_set_id = randomSubjectSet;
 
-    if (getState().subject.subjectSet) {
-      subjectQuery.subject_set_id = getState().subject.subjectSet;
-    }
-    */
+    // Removed for //BETA_ONLY
+    // if (getState().subject.subjectSet) {
+    //   subjectQuery.subject_set_id = getState().subject.subjectSet;
+    // }
     //----------------
 
     const gsMode = getState().workflow.goldStandardMode;
@@ -264,10 +258,10 @@ const clearQueue = () => {
     dispatch({
       type: CLEAR_QUEUE,
       status: SUBJECT_STATUS.IDLE,
-      currentSubject: null
+      currentSubject: null,
     });
-  }
-}
+  };
+};
 
 export default subjectReducer;
 
