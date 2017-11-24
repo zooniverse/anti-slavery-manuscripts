@@ -126,7 +126,7 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
-    const updatedAnnotations = (classification && classification.annotations) ? classification.annotations.slice() : [];  //Create a copy of the Annotations array so we can later update the Classification object with it.
+    const updatedAnnotations = [];  //Always start empty (don't pull anything from classification.annotation) the build the array based on the answers we have.
     const user = getState().login.user;
 
     //TODO: Better error handling
