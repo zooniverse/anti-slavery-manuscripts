@@ -126,6 +126,7 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
+    const updatedAnnotations = (classification && classification.annotations) ? classification.annotations.slice() : [];  //Create a copy of the Annotations array so we can later update the Classification object with it.
     const user = getState().login.user;
 
     //TODO: Better error handling
@@ -139,27 +140,26 @@ const submitClassification = () => {
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
     }
-    const annotations = {
+    const firstTaskAnnotations = {
       _key: Math.random(),
       _toolIndex: 0,
       task,
       value: getState().annotations.annotations,
     };
-    classification.annotations.push(annotations);
+    updatedAnnotations.push(firstTaskAnnotations);
     //----------------
 
     //Record the other tasks.
     //Note that each annotation in classification.annotations[] is in the form
     //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
     //----------------
-
     const sca = getState().classifications.subjectCompletionAnswers;
     Object.keys(sca).map((taskId) => {
       const answerForTask = {
         task: taskId,
         value: sca[taskId],
       };
-      classification.annotations.push(answerForTask);
+      updatedAnnotations.push(answerForTask);
     });
     //----------------
 
@@ -167,7 +167,7 @@ const submitClassification = () => {
     //----------------
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
-      annotations: classification.annotations,
+      annotations: updatedAnnotations,
       completed: true,
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
@@ -220,6 +220,7 @@ const retrieveClassification = (id) => {
   return (dispatch) => {
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
+        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly. 
         const subjectId = classification.links.subjects.shift();
         const annotations = classification.annotations.shift();
         dispatch(setAnnotations(annotations.value));
