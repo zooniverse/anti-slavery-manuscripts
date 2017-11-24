@@ -70,7 +70,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         subjectCompletionAnswers: sca,
       });
-    
+
     case UPDATE_CLASSIFICATION:  //Useful when the Classification object is changed, and we need to get a 'fresh one' from Panoptes.
       return Object.assign({}, state, {
         classification: action.classification,
@@ -152,7 +152,7 @@ const submitClassification = () => {
     //Note that each annotation in classification.annotations[] is in the form
     //of: { task: "T1", value: 123 || "abc" || ['a','b'] }
     //----------------
-    
+
     const sca = getState().classifications.subjectCompletionAnswers;
     Object.keys(sca).map((taskId) => {
       const answerForTask = {
@@ -167,6 +167,7 @@ const submitClassification = () => {
     //----------------
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
+      annotations: classification.annotations,
       completed: true,
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
@@ -252,9 +253,9 @@ const saveClassificationInProgress = () => {
       task,
       value: getState().annotations.annotations,
     };
-    
+
     const classification = getState().classifications.classification;
-    
+
     classification.update({
       annotations: [annotations],
       completed: false,
