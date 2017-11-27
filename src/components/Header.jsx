@@ -1,11 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { ZooHeader, LoginButton, LogoutButton, UserMenu } from 'zooniverse-react-components';
+import { ZooHeader } from 'zooniverse-react-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginToPanoptes, logoutFromPanoptes } from '../ducks/login';
 import AuthContainer from '../containers/AuthContainer';
-import SiteNavItems from '../lib/site-nav-items';
 
 class Header extends React.Component {
   constructor(props) {
@@ -23,14 +21,18 @@ class Header extends React.Component {
   }
 
   render() {
+    const isAdmin = this.props.user && this.props.user.admin;
+
     return (
-      <ZooHeader authContainer={<AuthContainer />} />
+      <ZooHeader authContainer={<AuthContainer />} isAdmin={isAdmin} />
     );
   }
 }
 
 Header.propTypes = {
+  dispatch: PropTypes.func,
   user: PropTypes.shape({
+    admin: PropTypes.bool,
     id: PropTypes.string,
   }),
 };
@@ -41,7 +43,7 @@ Header.defaultProps = {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.login.user
+    user: state.login.user,
   };
 };
 
