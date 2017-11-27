@@ -192,7 +192,7 @@ class SubjectViewer extends React.Component {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
-    
+
     //Fetch the first subject, IF no subject has yet been loaded.
     //Fetching a subject will also ensure a clean slate for Annotations,
     //Previous Annotations, and Classifications.
