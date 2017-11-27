@@ -166,10 +166,10 @@ const selectSubjectSet = (id) => {
     meant to be the first fetchSubject of the user's session. Hence, the Subject
     will ONLY be fetched IF no Subject has previously been fetched.
  */
-const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
+const fetchSubject = (initialFetch = false) => {
   return (dispatch, getState) => {
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
-    const workflow_id = getState().workflow.id || id;
+    const workflow_id = getState().workflow.id;
 
     dispatch({
       type: FETCH_SUBJECT,
@@ -177,10 +177,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
 
     // BETA_ONLY
     //----------------
-    let subjectQuery = {
-      workflow_id,
-      subject_set_id: config.zooniverseLinks.betaSubjectSet,
-    };
+    let subjectQuery = { workflow_id };
 
     //----------------
     let randomSubjectSet;
@@ -191,7 +188,6 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     } else {
       randomSubjectSet = subjectSets[Math.floor(Math.random() * subjectSets.length)].id;
     }
-
     subjectQuery.subject_set_id = randomSubjectSet;
 
     // Removed for //BETA_ONLY
@@ -204,7 +200,6 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     if (gsMode) {
       subjectQuery = { workflow_id: config.zooniverseLinks.gsWorkflow };
     }
-
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
@@ -220,7 +215,6 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
           prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
-          console.error(err);
           dispatch({ type: FETCH_SUBJECT_ERROR });
         });
     };
