@@ -109,7 +109,6 @@ class FieldGuide extends React.Component {
   render() {
     return (
       <div>
-        <p className="field-guide-title">Field Guide</p>
         {this.state.activeCard && (this.renderActiveCard())}
 
         {!this.state.activeCard && (

@@ -18,6 +18,19 @@ class Dialog extends React.Component {
     // }
   }
 
+  stopEvent(e) {
+    e.preventDefault && e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+    e.returnValue = false;
+    e.cancelBubble = true;
+    return false;
+  }
+
+  close(e) {
+    this.onClose();
+    return this.stopEvent(e);
+  }
+
   render() {
     const width = this.props.isPrompt ? 450 : 800;
     const height = 425;
@@ -26,7 +39,7 @@ class Dialog extends React.Component {
 
     const defaultPosition = { x, y, height, width };
     const enableResize = this.props.enableResize ? { bottomRight: true } : false;
-    const resizeClass = this.props.enableResize ? { bottomRight: "drag-handler" } : false;
+    const resizeClass = this.props.enableResize ? { bottomRight: 'drag-handler' } : false;
     const children = React.Children.map(this.props.children, (child) => {
       return React.cloneElement(child, { onClose: this.close });
     });
@@ -41,44 +54,41 @@ class Dialog extends React.Component {
       >
         <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
           <div className="popup-content dialog-content">
-            {!this.props.isPrompt && (
-              <button className="close-button" onClick={this.close}>X</button>
-            )}
+            <div>
+              {this.props.title.length ? (
+                <h2>{this.props.title}</h2>
+              ) : false}
+
+              {!this.props.isPrompt && (
+                <button className="close-button" onClick={this.close}>X</button>
+              )}
+            </div>
             {children}
           </div>
         </div>
       </Rnd>
     );
   }
-
-  close(e) {
-    this.onClose();
-    return this.stopEvent(e);
-  }
-
-  stopEvent(e) {
-    e.preventDefault && e.preventDefault();
-    e.stopPropagation && e.stopPropagation();
-    e.returnValue = false;
-    e.cancelBubble = true;
-    return false;
-  }
 }
 
 Dialog.defaultProps = {
   enableResize: true,
-  isPrompt: false
-}
+  isPrompt: false,
+  title: '',
+};
 
 Dialog.propTypes = {
+  children: PropTypes.node,
   dispatch: PropTypes.func,
   enableResize: PropTypes.bool,
-  isPrompt: PropTypes.bool
-}
+  isPrompt: PropTypes.bool,
+  title: PropTypes.string,
+};
 
 const mapStateToProps = (state) => ({
   enableResize: state.dialog.enableResize,
-  isPrompt: state.dialog.isPrompt
+  isPrompt: state.dialog.isPrompt,
+  title: state.dialog.title,
 });
 
 export default connect(mapStateToProps)(Dialog);

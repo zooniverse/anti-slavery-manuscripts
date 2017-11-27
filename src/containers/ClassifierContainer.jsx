@@ -235,12 +235,12 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
-        
+
         { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
         (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
           <Popup className="beta-popup-sign-in-prompt" onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
             <div>
-              Thanks for participating in our beta test. 
+              Thanks for participating in our beta test.
               Before you begin transcribing, please sign in or create an account by clicking the button below:
             </div>
             <div>
@@ -317,7 +317,7 @@ class ClassifierContainer extends React.Component {
 
   showMetadata() {
     this.props.dispatch(toggleDialog(
-      <ShowMetadata metadata={this.props.currentSubject.metadata} />));
+      <ShowMetadata metadata={this.props.currentSubject.metadata} />, true, false, 'Subject Info'));
   }
 
   toggleFieldGuide() {
@@ -326,7 +326,7 @@ class ClassifierContainer extends React.Component {
     }
 
     this.props.dispatch(toggleDialog(
-      <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false));
+      <FieldGuide guide={this.props.guide} icons={this.props.icons} />, false, false, 'Field Guide'));
   }
 
   showTutorial() {
@@ -352,6 +352,7 @@ ClassifierContainer.propTypes = {
   adminOverride: PropTypes.bool,
   currentSubject: PropTypes.shape({
     id: PropTypes.string,
+    metadata: PropTypes.object,
   }),
   dispatch: PropTypes.func,
   goldStandardMode: PropTypes.bool,
