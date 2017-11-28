@@ -81,7 +81,7 @@ class FieldGuide extends React.Component {
 
     return (
       <div className="active-card">
-        <button className="field-guide-title" onClick={this.deactivateCard}>
+        <button onClick={this.deactivateCard}>
           <i className="fa fa-arrow-left" /> Back
         </button>
 
@@ -109,7 +109,6 @@ class FieldGuide extends React.Component {
   render() {
     return (
       <div>
-        <p className="field-guide-title">Field Guide</p>
         {this.state.activeCard && (this.renderActiveCard())}
 
         {!this.state.activeCard && (
