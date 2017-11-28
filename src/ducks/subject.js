@@ -169,9 +169,10 @@ const selectSubjectSet = (id) => {
     meant to be the first fetchSubject of the user's session. Hence, the Subject
     will ONLY be fetched IF no Subject has previously been fetched.
  */
-const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = false) => {
+const fetchSubject = (initialFetch = false) => {
   return (dispatch, getState) => {
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
+    const workflow_id = getState().workflow.id;
 
     let savedClassificationPrompt = false;
     const user = getState().login.user;
@@ -189,7 +190,7 @@ const fetchSubject = (id = config.zooniverseLinks.workflowId, initialFetch = fal
     //BETA_ONLY
     //----------------
     let subjectQuery = {
-      workflow_id: id,
+      workflow_id,
       subject_set_id: config.zooniverseLinks.betaSubjectSet,
     };
 
