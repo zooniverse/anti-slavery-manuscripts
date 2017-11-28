@@ -20,6 +20,7 @@ import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import { saveClassificationInProgress } from '../ducks/classifications';
+import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
 
@@ -56,6 +57,7 @@ class ClassifierContainer extends React.Component {
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
 
     if (!(props.user && props.user.admin)) {
       browserHistory.push('/');
@@ -70,6 +72,7 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
   componentDidMount() {
     this.props.dispatch(fetchGuide());
+    document.addEventListener('keyup', this.handleKeyUp);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -92,6 +95,7 @@ class ClassifierContainer extends React.Component {
 
   componentWillUnmount() {
     Split.clear();
+    document.removeEventListener('keyup', this.handleKeyUp);
     this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
   }
 
@@ -287,6 +291,19 @@ class ClassifierContainer extends React.Component {
 
   closePopup() {
     this.setState({ popup: null });
+  }
+
+  handleKeyUp(e) {
+    if (Utility.getKeyCode(e) === KEY_CODES.N && e.ctrlKey) {
+      if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
+        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
+      } else {
+        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      }
+    }
+    if (Utility.getKeyCode(e) === KEY_CODES.M && e.ctrlKey) {
+      this.togglePreviousMarks();
+    }
   }
 
   //----------------------------------------------------------------

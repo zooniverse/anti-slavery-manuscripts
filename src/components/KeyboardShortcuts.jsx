@@ -2,29 +2,25 @@ import React from 'react';
 
 const KeyboardShortcuts = () => {
   return (
-    <div className="login-button">
+    <div className="keyboard-shortcuts">
       <h2>Keyboard Shortcuts</h2>
       <table>
         <tr>
           <th>When Annotating</th>
         </tr>
         <tr>
-          <th>Command</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>M</td>
+          <td>Ctrl + M</td>
           <td>Toggle Previous Marks</td>
         </tr>
         <tr>
-          <td>Space</td>
+          <td>Ctrl + N</td>
           <td>Toggle Navigate and Annotate</td>
         </tr>
         <tr>
           <th>When Transcribing</th>
         </tr>
         <tr>
-          <td>Shift + Enter</td>
+          <td>Ctrl + Enter</td>
           <td>Submit Classifications</td>
         </tr>
         <tr>
