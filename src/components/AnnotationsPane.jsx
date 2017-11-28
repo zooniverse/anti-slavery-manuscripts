@@ -233,17 +233,21 @@ class AnnotationsPane extends React.Component {
             if (onSelectAnnotation) {
               onSelectAnnotation(index, previousAnnotations);
             }
+
+            if (consensusLine) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
           onMouseOver={(e) => {
             if (consensusLine) {
               this.tooltip.style.visibility = 'visible';
+              return;  //If retired line, don't stop events.
             }
             return Utility.stopEvent(e);
           }}
           onMouseOut={(e) => {
             if (consensusLine) {
               this.tooltip.style.visibility = 'hidden';
+              return;  //If retired line, don't stop events.
             }
             return Utility.stopEvent(e);
           }}
@@ -262,13 +266,16 @@ class AnnotationsPane extends React.Component {
                   rotationOffset = this.props.rotation;
               }
               this.tooltip.setAttribute('transform', `translate(${cursor.x}, ${cursor.y}) rotate(${rotationOffset})`);
+              return;  //If retired line, don't stop events.
             }
             return Utility.stopEvent(e);
           }}
           onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
+            if (consensusLine) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
           onMouseUp={(e) => {
+            if (consensusLine) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
         >

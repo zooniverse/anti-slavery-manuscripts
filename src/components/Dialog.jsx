@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
 import { connect } from 'react-redux';
 import { toggleDialog } from '../ducks/dialog';
+import { Utility } from '../lib/Utility';
 
 class Dialog extends React.Component {
   constructor(props) {
@@ -18,17 +19,9 @@ class Dialog extends React.Component {
     // }
   }
 
-  stopEvent(e) {
-    e.preventDefault && e.preventDefault();
-    e.stopPropagation && e.stopPropagation();
-    e.returnValue = false;
-    e.cancelBubble = true;
-    return false;
-  }
-
   close(e) {
     this.onClose();
-    return this.stopEvent(e);
+    return Utility.stopEvent(e);
   }
 
   render() {
