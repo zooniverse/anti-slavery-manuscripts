@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Utility } from '../lib/Utility';
 
 class Popup extends React.Component {
   constructor(props) {
@@ -23,15 +24,7 @@ class Popup extends React.Component {
 
   close(e) {
     this.props.onClose && this.props.onClose();
-    return this.stopEvent(e);
-  }
-
-  stopEvent(e) {
-    e.preventDefault && e.preventDefault();
-    e.stopPropagation && e.stopPropagation();
-    e.returnValue = false;
-    e.cancelBubble = true;
-    return false;
+    return Utility.stopEvent(e);
   }
 }
 
