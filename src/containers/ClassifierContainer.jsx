@@ -332,7 +332,7 @@ class ClassifierContainer extends React.Component {
   }
 
   toggleCribDraw() {
-    this.props.dispatch(toggleDialog(<CribSheet />, false));
+    this.props.dispatch(toggleDialog(<CribSheet />, false, false, 'Crib Sheet'));
   }
 
   togglePreviousMarks() {

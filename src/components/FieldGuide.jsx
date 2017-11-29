@@ -45,7 +45,7 @@ class FieldGuide extends React.Component {
 
   renderItem(items, index) {
     return (
-      <div className="field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
+      <div className="handle field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
         {items.map((item, i) => {
           const resource = item.icon;
           let src;

@@ -52,7 +52,6 @@ class CribSheet extends React.Component {
     const cribsheet = this.props.preferences.preferences.cribsheet;
     return (
       <div className="handle crib-sheet">
-        <h3>Crib Sheet</h3>
         <span className="crib-sheet__instructions">Save images with description for reference.</span>
         <div className="crib-sheet__content">
           {cribsheet && (

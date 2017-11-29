@@ -59,8 +59,6 @@ class AnnotationsPane extends React.Component {
           </text>
         </g>
 
-        {this.renderCrop()}
-
       </g>
     );
   }

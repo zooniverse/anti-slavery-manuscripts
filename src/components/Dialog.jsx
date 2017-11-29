@@ -52,7 +52,7 @@ class Dialog extends React.Component {
           onClick={(e) => { return e.target === this.popupBody && this.close(e); }}
         >
           <div className="popup-content dialog-content">
-            <div>
+            <div className="handle">
               {this.props.title.length ? (
                 <h2>{this.props.title}</h2>
               ) : false}
