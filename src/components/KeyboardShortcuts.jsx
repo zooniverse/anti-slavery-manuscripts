@@ -13,7 +13,7 @@ const KeyboardShortcuts = () => {
           <td>Toggle Previous Marks</td>
         </tr>
         <tr>
-          <td>Ctrl + N</td>
+          <td>Ctrl + A</td>
           <td>Toggle Navigate and Annotate</td>
         </tr>
         <tr>

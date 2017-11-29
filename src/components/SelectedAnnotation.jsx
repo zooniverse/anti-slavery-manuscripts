@@ -317,10 +317,13 @@ class SelectedAnnotation extends React.Component {
 
   handleKeyUp(e) {
     if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE) {
-      this.props.onClose && this.props.onClose();
+      this.cancelAnnotation();
     }
-    if (Utility.getKeyCode(e) === KEY_CODES.ENTER && e.ctrlKey) {
-      this.saveText();
+    if (Utility.getKeyCode(e) === KEY_CODES.ENTER) {
+      const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
+      if (wordCountMatchesDots) {
+        this.saveText();
+      }
     }
   }
 
@@ -345,6 +348,7 @@ SelectedAnnotation.defaultProps = {
   },
   rotation: 0,
   scaling: 1,
+  selectedAnnotation: null,
   translationX: 0,
   translationY: 0,
   viewerSize: {
@@ -362,6 +366,9 @@ SelectedAnnotation.propTypes = {
   onClose: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  selectedAnnotation: PropTypes.shape({
+    points: PropTypes.array,
+  }),
   selectedAnnotationIndex: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
