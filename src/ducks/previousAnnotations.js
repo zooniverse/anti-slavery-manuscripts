@@ -96,18 +96,19 @@ const previousAnnotationsReducer = (state = initialState, action) => {
 
 const fetchPreviousAnnotations = (subject) => {
   if (!subject) return () => {};
-
-  const query = `{
-    workflow(id: ${config.zooniverseLinks.workflowId}) {
-      reductions(subjectId: ${subject.id}) {
-        data
-      }
-    }
-  }`;
-
   return (dispatch, getState) => {
+    const workflowId = getState().workflow.id;
+
+    const query = `{
+      workflow(id: ${workflowId}) {
+        reductions(subjectId: ${subject.id}) {
+          data
+        }
+      }
+    }`;
+
     dispatch({
-      type: FETCH_ANNOTATIONS
+      type: FETCH_ANNOTATIONS,
     });
 
     request(config.zooniverseLinks.caesarHost, query).then((data) => {

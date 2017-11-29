@@ -197,7 +197,6 @@ class SubjectViewer extends React.Component {
     //Fetching a subject will also ensure a clean slate for Annotations,
     //Previous Annotations, and Classifications.
     this.props.dispatch(fetchSubject(
-      undefined,  //JS Quirk: this ensures we're fetching the default value for the 'id' parameter (as defined in fetchSubject())
       true,  //Initial fetch only, meaning ignore this action call if a Subject is already being fetch/has already been loaded.
     ));
   }
