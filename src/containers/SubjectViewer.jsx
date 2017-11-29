@@ -106,7 +106,10 @@ class SubjectViewer extends React.Component {
     let subjectLocation = undefined;
     const cursor = this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING ? 'cursor-move' : 'cursor-crosshairs';
 
-    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
+    if (this.props.currentSubject) {
+      subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
+      subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
+    };
 
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>

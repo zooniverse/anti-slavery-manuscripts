@@ -14,7 +14,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
 
           {subjectsOfNote.map((subject, i) => {
             const location = getSubjectLocation(subject);
-            const thumbnail = getThumbnailSource(location.src);
+            const thumbnail = (location && location.src) ? getThumbnailSource(location.src) : undefined;
             return (
               <div key={i}>
                 <img src={thumbnail} />
