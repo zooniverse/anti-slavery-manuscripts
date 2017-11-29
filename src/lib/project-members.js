@@ -1,6 +1,6 @@
 const ProjectMembers = [
   {
-    photo: "Tom",
+    photo: 'Tom',
     name: 'Tom Blake',
     description: `
       Tom Blake has been working at the Boston Public Library as their Digital
@@ -13,10 +13,19 @@ const ProjectMembers = [
       Tom has overseen the digitization of the BPL's anti-slavery manuscripts and
       will be thrilled to see them transcribed so his kids who don't know cursive
       can read them.
-    `
+    `,
   },
   {
-    photo: "Eben",
+    photo: 'Sam',
+    name: 'Sam Blickhan',
+    description: `
+      Samantha Blickhan is the IMLS Postdoctoral Fellow for Zooniverse, working
+      on text and audio transcription projects. Her research interests include
+      medieval manuscripts, music notation, and histories of writing.
+    `,
+  },
+  {
+    photo: 'Eben',
     name: 'Eben English',
     description: `
       Eben English is a digital repository developer at the Boston Public Library,
@@ -30,21 +39,40 @@ const ProjectMembers = [
       from the University of Illinois Urbana-Champaign. Eben is excited about
       integrating the data generated from this project into BPL's digital repository,
       and hopes it will make these historical treasures even more valuable.
-    `
+    `,
   },
   {
-    photo: "Katherine",
+    photo: 'Will',
+    name: 'Will Granger',
+    description: `
+      Will joined the Zooniverse in 2016 as a front-end developer. In the past,
+      he has taught English overseas, toured in bands, and helped open a music
+      venue in Alabama.
+    `,
+  },
+  {
+    photo: 'Katherine',
     name: 'Katherine Griffin',
     description: `
       Katherine has been working at the Massachusetts Historical Society (a
-        private research library and manuscript repository) in Boston since
-        1985, and is currently the Preservation Librarian there. Over the years
-        she has particularly enjoyed unpacking the mysteries of difficult handwriting
-        and providing transcriptions of manuscripts for web displays and exhibitions.
-    `
+      private research library and manuscript repository) in Boston since
+      1985, and is currently the Preservation Librarian there. Over the years
+      she has particularly enjoyed unpacking the mysteries of difficult handwriting
+      and providing transcriptions of manuscripts for web displays and exhibitions.
+    `,
   },
   {
-    photo: "Susan",
+    photo: 'Coleman',
+    name: 'Coleman Krawczyk',
+    description: `
+      Coleman Krawczyk is a postdoctoral researcher at the University of Portsmouth,
+      UK. With a background in astrophysics, he is currently working as a data
+      scientist for the Zooniverse. In particular he is working on general purpose
+      aggregation tools including the ones used for AnitSlavery Manuscripts.
+    `,
+  },
+  {
+    photo: 'Susan',
     name: 'Susan Mizruchi',
     description: `
       Susan Mizruchi is William Arrowsmith Professor in the Humanities, Director
@@ -56,10 +84,10 @@ const ProjectMembers = [
       is an October 2017 Forum on Libraries and Archives in the Digital Age,
       co-sponsored by the Boston Public Library and the Boston Athenaeum, and
       featuring leading experts from across the globe.
-    `
+    `,
   },
   {
-    photo: "Marilyn",
+    photo: 'Marilyn',
     name: 'Marilyn Morgan',
     description: `
       Marilyn is the Director of the Archives Program and Lecturer in History at
@@ -69,10 +97,30 @@ const ProjectMembers = [
       to help expand access to BPL's archival collections on anti-slavery, and
       believes that engaging the public will enrich digital history and contribute
       to the transformation of education.
-    `
+    `,
   },
   {
-    photo: "Beth",
+    photo: 'Shaun',
+    name: 'Shaun A. Noordin',
+    description: `
+      As a Zooniverse web developer, Shaun A. Noordin writes code for fun and
+      solves puzzles for a living. Although his favourite form of reading involves
+      wordless panels in comic books, he is supremely proud to contribute to the
+      Anti-Slavery Manuscripts transcription project.
+    `,
+  },
+  {
+    photo: 'Becky',
+    name: 'Becky Rother',
+    description: `
+      Becky Rother is the Zooniverse designer, working with both the research team
+      and Zooniverse developers to create a fun, engaging product to help researchers
+      achieve their goals. With a background in mobile apps and product design and
+      a degree in journalism, she's using her powers for good.
+    `,
+  },
+  {
+    photo: 'Beth',
     name: 'Beth Prindle',
     description: `
       Beth Prindle is Boston Public Library's Head of Special Collections,
@@ -82,8 +130,19 @@ const ProjectMembers = [
       special projects.  Beth started her career at BPL as the curator of the
       John Adams Library, the 3,500-volume personal collection of President John
       Adams. She is a former public high school teacher.
-    `
-  }
+    `,
+  },
+  {
+    photo: 'Victoria',
+    name: 'Victoria Van Hyning',
+    description: `
+      Victoria Van Hyning is a British Academy postdoctoral fellow in English
+      literature at Oxford, and is the humanities PI at Zooniverse. She has worked
+      on Science Gossip, AnnoTate, and Shakespeare’s World, and led the IMLS grant
+      proposal with Laura Trouille of the Adler, which funds work on AntiSlavery
+      Manuscripts. and other transcription projects.
+    `,
+  },
 ];
 
 export default ProjectMembers;
