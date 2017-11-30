@@ -21,6 +21,7 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Popup from '../components/Popup';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
@@ -29,6 +30,7 @@ import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import Crop from '../components/Crop';
+import AnnotationReminder from '../components/AnnotationReminder';
 
 import {
   setScaling, setTranslation, resetView,
@@ -80,6 +82,7 @@ class SubjectViewer extends React.Component {
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
     this.escapeCrop = this.escapeCrop.bind(this);
+    this.closePopup = this.closePopup.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -100,6 +103,7 @@ class SubjectViewer extends React.Component {
       cropping: INPUT_STATE.IDLE,
       mouseInViewer: false,
       pointerXYOnImage: null,
+      popup: null,
     };
   }
 
@@ -117,6 +121,12 @@ class SubjectViewer extends React.Component {
 
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
+
+        {(this.state.popup === null) ? null :
+          <Popup className="annotation-reminder" onClose={this.closePopup.bind(this)}>
+            {this.state.popup}
+          </Popup>
+        }
 
         <ZoomTools viewerState={this.props.viewerState} usePanTool={this.usePanTool} useZoomIn={this.useZoomIn} useZoomOut={this.useZoomOut} />
 
@@ -329,6 +339,9 @@ class SubjectViewer extends React.Component {
   }
 
   onMouseUp(e) {
+    if (this.props.userPreferences && this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+      this.setState({ popup: <AnnotationReminder /> });
+    }
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.IDLE;
@@ -392,6 +405,10 @@ class SubjectViewer extends React.Component {
   onMouseEnter(e) {
     this.setState({ mouseInViewer: true });
     return Utility.stopEvent(e);
+  }
+
+  closePopup() {
+    this.setState({ popup: null });
   }
 
   closeAnnotation() {
@@ -533,7 +550,7 @@ SubjectViewer.propTypes = {
         x: PropTypes.number,
         y: PropTypes.number,
       })),
-    })
+    }),
   ),
   //--------
   selectedAnnotation: PropTypes.shape({
@@ -543,6 +560,7 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
+  userPreferences: PropTypes.object,
 };
 SubjectViewer.defaultProps = {
   splits: null,
@@ -573,7 +591,7 @@ SubjectViewer.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   //--------
-  selectedAnnotation: null,
+  userPreferences: null,
 };
 
 SubjectViewer.contextTypes = {
@@ -606,6 +624,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotations: anno.annotations,
     //--------
     selectedAnnotation: state.annotations.selectedAnnotation,
+    userPreferences: state.project.userPreferences,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

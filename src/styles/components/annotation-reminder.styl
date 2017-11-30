@@ -1,0 +1,31 @@
+@import "font-groups.styl"
+
+.annotation-reminder
+  background: rgba(0,0,0,0.15) !important
+  z-index: 1
+
+  &__content
+    margin: 2em
+
+    img
+      display: block
+      max-width: 15em
+      max-height: 15em
+      margin: 1em auto
+
+    span
+      @extend .body-copy
+      display: inline-block
+      font-size: 0.8em
+      line-height: 1.5em
+      margin: 0.5em
+
+  .popup-content
+    width: 19.5em
+
+  .modal-content
+    margin: 0 auto 20vh auto !important
+
+  .modal-title
+    margin: 10vh auto 0 auto !important
+    width: 20em
