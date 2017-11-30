@@ -21,7 +21,6 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
@@ -31,20 +30,20 @@ import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 
 import {
-  setRotation, setScaling, setTranslation, resetView,
+  setScaling, setTranslation, resetView,
   setViewerState, updateViewerSize, updateImageSize,
   SUBJECTVIEWER_STATE,
 } from '../ducks/subject-viewer';
 
 import {
   addAnnotationPoint, completeAnnotation, selectAnnotation,
-  unselectAnnotation, ANNOTATION_STATUS
+  unselectAnnotation, ANNOTATION_STATUS,
 } from '../ducks/annotations';
 
 const INPUT_STATE = {
   IDLE: 0,
   ACTIVE: 1,
-}
+};
 
 const ZOOM_STEP = 0.1;
 const MAX_ANGLE = 8;
@@ -109,7 +108,7 @@ class SubjectViewer extends React.Component {
     if (this.props.currentSubject) {
       subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
       subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
-    };
+    }
 
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>

@@ -29,6 +29,7 @@ AnnotationsPane.jsx for details.
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import SubjectLoading from './SubjectLoading';
 
 const FILTER = "url('#svg-invert-filter')"
 
@@ -73,7 +74,8 @@ export default class SVGImage extends React.Component {
 
     if (this.state.loaded) {
       return (
-        <image className="svg-image"
+        <image
+          className="svg-image"
           style={invertFilter}
           xlinkHref={this.image.src}
           width={this.image.width}
@@ -89,11 +91,8 @@ export default class SVGImage extends React.Component {
           <path d="M -60 -80 L 0 -20 L 60 -80 L 80 -60 L 20 0 L 80 60 L 60 80 L 0 20 L -60 80 L -80 60 L -20 0 L -80 -60 Z" />
         </g>
       );
-    } else {
-      return (
-        <circle className="svg-image-loading" cx={0} cy={0} r={100} />
-      );
     }
+    return <SubjectLoading />;
   }
 }
 

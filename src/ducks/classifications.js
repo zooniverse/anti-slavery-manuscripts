@@ -220,7 +220,7 @@ const retrieveClassification = (id) => {
   return (dispatch) => {
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
-        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly. 
+        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly.
         const subjectId = classification.links.subjects.shift();
         const annotations = classification.annotations.shift();
         dispatch(setAnnotations(annotations.value));
@@ -269,7 +269,7 @@ const saveClassificationInProgress = () => {
         localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
       }
       dispatch(toggleDialog(<SaveSuccess />, false, true));
-      
+
       //Refresh our Classification object with the newer, fresher version from
       //Panoptes. If we don't, all future .save() and .update() actions on the
       //(old) Classification object will start going wonky.
