@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
+import { browserHistory } from 'react-router';
 import { config } from '../config';
 
 import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
@@ -58,10 +59,14 @@ class ClassifierContainer extends React.Component {
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
 
+    if (!(props.user && props.user.admin)) {
+      browserHistory.push('/');
+    }
+
     this.state = {
       popup: null,
       showBetaSignInPrompt: true,
-    }
+    };
   }
 
   //----------------------------------------------------------------
@@ -380,8 +385,9 @@ ClassifierContainer.propTypes = {
     id: PropTypes.string,
   }),
   user: PropTypes.shape({
-    id: PropTypes.string
-  })
+    admin: PropTypes.bool,
+    id: PropTypes.string,
+  }),
 };
 ClassifierContainer.defaultProps = {
   adminOverride: false,
@@ -404,7 +410,7 @@ ClassifierContainer.defaultProps = {
 };
 
 ClassifierContainer.contextTypes = {
-  googleLogger: PropTypes.object
+  googleLogger: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {

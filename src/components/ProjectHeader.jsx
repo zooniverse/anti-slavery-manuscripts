@@ -33,6 +33,9 @@ class ProjectHeader extends React.Component {
   }
 
   render() {
+    const isAdmin = this.props.user && this.props.user.admin ?
+      '' : 'project-header__disabled';
+
     return(
       <div className="project-header">
         {this.props.showTitle && (
@@ -49,7 +52,7 @@ class ProjectHeader extends React.Component {
           </Link>
           <Link
             activeClassName="project-header__link--active"
-            className="project-header__link"
+            className={`project-header__link ${isAdmin}`}
             to="/classify"
           >
             Transcribe
@@ -66,14 +69,16 @@ class ProjectHeader extends React.Component {
           </Link>
           <a
             className="project-header__link"
-            href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/collections'}
+            href={`${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/collections`}
+            rel="noopener noreferrer"
             target="_blank"
           >
             Collect
           </a>
           <a
             className="project-header__link"
-            href={config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk'}
+            href={`${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/talk`}
+            rel="noopener noreferrer"
             target="_blank"
           >
             <button onClick={this.talkClick} tabIndex="-1">
@@ -83,24 +88,29 @@ class ProjectHeader extends React.Component {
           <a
             className="project-header__link"
             href={this.feedbackVariant()}
+            rel="noopener noreferrer"
             target="_blank"
           >
             Feedback
           </a>
         </nav>
       </div>
-    )
+    );
   }
 }
 
 ProjectHeader.defaultProps = {
   showTitle: false,
-  variant: VARIANT_TYPES.INDIVIDUAL
+  user: null,
+  variant: VARIANT_TYPES.INDIVIDUAL,
 };
 
 ProjectHeader.propTypes = {
   showTitle: PropTypes.bool,
-  variant: PropTypes.string
+  user: PropTypes.shape({
+    admin: PropTypes.bool,
+  }),
+  variant: PropTypes.string,
 };
 
 ProjectHeader.contextTypes = {
@@ -109,6 +119,7 @@ ProjectHeader.contextTypes = {
 
 const mapStateToProps = (state) => {
   return {
+    user: state.login.user,
     variant: state.splits.variant,
   };
 };
