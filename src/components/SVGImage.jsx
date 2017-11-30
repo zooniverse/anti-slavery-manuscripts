@@ -92,7 +92,7 @@ export default class SVGImage extends React.Component {
         </g>
       );
     }
-    return <SubjectLoading />;
+    return <SubjectLoading loaded={this.state.loaded} />;
   }
 }
 
