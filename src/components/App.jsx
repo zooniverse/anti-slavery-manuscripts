@@ -71,16 +71,16 @@ class App extends React.Component {
 
     const path = this.props.location.pathname;
     const showTitle = path === '/classify';
-    
+
     return (
       <div>
         <Header />
-        
-        {/*//BETA_ONLY: Prompt user to login*/}
-        {(this.props.initialised && !this.props.user)
+
+        {/*//BETA_ONLY: Notify of beta pause*/}
+        {(!(this.props.user && this.props.user.admin))
           ? <Banner /> : null
         }
-        
+
         <ProjectHeader showTitle={showTitle} />
         {this.props.children}
         <div className="grommet">
