@@ -5,9 +5,8 @@ const Banner = () => {
   return (
     <div className="beta-top-banner">
       <h2>
-        Thanks for participating in our beta test.
-        Please click on the "Sign in" button at top right
-        to login or create an account.
+        We’re currently implementing some changes to the project based on
+        feedback from our volunteers. Stay tuned for our next round of beta testing!
       </h2>
     </div>
   );

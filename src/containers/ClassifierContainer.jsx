@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
+import { browserHistory } from 'react-router';
 import { config } from '../config';
 
 import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
@@ -18,10 +19,7 @@ import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
-import {
-  createClassification, saveClassificationInProgress,
-  submitClassification
-} from '../ducks/classifications';
+import { saveClassificationInProgress } from '../ducks/classifications';
 
 import SubjectViewer from './SubjectViewer';
 
@@ -58,10 +56,14 @@ class ClassifierContainer extends React.Component {
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
 
+    if (!(props.user && props.user.admin)) {
+      browserHistory.push('/');
+    }
+
     this.state = {
       popup: null,
       showBetaSignInPrompt: true,
-    }
+    };
   }
 
   //----------------------------------------------------------------
@@ -349,23 +351,22 @@ class ClassifierContainer extends React.Component {
 }
 
 ClassifierContainer.propTypes = {
+  dispatch: PropTypes.func,
+  //--------
   adminOverride: PropTypes.bool,
   currentSubject: PropTypes.shape({
     id: PropTypes.string,
     metadata: PropTypes.object,
   }),
-  dispatch: PropTypes.func,
+  favoriteSubject: PropTypes.bool,
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
-  initialised: PropTypes.bool,  //BETA_ONLY
   guideStatus: PropTypes.string,
-  rotation: PropTypes.number,
+  icons: PropTypes.object,
+  initialised: PropTypes.bool,  //BETA_ONLY
+  preferences: PropTypes.object,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
-  project: PropTypes.shape({
-    id: PropTypes.string,
-  }),
   rotation: PropTypes.number,
-  scaling: PropTypes.number,
   selectedAnnotation: PropTypes.shape({
     status: PropTypes.string
   }),
@@ -374,62 +375,60 @@ ClassifierContainer.propTypes = {
     steps: PropTypes.array
   }),
   tutorialStatus: PropTypes.string,
-  variant: PropTypes.string,
+  user: PropTypes.shape({
+    admin: PropTypes.bool,
+    id: PropTypes.string,
+  }),
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
     id: PropTypes.string,
   }),
-  user: PropTypes.shape({
-    id: PropTypes.string
-  })
 };
 ClassifierContainer.defaultProps = {
+  dispatch: () => {},
+  //--------
   adminOverride: false,
-  previousAnnotations: [],
+  currentSubject: null,
+  favoriteSubject: false,
   goldStandardMode: false,
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
   initialised: false,  //BETA_ONLY
-  project: null,
+  preferences: null,
+  previousAnnotations: [],
   rotation: 0,
-  scaling: 1,
   selectedAnnotation: null,
   shownMarks: 0,
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
-  workflow: null,
-  variant: VARIANT_TYPES.INDIVIDUAL,
+  user: null,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
+  workflow: null,
 };
 
 ClassifierContainer.contextTypes = {
-  googleLogger: PropTypes.object
+  googleLogger: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
     adminOverride: state.splits.adminOverride,
-    classification: state.classifications.classification,
     currentSubject: state.subject.currentSubject,
-    goldStandardMode: state.workflow.goldStandardMode,
-    previousAnnotations: state.previousAnnotations.marks,
     favoriteSubject: state.subject.favorite,
+    goldStandardMode: state.workflow.goldStandardMode,
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
     initialised: state.login.initialised,  //BETA_ONLY
     preferences: state.project.userPreferences,
-    project: state.project.data,
+    previousAnnotations: state.previousAnnotations.marks,
     rotation: state.subjectViewer.rotation,
-    scaling: state.subjectViewer.scaling,
     selectedAnnotation: state.annotations.selectedAnnotation,
     shownMarks: state.subjectViewer.shownMarks,
-    splits: state.splits.splits,
     tutorial: state.tutorial.data,
     tutorialStatus: state.tutorial.status,
     user: state.login.user,
-    variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
     workflow: state.workflow.data,
   };
