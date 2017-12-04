@@ -9,17 +9,17 @@ class AnnotationReminder extends React.Component {
     this.props.dispatch(reminderSeen());
 
     if (this.props.user) {
-      const projectPreferences = this.props.userPreferences;
-      if (!projectPreferences.preferences) {
-        projectPreferences.preferences = {};
+      const prefs = this.props.userPreferences;
+      if (!prefs.preferences) {
+        prefs.preferences = {};
       }
-      if (!projectPreferences.preferences.annotation_reminder) {
-        projectPreferences.preferences.annotation_reminder = {};
+      if (!prefs.preferences.annotation_reminder) {
+        prefs.preferences.annotation_reminder = {};
       }
       const changes = {};
       changes[`preferences.annotation_reminder.${this.props.projectId}`] = true;
-      projectPreferences.update(changes);
-      projectPreferences.save();
+      prefs.update(changes);
+      prefs.save();
     }
   }
 
