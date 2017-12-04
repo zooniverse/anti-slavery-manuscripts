@@ -339,7 +339,7 @@ class SubjectViewer extends React.Component {
   }
 
   onMouseUp(e) {
-    if (this.props.userPreferences && this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
+    if (this.props.userPreferences && this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING && !this.props.reminderSeen) {
       this.setState({ popup: <AnnotationReminder /> });
     }
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
@@ -509,9 +509,6 @@ SubjectViewer.propTypes = {
   dispatch: PropTypes.func,
   //--------
   splits: PropTypes.object,
-  user: PropTypes.shape({
-    id: PropTypes.string
-  }),
   //--------
   currentSubject: PropTypes.shape({
     src: PropTypes.string,
@@ -535,7 +532,6 @@ SubjectViewer.propTypes = {
   //--------
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   //--------
-  annotationsStatus: PropTypes.string,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -553,6 +549,7 @@ SubjectViewer.propTypes = {
     }),
   ),
   //--------
+  reminderSeen: PropTypes.bool,
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -591,11 +588,12 @@ SubjectViewer.defaultProps = {
   annotationInProgress: null,
   annotations: [],
   //--------
+  reminderSeen: false,
   userPreferences: null,
 };
 
 SubjectViewer.contextTypes = {
-  googleLogger: PropTypes.object
+  googleLogger: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
@@ -623,6 +621,7 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
     //--------
+    reminderSeen: state.project.reminderSeen,
     selectedAnnotation: state.annotations.selectedAnnotation,
     userPreferences: state.project.userPreferences,
   };

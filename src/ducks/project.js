@@ -16,6 +16,7 @@ const FETCH_PROJECT_SUCCESS = 'FETCH_PROJECT_SUCCESS';
 const FETCH_PROJECT_ERROR = 'FETCH_PROJECT_ERROR';
 const FETCH_PREFERENCES = 'FETCH_PREFERENCES';
 const SET_USER_ROLES = 'SET_USER_ROLES';
+const REMINDER_SEEN = 'REMINDER_SEEN';
 
 //Misc Constants
 const PROJECT_STATUS = {
@@ -33,13 +34,13 @@ const initialState = {
   status: PROJECT_STATUS.IDLE,
   id: null,
   data: {},
+  reminderSeen: false,
   userPreferences: null,
-  userRoles: []
+  userRoles: [],
 };
 
 const classifierReducer = (state = initialState, action) => {
   switch (action.type) {
-
     //State Transition: we are going from idle to fetching a project.
     case FETCH_PROJECT:
       return Object.assign({}, state, {
@@ -68,12 +69,17 @@ const classifierReducer = (state = initialState, action) => {
 
     case SET_USER_ROLES:
       return Object.assign({}, state, {
-        userRoles: action.roles
+        userRoles: action.roles,
+      });
+
+    case REMINDER_SEEN:
+      return Object.assign({}, state, {
+        reminderSeen: true,
       });
 
     default:
       return state;
-  };
+  }
 };
 
 //------------------------------------------------------------------------------
@@ -96,22 +102,27 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
 
     //Step 2: Begin the asynchronous magic!
     apiClient.type('projects').get(id)
-    .then((project) => {
-
-      //Step 3a: Tell the Redux store we're successful, along with the data we fetched.
-      dispatch({
-        type: FETCH_PROJECT_SUCCESS,
-        data: project,
+      .then((project) => {
+        //Step 3a: Tell the Redux store we're successful, along with the data we fetched.
+        dispatch({
+          type: FETCH_PROJECT_SUCCESS,
+          data: project,
+        });
+      })
+      .catch(() => {
+        //Step 3b: Tell the Redux store we screwed up.
+        dispatch({ type: FETCH_PROJECT_ERROR });
       });
-    })
-    .catch((err) => {
+  };
+};
 
-      //Step 3b: Tell the Redux store we screwed up.
-      dispatch({ type: FETCH_PROJECT_ERROR });
-
+const reminderSeen = () => {
+  return (dispatch) => {
+    dispatch({
+      type: REMINDER_SEEN,
     });
   };
-}
+};
 
 const fetchPreferences = (user) => {
   return (dispatch, getState) => {
@@ -174,6 +185,7 @@ export default classifierReducer;
 export {
   fetchProject,
   fetchPreferences,
+  reminderSeen,
   setUserRoles,
   PROJECT_STATUS,
 };
