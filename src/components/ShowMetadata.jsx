@@ -10,12 +10,17 @@ const ShowMetadata = ({ metadata }) => {
         {Object.keys(metadata).map((key, i) => {
           const isHidden = /^\s*#|(\/\/)|!/g.test(key);
           if (metadata[key] && !isHidden) {
+            const isUrl = metadata[key].substring(0, 4) === 'http';
+            let info = metadata[key];
+            if (isUrl) {
+              info = <a target="_blank" rel="noopener noreferrer" href={metadata[key]}>{metadata[key]}</a>;
+            }
             return (
               <tr key={i}>
                 <td><b>{key}</b></td>
-                <td>{metadata[key]}</td>
+                <td>{info}</td>
               </tr>
-            )
+            );
           }
         })}
       </table>
@@ -24,7 +29,7 @@ const ShowMetadata = ({ metadata }) => {
 };
 
 ShowMetadata.propTypes = {
-  metadata: PropTypes.object
+  metadata: PropTypes.object,
 };
 
 export default ShowMetadata;

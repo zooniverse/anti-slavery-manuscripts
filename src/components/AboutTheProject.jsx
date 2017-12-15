@@ -35,7 +35,7 @@ class AboutTheProject extends React.Component {
         </div>
         <div className="about-the-project__description">
           <span>
-            The Boston Public Library's Anti-Slavery collection-one of the largest
+            The Boston Public Library&apos;s Anti-Slavery collection-one of the largest
             and most important collections of abolitionist material in the United
             States-contains rougly 40,000 pieces of correspondence, broadsides,
             newspapers, pamphlets, books, and memorabilia from the 1830s through
