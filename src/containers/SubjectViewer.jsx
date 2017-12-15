@@ -77,7 +77,6 @@ class SubjectViewer extends React.Component {
     this.getBoundingBox = this.getBoundingBox.bind(this);
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
-    this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
 
@@ -143,7 +142,6 @@ class SubjectViewer extends React.Component {
               frame={this.props.frame}
               getPointerXY={this.getPointerXYOnImage}
               mouseInViewer={this.state.mouseInViewer}
-              onCompleteAnnotation={this.onCompleteAnnotation}
               onSelectAnnotation={this.onSelectAnnotation}
               previousAnnotations={this.props.previousAnnotations}
             />
@@ -308,6 +306,17 @@ class SubjectViewer extends React.Component {
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
+      
+      //The second added point should automatically complete the annotation.
+      //As of Dec 2017 we've moved from multi-point lines to a line consisting
+      //of a start and end point, only.
+      if (this.props.annotationInProgress && this.props.annotationInProgress.points &&
+          this.props.annotationInProgress.points.length >= 1) {
+        this.props.dispatch(completeAnnotation());
+      }
+      
+      //TODO: Check if there's an issue with addAnnotationPoint() completing AFTER completeAnnotation();
+      //I don't trust Redux.dispatch() to be synchronous given the weirdness we've seen. (@shaun 20171215)
     }
   }
 
@@ -344,13 +353,6 @@ class SubjectViewer extends React.Component {
   onMouseEnter(e) {
     this.setState({ mouseInViewer: true });
     return Utility.stopEvent(e);
-  }
-
-  /*  Triggers when the user clicks on the final node/point of an
-      annotation-in-progress.
-   */
-  onCompleteAnnotation(point) {
-    this.props.dispatch(completeAnnotation(point));
   }
 
   closeAnnotation() {
