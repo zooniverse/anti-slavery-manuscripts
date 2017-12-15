@@ -37,7 +37,6 @@ class AnnotationsPane extends React.Component {
       <g transform={imageOffset}>
         {pendingLine && (
           <PendingAnnotation
-            angleDegree={this.props.angleDegree}
             annotationInProgress={this.props.annotationInProgress}
             getPointerXY={this.props.getPointerXY}
             mouseInViewer={this.props.mouseInViewer}
@@ -314,7 +313,6 @@ AnnotationsPane.propTypes = {
   }),
   //--------
   adminOverride: PropTypes.bool,
-  angleDegree: PropTypes.func,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({

@@ -140,7 +140,6 @@ class SubjectViewer extends React.Component {
               imageSize={this.props.imageSize}
               annotationInProgress={this.props.annotationInProgress}
               annotations={this.props.annotations}
-              angleDegree={this.angleDegree}
               frame={this.props.frame}
               getPointerXY={this.getPointerXYOnImage}
               mouseInViewer={this.state.mouseInViewer}
@@ -308,13 +307,6 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
-      if (this.props.annotationInProgress && this.props.annotationInProgress.points.length >= 2) {
-        const i = this.props.annotationInProgress.points.length - 1;
-        const points = this.props.annotationInProgress.points;
-
-        const straight = this.angleDegree(pointerXYOnImage, points[i], points[i - 1]);
-        if (!straight) return Utility.stopEvent(e);
-      }
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
     }
   }
@@ -352,15 +344,6 @@ class SubjectViewer extends React.Component {
   onMouseEnter(e) {
     this.setState({ mouseInViewer: true });
     return Utility.stopEvent(e);
-  }
-
-  angleDegree(A,B,C) {
-    const AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));
-    const BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2));
-    const AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
-    const radians = Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
-    const degrees = radians * 180 / Math.PI;
-    return (180 - degrees) <= MAX_ANGLE;
   }
 
   /*  Triggers when the user clicks on the final node/point of an
