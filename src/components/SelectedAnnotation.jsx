@@ -22,7 +22,6 @@ class SelectedAnnotation extends React.Component {
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
-    this.renderWordCount = this.renderWordCount.bind(this);
 
     this.state = {
       annotationText: '',
@@ -172,8 +171,6 @@ class SelectedAnnotation extends React.Component {
       width: PANE_WIDTH,
     };
 
-    const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
-
     return (
       <Rnd
         default={defaultPosition}
@@ -218,12 +215,8 @@ class SelectedAnnotation extends React.Component {
             this.renderAnnotationOptions()
           )}
 
-          {!this.state.showAnnotationOptions && (
-            this.renderWordCount(this.state.annotationText)
-          )}
-
           <div className="selected-annotation__buttons">
-            <button className="done-button" disabled={!wordCountMatchesDots} onClick={this.saveText}>Done</button>
+            <button className="done-button" onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
@@ -264,26 +257,6 @@ class SelectedAnnotation extends React.Component {
         })}
       </div>
     )
-  }
-
-  renderWordCount(text) {
-    const expectedWords = this.props.selectedAnnotation.points.length - 1;
-    const cleaned_text = text.replace(/\s+/g, ' ').trim();
-    const number_of_words = cleaned_text ? cleaned_text.split(' ').length : 0;
-    const style = expectedWords === number_of_words ? "word-count--green" :
-      expectedWords < number_of_words ? "word-count--red" : "";
-
-    return (
-      <span className={`word-count ${style}`}>
-        {number_of_words} &#47; {expectedWords} words
-      </span>
-    )
-  }
-
-  doesWordCountMatchDots(text, dots) {
-    const cleaned_text = text.replace(/\s+/g, ' ').trim();
-    const number_of_words = cleaned_text.split(' ').length;
-    return number_of_words === dots - 1;
   }
 
   saveText() {
