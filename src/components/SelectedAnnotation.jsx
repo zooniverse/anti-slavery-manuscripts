@@ -22,6 +22,7 @@ class SelectedAnnotation extends React.Component {
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
+    this.deleteAnnotation = this.deleteAnnotation.bind(this);
 
     this.state = {
       annotationText: '',
@@ -260,11 +261,22 @@ class SelectedAnnotation extends React.Component {
   }
 
   saveText() {
+    //There are two possibilities here: either the user is agreeing with a
+    //Previous (Aggregated) Annotation, or the user is creating/editing their
+    //own.
     if (this.props.annotation.previousAnnotation) {
       this.props.dispatch(collaborateWithAnnotation(this.props.annotation, this.state.annotationText));
       this.props.dispatch(updatePreviousAnnotation(this.props.selectedAnnotationIndex));
     } else {
-      this.props.dispatch(updateText(this.state.annotationText));
+      //If the newly updated annotation text is essentially blank, just delete this whole Annotation line.
+      const text = (this.state.annotationText && this.state.annotationText.trim)
+        ? this.state.annotationText.trim() : '';
+      if (text !== '') {
+        this.props.dispatch(updateText(text));
+      } else {
+        this.deleteAnnotation();
+      }
+      
     }
 
     if (this.context.googleLogger) {
