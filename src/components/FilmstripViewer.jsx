@@ -72,7 +72,7 @@ class FilmstripViewer extends React.Component {
     const MINIMUM_IMAGES_FOR_SCROLL_BUTTONS = 5;
     const renderButtons = this.props.currentSubject && this.props.currentSubject.locations.length > MINIMUM_IMAGES_FOR_SCROLL_BUTTONS;
     return (
-      <section className="filmstrip-viewer" style={{height: this.props.viewerSize.height}}>
+      <section className="filmstrip-viewer" id="filmstrip-column" style={{height: this.props.viewerSize.height}}>
         {renderButtons && (
           <button className="related-images__top" onClick={this.scroll.bind(this, false)}><i className="fa fa-chevron-up" /></button>
         )}

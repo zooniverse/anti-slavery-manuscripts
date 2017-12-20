@@ -108,7 +108,7 @@ class ClassifierContainer extends React.Component {
     return (
       <main className="app-content classifier-page flex-row">
         <div className="project-background"></div>
-        <section className="help-pane">
+        <section id="help-column" className="help-pane">
           <div>
             <h2>directions</h2>
             <p>

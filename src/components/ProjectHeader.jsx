@@ -37,7 +37,7 @@ class ProjectHeader extends React.Component {
       '' : 'project-header__disabled';
 
     return(
-      <div className="project-header">
+      <div id="project-header" className="project-header">
         {this.props.showTitle && (
           <h1 className="main-title">Anti-Slavery Manuscripts</h1>
         )}

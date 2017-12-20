@@ -7,7 +7,7 @@ import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from 
 import { updatePreviousAnnotation, reenablePreviousAnnotation } from '../ducks/previousAnnotations';
 
 const PANE_WIDTH = 800;
-const PANE_HEIGHT = 260;
+const PANE_HEIGHT = 350;
 const BUFFER = 10;
 
 const ENABLE_DRAG = "handle selected-annotation";
@@ -24,6 +24,7 @@ class SelectedAnnotation extends React.Component {
     this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.checkPaneBounds = this.checkPaneBounds.bind(this);
 
     this.state = {
       annotationText: '',
@@ -147,6 +148,27 @@ class SelectedAnnotation extends React.Component {
     .replace(/\s+/g, ' ');  //No multiple spaces.
   }
 
+  checkPaneBounds(x, y) {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight + window.pageYOffset;
+
+    const paneHalf = PANE_WIDTH / 2;
+    const helpWidth = document.getElementById('help-column').offsetWidth;
+    const filmstripWidth = document.getElementById('filmstrip-column').offsetWidth;
+    const zooHeaderHeight = document.getElementsByClassName('zoo-header')[0].offsetHeight;
+    const projectHeaderHeight = document.getElementById('project-header').offsetHeight;
+
+    const leftX = (x - paneHalf) + (helpWidth + filmstripWidth);
+    const rightX = (x + paneHalf) + (helpWidth + filmstripWidth + BUFFER);
+    const bottomY = zooHeaderHeight + projectHeaderHeight + y + PANE_HEIGHT + BUFFER;
+
+    if (rightX - windowWidth > 0) { x = x - ((rightX + BUFFER) - windowWidth); }
+    if (leftX < 0) { x = x + Math.abs(leftX); }
+    if (bottomY - windowHeight > 0) { y = y - (BUFFER * 3) - (bottomY - windowHeight); }
+
+    return { x, y };
+  }
+
   render() {
     if (!this.props.annotation || !this.props.annotationPanePosition) return null;
 
@@ -169,9 +191,11 @@ class SelectedAnnotation extends React.Component {
 
     const inputClass = this.props.annotation.previousAnnotation ? "selected-annotation__previous" : "selected-annotation__user";
 
+    const boundPos = this.checkPaneBounds(inputX, inputY);
+
     const defaultPosition = {
-      x: inputX - (PANE_WIDTH / 2),
-      y: inputY + BUFFER,
+      x: boundPos.x - (PANE_WIDTH / 2),
+      y: boundPos.y + BUFFER,
       width: PANE_WIDTH,
     };
 
@@ -279,7 +303,7 @@ class SelectedAnnotation extends React.Component {
       } else {
         this.deleteAnnotation();
       }
-      
+
     }
 
     if (this.context.googleLogger) {
