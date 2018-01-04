@@ -82,9 +82,6 @@ export const KEY_CODES = {
   NUM7: 55,
   NUM8: 56,
   NUM9: 57,
-
-  COMMA: 188,
-  PERIOD: 190,
 };
 
 export const KEY_VALUES = {
@@ -96,8 +93,6 @@ export const KEY_VALUES = {
   "Down": KEY_CODES.DOWN,
   "ArrowRight": KEY_CODES.RIGHT,
   "Right": KEY_CODES.RIGHT,
-  "Comma": KEY_CODES.COMMA,
-  "Period": KEY_CODES.PERIOD,
   "Enter": KEY_CODES.ENTER,
   "Space": KEY_CODES.SPACE,
   " ": KEY_CODES.SPACE,

@@ -294,14 +294,14 @@ class ClassifierContainer extends React.Component {
   }
 
   handleKeyUp(e) {
-    if (Utility.getKeyCode(e) === KEY_CODES.COMMA && e.ctrlKey) {
+    if (Utility.getKeyCode(e) === KEY_CODES.A) {
       if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
         this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
       } else {
         this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
       }
     }
-    if (Utility.getKeyCode(e) === KEY_CODES.M && e.ctrlKey) {
+    if (Utility.getKeyCode(e) === KEY_CODES.M) {
       this.togglePreviousMarks();
     }
   }

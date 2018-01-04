@@ -9,11 +9,11 @@ const KeyboardShortcuts = () => {
           <th>When Annotating</th>
         </tr>
         <tr>
-          <td>Ctrl + M</td>
+          <td>M</td>
           <td>Toggle Previous Marks</td>
         </tr>
         <tr>
-          <td>Ctrl + &#60;</td>
+          <td>A</td>
           <td>Toggle Navigate and Annotate</td>
         </tr>
         <tr>
