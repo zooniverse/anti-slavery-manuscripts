@@ -294,7 +294,7 @@ class ClassifierContainer extends React.Component {
   }
 
   handleKeyUp(e) {
-    if (Utility.getKeyCode(e) === KEY_CODES.A && e.ctrlKey) {
+    if (Utility.getKeyCode(e) === KEY_CODES.COMMA && e.ctrlKey) {
       if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
         this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
       } else {

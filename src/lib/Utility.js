@@ -14,14 +14,14 @@ export const Utility = {
     e.cancelBubble = true;
     return false;
   },
-  
+
   getKeyCode(e) {
     //KeyboardEvent.keyCode is the most reliable identifier for a keyboard event
     //at the moment, but unfortunately it's being deprecated.
     if (e.keyCode) {
       return e.keyCode;
     }
-    
+
     //KeyboardEvent.code and KeyboardEvent.key are the 'new' standards, but it's
     //far from being standardised between browsers.
     if (e.code && KEY_VALUES[e.code]) {
@@ -29,7 +29,7 @@ export const Utility = {
     } else if (e.key && KEY_VALUES[e.key]) {
       return KEY_VALUES[e.key]
     }
-    
+
     return 0;
   }
 };
@@ -44,7 +44,7 @@ export const KEY_CODES = {
   ESCAPE: 27,
   TAB: 9,
   SHIFT: 16,
-  
+
   A: 65,
   B: 66,
   C: 67,
@@ -72,7 +72,7 @@ export const KEY_CODES = {
   Y: 89,
   Z: 90,
 
-  NUM0: 48,  
+  NUM0: 48,
   NUM1: 49,
   NUM2: 50,
   NUM3: 51,
@@ -82,6 +82,9 @@ export const KEY_CODES = {
   NUM7: 55,
   NUM8: 56,
   NUM9: 57,
+
+  COMMA: 188,
+  PERIOD: 190,
 };
 
 export const KEY_VALUES = {
@@ -93,6 +96,8 @@ export const KEY_VALUES = {
   "Down": KEY_CODES.DOWN,
   "ArrowRight": KEY_CODES.RIGHT,
   "Right": KEY_CODES.RIGHT,
+  "Comma": KEY_CODES.COMMA,
+  "Period": KEY_CODES.PERIOD,
   "Enter": KEY_CODES.ENTER,
   "Space": KEY_CODES.SPACE,
   " ": KEY_CODES.SPACE,
@@ -102,7 +107,7 @@ export const KEY_VALUES = {
   "Shift": KEY_CODES.SHIFT,
   "ShiftLeft": KEY_CODES.SHIFT,
   "ShiftRight": KEY_CODES.SHIFT,
-  
+
   "A": KEY_CODES.A,
   "KeyA": KEY_CODES.A,
   "B": KEY_CODES.B,
@@ -155,7 +160,7 @@ export const KEY_VALUES = {
   "KeyY": KEY_CODES.Y,
   "Z": KEY_CODES.Z,
   "KeyZ": KEY_CODES.Z,
-  
+
   "0": KEY_CODES.NUM0,
   "Digit0": KEY_CODES.NUM0,
   "1": KEY_CODES.NUM1,
