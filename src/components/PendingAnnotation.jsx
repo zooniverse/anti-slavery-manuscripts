@@ -41,10 +41,6 @@ class PendingAnnotation extends React.Component {
     if (this.state.pointer) {
       const prevPoint = this.props.annotationInProgress.points[i - 1];
       const beforePoint = this.props.annotationInProgress.points[i - 2];
-      if (i >= 2) {
-        const straight = this.props.angleDegree(this.state.pointer, prevPoint, beforePoint);
-        if (!straight) fill = "#c33";
-      }
       pendingPoint = (
         <circle
           key="PENDING_POINT"
@@ -73,7 +69,6 @@ class PendingAnnotation extends React.Component {
 }
 
 PendingAnnotation.propTypes = {
-  angleDegree: PropTypes.func,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -86,7 +81,6 @@ PendingAnnotation.propTypes = {
 };
 
 PendingAnnotation.defaultProps = {
-  angleDegree: () => {},
   annotationInProgress: null,
   getPointerXY: () => {},
   mouseInViewer: false,
