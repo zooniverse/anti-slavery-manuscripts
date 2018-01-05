@@ -182,48 +182,34 @@ const fetchSubject = (initialFetch = false) => {
       if (savedClassification) savedClassificationPrompt = true;
     }
 
-
     dispatch({
       type: FETCH_SUBJECT,
     });
 
-    //BETA_ONLY
+    // BETA_ONLY
     //----------------
-    let subjectQuery = {
-      workflow_id,
-      subject_set_id: config.zooniverseLinks.betaSubjectSet,
-    };
+    let subjectQuery = { workflow_id };
 
-    //----------------
-
-    //Removed for //BETA_ONLY
-    //----------------
-    /*
     let randomSubjectSet;
     const workflow = getState().workflow.data;
     if (workflow && workflow.links.subject_sets.length) {
       const linkedSets = workflow.links.subject_sets;
-      randomSubjectSet = linkedSets[Math.floor(Math.random()*linkedSets.length)];
+      randomSubjectSet = linkedSets[Math.floor(Math.random() * linkedSets.length)];
     } else {
-      randomSubjectSet = subjectSets[Math.floor(Math.random()*subjectSets.length)].id;
+      randomSubjectSet = subjectSets[Math.floor(Math.random() * subjectSets.length)].id;
     }
+    subjectQuery.subject_set_id = randomSubjectSet;
 
-    const subjectQuery = {
-      workflow_id: id,
-      subject_set_id: randomSubjectSet
-    };
-
-    if (getState().subject.subjectSet) {
-      subjectQuery.subject_set_id = getState().subject.subjectSet;
-    }
-    */
+    // Removed for //BETA_ONLY
+    // if (getState().subject.subjectSet) {
+    //   subjectQuery.subject_set_id = getState().subject.subjectSet;
+    // }
     //----------------
 
     const gsMode = getState().workflow.goldStandardMode;
     if (gsMode) {
       subjectQuery = { workflow_id: config.zooniverseLinks.gsWorkflow };
     }
-
     const fetchQueue = () => {
       apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
@@ -239,7 +225,6 @@ const fetchSubject = (initialFetch = false) => {
           prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
-          console.error(err);
           dispatch({ type: FETCH_SUBJECT_ERROR });
         });
     };
@@ -297,10 +282,10 @@ const clearQueue = () => {
     dispatch({
       type: CLEAR_QUEUE,
       status: SUBJECT_STATUS.IDLE,
-      currentSubject: null
+      currentSubject: null,
     });
-  }
-}
+  };
+};
 
 export default subjectReducer;
 
