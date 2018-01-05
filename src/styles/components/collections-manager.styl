@@ -36,6 +36,9 @@
     div:first-child
       position: relative
 
+    .Select-control
+      display: block
+
     .Select-input
       position: absolute
       top: 0
@@ -73,7 +76,14 @@
 
   button
     background: $aqua-marine
+    box-shadow: none
     color: black
     height: 2em
     padding: 0.25rem 0.5rem
     margin: auto 1em
+
+    &:disabled
+      background-color: $light-grey
+
+  div
+    font-family: $cormorant-font

@@ -175,7 +175,7 @@ class ClassifierContainer extends React.Component {
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-repeat" />
               </span>
-              <span>Rotate 90 &deg;</span>
+              <span>Rotate 90&deg;</span>
             </button>
 
             <button className="flat-button block" onClick={this.useResetImage}>
@@ -196,7 +196,7 @@ class ClassifierContainer extends React.Component {
               <span className="classifier-toolbar__icon">
                 <i className="fa fa-adjust" />
               </span>
-              <span>Contrast</span>
+              <span>Invert Colors</span>
             </button>
 
             {this.props.user && (

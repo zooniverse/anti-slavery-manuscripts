@@ -37,7 +37,6 @@ class AnnotationsPane extends React.Component {
       <g transform={imageOffset}>
         {pendingLine && (
           <PendingAnnotation
-            angleDegree={this.props.angleDegree}
             annotationInProgress={this.props.annotationInProgress}
             getPointerXY={this.props.getPointerXY}
             mouseInViewer={this.props.mouseInViewer}
@@ -76,36 +75,12 @@ class AnnotationsPane extends React.Component {
     for (let i = 0; i < this.props.annotationInProgress.points.length; i++) {
       const point = this.props.annotationInProgress.points[i];
 
-      if (i === this.props.annotationInProgress.points.length - 1) {  //Final node: click to finish annotation.
-        svgPoints.push(
-          <circle
-            id="pulsating"
-            key={svgPointPrefix + i}
-            cx={point.x} cy={point.y} r={10} fill="#00CED1"
-            className="end"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              if (this.props.onCompleteAnnotation) {
-                this.props.onCompleteAnnotation();
-              }
-              return Utility.stopEvent(e);
-            }}
-            onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
-              return Utility.stopEvent(e);
-            }}
-            onMouseUp={(e) => {
-              return Utility.stopEvent(e);
-            }}
-          />,
-        );
-      } else {
-        svgPoints.push(
-          <circle
-            key={svgPointPrefix + i}
-            cx={point.x} cy={point.y} r={10} fill="#00CED1"
-          />,
-        );
-      }
+      svgPoints.push(
+        <circle
+          key={svgPointPrefix + i}
+          cx={point.x} cy={point.y} r={10} fill="#00CED1"
+        />,
+      );
 
       if (i > 0) {
         const prevPoint = this.props.annotationInProgress.points[i - 1];
@@ -305,7 +280,6 @@ class AnnotationsPane extends React.Component {
 
 AnnotationsPane.propTypes = {
   frame: PropTypes.number,
-  onCompleteAnnotation: PropTypes.func,
   onSelectAnnotation: PropTypes.func,
   //--------
   imageSize: PropTypes.shape({
@@ -314,7 +288,6 @@ AnnotationsPane.propTypes = {
   }),
   //--------
   adminOverride: PropTypes.bool,
-  angleDegree: PropTypes.func,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -348,7 +321,6 @@ AnnotationsPane.propTypes = {
 
 AnnotationsPane.defaultProps = {
   frame: 0,
-  onCompleteAnnotation: null,
   onSelectAnnotation: null,
   //--------
   imageSize: {
