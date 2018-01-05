@@ -59,10 +59,6 @@ class ClassifierContainer extends React.Component {
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
 
-    if (!(props.user && props.user.admin)) {
-      browserHistory.push('/');
-    }
-
     this.state = {
       popup: null,
       showBetaSignInPrompt: true,
