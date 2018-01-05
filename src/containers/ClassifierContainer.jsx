@@ -20,6 +20,7 @@ import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
 import { saveClassificationInProgress } from '../ducks/classifications';
+import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
 
@@ -28,8 +29,8 @@ import FilmstripViewer from '../components/FilmstripViewer';
 import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
 import ShowMetadata from '../components/ShowMetadata';
-import ZoomTools from '../components/ZoomTools';
 import CollectionsContainer from './CollectionsContainer';
+import KeyboardShortcuts from '../components/KeyboardShortcuts';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
 import SubmitClassificationForm from '../components/SubmitClassificationForm';
@@ -40,7 +41,7 @@ class ClassifierContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    //Bind events
+    // Bind events
     this.useAnnotationTool = this.useAnnotationTool.bind(this);
     this.useRotate90 = this.useRotate90.bind(this);
     this.useResetImage = this.useResetImage.bind(this);
@@ -49,12 +50,14 @@ class ClassifierContainer extends React.Component {
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.showMetadata = this.showMetadata.bind(this);
     this.showCollections = this.showCollections.bind(this);
+    this.showShortcuts = this.showShortcuts.bind(this);
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
     this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
 
     if (!(props.user && props.user.admin)) {
       browserHistory.push('/');
@@ -67,6 +70,10 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+  componentDidMount() {
+    this.props.dispatch(fetchGuide());
+    document.addEventListener('keyup', this.handleKeyUp);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
@@ -88,18 +95,15 @@ class ClassifierContainer extends React.Component {
 
   componentWillUnmount() {
     Split.clear();
+    document.removeEventListener('keyup', this.handleKeyUp);
     this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
-  }
-
-  componentDidMount() {
-    this.props.dispatch(fetchGuide());
   }
 
   render() {
     const disableAnnotate = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
-    const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? "fa fa-eye" :
-      (MARKS_STATE.USER === this.props.shownMarks) ? "fa fa-eye-slash" : "fa fa-eye-slash grey";
+    const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
+      (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -215,6 +219,13 @@ class ClassifierContainer extends React.Component {
               <span>Subject Info</span>
             </button>
 
+            <button className="flat-button block" onClick={this.showShortcuts}>
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-keyboard-o" />
+              </span>
+              <span>Shortcuts</span>
+            </button>
+
             {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
               <label
                 className="admin-override"
@@ -239,34 +250,37 @@ class ClassifierContainer extends React.Component {
         }
 
         { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
-        (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
-          <Popup className="beta-popup-sign-in-prompt" onClose={()=>{ this.setState({ showBetaSignInPrompt: false }); }}>
-            <div>
-              Thanks for participating in our beta test.
-              Before you begin transcribing, please sign in or create an account by clicking the button below:
-            </div>
-            <div>
-              <button
-                className="green sign-in button"
-                onClick={()=>{
-                  const computeRedirectURL = (window) => {
-                    const { location } = window;
-                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
-                  };
-                  oauth.signIn(computeRedirectURL(window));
-                }}
-              >
-                Sign In
-              </button>
-              <a
-                className="continue"
-                onClick={()=>{ this.setState({ showBetaSignInPrompt: false })}}
-                href="#"
-              >
-                Continue without signing in
-              </a>
-            </div>
-          </Popup>
+          (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
+            <Popup
+              className="beta-popup-sign-in-prompt"
+              onClose={() => { this.setState({ showBetaSignInPrompt: false }); }}
+            >
+              <div>
+                Thanks for participating in our beta test.
+                Before you begin transcribing, please sign in or create an account by clicking the button below:
+              </div>
+              <div>
+                <button
+                  className="green sign-in button"
+                  onClick={() => {
+                    const computeRedirectURL = (window) => {
+                      const { location } = window;
+                      return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+                    };
+                    oauth.signIn(computeRedirectURL(window));
+                  }}
+                >
+                  Sign In
+                </button>
+                <a
+                  className="continue"
+                  onClick={() => { this.setState({ showBetaSignInPrompt: false }); }}
+                  href="#"
+                >
+                  Continue without signing in
+                </a>
+              </div>
+            </Popup>
         }
 
       </main>
@@ -277,6 +291,19 @@ class ClassifierContainer extends React.Component {
 
   closePopup() {
     this.setState({ popup: null });
+  }
+
+  handleKeyUp(e) {
+    if (Utility.getKeyCode(e) === KEY_CODES.A) {
+      if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
+        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
+      } else {
+        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      }
+    }
+    if (Utility.getKeyCode(e) === KEY_CODES.M) {
+      this.togglePreviousMarks();
+    }
   }
 
   //----------------------------------------------------------------
@@ -322,6 +349,10 @@ class ClassifierContainer extends React.Component {
       <ShowMetadata metadata={this.props.currentSubject.metadata} />, true, false, 'Subject Info'));
   }
 
+  showShortcuts() {
+    this.setState({ popup: <KeyboardShortcuts /> });
+  }
+
   toggleFieldGuide() {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'open-field-guide' });
@@ -358,21 +389,24 @@ ClassifierContainer.propTypes = {
     id: PropTypes.string,
     metadata: PropTypes.object,
   }),
+  dispatch: PropTypes.func,
   favoriteSubject: PropTypes.bool,
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
-  guideStatus: PropTypes.string,
   icons: PropTypes.object,
   initialised: PropTypes.bool,  //BETA_ONLY
-  preferences: PropTypes.object,
-  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
+  guideStatus: PropTypes.string,
   rotation: PropTypes.number,
+  preferences: PropTypes.shape({
+    preferences: PropTypes.object,
+  }),
+  previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   selectedAnnotation: PropTypes.shape({
-    status: PropTypes.string
+    status: PropTypes.string,
   }),
   shownMarks: PropTypes.number,
   tutorial: PropTypes.shape({
-    steps: PropTypes.array
+    steps: PropTypes.array,
   }),
   tutorialStatus: PropTypes.string,
   user: PropTypes.shape({
