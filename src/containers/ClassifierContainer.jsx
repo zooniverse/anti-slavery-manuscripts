@@ -112,8 +112,8 @@ class ClassifierContainer extends React.Component {
           <div>
             <h2>directions</h2>
             <p>
-              Using the Annotate tool, click under each word in a line of text,
-              then add your transcription.
+              Using the Annotate tool, click under the start and end of a line
+              of text, then add your transcription.
 
               {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
               crib sheet for reference.*/}
