@@ -22,7 +22,6 @@ class SelectedAnnotation extends React.Component {
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
-    this.deleteAnnotation = this.deleteAnnotation.bind(this);
 
     this.state = {
       annotationText: '',
