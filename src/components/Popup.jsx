@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Utility } from '../lib/Utility';
 
 class Popup extends React.Component {
   constructor(props) {
@@ -10,11 +11,13 @@ class Popup extends React.Component {
 
   render() {
     return (
-      <div className={`popup modal ${this.props.className}`} ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
-        <div className="popup-title modal-title">
-          <button className="fa fa-close close-button" onClick={this.close}></button>
-        </div>
+      <div
+        className={`popup modal ${this.props.className}`}
+        ref={(c) => { this.popupBody = c; }}
+        onClick={(e) => { return e.target === this.popupBody && this.close(e); }}
+      >
         <div className="popup-content modal-content">
+          <button className="close-button" onClick={this.close}>X</button>
           {this.props.children}
         </div>
       </div>
@@ -23,19 +26,12 @@ class Popup extends React.Component {
 
   close(e) {
     this.props.onClose && this.props.onClose();
-    return this.stopEvent(e);
-  }
-
-  stopEvent(e) {
-    e.preventDefault && e.preventDefault();
-    e.stopPropagation && e.stopPropagation();
-    e.returnValue = false;
-    e.cancelBubble = true;
-    return false;
+    return Utility.stopEvent(e);
   }
 }
 
 Popup.propTypes = {
+  children: PropTypes.node,
   onClose: PropTypes.func,
   className: PropTypes.string,
 };

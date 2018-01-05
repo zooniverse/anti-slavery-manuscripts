@@ -81,7 +81,10 @@ class Navigator extends React.Component {
     const transform = `translate(${-this.props.translationX * this.props.scaling}, ${-this.props.translationY * this.props.scaling})`;
     const rotate = `rotate(${this.props.rotation})`;
     let subjectLocation;
-    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
+    if (this.props.currentSubject) {
+      subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
+      subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
+    };
 
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>

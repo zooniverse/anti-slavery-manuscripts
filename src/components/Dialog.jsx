@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
 import { connect } from 'react-redux';
 import { toggleDialog } from '../ducks/dialog';
+import { Utility } from '../lib/Utility';
 
 class Dialog extends React.Component {
   constructor(props) {
@@ -18,15 +19,23 @@ class Dialog extends React.Component {
     // }
   }
 
+  close(e) {
+    this.onClose();
+    return Utility.stopEvent(e);
+  }
+
   render() {
-    const width = 800;
+    const width = this.props.isPrompt ? 450 : 800;
     const height = 425;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2) + window.pageYOffset;
 
     const defaultPosition = { x, y, height, width };
     const enableResize = this.props.enableResize ? { bottomRight: true } : false;
-    const resizeClass = this.props.enableResize ? { bottomRight: "drag-handler" } : false;
+    const resizeClass = this.props.enableResize ? { bottomRight: 'drag-handler' } : false;
+    const children = React.Children.map(this.props.children, (child) => {
+      return React.cloneElement(child, { onClose: this.close });
+    });
 
     return (
       <Rnd
@@ -38,39 +47,41 @@ class Dialog extends React.Component {
       >
         <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
           <div className="popup-content dialog-content">
-            <button className="close-button" onClick={this.close}>X</button>
-            {this.props.children}
+            <div>
+              {this.props.title.length ? (
+                <h2>{this.props.title}</h2>
+              ) : false}
+
+              {!this.props.isPrompt && (
+                <button className="close-button" onClick={this.close}>X</button>
+              )}
+            </div>
+            {children}
           </div>
         </div>
       </Rnd>
     );
   }
-
-  close(e) {
-    this.onClose();
-    return this.stopEvent(e);
-  }
-
-  stopEvent(e) {
-    e.preventDefault && e.preventDefault();
-    e.stopPropagation && e.stopPropagation();
-    e.returnValue = false;
-    e.cancelBubble = true;
-    return false;
-  }
 }
 
 Dialog.defaultProps = {
-  enableResize: true
-}
+  enableResize: true,
+  isPrompt: false,
+  title: '',
+};
 
 Dialog.propTypes = {
+  children: PropTypes.node,
   dispatch: PropTypes.func,
-  enableResize: PropTypes.bool
-}
+  enableResize: PropTypes.bool,
+  isPrompt: PropTypes.bool,
+  title: PropTypes.string,
+};
 
 const mapStateToProps = (state) => ({
-  enableResize: state.dialog.enableResize
+  enableResize: state.dialog.enableResize,
+  isPrompt: state.dialog.isPrompt,
+  title: state.dialog.title,
 });
 
 export default connect(mapStateToProps)(Dialog);

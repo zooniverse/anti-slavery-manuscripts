@@ -108,7 +108,7 @@ const fetchPreviousAnnotations = (subject) => {
     }`;
 
     dispatch({
-      type: FETCH_ANNOTATIONS
+      type: FETCH_ANNOTATIONS,
     });
 
     request(config.zooniverseLinks.caesarHost, query).then((data) => {

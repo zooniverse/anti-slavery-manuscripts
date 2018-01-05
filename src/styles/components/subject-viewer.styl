@@ -2,11 +2,12 @@
   flex: 1 1 auto
   overflow: inherit
   background: #333  //TMP: visual differentiator for the Subject
-  border: 1px solid #333  //TMP: Borders offer visual differentiation but may interfere with precise mathematical calculations of width.
 
   svg
     background: $light-grey
-    border: 1px solid #fff  //TMP: Borders offer visual differentiation but may interfere with precise mathematical calculations of width.
+
+.tooltip
+  visibility: hidden
 
 .filmstrip-viewer
   position: relative
@@ -19,14 +20,15 @@
 
 .related-images
   background: $mid-grey
+  color: #EFEBE3
   height: 100%
   overflow: hidden
   position: relative
   width: 3em
 
   > div:first-child
-    transform: rotate(-90deg) translateX(-55%) translateY(-145%)
-    width: 7em
+    transform: rotate(-90deg) translateX(-55%) translateY(-110%)
+    width: 6em
 
     h2
       font-size: 0.6em
@@ -34,7 +36,7 @@
   &__frames
     line-height: 0.8em
     position: relative
-    top: 6.5em
+    top: 6em
     text-align: center
     width: 100%
 

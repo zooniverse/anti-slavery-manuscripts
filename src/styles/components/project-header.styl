@@ -6,7 +6,7 @@
 
   .main-title
     flex: 1
-    font-size 2.5rem
+    font-size 1.7rem
 
   &__nav
     align-self: flex-start
@@ -45,3 +45,11 @@
 
     &:first-child
       margin-left: 0
+
+  &__disabled
+    color: $mid-grey
+    pointer-events: none
+
+    &:hover, &:focus
+      border-bottom: none
+      color: $mid-grey

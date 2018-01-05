@@ -1,17 +1,23 @@
+import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
-import { fetchSubject } from './subject';
+import { setAnnotations } from './annotations';
+import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
+import { toggleDialog } from './dialog';
+import SaveSuccess from '../components/SaveSuccess';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
 const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
 const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
+const CREATE_CLASSIFICATION_ERROR = 'CREATE_CLASSIFICATION_ERROR';
 const SET_SUBJECT_COMPLETION_ANSWERS = 'SET_SUBJECT_COMPLETION_ANSWERS';
+const UPDATE_CLASSIFICATION = 'UPDATE_CLASSIFICATION';
 
 const CLASSIFICATION_STATUS = {
   IDLE: 'classification_status_idle',
@@ -33,6 +39,11 @@ const classificationReducer = (state = initialState, action) => {
         classification: action.classification,
         status: CLASSIFICATION_STATUS.IDLE,
         subjectCompletionAnswers: {},
+      });
+
+    case CREATE_CLASSIFICATION_ERROR:
+      return Object.assign({}, state, {
+        status: CLASSIFICATION_STATUS.ERROR
       });
 
     case SUBMIT_CLASSIFICATION:
@@ -58,6 +69,11 @@ const classificationReducer = (state = initialState, action) => {
       sca[action.taskId] = action.answerValue;
       return Object.assign({}, state, {
         subjectCompletionAnswers: sca,
+      });
+
+    case UPDATE_CLASSIFICATION:  //Useful when the Classification object is changed, and we need to get a 'fresh one' from Panoptes.
+      return Object.assign({}, state, {
+        classification: action.classification,
       });
 
     default:
@@ -110,6 +126,8 @@ const submitClassification = () => {
     const subject = getState().subject;
     const subject_dimensions = (subject && subject.imageMetadata) ? subject.imageMetadata : [];
     const classification = getState().classifications.classification;
+    const updatedAnnotations = [];  //Always start empty (don't pull anything from classification.annotation) the build the array based on the answers we have.
+    const user = getState().login.user;
 
     //TODO: Better error handling
     if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
@@ -122,13 +140,13 @@ const submitClassification = () => {
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
     }
-    const annotations = {
+    const firstTaskAnnotations = {
       _key: Math.random(),
       _toolIndex: 0,
-      task: task,
+      task,
       value: getState().annotations.annotations,
     };
-    classification.annotations.push(annotations);
+    updatedAnnotations.push(firstTaskAnnotations);
     //----------------
 
     //Record the other tasks.
@@ -141,7 +159,7 @@ const submitClassification = () => {
         task: taskId,
         value: sca[taskId],
       };
-      classification.annotations.push(answerForTask);
+      updatedAnnotations.push(answerForTask);
     });
     //----------------
 
@@ -149,6 +167,7 @@ const submitClassification = () => {
     //----------------
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
+      annotations: updatedAnnotations,
       completed: true,
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
@@ -162,6 +181,9 @@ const submitClassification = () => {
 
     //Successful save: reset everything, then get the next Subject.
     .then(() => {
+      if (user) {
+        localStorage.removeItem(`${user.id}.classificationID`);
+      }
       //Log
       console.log('Submit classification: Success');
       Split.classificationCreated(classification);
@@ -194,6 +216,71 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
   };
 };
 
+const retrieveClassification = (id) => {
+  return (dispatch) => {
+    apiClient.type('classifications/incomplete').get({ id })
+      .then(([classification]) => {
+        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly. 
+        const subjectId = classification.links.subjects.shift();
+        const annotations = classification.annotations.shift();
+        dispatch(setAnnotations(annotations.value));
+        dispatch(fetchSavedSubject(subjectId));
+        dispatch({
+          type: CREATE_CLASSIFICATION,
+          classification,
+          status: CLASSIFICATION_STATUS.IDLE,
+          subjectCompletionAnswers: {},
+        });
+      })
+      .catch((err) => {
+        dispatch({
+          type: CREATE_CLASSIFICATION_ERROR
+        })
+      });
+  };
+};
+
+const saveClassificationInProgress = () => {
+  return (dispatch, getState) => {
+    let task = "T0";
+    if (getState().workflow.data) {
+      task = getState().workflow.data.first_task;  //This should usually be T1.
+    }
+    const user = getState().login.user;
+
+    const annotations = {
+      _key: Math.random(),
+      _toolIndex: 0,
+      task,
+      value: getState().annotations.annotations,
+    };
+
+    const classification = getState().classifications.classification;
+
+    classification.update({
+      annotations: [annotations],
+      completed: false,
+      'metadata.session': getSessionID(),
+      'metadata.finished_at': (new Date()).toISOString(),
+    })
+    .save()
+    .then((savedClassification) => {
+      if (user) {
+        localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
+      }
+      dispatch(toggleDialog(<SaveSuccess />, false, true));
+      
+      //Refresh our Classification object with the newer, fresher version from
+      //Panoptes. If we don't, all future .save() and .update() actions on the
+      //(old) Classification object will start going wonky.
+      dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+};
+
 export default classificationReducer;
 
 //------------------------------------------------------------------------------
@@ -203,5 +290,7 @@ export default classificationReducer;
 export {
   createClassification,
   submitClassification,
+  saveClassificationInProgress,
+  retrieveClassification,
   setSubjectCompletionAnswers,
 };

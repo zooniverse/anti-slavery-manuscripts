@@ -77,7 +77,6 @@ class SubjectViewer extends React.Component {
     this.getBoundingBox = this.getBoundingBox.bind(this);
     this.getPointerXY = this.getPointerXY.bind(this);
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
-    this.onCompleteAnnotation = this.onCompleteAnnotation.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
 
@@ -106,7 +105,10 @@ class SubjectViewer extends React.Component {
     let subjectLocation = undefined;
     const cursor = this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING ? 'cursor-move' : 'cursor-crosshairs';
 
-    if (this.props.currentSubject) subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame).src;
+    if (this.props.currentSubject) {
+      subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
+      subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
+    };
 
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
@@ -137,11 +139,9 @@ class SubjectViewer extends React.Component {
               imageSize={this.props.imageSize}
               annotationInProgress={this.props.annotationInProgress}
               annotations={this.props.annotations}
-              angleDegree={this.angleDegree}
               frame={this.props.frame}
               getPointerXY={this.getPointerXYOnImage}
               mouseInViewer={this.state.mouseInViewer}
-              onCompleteAnnotation={this.onCompleteAnnotation}
               onSelectAnnotation={this.onSelectAnnotation}
               previousAnnotations={this.props.previousAnnotations}
             />
@@ -305,14 +305,18 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
-      if (this.props.annotationInProgress && this.props.annotationInProgress.points.length >= 2) {
-        const i = this.props.annotationInProgress.points.length - 1;
-        const points = this.props.annotationInProgress.points;
-
-        const straight = this.angleDegree(pointerXYOnImage, points[i], points[i - 1]);
-        if (!straight) return Utility.stopEvent(e);
-      }
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
+      
+      //The second added point should automatically complete the annotation.
+      //As of Dec 2017 we've moved from multi-point lines to a line consisting
+      //of a start and end point, only.
+      if (this.props.annotationInProgress && this.props.annotationInProgress.points &&
+          this.props.annotationInProgress.points.length >= 1) {
+        this.props.dispatch(completeAnnotation());
+      }
+      
+      //TODO: Check if there's an issue with addAnnotationPoint() completing AFTER completeAnnotation();
+      //I don't trust Redux.dispatch() to be synchronous given the weirdness we've seen. (@shaun 20171215)
     }
   }
 
@@ -349,22 +353,6 @@ class SubjectViewer extends React.Component {
   onMouseEnter(e) {
     this.setState({ mouseInViewer: true });
     return Utility.stopEvent(e);
-  }
-
-  angleDegree(A,B,C) {
-    const AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));
-    const BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2));
-    const AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
-    const radians = Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
-    const degrees = radians * 180 / Math.PI;
-    return (180 - degrees) <= MAX_ANGLE;
-  }
-
-  /*  Triggers when the user clicks on the final node/point of an
-      annotation-in-progress.
-   */
-  onCompleteAnnotation(point) {
-    this.props.dispatch(completeAnnotation(point));
   }
 
   closeAnnotation() {

@@ -78,7 +78,7 @@ class FilmstripViewer extends React.Component {
         )}
         <div className="related-images" ref={(el) => {this.viewport = el; }} style={{height: this.props.viewerSize.height}}>
           <div>
-            <h2>Related Images</h2>
+            <h2>Other Pages</h2>
           </div>
 
           {this.renderFrames()}

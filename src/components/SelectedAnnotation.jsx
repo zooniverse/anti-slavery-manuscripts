@@ -2,6 +2,7 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Utility, KEY_CODES } from '../lib/Utility';
 import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from '../ducks/annotations';
 import { updatePreviousAnnotation, reenablePreviousAnnotation } from '../ducks/previousAnnotations';
 
@@ -22,14 +23,14 @@ class SelectedAnnotation extends React.Component {
     this.deleteAnnotation = this.deleteAnnotation.bind(this);
     this.insertTextModifier = this.insertTextModifier.bind(this);
     this.cancelAnnotation = this.cancelAnnotation.bind(this);
-    this.renderWordCount = this.renderWordCount.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
 
     this.state = {
       annotationText: '',
       previousTranscriptionAgreement: false,
       previousTranscriptionSelection: false,
-      showAnnotationOptions: false
-    }
+      showAnnotationOptions: false,
+    };
   }
 
   componentDidMount() {
@@ -37,6 +38,7 @@ class SelectedAnnotation extends React.Component {
     if (this.props.annotation.details) {
       text = this.props.annotation.details[0].value;
     }
+    document.addEventListener('keyup', this.handleKeyUp);
     this.setState({ annotationText: text });
     this.inputText.addEventListener('mousedown', () => {
       this.dialog.className = DISABLE_DRAG;
@@ -48,6 +50,7 @@ class SelectedAnnotation extends React.Component {
   }
 
   componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeyUp);
     this.inputText.removeEventListener('mousedown', () => {
       this.dialog.className = DISABLE_DRAG;
     });
@@ -73,7 +76,7 @@ class SelectedAnnotation extends React.Component {
       annotationText,
       previousTranscriptionAgreement: true,
       previousTranscriptionSelection: true,
-      showAnnotationOptions: false
+      showAnnotationOptions: false,
     });
   }
 
@@ -172,8 +175,6 @@ class SelectedAnnotation extends React.Component {
       width: PANE_WIDTH,
     };
 
-    const wordCountMatchesDots = this.doesWordCountMatchDots(this.state.annotationText, this.props.selectedAnnotation.points.length);
-
     return (
       <Rnd
         default={defaultPosition}
@@ -181,17 +182,17 @@ class SelectedAnnotation extends React.Component {
         enableResizing={{ bottomRight: true }}
         minHeight={PANE_HEIGHT}
         minWidth={500}
-        resizeHandlerClasses={{ bottomRight: "drag-handler" }}
-        style={{backgroundColor: 'white' }}
+        resizeHandlerClasses={{ bottomRight: 'drag-handler' }}
+        style={{ backgroundColor: 'white' }}
       >
-        <div className={ENABLE_DRAG} ref={(c) => {this.dialog = c}}>
+        <div className={ENABLE_DRAG} ref={(c) => { this.dialog = c; }}>
           <div>
             <h2>Transcribe</h2>
             <button className="close-button" onClick={this.cancelAnnotation}>X</button>
           </div>
           <span>
             Enter the words you marked in the order you marked them. Open the
-            dropdown menu to use previous volunteers' transcriptions as a starting
+            dropdown menu to use previous volunteers&apos; transcriptions as a starting
             point.
           </span>
 
@@ -204,7 +205,7 @@ class SelectedAnnotation extends React.Component {
           </div>
 
           <p>
-            <input className={inputClass} type="text" ref={(c)=>{this.inputText=c}} onChange={this.onTextUpdate} value={this.state.annotationText} />
+            <input className={inputClass} type="text" ref={(c) => { this.inputText = c; }} onChange={this.onTextUpdate} value={this.state.annotationText} />
 
             {this.props.annotation.previousAnnotation && (
               <button onClick={this.toggleShowAnnotations}>
@@ -218,12 +219,8 @@ class SelectedAnnotation extends React.Component {
             this.renderAnnotationOptions()
           )}
 
-          {!this.state.showAnnotationOptions && (
-            this.renderWordCount(this.state.annotationText)
-          )}
-
           <div className="selected-annotation__buttons">
-            <button className="done-button" disabled={!wordCountMatchesDots} onClick={this.saveText}>Done</button>
+            <button className="done-button" onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
@@ -263,35 +260,26 @@ class SelectedAnnotation extends React.Component {
           );
         })}
       </div>
-    )
-  }
-
-  renderWordCount(text) {
-    const expectedWords = this.props.selectedAnnotation.points.length - 1;
-    const cleaned_text = text.replace(/\s+/g, ' ').trim();
-    const number_of_words = cleaned_text ? cleaned_text.split(' ').length : 0;
-    const style = expectedWords === number_of_words ? "word-count--green" :
-      expectedWords < number_of_words ? "word-count--red" : "";
-
-    return (
-      <span className={`word-count ${style}`}>
-        {number_of_words} &#47; {expectedWords} words
-      </span>
-    )
-  }
-
-  doesWordCountMatchDots(text, dots) {
-    const cleaned_text = text.replace(/\s+/g, ' ').trim();
-    const number_of_words = cleaned_text.split(' ').length;
-    return number_of_words === dots - 1;
+    );
   }
 
   saveText() {
+    //There are two possibilities here: either the user is agreeing with a
+    //Previous (Aggregated) Annotation, or the user is creating/editing their
+    //own.
     if (this.props.annotation.previousAnnotation) {
       this.props.dispatch(collaborateWithAnnotation(this.props.annotation, this.state.annotationText));
       this.props.dispatch(updatePreviousAnnotation(this.props.selectedAnnotationIndex));
     } else {
-      this.props.dispatch(updateText(this.state.annotationText));
+      //If the newly updated annotation text is essentially blank, just delete this whole Annotation line.
+      const text = (this.state.annotationText && this.state.annotationText.trim)
+        ? this.state.annotationText.trim() : '';
+      if (text !== '') {
+        this.props.dispatch(updateText(text));
+      } else {
+        this.deleteAnnotation();
+      }
+      
     }
 
     if (this.context.googleLogger) {
@@ -309,6 +297,15 @@ class SelectedAnnotation extends React.Component {
     this.props.dispatch(reenablePreviousAnnotation());
     this.props.dispatch(deleteSelectedAnnotation());
     this.props.onClose();  //Note that deleteSelectedAnnotation() also runs unselectAnnotation(), but this needs to be called anyway to inform the parent component.
+  }
+
+  handleKeyUp(e) {
+    if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE) {
+      this.cancelAnnotation();
+    }
+    if (Utility.getKeyCode(e) === KEY_CODES.ENTER) {
+      this.saveText();
+    }
   }
 
   onTextUpdate() {
@@ -332,13 +329,14 @@ SelectedAnnotation.defaultProps = {
   },
   rotation: 0,
   scaling: 1,
+  selectedAnnotation: null,
   translationX: 0,
   translationY: 0,
   viewerSize: {
     width: 0,
     height: 0,
-  }
-}
+  },
+};
 
 SelectedAnnotation.propTypes = {
   annotationPanePosition: PropTypes.shape({
@@ -349,6 +347,9 @@ SelectedAnnotation.propTypes = {
   onClose: PropTypes.func,
   rotation: PropTypes.number,
   scaling: PropTypes.number,
+  selectedAnnotation: PropTypes.shape({
+    points: PropTypes.array,
+  }),
   selectedAnnotationIndex: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
@@ -356,10 +357,10 @@ SelectedAnnotation.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
-}
+};
 
 SelectedAnnotation.contextTypes = {
-  googleLogger: PropTypes.object
+  googleLogger: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -373,7 +374,7 @@ const mapStateToProps = (state, ownProps) => {
     translationX: sv.translationX,
     translationY: sv.translationY,
     viewerSize: sv.viewerSize,
-    imageSize: sv.imageSize
+    imageSize: sv.imageSize,
   };
 };
 

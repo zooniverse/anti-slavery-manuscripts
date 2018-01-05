@@ -22,6 +22,7 @@
 
 .collections-manager
   font-size: 0.7em
+  margin: 1.5em
 
   &__error
     color: red
@@ -34,6 +35,9 @@
 
     div:first-child
       position: relative
+
+    .Select-control
+      display: block
 
     .Select-input
       position: absolute
@@ -61,6 +65,9 @@
     > *
       flex: 1 0 auto
 
+    input
+      margin-right: 0.25em
+
     .submit-button-container
       text-align: right
 
@@ -69,7 +76,14 @@
 
   button
     background: $aqua-marine
+    box-shadow: none
     color: black
     height: 2em
     padding: 0.25rem 0.5rem
     margin: auto 1em
+
+    &:disabled
+      background-color: $light-grey
+
+  div
+    font-family: $cormorant-font
