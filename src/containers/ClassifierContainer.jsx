@@ -312,10 +312,6 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   useAnnotationTool() {
-    if (this.context.googleLogger) {
-      this.context.googleLogger.logEvent({ type: 'novel-transcription' });
-    }
-
     this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
   }
 
