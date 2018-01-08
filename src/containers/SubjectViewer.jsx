@@ -340,6 +340,9 @@ class SubjectViewer extends React.Component {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
 
+      if (this.context.googleLogger && !this.props.annotationInProgress) {
+        this.context.googleLogger.logEvent({ type: 'novel-transcription' });
+      }
       //The second added point should automatically complete the annotation.
       //As of Dec 2017 we've moved from multi-point lines to a line consisting
       //of a start and end point, only.
