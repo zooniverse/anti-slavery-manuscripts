@@ -1,0 +1,102 @@
+@import "font-groups.styl"
+
+.crib-sheet
+  color: black
+  font-family: playfair-display
+  margin-top: 3em
+
+  &__content
+    background-color: rgba(255, 255, 255, 0.5) !important
+    margin-top: 0 !important
+
+  &__item
+    position: relative
+
+    .crib-sheet__delete
+      visibility: hidden
+
+    &:hover, &:focus
+      .crib-sheet__delete
+        visibility: visible
+
+  &__delete
+    border-radius: 50%
+    display: none
+    position: absolute
+    right: 0.5em
+    top: -0.25em
+    cursor: pointer !important
+
+    i
+      line-height: 0.75em
+      margin: 0 !important
+      padding: 0.2em
+
+  h3
+    @extend .secondary-head
+    line-height: 2em
+
+  button
+    cursor: default
+
+  i
+    color: white
+    margin: 0.2em auto 0 auto
+
+  &__instructions
+    @extend .body-copy
+    margin: 0 0.75em
+
+  &__add-item
+    button
+      cursor: pointer
+      height: 6.9em
+      margin-right: 1em
+      width: 6.5em
+
+    span
+      margin: auto 0 1em 0
+      width: 11em
+
+.save-snippet
+  align-items: center
+  display: flex
+  margin: 1em
+  flex-direction: column
+
+  h3
+    @extend .secondary-head
+
+  input
+    font-family: playfair-display
+    font-size: 0.8em
+    padding: 0.5em
+    width: 15em
+
+  &__image
+    text-align: center
+    margin: 0.5em
+    height: 9em
+    width: 9em
+
+    img
+      object-fit: contain
+      overflow: hidden
+      height: 100%
+      width: 100%
+
+  &__buttons
+    font-size: 0.7em
+
+    button:nth-child(2)
+      background-color: $aqua-marine
+
+    button
+      background-color: white
+      border: 1px solid $teal !important
+      margin: 1.5em
+      width: 7em
+      padding: 0.5em 1.5em
+
+      &:hover, &:focus
+        background-color: $teal

@@ -25,10 +25,11 @@ import FilmstripViewer from '../components/FilmstripViewer';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
-import { Utility } from '../lib/Utility';
+import { Utility, KEY_CODES } from '../lib/Utility';
 import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
+import Crop from '../components/Crop';
 
 import {
   setRotation, setScaling, setTranslation, resetView,
@@ -79,6 +80,7 @@ class SubjectViewer extends React.Component {
     this.getPointerXYOnImage = this.getPointerXYOnImage.bind(this);
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
+    this.escapeCrop = this.escapeCrop.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -87,12 +89,16 @@ class SubjectViewer extends React.Component {
       state: INPUT_STATE.IDLE,
     };
 
+    //Mouse or touch rectangle
+    this.rectangleStart = { x: 0, y: 0 };
+
     //Misc
     this.tmpTransform = null;
 
     //State
     this.state = {
       annotation: null,
+      cropping: INPUT_STATE.IDLE,
       mouseInViewer: false,
       pointerXYOnImage: null,
     };
@@ -146,6 +152,18 @@ class SubjectViewer extends React.Component {
               previousAnnotations={this.props.previousAnnotations}
             />
           </g>
+
+          {this.state.cropping === INPUT_STATE.ACTIVE && (
+            <g transform={transform}>
+              <Crop
+                getPointerXY={this.getPointerXYOnImage}
+                imageSize={this.props.imageSize}
+                mouseInViewer={this.state.mouseInViewer}
+                rectangleStart={this.rectangleStart}
+              />
+            </g>
+          )}
+
           {(!DEV_MODE) ? null :
             <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
               {(()=>{
@@ -191,6 +209,7 @@ class SubjectViewer extends React.Component {
   componentDidMount() {
     //Make sure we monitor visible size of Subject Viewer.
     window.addEventListener('resize', this.updateSize);
+    document.addEventListener('keyup', this.escapeCrop);
     this.updateSize();
 
     //Fetch the first subject, IF no subject has yet been loaded.
@@ -213,6 +232,7 @@ class SubjectViewer extends React.Component {
   componentWillUnmount() {
     //Cleanup
     window.removeEventListener('resize', this.updateSize);
+    document.removeEventListener('keyup', this.escapeCrop);
   }
 
   //----------------------------------------------------------------
@@ -240,6 +260,13 @@ class SubjectViewer extends React.Component {
     const svgW = boundingBox.width;
     const svgH = boundingBox.height;
     this.props.dispatch(updateViewerSize(svgW, svgH));
+  }
+
+  escapeCrop(e) {
+    if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE && this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      this.setState({ cropping: INPUT_STATE.IDLE });
+    }
   }
 
   /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.
@@ -293,6 +320,12 @@ class SubjectViewer extends React.Component {
       return Utility.stopEvent(e);
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       return Utility.stopEvent(e);
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      const pointerXY = this.getPointerXYOnImage(e);
+      this.rectangleStart = { x: pointerXY.x, y: pointerXY.y };
+      this.setState({ cropping: INPUT_STATE.ACTIVE });
+
+      return Utility.stopEvent(e);
     }
   }
 
@@ -306,7 +339,7 @@ class SubjectViewer extends React.Component {
     } else if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) {
       const pointerXYOnImage = this.getPointerXYOnImage(e);
       this.props.dispatch(addAnnotationPoint(pointerXYOnImage.x, pointerXYOnImage.y, this.props.frame));
-      
+
       //The second added point should automatically complete the annotation.
       //As of Dec 2017 we've moved from multi-point lines to a line consisting
       //of a start and end point, only.
@@ -314,9 +347,13 @@ class SubjectViewer extends React.Component {
           this.props.annotationInProgress.points.length >= 1) {
         this.props.dispatch(completeAnnotation());
       }
-      
+
       //TODO: Check if there's an issue with addAnnotationPoint() completing AFTER completeAnnotation();
       //I don't trust Redux.dispatch() to be synchronous given the weirdness we've seen. (@shaun 20171215)
+    } else if (this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING) {
+      this.setState({ cropping: INPUT_STATE.IDLE });
+      this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+      return Utility.stopEvent(e);
     }
   }
 

@@ -4,7 +4,7 @@ import Divider from '../images/img_divider.png';
 
 const ShowMetadata = ({ metadata }) => {
   return (
-    <div className="show-metadata">
+    <div className="handle show-metadata">
       <img role="presentation" className="divider" src={Divider} />
       <table width="100%">
         {Object.keys(metadata).map((key, i) => {

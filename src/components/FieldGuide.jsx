@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StepThrough } from 'zooniverse-react-components';
 import { Markdown } from "markdownz";
-import { getSubjectLocation } from '../lib/get-subject-location';
 
 class FieldGuide extends React.Component {
   constructor(props) {
@@ -46,7 +45,7 @@ class FieldGuide extends React.Component {
 
   renderItem(items, index) {
     return (
-      <div className="field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
+      <div className="handle field-guide" key={`FIELD_GUIDE_PAGE_${index}`}>
         {items.map((item, i) => {
           const resource = item.icon;
           let src;

@@ -27,8 +27,8 @@ class Dialog extends React.Component {
   render() {
     const width = this.props.isPrompt ? 450 : 800;
     const height = 425;
-    const x = window.innerWidth / 2 - (width / 2);
-    const y = window.innerHeight / 2 - (height / 2) + window.pageYOffset;
+    const x = (window.innerWidth / 2) - (width / 2);
+    const y = (window.innerHeight / 2) - height / 2 + window.pageYOffset;
 
     const defaultPosition = { x, y, height, width };
     const enableResize = this.props.enableResize ? { bottomRight: true } : false;
@@ -41,13 +41,18 @@ class Dialog extends React.Component {
       <Rnd
         default={defaultPosition}
         enableResizing={enableResize}
+        dragHandlerClassName={'.handle'}
         minHeight={400}
         minWidth={400}
         resizeHandlerClasses={resizeClass}
       >
-        <div className="popup dialog" ref={(c)=>{this.popupBody=c}} onClick={(e) => { return e.target === this.popupBody && this.close(e); }}>
+        <div
+          className="popup dialog"
+          ref={(c) => { this.popupBody = c; }}
+          onClick={(e) => { return e.target === this.popupBody && this.close(e); }}
+        >
           <div className="popup-content dialog-content">
-            <div>
+            <div className="handle">
               {this.props.title.length ? (
                 <h2>{this.props.title}</h2>
               ) : false}

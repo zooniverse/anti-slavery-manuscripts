@@ -14,6 +14,7 @@ const SUBJECTVIEWER_STATE = {
   IDLE: 'idle',  //Eh, doing nothing.
   NAVIGATING: 'navigating',  //User wants to use the mouse to navigate the Subject.
   ANNOTATING: 'annotating',  //User has started, or is in the process of, adding annotations to the Subject.
+  CROPPING: 'cropping' //User wants to crop part of a manuscript for the cribsheet.
 }
 const MIN_SCALING = 0.1;
 const MAX_SCALING = 10;
@@ -24,9 +25,9 @@ const MARKS_STATE = {
   NONE: 2,
 };
 
-//Initial State
+// Initial State
 const initialState = {
-  //Image transformations
+  // Image transformations
   contrast: false,
   frame: 0,
   rotation: 0,
@@ -35,7 +36,7 @@ const initialState = {
   translationX: 0,
   translationY: 0,
 
-  //Viewer settings
+  // Viewer settings
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
   viewerSize: { width: 0, height: 0 },
   imageSize: { width: 0, height: 0 },

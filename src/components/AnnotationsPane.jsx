@@ -58,6 +58,7 @@ class AnnotationsPane extends React.Component {
             This line has been transcribed!
           </text>
         </g>
+
       </g>
     );
   }

@@ -34,6 +34,7 @@ import KeyboardShortcuts from '../components/KeyboardShortcuts';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
 import SubmitClassificationForm from '../components/SubmitClassificationForm';
+import CribSheet from '../components/CribSheet';
 
 const ROTATION_STEP = 90;
 
@@ -58,6 +59,7 @@ class ClassifierContainer extends React.Component {
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.toggleCribDraw = this.toggleCribDraw.bind(this);
 
     this.state = {
       popup: null,
@@ -96,6 +98,7 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
+    const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
     const disableAnnotate = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
@@ -126,8 +129,10 @@ class ClassifierContainer extends React.Component {
             {this.props.guide && this.props.guideStatus === GUIDE_STATUS.READY && (
               <button className="white-red button" onClick={this.toggleFieldGuide}>Field Guide</button>
             )}
-            {/*TEMPORARILY REMOVED: CRIBSHEET
-            <button className="white-red button">Your Crib Sheet</button>*/}
+            {this.props.user && (
+              <button className={`${activeCrop} white-red button`} onClick={this.toggleCribDraw}>Your Crib Sheet</button>
+            )}
+
             <img className="divider" role="presentation" src={Divider} />
 
             {this.props.user && (
@@ -324,6 +329,10 @@ class ClassifierContainer extends React.Component {
 
   useResetImage() {
     this.props.dispatch(resetView());
+  }
+
+  toggleCribDraw() {
+    this.props.dispatch(toggleDialog(<CribSheet />, false, false, 'Crib Sheet'));
   }
 
   togglePreviousMarks() {
