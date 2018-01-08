@@ -26,6 +26,7 @@ const baseConfig = {
     zooniverseLinks: {
       host: 'https://master.pfe-preview.zooniverse.org/',
       caesarHost: 'https://caesar-staging.zooniverse.org/graphql',
+      caesarReducerKey: 'ext-17',
       projectId: '1764',
       projectSlug: 'wgranger-test/anti-slavery-testing',
       workflowId: '3017',
@@ -39,6 +40,7 @@ const baseConfig = {
     zooniverseLinks: {
       host: 'https://www.zooniverse.org/',
       caesarHost: 'https://caesar.zooniverse.org/graphql',
+      caesarReducerKey: 'ext',
       projectId: '4973',
       projectSlug: 'bostonpubliclibrary/anti-slavery-manuscripts',
       workflowId: '5329',
