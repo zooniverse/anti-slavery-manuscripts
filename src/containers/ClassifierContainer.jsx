@@ -59,10 +59,6 @@ class ClassifierContainer extends React.Component {
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
 
-    if (!(props.user && props.user.admin)) {
-      browserHistory.push('/');
-    }
-
     this.state = {
       popup: null,
       showBetaSignInPrompt: true,
@@ -112,8 +108,8 @@ class ClassifierContainer extends React.Component {
           <div>
             <h2>directions</h2>
             <p>
-              Using the Annotate tool, click under each word in a line of text,
-              then add your transcription.
+              Using the Annotate tool, click under the start and end of a line
+              of text, then add your transcription.
 
               {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
               crib sheet for reference.*/}
@@ -294,15 +290,17 @@ class ClassifierContainer extends React.Component {
   }
 
   handleKeyUp(e) {
-    if (Utility.getKeyCode(e) === KEY_CODES.A) {
-      if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
-        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
-      } else {
-        this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+    if (this.props.selectedAnnotation === null) {
+      if (Utility.getKeyCode(e) === KEY_CODES.A) {
+        if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING && !this.props.selectedAnnotation) {
+          this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.ANNOTATING));
+        } else {
+          this.props.dispatch(setViewerState(SUBJECTVIEWER_STATE.NAVIGATING));
+        }
       }
-    }
-    if (Utility.getKeyCode(e) === KEY_CODES.M) {
-      this.togglePreviousMarks();
+      if (Utility.getKeyCode(e) === KEY_CODES.M) {
+        this.togglePreviousMarks();
+      }
     }
   }
 

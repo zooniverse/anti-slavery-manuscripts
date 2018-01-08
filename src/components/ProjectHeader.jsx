@@ -33,10 +33,7 @@ class ProjectHeader extends React.Component {
   }
 
   render() {
-    const isAdmin = this.props.user && this.props.user.admin ?
-      '' : 'project-header__disabled';
-
-    return(
+    return (
       <div className="project-header">
         {this.props.showTitle && (
           <h1 className="main-title">Anti-Slavery Manuscripts</h1>
@@ -52,7 +49,7 @@ class ProjectHeader extends React.Component {
           </Link>
           <Link
             activeClassName="project-header__link--active"
-            className={`project-header__link ${isAdmin}`}
+            className="project-header__link"
             to="/classify"
           >
             Transcribe
