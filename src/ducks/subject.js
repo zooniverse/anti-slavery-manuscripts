@@ -262,18 +262,20 @@ const prepareForNewSubject = (dispatch, subject) => {
 const fetchSavedSubject = (id) => {
   return (dispatch) => {
     apiClient.type('subjects').get(id)
-    .then((currentSubject) => {
-      dispatch(changeFrame(0));
-      dispatch({
-        type: FETCH_SUBJECT_SUCCESS,
-        favorite: currentSubject.favorite || false,
-        currentSubject, id,
+      .then((currentSubject) => {
+        dispatch(fetchPreviousAnnotations(currentSubject));
+        dispatch(changeFrame(0));
+        dispatch({
+          type: FETCH_SUBJECT_SUCCESS,
+          favorite: currentSubject.favorite || false,
+          currentSubject,
+          id,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch({ type: FETCH_SUBJECT_ERROR });
       });
-    })
-    .catch((err) => {
-      console.error(err);
-      dispatch({ type: FETCH_SUBJECT_ERROR });
-    })
   };
 };
 
