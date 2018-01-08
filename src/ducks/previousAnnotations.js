@@ -101,7 +101,7 @@ const fetchPreviousAnnotations = (subject) => {
 
     const query = `{
       workflow(id: ${workflowId}) {
-        reductions(subjectId: ${subject.id}) {
+        reductions(subjectId: ${subject.id}, reducerKey:"${config.zooniverseLinks.caesarReducerKey}") {
           data
         }
       }

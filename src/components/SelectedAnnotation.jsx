@@ -327,7 +327,7 @@ class SelectedAnnotation extends React.Component {
     if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE) {
       this.cancelAnnotation();
     }
-    if (Utility.getKeyCode(e) === KEY_CODES.ENTER) {
+    if (Utility.getKeyCode(e) === KEY_CODES.ENTER && e.ctrlKey) {
       this.saveText();
     }
   }
