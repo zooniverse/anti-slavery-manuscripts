@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject } from '../ducks/project';
+import { disableBanner } from '../ducks/banner';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
@@ -24,6 +25,7 @@ class App extends React.Component {
     super(props);
 
     this.googleLogger = null;
+    this.hideBanner = this.hideBanner.bind(this);
 
     if (!props.initialised) {  //NOTE: This should almost always trigger, since App.constructor() triggers exactly once, on the website loading, when all initial values are at their default.
       props.dispatch(checkLoginUser());
@@ -63,6 +65,10 @@ class App extends React.Component {
     }
   }
 
+  hideBanner() {
+    this.props.dispatch(disableBanner());
+  }
+
   render() {
     if (this.props.projectStatus !== PROJECT_STATUS.READY ||
         this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
@@ -76,9 +82,9 @@ class App extends React.Component {
       <div>
         <Header />
 
-        {/*//BETA_ONLY: Notify of beta pause*/}
-        {(!(this.props.user && this.props.user.admin))
-          ? <Banner /> : null
+        {/*//BETA_ONLY: Notify of beta and feedback form*/}
+        {(this.props.showBanner)
+          ? <Banner hideBanner={this.hideBanner} /> : null
         }
 
         <ProjectHeader showTitle={showTitle} />
@@ -113,6 +119,7 @@ App.propTypes = {
   splitID: PropTypes.string,
   projectStatus: PropTypes.string,
   workflowStatus: PropTypes.string,
+  showBanner: PropTypes.bool,
   splitStatus: PropTypes.string,
 };
 
@@ -129,6 +136,7 @@ App.defaultProps = {
   splitID: null,
   projectStatus: PROJECT_STATUS.IDLE,
   workflowStatus: WORKFLOW_STATUS.IDLE,
+  showBanner: true,
   splitStatus: SPLIT_STATUS.IDLE,
 };
 
@@ -138,6 +146,7 @@ App.childContextTypes = {
 
 const mapStateToProps = (state) => {
   return {
+    showBanner: state.banner.show,
     user: state.login.user,
     initialised: state.login.initialised,
     //--------

@@ -12,6 +12,7 @@ import classifications from './classifications';
 import splits from './splits';
 import fieldGuide from './field-guide';
 import tutorial from './tutorial';
+import banner from './banner';
 
 export default combineReducers({
   login,
@@ -26,5 +27,6 @@ export default combineReducers({
   classifications,
   splits,
   fieldGuide,
-  tutorial
+  tutorial,
+  banner,
 });
