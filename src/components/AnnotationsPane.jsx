@@ -18,8 +18,8 @@ import PendingAnnotation from './PendingAnnotation';
 import { VARIANT_TYPES } from '../ducks/splits';
 import { MARKS_STATE } from '../ducks/subject-viewer';
 
-const CONSENSUS_LINE = { text: 'This line has been completed.', width: 300 };
-const TRANSCRIBED_LINE = { text: 'This line has existing transcriptions.', width: 350 };
+const CONSENSUS_LINE = { text: 'This line has been completed.', width: 310 };
+const TRANSCRIBED_LINE = { text: 'This line has existing transcriptions.', width: 360 };
 
 class AnnotationsPane extends React.Component {
   constructor(props) {
@@ -66,10 +66,9 @@ class AnnotationsPane extends React.Component {
             </filter>
           </defs>
 
-          <rect x="25" y="-25" width={this.state.hoverObj.width} height="35" fill="#D6DEE4" stroke="#979797" filter="url(#shadow)" />
-          <polygon points="10,-6 25,-12 25,0" fill="#D6DEE4" stroke="#979797" />
-          <polygon points="25,-11 27,-12 27,-0 25,-1" stroke="#D6DEE4" fill="#D6DEE4" />
-          <text x="38" fill="#4a4a4a" fontFamily="Playfair Display">
+          <rect x="25" y="-30" width={this.state.hoverObj.width} height="45" fill="#979797" filter="url(#shadow)" />
+          <polygon points="10,-6 25,-12 25,0" fill="#979797" />
+          <text x="43" fill="#fff" fontFamily="Playfair Display">
             {this.state.hoverObj.text}
           </text>
         </g>
