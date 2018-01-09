@@ -1,21 +1,30 @@
 .beta-top-banner  //BETA_ONLY
   background-color: $teal
   color: white
+  display: flex
   height: auto
   font-family: 'Karla', sans-serif
   font-size: 0.5em
   text-align: center
   padding: 0.5em
 
+  button
+    background-color: transparent
+    border: none
+    color: white
+    cursor: pointer
+    font-size: 1.25em
+    margin: 0 0.5em 0 auto
+
   h2
     margin: 0
 
 .popup.beta-popup-sign-in-prompt  //BETA_ONLY
   z-index: 100  //Place the prompt above the ZRC Tutorial.
-  
+
   .popup-content
     padding: 2em
-    
+
     .button
       width: 240px
       display: block
@@ -26,6 +35,6 @@
     display: block
     text-align: center
     margin: 1.5em auto 0 auto
-    
+
     &:hover
       text-decoration: underline
