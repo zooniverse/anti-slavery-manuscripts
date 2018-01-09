@@ -115,36 +115,53 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
 
 const fetchPreferences = (user) => {
   return (dispatch, getState) => {
-    const project = getState().project.data;
-    if (project && user) {
-      user.get('project_preferences', { project_id: project.id })
-      .then(([preferences]) => {
-        dispatch({
-          type: FETCH_PREFERENCES,
-          preferences
+    const projectId = config.zooniverseLinks.projectId;
+    if (user) {
+      user.get('project_preferences', { project_id: projectId })
+        .then(([preferences]) => {
+          if (preferences) {
+            dispatch({
+              type: FETCH_PREFERENCES,
+              preferences,
+            });
+          } else {
+            apiClient.type('project_preferences').create({
+              links: { project: projectId },
+              preferences: {},
+            })
+              .save()
+              .then((newPreferences) => {
+                dispatch({
+                  type: FETCH_PREFERENCES,
+                  preferences: newPreferences,
+                });
+              })
+              .catch((err) => {
+                console.warn(err);
+              });
+          }
         });
-      });
-    } else if (project) {
+    } else {
       Promise.resolve(apiClient.type('project_preferences').create({
         id: 'GUEST_PREFERENCES_DO_NOT_SAVE',
-        links: { project: project.id },
-        preferences: {}
+        links: { project: projectId },
+        preferences: {},
       })).then((preferences) => {
         dispatch({
           type: FETCH_PREFERENCES,
-          preferences
+          preferences,
         });
       });
-    };
-  }
+    }
+  };
 };
 
 const setUserRoles = (roles) => {
   return (dispatch) => {
     dispatch({
       type: SET_USER_ROLES,
-      roles
-    })
+      roles,
+    });
   };
 };
 
