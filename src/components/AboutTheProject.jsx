@@ -1,28 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router';
 import ProjectMembers from '../lib/project-members';
-let members = {
-  Beth: require('../images/Beth-Prindle.jpg'),
-  Eben: require('../images/Eben-English.jpg'),
-  Katherine: require('../images/Katherine-Griffin.jpg'),
-  Marilyn: require('../images/Marilyn-Morgan.jpg'),
-  Susan: require('../images/Susan-Mizruchi.jpg'),
-  Tom: require('../images/Tom-Blake.jpg')
-}
+import Becky from '../images/Becky-Rother.jpg';
+import Beth from '../images/Beth-Prindle.jpg';
+import Coleman from '../images/Coleman-Krawczyk.jpg';
+import Eben from '../images/Eben-English.jpg';
+import Katherine from '../images/Katherine-Griffin.jpg';
+import Marilyn from '../images/Marilyn-Morgan.jpg';
+import Sam from '../images/Sam-Blickhan.jpg';
+import Shaun from '../images/Shaun-Noordin.jpg';
+import Susan from '../images/Susan-Mizruchi.jpg';
+import Tom from '../images/Tom-Blake.jpg';
+import Victoria from '../images/Victoria-Van-Hyning.jpg';
+import Will from '../images/Will-Granger.jpg';
+
+const members = {
+  Becky,
+  Beth,
+  Coleman,
+  Eben,
+  Katherine,
+  Marilyn,
+  Sam,
+  Shaun,
+  Susan,
+  Tom,
+  Victoria,
+  Will,
+};
 
 class AboutTheProject extends React.Component {
   renderTeamMember(member, i) {
     return (
       <div key={i} className="about-the-project__member">
         <div>
-          <img src={members[member.photo]} />
+          <img role="presentation" src={members[member.photo]} />
         </div>
         <div>
           <h4>{member.name}</h4>
           <span>{member.description}</span>
         </div>
       </div>
-    )
+    );
   }
 
   render() {
@@ -42,7 +60,7 @@ class AboutTheProject extends React.Component {
             the 1870s.
           </span>
 
-          <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View Collection</a>
+          <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" rel="noopener noreferrer" target="_blank">View Collection</a>
         </div>
 
         <div className="about-the-project__team">
@@ -83,7 +101,7 @@ class AboutTheProject extends React.Component {
             the United States.
           </span>
           <span>
-            The collection includes a full run of William Lloyd Garrison's <i>The Liberator</i>,
+            The collection includes a full run of William Lloyd Garrison&apos;s <i>The Liberator</i>,
             a newspaper that was published continuously for 35 years, from 1831 to 1866. This
             newspaper, published by Garrison, was the official organ of the abolitionist movement.
           </span>
@@ -94,9 +112,9 @@ class AboutTheProject extends React.Component {
           </span>
 
           <div className="about-the-project__icons">
-            <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank"><i className="fa fa-facebook fa-2x" /></a>
-            <a href="https://twitter.com/BPLBoston" target="_blank"><i className="fa fa-twitter fa-2x" /></a>
-            <a href="https://www.instagram.com/bplboston" target="_blank"><i className="fa fa-instagram fa-2x" /></a>
+            <a href="https://www.facebook.com/bostonpubliclibrary/" rel="noopener noreferrer" target="_blank"><i className="fa fa-facebook fa-2x" /></a>
+            <a href="https://twitter.com/BPLBoston" rel="noopener noreferrer" target="_blank"><i className="fa fa-twitter fa-2x" /></a>
+            <a href="https://www.instagram.com/bplboston" rel="noopener noreferrer" target="_blank"><i className="fa fa-instagram fa-2x" /></a>
           </div>
         </div>
       </main>
