@@ -186,7 +186,9 @@ const submitClassification = () => {
       }
       //Log
       console.log('Submit classification: Success');
-      Split.classificationCreated(classification);
+      try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
+        Split.classificationCreated(classification);
+      } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
       //Reset values in preparation for the next Subject.
       dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
