@@ -18,6 +18,9 @@ import PendingAnnotation from './PendingAnnotation';
 import { VARIANT_TYPES } from '../ducks/splits';
 import { MARKS_STATE } from '../ducks/subject-viewer';
 
+const CONSENSUS_LINE = { text: 'This line has been completed.', width: 310 };
+const TRANSCRIBED_LINE = { text: 'This line has existing transcriptions.', width: 360 };
+
 class AnnotationsPane extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +29,10 @@ class AnnotationsPane extends React.Component {
     this.renderPreviousAnnotations = this.renderPreviousAnnotations.bind(this);
     this.renderUserAnnotations = this.renderUserAnnotations.bind(this);
     this.determineGreenLine = this.determineGreenLine.bind(this);
+
+    this.state = {
+      hoverObj: TRANSCRIBED_LINE,
+    };
   }
 
   //----------------------------------------------------------------
@@ -52,10 +59,17 @@ class AnnotationsPane extends React.Component {
 
         {this.renderAnnotationInProgress()}
 
-        <g ref={(el) => { this.tooltip = el; }} className="tooltip">
-          <rect x="15" y="-25" rx="10" ry="10" width="300" height="35" fill="#979797" />
-          <text x="28">
-            This line has been transcribed!
+        <g ref={(el) => { this.tooltip = el; }} className="tooltip" >
+          <defs>
+            <filter id="shadow" height="180%">
+              <feDropShadow dy="4" stdDeviation="4" floodColor="#4a4a4a" />
+            </filter>
+          </defs>
+
+          <rect x="25" y="-30" width={this.state.hoverObj.width} height="45" fill="#979797" filter="url(#shadow)" />
+          <polygon points="10,-6 25,-12 25,0" fill="#979797" />
+          <text x="43" fill="#fff" fontFamily="Playfair Display">
+            {this.state.hoverObj.text}
           </text>
         </g>
 
@@ -154,7 +168,7 @@ class AnnotationsPane extends React.Component {
       if (annotation.frame !== this.props.frame) return null;
 
       let onSelectAnnotation = this.props.onSelectAnnotation;
-      let consensusLine = false;
+      let hoverObj = TRANSCRIBED_LINE;
       let fillColor = previousAnnotations ? '#c33' : '#00CED1';
       const style = { cursor: 'pointer' };
 
@@ -162,7 +176,7 @@ class AnnotationsPane extends React.Component {
 
       if (selectedAnnotation) { fillColor = '#5cb85c'; }
       if (previousAnnotations && annotation.consensusReached) {
-        consensusLine = true;
+        hoverObj = CONSENSUS_LINE;
         onSelectAnnotation = () => {};
         fillColor = '#979797';
         style.cursor = 'inherit';
@@ -210,25 +224,26 @@ class AnnotationsPane extends React.Component {
               onSelectAnnotation(index, previousAnnotations);
             }
 
-            if (consensusLine) return;  //If retired line, don't stop events.
+            if (previousAnnotations) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
           onMouseOver={(e) => {
-            if (consensusLine) {
+            if (previousAnnotations) {
+              this.setState({ hoverObj });
               this.tooltip.style.visibility = 'visible';
               return;  //If retired line, don't stop events.
             }
             return Utility.stopEvent(e);
           }}
           onMouseOut={(e) => {
-            if (consensusLine) {
+            if (previousAnnotations) {
               this.tooltip.style.visibility = 'hidden';
               return;  //If retired line, don't stop events.
             }
             return Utility.stopEvent(e);
           }}
           onMouseMove={(e) => {
-            if (consensusLine) {
+            if (previousAnnotations) {
               const cursor = this.props.getPointerXY(e);
               let rotationOffset;
               switch (this.props.rotation) {
@@ -247,11 +262,11 @@ class AnnotationsPane extends React.Component {
             return Utility.stopEvent(e);
           }}
           onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
-            if (consensusLine) return;  //If retired line, don't stop events.
+            if (previousAnnotations) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
           onMouseUp={(e) => {
-            if (consensusLine) return;  //If retired line, don't stop events.
+            if (previousAnnotations) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
         >
