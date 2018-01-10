@@ -5,6 +5,25 @@
   font-family: playfair-display
   margin-top: 3em
 
+  .active-card
+    margin: 1em 0.75em
+
+    i
+      color: black
+
+    &__content
+      align-items: center
+      flex-direction: column
+      height: 14em
+      text-align: center
+
+      div
+        align-items: center
+        display: flex
+
+        img
+          object-fit: contain
+
   &__content
     background-color: rgba(255, 255, 255, 0.5) !important
     margin-top: 0 !important
@@ -25,7 +44,6 @@
     position: absolute
     right: 0.5em
     top: -0.25em
-    cursor: pointer !important
 
     i
       line-height: 0.75em
@@ -37,7 +55,7 @@
     line-height: 2em
 
   button
-    cursor: default
+    cursor: pointer
 
   i
     color: white
@@ -49,7 +67,6 @@
 
   &__add-item
     button
-      cursor: pointer
       height: 6.9em
       margin-right: 1em
       width: 6.5em

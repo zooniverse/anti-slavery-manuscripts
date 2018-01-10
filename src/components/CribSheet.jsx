@@ -9,6 +9,14 @@ class CribSheet extends React.Component {
 
     this.renderItem = this.renderItem.bind(this);
     this.activateCrop = this.activateCrop.bind(this);
+    this.activateCard = this.activateCard.bind(this);
+    this.deactivateCard = this.deactivateCard.bind(this);
+    this.renderActiveCard = this.renderActiveCard.bind(this);
+    this.renderAllCards = this.renderAllCards.bind(this);
+
+    this.state = {
+      activeCard: null,
+    };
   }
 
   activateCrop(e) {
@@ -25,6 +33,40 @@ class CribSheet extends React.Component {
     }
   }
 
+  activateCard(activeCard) {
+    this.setState({ activeCard });
+  }
+
+  deactivateCard() {
+    this.setState({ activeCard: null });
+  }
+
+  renderActiveCard() {
+    if (!this.state.activeCard) { return null; }
+    const card = this.state.activeCard;
+    return (
+      <div className="active-card">
+        <button onClick={this.deactivateCard}>
+          <i className="fa fa-arrow-left" /> Back
+        </button>
+
+        <div className="active-card__content">
+          {this.state.activeCard.cropUrl && (
+            <div>
+              <img alt="Cribsheet Selection" src={this.state.activeCard.cropUrl} />
+            </div>
+          )}
+
+          <div>
+            {card.name && (
+              <h2>{card.name}</h2>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   renderItem(snippet, i) {
     return (
       <div className="crib-sheet__item" key={`SNIPPET_${i}`}>
@@ -35,7 +77,7 @@ class CribSheet extends React.Component {
           <i className="fa fa-times" />
         </button>
 
-        <button>
+        <button onClick={this.activateCard.bind(this, snippet)}>
           {snippet.cropUrl && (
             <img role="presentation" src={snippet.cropUrl} />
           )}
@@ -48,11 +90,10 @@ class CribSheet extends React.Component {
     );
   }
 
-  render() {
+  renderAllCards() {
     const cribsheet = this.props.preferences.preferences.cribsheet;
     return (
-      <div className="handle crib-sheet">
-        <span className="crib-sheet__instructions">Save images with description for reference.</span>
+      <div>
         <div className="crib-sheet__content">
           {cribsheet && (
             cribsheet.map((snippet, i) => {
@@ -68,6 +109,16 @@ class CribSheet extends React.Component {
             </button>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div className="handle crib-sheet">
+        {this.state.activeCard && (this.renderActiveCard())}
+
+        {!this.state.activeCard && (this.renderAllCards())}
       </div>
     );
   }
