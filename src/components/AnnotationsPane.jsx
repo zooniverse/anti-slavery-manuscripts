@@ -262,11 +262,11 @@ class AnnotationsPane extends React.Component {
             return Utility.stopEvent(e);
           }}
           onMouseDown={(e) => {  //Prevent triggering actions in the parent SubjectViewer.
-            if (previousAnnotations) return;  //If retired line, don't stop events.
+            if (annotation.consensusReached) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
           onMouseUp={(e) => {
-            if (previousAnnotations) return;  //If retired line, don't stop events.
+            if (annotation.consensusReached) return;  //If retired line, don't stop events.
             return Utility.stopEvent(e);
           }}
         >
