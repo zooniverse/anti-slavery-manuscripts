@@ -131,6 +131,11 @@ const fetchPreferences = (user) => {
       user.get('project_preferences', { project_id: projectId })
         .then(([preferences]) => {
           if (preferences) {
+            if (preferences.preferences &&
+              preferences.preferences.annotation_reminder &&
+              preferences.preferences.annotation_reminder[projectId]) {
+              dispatch(reminderSeen());
+            }
             dispatch({
               type: FETCH_PREFERENCES,
               preferences,
