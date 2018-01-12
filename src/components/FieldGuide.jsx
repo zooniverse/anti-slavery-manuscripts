@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StepThrough } from 'zooniverse-react-components';
 import { Markdown } from "markdownz";
+import Thumbnail from './thumbnail';
 
 class FieldGuide extends React.Component {
   constructor(props) {
@@ -58,7 +59,7 @@ class FieldGuide extends React.Component {
             <div key={`FIELD_GUIDE_CARD_${index}-${i}`}>
               <button onClick={this.activateCard.bind(this, item)}>
                 {src && (
-                  <img src={src} />
+                  <Thumbnail height={150} src={src} />
                 )}
                 <span className="instructions">{item.title}</span>
               </button>
