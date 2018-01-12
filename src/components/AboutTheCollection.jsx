@@ -32,7 +32,7 @@ class AboutTheCollection extends React.Component {
           </div>
           <div>
             <img role="presentation" src={AboutEnvelope} />
-            <span className="footnote">Envelope addressed to the Westons, CA. 1832-1867</span>
+            <span className="footnote">Detail from envelope addressed to the Westons, CA. 1832-1867</span>
           </div>
         </div>
 
