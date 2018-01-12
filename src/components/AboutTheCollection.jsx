@@ -22,7 +22,7 @@ class AboutTheCollection extends React.Component {
             <Link to="/">Anti-Slavery Manuscripts</Link>
             <h3>About <i>the</i> Collection</h3>
             <span className="about-the-collection__content">
-              The Boston Public Library's Anti-Slavery collection &mdash; one of the largest
+              The Boston Public Library&apos;s Anti-Slavery collection &mdash; one of the largest
               and most important collections of abolitionist material in the United
               States &mdash; contains roughly 40,000 pieces of correspondence, broadsides,
               newspapers, pamphlets, books, and memorabilia from the 1830s through
@@ -31,14 +31,14 @@ class AboutTheCollection extends React.Component {
             <Link to="/about-the-project">About the Project</Link>
           </div>
           <div>
-            <img role="presentation" src={AboutEnvelope}></img>
+            <img role="presentation" src={AboutEnvelope} />
             <span className="footnote">Envelope addressed to the Westons, CA. 1832-1867</span>
           </div>
         </div>
 
         <div className="about-the-collection__significance flex-row">
           <div>
-            <img role="presentation" src={AboutProgram}></img>
+            <img alt="Program of anti-slavery meetings" src={AboutProgram} />
             <span className="footnote">
               Program of anti-slavery meetings in New England, Summer of 1857
             </span>
@@ -61,7 +61,7 @@ class AboutTheCollection extends React.Component {
                 of whether or not women should participate in the movement.
               </div>
               <div>
-                Women's rights also proved a dominant theme in the abolitionist movement,
+                Women&apos;s rights also proved a dominant theme in the abolitionist movement,
                 and the deep contention surrounding this issue is reflected in the
                 correspondence. In addition, while the collection documents years of
                 concerted effort on behalf of the abolitionists to end slavery, the
@@ -76,11 +76,11 @@ class AboutTheCollection extends React.Component {
 
         <div className="about-the-collection__attribution">
           <span className="about-the-collection__content">
-            "Through the participation of citizen historians, we now stand on the
+            &#34;Through the participation of citizen historians, we now stand on the
             threshold of having available &mdash; free to all &mdash; the entire contents of the
-            Boston Public Library's extraordinary Anti-Slavery Manuscripts
+            Boston Public Library&apos;s extraordinary Anti-Slavery Manuscripts
             collection: the personal papers of women and men who joined together,
-            across barriers of race and class, in the Abolitionist crusade."
+            across barriers of race and class, in the Abolitionist crusade.&#34;
           </span>
           <img className="divider" role="presentation" src={Divider} />
           <h2>Peter Drummey</h2>
@@ -95,7 +95,7 @@ class AboutTheCollection extends React.Component {
 
         <div className="about-the-collection__notable-figures flex-row">
           <div>
-            <img src={NotableBackground} />
+            <img alt="Wendell Phillips, William Lloyd Garrison and George Thompson" src={NotableBackground} />
             <span className="footnote">
               Wendell Phillips, William Lloyd Garrison and George Thompson, 1851
             </span>
@@ -103,15 +103,15 @@ class AboutTheCollection extends React.Component {
           <div className="flex-row">
             <div>
               <figure>
-                <img role="presentation" src={AboutCharles} />
-                <span className="footnote">Charles Lenox Remond, CA. 1851-1856</span>
+                <img alt="Maria Weston Chapman" src={AboutMaria} />
+                <span className="footnote">Maria Weston Chapman, CA 1864</span>
               </figure>
             </div>
 
             <div>
               <figure>
-                <img role="presentation" src={AboutMaria} />
-                <span className="footnote">Maria Weston Chapman, CA 1864</span>
+                <img alt="Charles Lenox Remond" src={AboutCharles} />
+                <span className="footnote">Charles Lenox Remond, CA. 1851-1856</span>
               </figure>
             </div>
           </div>
@@ -132,7 +132,7 @@ class AboutTheCollection extends React.Component {
               and in the United States; and records of the American, Massachusetts,
               New England, and Female Anti-Slavery Societies.
             </span>
-            <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View More</a>
+            <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" rel="noopener noreferrer" target="_blank">View More</a>
           </div>
         </div>
 
@@ -152,10 +152,10 @@ class AboutTheCollection extends React.Component {
               Phillips, and the families of such abolitionists as William Lloyd
               Garrison, the Weston sisters, Amos A. Phelps, John Bishop Estlin, and Samuel Mav.
             </span>
-            <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" target="_blank">View More</a>
+            <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" rel="noopener noreferrer" target="_blank">View More</a>
           </div>
           <div>
-            <img role="presentation" src={AboutBroadside} />
+            <img alt="Abolitionist Broadside" src={AboutBroadside} />
             <span className="footnote">Broadside, 1800</span>
           </div>
         </div>
