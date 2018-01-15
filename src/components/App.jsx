@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
-import { fetchProject } from '../ducks/project';
+import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
@@ -10,7 +10,7 @@ import Dialog from './Dialog';
 import LoadingSpinner from './LoadingSpinner';
 import { generateSessionID } from '../lib/get-session-id';
 
-import { PROJECT_STATUS } from '../ducks/project';
+import { env } from '../config';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
 import { SPLIT_STATUS } from '../ducks/splits';
 import GALogAdapter from '../lib/ga-log-adapter';
@@ -48,6 +48,7 @@ class App extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchProject());
     this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
+    Rollbar.configure({ payload: { environment: env } });
     generateSessionID();
   }
 

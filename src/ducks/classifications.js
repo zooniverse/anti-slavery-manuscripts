@@ -200,12 +200,12 @@ const submitClassification = () => {
     .catch((err) => {
       //TODO: Proper error handling
       console.error('Submit classification: Error - ', err);
+      Rollbar.error('Submit classification: Error - ', err);
       alert('ERROR: Could not submit Classification');
 
       dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
     });
     //----------------
-
   };
 };
 
