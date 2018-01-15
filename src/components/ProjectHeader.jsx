@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { config } from '../config';
-import { VARIANT_TYPES } from '../ducks/splits';
 
 class ProjectHeader extends React.Component {
   constructor(props) {
@@ -11,7 +10,6 @@ class ProjectHeader extends React.Component {
 
     this.aboutClick = this.aboutClick.bind(this);
     this.talkClick = this.talkClick.bind(this);
-    this.feedbackVariant = this.feedbackVariant.bind(this);
   }
 
   aboutClick() {
@@ -24,12 +22,6 @@ class ProjectHeader extends React.Component {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'header-talk-click' });
     }
-  }
-
-  feedbackVariant() {
-    return this.props.variant === VARIANT_TYPES.INDIVIDUAL
-      ? 'https://goo.gl/forms/h0V82sJQ4zEmveCH3'  //Individual-type users.
-      : 'https://goo.gl/forms/7Ur0kCxD1ZIPjNgA2';  //Collaborative-type users.
   }
 
   render() {
@@ -84,11 +76,11 @@ class ProjectHeader extends React.Component {
           </a>
           <a
             className="project-header__link"
-            href={this.feedbackVariant()}
+            href="https://www.zooniverse.org/projects/bostonpubliclibrary/anti-slavery-manuscripts/stats"
             rel="noopener noreferrer"
             target="_blank"
           >
-            Feedback
+            Stats
           </a>
         </nav>
       </div>
@@ -99,7 +91,6 @@ class ProjectHeader extends React.Component {
 ProjectHeader.defaultProps = {
   showTitle: false,
   user: null,
-  variant: VARIANT_TYPES.INDIVIDUAL,
 };
 
 ProjectHeader.propTypes = {
@@ -107,7 +98,6 @@ ProjectHeader.propTypes = {
   user: PropTypes.shape({
     admin: PropTypes.bool,
   }),
-  variant: PropTypes.string,
 };
 
 ProjectHeader.contextTypes = {
@@ -117,7 +107,6 @@ ProjectHeader.contextTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.login.user,
-    variant: state.splits.variant,
   };
 };
 

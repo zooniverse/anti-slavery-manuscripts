@@ -28,7 +28,8 @@ const SocialSection = ({ project, subjectsOfNote }) =>
 
     <h2 className="main-title">Community</h2>
     <img role="presentation" className="divider" src={Divider} />
-    <div className="home-page__project-stats flex-row">
+
+    {/* <div className="home-page__project-stats flex-row">
       <div>
         <h3 className="main-title">Project Statistics</h3>
         <span className="body-copy">
@@ -66,7 +67,7 @@ const SocialSection = ({ project, subjectsOfNote }) =>
           </span>
         </div>
       </div>
-    </div>
+    </div> */}
     <div className="home-page__social-content flex-row">
       <div>
         <h3 className="main-title">Message from the researchers</h3>
