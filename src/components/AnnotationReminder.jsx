@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import LineAnnotation from '../images/LineAnnotation.gif';
+import LineAnnotation from '../images/LineAnnotation.png';
 import { reminderSeen } from '../ducks/project';
 
 class AnnotationReminder extends React.Component {
@@ -28,17 +28,14 @@ class AnnotationReminder extends React.Component {
       <div className="annotation-reminder__content">
         <img role="presentation" src={LineAnnotation} />
         <span>
-          To create a new transcription, click below the start of the line of text
-          just before the first word, then place one dot in each space between words.
+          To create a new transcription, click below the start of a line of text
+          just before the first word, and again just after the last word.
+          This will underline the text you wish to transcribe.
         </span>
+
         <span>
-          When you reach the end of the line, place a dot under the space just after the final word.
-        </span>
-        <span>
-          Click the last dot again to open the transcription box.
-        </span>
-        <span>
-          Check out the tutorial to learn more.
+          Please annotate and transcribe entire lines at a time. If you&apos;re
+          unsure of anything, please revisit the project tutorial.
         </span>
       </div>
     );
