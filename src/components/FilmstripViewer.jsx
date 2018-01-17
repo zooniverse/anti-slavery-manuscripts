@@ -47,7 +47,7 @@ class FilmstripViewer extends React.Component {
     const images = getAllLocations(this.props.currentSubject);
 
     const render = images.map((image, i) => {
-      const activeBorder = i === this.props.frame ? "related-images__frame--active" : "";
+      const activeBorder = i === this.props.frame ? "related-images__frame--active" : '';
       const thumbnailSrc = this.thumbnailPath(image.src);
 
       return (
@@ -59,24 +59,30 @@ class FilmstripViewer extends React.Component {
             </div>
           </button>
         </div>
-      )
-    })
+      );
+    });
     return (
       <div className="related-images__frames">
         {render}
       </div>
-    )
+    );
   }
 
   render() {
     const MINIMUM_IMAGES_FOR_SCROLL_BUTTONS = 5;
     const renderButtons = this.props.currentSubject && this.props.currentSubject.locations.length > MINIMUM_IMAGES_FOR_SCROLL_BUTTONS;
+    let filmstripHeight = this.props.viewerSize.height;
+
+    if (this.props.currentSubject && this.props.currentSubject.already_seen) {
+      filmstripHeight += 30;
+    }
+
     return (
-      <section className="filmstrip-viewer" id="filmstrip-column" style={{height: this.props.viewerSize.height}}>
+      <section className="filmstrip-viewer" id="filmstrip-column" style={{ height: filmstripHeight }}>
         {renderButtons && (
           <button className="related-images__top" onClick={this.scroll.bind(this, false)}><i className="fa fa-chevron-up" /></button>
         )}
-        <div className="related-images" ref={(el) => {this.viewport = el; }} style={{height: this.props.viewerSize.height}}>
+        <div className="related-images" ref={(el) => {this.viewport = el; }} style={{ height: filmstripHeight }}>
           <div>
             <h2>Other Pages</h2>
           </div>
@@ -88,17 +94,22 @@ class FilmstripViewer extends React.Component {
           <button className="related-images__down" onClick={this.scroll.bind(this, true)}><i className="fa fa-chevron-down" /></button>
         )}
       </section>
-    )
+    );
   }
 }
 
 FilmstripViewer.propTypes = {
   currentSubject: PropTypes.shape({
+    already_seen: PropTypes.bool,
     locations: PropTypes.array,
     src: PropTypes.string,
   }),
   dispatch: PropTypes.func,
   imageSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  viewerSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
   }),

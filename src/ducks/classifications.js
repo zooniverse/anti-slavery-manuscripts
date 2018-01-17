@@ -8,6 +8,7 @@ import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject } from './subject';
 import { resetView } from './subject-viewer';
 import { toggleDialog } from './dialog';
+import { add } from '../lib/seen-this-session';
 import SaveSuccess from '../components/SaveSuccess';
 
 //Action Types
@@ -177,35 +178,36 @@ const submitClassification = () => {
       },
       'metadata.subject_dimensions': subject_dimensions || [],
     })
-    .save()
+      .save()
 
-    //Successful save: reset everything, then get the next Subject.
-    .then(() => {
-      if (user) {
-        localStorage.removeItem(`${user.id}.classificationID`);
-      }
-      //Log
-      console.log('Submit classification: Success');
-      try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
-        Split.classificationCreated(classification);
-      } catch (err) { console.error('Split.classificationCreated() error: ', err); }
+      //Successful save: reset everything, then get the next Subject.
+      .then(() => {
+        if (user) {
+          localStorage.removeItem(`${user.id}.classificationID`);
+        }
+        //Log
+        console.log('Submit classification: Success');
+        try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
+          Split.classificationCreated(classification);
+        } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
-      //Reset values in preparation for the next Subject.
-      dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
-      dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
-      dispatch(resetView());
-    })
+        //Reset values in preparation for the next Subject.
+        dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
+        dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
+        dispatch(resetView());
+      })
 
-    //Unsuccessful save
-    .catch((err) => {
-      //TODO: Proper error handling
-      console.error('Submit classification: Error - ', err);
-      alert('ERROR: Could not submit Classification');
+      //Unsuccessful save
+      .catch((err) => {
+        //TODO: Proper error handling
+        console.error('Submit classification: Error - ', err);
+        alert('ERROR: Could not submit Classification');
 
-      dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
-    });
+        dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
+      });
     //----------------
-
+    const { workflow, subjects } = classification.links;
+    add(workflow, subjects);
   };
 };
 
