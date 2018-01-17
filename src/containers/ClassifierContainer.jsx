@@ -6,7 +6,7 @@ import { Tutorial } from 'zooniverse-react-components';
 import { browserHistory } from 'react-router';
 import { config } from '../config';
 
-import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
+import oauth from 'panoptes-client/lib/oauth';
 
 import {
   setRotation, setContrast, resetView,
