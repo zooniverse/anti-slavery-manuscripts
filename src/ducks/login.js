@@ -9,32 +9,32 @@ const SET_LOGIN_USER = 'project/user/SET_LOGIN_USER';
 
 // Reducer
 const initialState = {
- user: null,
- initialised: false,
+  user: null,
+  initialised: false,
 };
 
 const loginReducer = (state = initialState, action) => {
- switch (action.type) {
-   case SET_LOGIN_USER:
-     return Object.assign({}, state, {
-       user: action.user,  // null if logged out.
-       initialised: true,  // true once we know if user is logged in/out; false if unknown.
-     });
+  switch (action.type) {
+    case SET_LOGIN_USER:
+      return Object.assign({}, state, {
+        user: action.user,  // null if logged out.
+        initialised: true,  // true once we know if user is logged in/out; false if unknown.
+      });
 
-   default:
-     return state;
- };
+    default:
+      return state;
+  }
 };
 
 // Action Creators
 const checkLoginUser = () => {
  // First thing on app load - check if the user is logged in.
- return (dispatch) => {
-   oauth.checkCurrent()
-     .then((user) => {
-       dispatch(setLoginUser(user));
-     });
- };
+  return (dispatch) => {
+    oauth.checkCurrent()
+      .then((user) => {
+        dispatch(setLoginUser(user));
+      });
+  };
 };
 
 const loginToPanoptes = () => {
@@ -43,36 +43,36 @@ const loginToPanoptes = () => {
 };
 
 const logoutFromPanoptes = () => {
- return (dispatch) => {
-   oauth.signOut()
-     .then((user) => {
-       dispatch(setLoginUser(user));
-     });
- };
+  return (dispatch) => {
+    oauth.signOut()
+      .then((user) => {
+        dispatch(setLoginUser(user));
+      });
+  };
 };
 
 const setLoginUser = (user) => {
- return (dispatch) => {
-   if (user) {
-     apiClient.type('project_roles').get({ project_id: config.zooniverseLinks.projectId, user_id: user.id })
-     .then(([userRoles]) => {
-       if (userRoles) {
-         dispatch(setUserRoles(userRoles.roles));
-       }
-     })
-     .catch((err) => {
-       console.warn(err);
-     })
-   };
+  return (dispatch) => {
+    if (user) {
+      apiClient.type('project_roles').get({ project_id: config.zooniverseLinks.projectId, user_id: user.id })
+        .then(([userRoles]) => {
+          if (userRoles) {
+            dispatch(setUserRoles(userRoles.roles));
+          }
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    }
 
-   dispatch({
-     type: SET_LOGIN_USER,
-     user,
-   });
+    dispatch({
+      type: SET_LOGIN_USER,
+      user,
+    });
 
-   dispatch(fetchSplit(user));
-   dispatch(fetchPreferences(user));
- };
+    dispatch(fetchSplit(user));
+    dispatch(fetchPreferences(user));
+  };
 };
 
 // Helper functions
@@ -86,8 +86,8 @@ const computeRedirectURL = (window) => {
 export default loginReducer;
 
 export {
- checkLoginUser,
- loginToPanoptes,
- logoutFromPanoptes,
- setLoginUser,
+  checkLoginUser,
+  loginToPanoptes,
+  logoutFromPanoptes,
+  setLoginUser,
 };
