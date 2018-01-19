@@ -17,11 +17,12 @@ const ProjectMembers = [
   },
   {
     photo: 'Sam',
-    name: 'Sam Blickhan',
+    name: 'Samantha Blickhan',
     description: `
-      Samantha Blickhan is the IMLS Postdoctoral Fellow for Zooniverse, working
-      on text and audio transcription projects. Her research interests include
-      medieval manuscripts, music notation, and histories of writing.
+      Samantha Blickhan is the IMLS Postdoctoral Fellow for Zooniverse, leading
+      text and audio transcription projects. Her research interests include
+      medieval manuscripts, musicology, palaeography, music notation, and
+      histories of writing.
     `,
   },
   {
@@ -68,7 +69,7 @@ const ProjectMembers = [
       Coleman Krawczyk is a postdoctoral researcher at the University of Portsmouth,
       UK. With a background in astrophysics, he is currently working as a data
       scientist for the Zooniverse. In particular he is working on general purpose
-      aggregation tools including the ones used for AnitSlavery Manuscripts.
+      aggregation tools including the ones used for Anit-Slavery Manuscripts.
     `,
   },
   {
@@ -139,7 +140,7 @@ const ProjectMembers = [
       Victoria Van Hyning is a British Academy postdoctoral fellow in English
       literature at Oxford, and is the humanities PI at Zooniverse. She has worked
       on Science Gossip, AnnoTate, and Shakespeare’s World, and led the IMLS grant
-      proposal with Laura Trouille of the Adler, which funds work on AntiSlavery
+      proposal with Laura Trouille of the Adler, which funds work on Anti-Slavery
       Manuscripts. and other transcription projects.
     `,
   },

@@ -34,8 +34,9 @@ class AnnotationReminder extends React.Component {
         </span>
 
         <span>
-          Please annotate and transcribe entire lines at a time. If you&apos;re
-          unsure of anything, please revisit the project tutorial.
+          Please annotate and transcribe entire lines at a time. Words split
+          between two lines should be typed out in their entirety on the first line.
+          If you&apos;re unsure of anything, please revisit the project tutorial.
         </span>
       </div>
     );

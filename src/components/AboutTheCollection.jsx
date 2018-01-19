@@ -22,9 +22,9 @@ class AboutTheCollection extends React.Component {
             <Link to="/">Anti-Slavery Manuscripts</Link>
             <h3>About <i>the</i> Collection</h3>
             <span className="about-the-collection__content">
-              The Boston Public Library&apos;s Anti-Slavery collection &mdash; one of the largest
+              The Boston Public Library&apos;s Anti-Slavery collection&mdash;one of the largest
               and most important collections of abolitionist material in the United
-              States &mdash; contains roughly 40,000 pieces of correspondence, broadsides,
+              States&mdash;contains roughly 40,000 pieces of correspondence, broadsides,
               newspapers, pamphlets, books, and memorabilia from the 1830s through
               the 1870s.
             </span><br />
