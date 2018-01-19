@@ -32,7 +32,7 @@ import SelectedAnnotation from '../components/SelectedAnnotation';
 import Crop from '../components/Crop';
 import AnnotationReminder from '../components/AnnotationReminder';
 import AlreadySeen from '../components/AlreadySeen';
-import { check } from '../lib/seen-this-session';
+import { checkAlreadySeen } from '../lib/seen-this-session';
 
 import {
   setScaling, setTranslation, resetView,
@@ -114,12 +114,12 @@ class SubjectViewer extends React.Component {
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
-    let subjectLocation = undefined;
+    let subjectLocation;
     const cursor = this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING ? 'cursor-move' : 'cursor-crosshairs';
     let alreadySeen = false;
 
     if (this.props.currentSubject && this.props.workflow) {
-      if (this.props.currentSubject.already_seen || check(this.props.workflow, this.props.currentSubject)) {
+      if (this.props.currentSubject.already_seen || checkAlreadySeen(this.props.workflow, this.props.currentSubject)) {
         alreadySeen = true;
       }
     }
@@ -583,6 +583,9 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
+  workflow: PropTypes.shape({
+    id: PropTypes.string,
+  }),
 };
 SubjectViewer.defaultProps = {
   splits: null,
@@ -609,11 +612,11 @@ SubjectViewer.defaultProps = {
   //--------
   previousAnnotations: [],
   //--------
-  annotationsStatus: ANNOTATION_STATUS.IDLE,
   annotationInProgress: null,
   annotations: [],
   //--------
   reminderSeen: false,
+  workflow: null,
 };
 
 SubjectViewer.contextTypes = {
@@ -641,7 +644,6 @@ const mapStateToProps = (state) => {  //Listens for changes in the Redux Store
     //--------
     previousAnnotations: state.previousAnnotations.marks,
     //--------
-    annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
     //--------

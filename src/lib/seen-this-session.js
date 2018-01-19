@@ -6,13 +6,13 @@ auth.listen('change', () => {
   return subjectsSeenThisSession.splice(0);
 });
 
-function add(workflowId, subjectIds) {
+function addAlreadySeen(workflowId, subjectIds) {
   subjectIds.map((subjectId) => {
     subjectsSeenThisSession.push(`${workflowId}/${subjectId}`);
   });
 }
 
-function check(workflow, subject) {
+function checkAlreadySeen(workflow, subject) {
   return subjectsSeenThisSession.includes(`${workflow.id}/${subject.id}`);
 }
 
@@ -21,6 +21,6 @@ if (window) {
 }
 
 export {
-  add,
-  check,
+  addAlreadySeen,
+  checkAlreadySeen,
 };
