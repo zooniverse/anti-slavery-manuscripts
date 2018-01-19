@@ -275,8 +275,6 @@ class AnnotationsPane extends React.Component {
         </g>
       );
 
-      if (previousAnnotations && this.props.adminOverride) { return renderedMarks; }
-
       if (this.props.variant === VARIANT_TYPES.COLLABORATIVE && previousAnnotations) {
         return (
           <VisibilitySplit
@@ -303,7 +301,6 @@ AnnotationsPane.propTypes = {
     height: PropTypes.number,
   }),
   //--------
-  adminOverride: PropTypes.bool,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -344,7 +341,6 @@ AnnotationsPane.defaultProps = {
     height: 0,
   },
   //--------
-  adminOverride: false,
   annotationInProgress: null,
   annotations: [],
   rotation: 0,
@@ -360,7 +356,6 @@ AnnotationsPane.defaultProps = {
 
 const mapStateToProps = (state) => {
   return {
-    adminOverride: state.splits.adminOverride,
     frame: state.subjectViewer.frame,
     rotation: state.subjectViewer.rotation,
     selectedAnnotation: state.annotations.selectedAnnotation,

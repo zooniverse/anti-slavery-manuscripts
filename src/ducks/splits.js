@@ -1,5 +1,4 @@
 import { Split } from 'seven-ten';
-import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
 import { fetchWorkflow } from './workflow';
 
@@ -7,7 +6,7 @@ const FETCH_SPLIT = 'FETCH_SPLIT';
 const FETCH_SPLIT_SUCCESS = 'FETCH_SPLIT_SUCCESS';
 const FETCH_SPLIT_ERROR = 'FETCH_SPLIT_ERROR';
 const CLEAR_SPLITS = 'CLEAR_SPLITS';
-const TOGGLE_OVERRIDE = 'TOGGLE_OVERRIDE';
+const TOGGLE_VARIANT = 'TOGGLE_VARIANT';
 const SET_VARIANT = 'SET_VARIANT';
 
 
@@ -20,14 +19,13 @@ const SPLIT_STATUS = {
 
 const VARIANT_TYPES = {
   INDIVIDUAL: 'individual',
-  COLLABORATIVE: 'collaborative'
+  COLLABORATIVE: 'collaborative',
 };
 
 const initialState = {
-  adminOverride: false,
   variant: VARIANT_TYPES.INDIVIDUAL,
   data: null,
-  id: null
+  id: null,
 };
 
 const splitReducer = (state = initialState, action) => {
@@ -50,9 +48,9 @@ const splitReducer = (state = initialState, action) => {
         status: SPLIT_STATUS.ERROR,
       });
 
-    case TOGGLE_OVERRIDE:
+    case TOGGLE_VARIANT:
       return Object.assign({}, state, {
-        adminOverride: action.option
+        variant: action.variant
       });
 
     case CLEAR_SPLITS:
@@ -108,7 +106,7 @@ const fetchSplit = (user) => {
       });
       dispatch(fetchWorkflow(variant));
     }
-  }
+  };
 };
 
 const clearSplits = () => {
@@ -117,26 +115,26 @@ const clearSplits = () => {
       type: CLEAR_SPLITS,
     });
   };
-}
+};
 
-const toggleOverride = () => {
+const toggleVariant = (currentVariant) => {
   return (dispatch, getState) => {
-    const option = !getState().splits.adminOverride;
+    const variant = currentVariant === VARIANT_TYPES.INDIVIDUAL ? VARIANT_TYPES.COLLABORATIVE : VARIANT_TYPES.INDIVIDUAL;
     dispatch({
-      type: TOGGLE_OVERRIDE,
-      option
+      type: TOGGLE_VARIANT,
+      variant,
     });
   };
-}
+};
 
 const setVariant = (variant) => {
   return (dispatch) => {
     dispatch({
       type: SET_VARIANT,
-      variant
+      variant,
     });
   };
-}
+};
 
 // Exports
 export default splitReducer;
@@ -144,7 +142,7 @@ export default splitReducer;
 export {
   clearSplits,
   fetchSplit,
-  toggleOverride,
+  toggleVariant,
   setVariant,
   SPLIT_STATUS,
   VARIANT_TYPES

@@ -1,5 +1,8 @@
 @import "font-groups.styl"
 
+.field-guide-container
+  padding: 0 0.75em
+
 .field-guide, .crib-sheet__content
   background-color: white
   display: flex
@@ -40,12 +43,11 @@
   button
     background-color: transparent
     font-size: 0.6em
-    margin: 0.5em
-    padding: 0.25em
+    padding: 0.25em 0
 
   &__content
     display: flex
-    padding: 0 1em
+    margin: 1em 0
 
     div:first-child
       flex: 5
@@ -53,7 +55,7 @@
       h2
         font-family: $playfair-display
         font-weight: 300
-        margin-bottom: 0.75em
+        margin: 0 0 0.75em 0
 
       p
         font-family: $playfair-display
