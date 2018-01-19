@@ -1,11 +1,9 @@
 
-import apiClient from 'panoptes-client/lib/api-client.js';
 import { Tutorial } from 'zooniverse-react-components';
 
 const FETCH_TUTORIAL = 'FETCH_TUTORIAL';
 const FETCH_TUTORIAL_SUCCESS = 'FETCH_TUTORIAL_SUCCESS';
 const FETCH_TUTORIAL_ERROR = 'FETCH_TUTORIAL_ERROR';
-const FETCH_PREFERENCES = 'FETCH_PREFERENCES';
 
 //Misc Constants
 const TUTORIAL_STATUS = {
@@ -16,8 +14,8 @@ const TUTORIAL_STATUS = {
 };
 
 const initialState = {
- data: null,
- status: TUTORIAL_STATUS.IDLE,
+  data: null,
+  status: TUTORIAL_STATUS.IDLE,
 };
 
 const tutorialReducer = (state = initialState, action) => {

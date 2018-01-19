@@ -13,7 +13,6 @@ const UNSELECT_ANNOTATION = 'UNSELECT_ANNOTATION';
 const DELETE_SELECTED_ANNOTATION = 'DELETE_SELECTED_ANNOTATION';
 const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
 const UPDATE_TEXT = 'UPDATE_TEXT';
-const SAVE_TEXT = 'SAVE_TEXT';
 const SET_ANNOTATIONS = 'SET_ANNOTATIONS';
 
 //Misc Constants
@@ -228,7 +227,7 @@ const collaborateWithAnnotation = (annotation, text) => {
 };
 
 const setAnnotations = (annotations) => {
-  return(dispatch) => {
+  return (dispatch) => {
     dispatch({
       type: SET_ANNOTATIONS,
       annotations
@@ -248,5 +247,5 @@ export {
   selectAnnotation, unselectAnnotation,
   deleteSelectedAnnotation,
   collaborateWithAnnotation,
-  updateText, ANNOTATION_STATUS
+  updateText, ANNOTATION_STATUS,
 };
