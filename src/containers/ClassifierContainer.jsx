@@ -6,7 +6,7 @@ import { Tutorial } from 'zooniverse-react-components';
 import { browserHistory } from 'react-router';
 import { config } from '../config';
 
-import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
+import oauth from 'panoptes-client/lib/oauth';
 
 import {
   setRotation, setContrast, resetView,
@@ -63,7 +63,7 @@ class ClassifierContainer extends React.Component {
 
     this.state = {
       popup: null,
-      showBetaSignInPrompt: true,
+      showSignInPrompt: true,
     };
   }
 
@@ -252,38 +252,35 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
 
-        { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
-          (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
-            <Popup
-              className="beta-popup-sign-in-prompt"
-              onClose={() => { this.setState({ showBetaSignInPrompt: false }); }}
-            >
-              <div>
-                Thanks for participating in our beta test.
-                Before you begin transcribing, please sign in or create an account by clicking the button below:
-              </div>
-              <div>
-                <button
-                  className="green sign-in button"
-                  onClick={() => {
-                    const computeRedirectURL = (window) => {
-                      const { location } = window;
-                      return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
-                    };
-                    oauth.signIn(computeRedirectURL(window));
-                  }}
-                >
-                  Sign In
-                </button>
-                <a
-                  className="continue"
-                  onClick={() => { this.setState({ showBetaSignInPrompt: false }); }}
-                  href="#"
-                >
-                  Continue without signing in
-                </a>
-              </div>
-            </Popup>
+        {(!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) ? null :
+          <Popup
+            className="popup-sign-in-prompt"
+            onClose={() => { this.setState({ showSignInPrompt: false }); }}
+          >
+            <div>
+              Before you begin transcribing, please sign in or create an account by clicking the button below:
+            </div>
+            <div>
+              <button
+                className="green sign-in button"
+                onClick={() => {
+                  const computeRedirectURL = (window) => {
+                    const { location } = window;
+                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+                  };
+                  oauth.signIn(computeRedirectURL(window));
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                className="continue"
+                onClick={() => { this.setState({ showSignInPrompt: false }); }}
+              >
+                Continue without signing in
+              </button>
+            </div>
+          </Popup>
         }
 
       </main>
@@ -399,7 +396,7 @@ ClassifierContainer.propTypes = {
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
   icons: PropTypes.object,
-  initialised: PropTypes.bool,  //BETA_ONLY
+  initialised: PropTypes.bool,
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
   preferences: PropTypes.shape({
@@ -433,7 +430,7 @@ ClassifierContainer.defaultProps = {
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
-  initialised: false,  //BETA_ONLY
+  initialised: false,
   preferences: null,
   previousAnnotations: [],
   rotation: 0,
@@ -459,7 +456,7 @@ const mapStateToProps = (state, ownProps) => {
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
-    initialised: state.login.initialised,  //BETA_ONLY
+    initialised: state.login.initialised,
     preferences: state.project.userPreferences,
     previousAnnotations: state.previousAnnotations.marks,
     rotation: state.subjectViewer.rotation,

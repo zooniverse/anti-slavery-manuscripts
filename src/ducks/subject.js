@@ -186,7 +186,7 @@ const fetchSubject = (initialFetch = false) => {
       type: FETCH_SUBJECT,
     });
 
-    // BETA_ONLY
+    // INITIAL_LAUNCH_ONLY
     //----------------
     let subjectQuery = { workflow_id };
 
@@ -200,7 +200,7 @@ const fetchSubject = (initialFetch = false) => {
     }
     subjectQuery.subject_set_id = randomSubjectSet;
 
-    // Removed for //BETA_ONLY
+    // Removed for //INITIAL_LAUNCH_ONLY
     // if (getState().subject.subjectSet) {
     //   subjectQuery.subject_set_id = getState().subject.subjectSet;
     // }

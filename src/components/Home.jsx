@@ -106,8 +106,7 @@ class Home extends React.Component {
 
           <Link to="/classify">Start Transcribing</Link>
           {/*
-          //BETA_ONLY
-          NOTE: Hide Subject Set Selection During Beta Launch.
+          NOTE: Hide Subject Set Selection During Initial Launch.
           <h3 className="transcribe">
             <Link onClick={this.setSubjectSet.bind(this, null)} to="/classify">Transcribe Random &#8608;</Link>
           </h3>
