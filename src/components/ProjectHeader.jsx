@@ -91,7 +91,7 @@ class ProjectHeader extends React.Component {
           </a>
           <a
             className="project-header__link"
-            href="http://www.bpl.org/distinction"
+            href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/"
             rel="noopener noreferrer"
             target="_blank"
           >
