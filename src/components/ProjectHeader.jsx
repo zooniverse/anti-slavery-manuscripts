@@ -10,6 +10,7 @@ class ProjectHeader extends React.Component {
 
     this.aboutClick = this.aboutClick.bind(this);
     this.talkClick = this.talkClick.bind(this);
+    this.blogClick = this.blogClick.bind(this);
   }
 
   aboutClick() {
@@ -21,6 +22,12 @@ class ProjectHeader extends React.Component {
   talkClick() {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'header-talk-click' });
+    }
+  }
+
+  blogClick() {
+    if (this.context.googleLogger) {
+      this.context.googleLogger.logEvent({ type: 'header-blog-click' });
     }
   }
 
@@ -81,6 +88,16 @@ class ProjectHeader extends React.Component {
             target="_blank"
           >
             Stats
+          </a>
+          <a
+            className="project-header__link"
+            href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <button onClick={this.blogClick} tabIndex="-1">
+              Blog
+            </button>
           </a>
         </nav>
       </div>
