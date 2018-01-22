@@ -2,11 +2,15 @@ import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import rootReducer from '../ducks/reducer';
+import { env } from '../config';
 
-const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware,
-  createLogger(),
-)(createStore);
+const middlewares = [thunkMiddleware];
+
+if (env !== 'production') {
+  middlewares.push(createLogger());
+}
+
+const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 
 export default function configureStore(initialState) {
   /* eslint-disable no-underscore-dangle */
