@@ -123,7 +123,6 @@ const fetchPreviousAnnotations = (subject) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: FETCH_ANNOTATIONS_ERROR });
     });
   };
