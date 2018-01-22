@@ -32,7 +32,6 @@ import SelectedAnnotation from '../components/SelectedAnnotation';
 import Crop from '../components/Crop';
 import AnnotationReminder from '../components/AnnotationReminder';
 import AlreadySeen from '../components/AlreadySeen';
-import { checkAlreadySeen } from '../lib/seen-this-session';
 
 import {
   setScaling, setTranslation, resetView,
@@ -119,7 +118,7 @@ class SubjectViewer extends React.Component {
     let alreadySeen = false;
 
     if (this.props.currentSubject && this.props.workflow) {
-      if (this.props.currentSubject.already_seen || checkAlreadySeen(this.props.workflow, this.props.currentSubject)) {
+      if (this.props.currentSubject.already_seen || this.checkAlreadySeen(this.props.workflow, this.props.currentSubject)) {
         alreadySeen = true;
       }
     }
@@ -531,12 +530,18 @@ class SubjectViewer extends React.Component {
   alreadySeen() {
     this.setState({ popup: <AlreadySeen /> });
   }
+
+  checkAlreadySeen(workflow, subject) {
+    return this.props.alreadySeen.includes(`${workflow.id}/${subject.id}`);
+  }
 }
 
 SubjectViewer.propTypes = {
   dispatch: PropTypes.func,
   //--------
+  alreadySeen: PropTypes.arrayOf(PropTypes.string),
   currentSubject: PropTypes.shape({
+    already_seen: PropTypes.bool,
     src: PropTypes.string,
   }),
   //--------
@@ -591,6 +596,7 @@ SubjectViewer.defaultProps = {
   splits: null,
   user: null,
   //-------
+  alreadySeen: [],
   currentSubject: null,
   //-------
   contrast: false,
@@ -630,6 +636,7 @@ const mapStateToProps = (state) => {  //Listens for changes in the Redux Store
     splits: state.splits.data,
     user: state.login.user,
     //--------
+    alreadySeen: state.subject.alreadySeen,
     currentSubject: state.subject.currentSubject,
     //--------
     contrast: sv.contrast,

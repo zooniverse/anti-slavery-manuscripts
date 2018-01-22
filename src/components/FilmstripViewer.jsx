@@ -47,7 +47,7 @@ class FilmstripViewer extends React.Component {
     const images = getAllLocations(this.props.currentSubject);
 
     const render = images.map((image, i) => {
-      const activeBorder = i === this.props.frame ? "related-images__frame--active" : '';
+      const activeBorder = i === this.props.frame ? 'related-images__frame--active' : '';
       const thumbnailSrc = this.thumbnailPath(image.src);
 
       return (

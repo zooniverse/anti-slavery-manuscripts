@@ -5,10 +5,9 @@ import { getSessionID } from '../lib/get-session-id';
 import { Split } from 'seven-ten';
 
 import { setAnnotations } from './annotations';
-import { fetchSubject, fetchSavedSubject } from './subject';
+import { fetchSubject, fetchSavedSubject, addAlreadySeen } from './subject';
 import { resetView } from './subject-viewer';
 import { toggleDialog } from './dialog';
-import { add } from '../lib/seen-this-session';
 import SaveSuccess from '../components/SaveSuccess';
 
 //Action Types
@@ -206,8 +205,9 @@ const submitClassification = () => {
         dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
       });
     //----------------
+    console.log('WE GET HERE');
     const { workflow, subjects } = classification.links;
-    add(workflow, subjects);
+    dispatch(addAlreadySeen(workflow, subjects));
   };
 };
 
