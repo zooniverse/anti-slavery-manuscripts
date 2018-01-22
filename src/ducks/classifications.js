@@ -205,7 +205,6 @@ const submitClassification = () => {
         dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
       });
     //----------------
-    console.log('WE GET HERE');
     const { workflow, subjects } = classification.links;
     dispatch(addAlreadySeen(workflow, subjects));
   };
