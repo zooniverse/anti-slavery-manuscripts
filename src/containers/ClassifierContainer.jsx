@@ -6,7 +6,7 @@ import { Tutorial } from 'zooniverse-react-components';
 import { browserHistory } from 'react-router';
 import { config } from '../config';
 
-import oauth from 'panoptes-client/lib/oauth';  //BETA_ONLY
+import oauth from 'panoptes-client/lib/oauth';
 
 import {
   setRotation, setContrast, resetView,
@@ -18,7 +18,7 @@ import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
-import { VARIANT_TYPES, toggleOverride } from '../ducks/splits';
+import { VARIANT_TYPES, toggleVariant } from '../ducks/splits';
 import { saveClassificationInProgress } from '../ducks/classifications';
 import { Utility, KEY_CODES } from '../lib/Utility';
 
@@ -55,7 +55,7 @@ class ClassifierContainer extends React.Component {
     this.showTutorial = this.showTutorial.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.prepareSubmitClassificationForm = this.prepareSubmitClassificationForm.bind(this);
-    this.toggleAdminOverride = this.toggleAdminOverride.bind(this);
+    this.toggleUserVariant = this.toggleUserVariant.bind(this);
     this.toggleFieldGuide = this.toggleFieldGuide.bind(this);
     this.saveCurrentClassification = this.saveCurrentClassification.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
@@ -63,7 +63,7 @@ class ClassifierContainer extends React.Component {
 
     this.state = {
       popup: null,
-      showBetaSignInPrompt: true,
+      showSignInPrompt: true,
     };
   }
 
@@ -103,6 +103,10 @@ class ClassifierContainer extends React.Component {
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
+
+    const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
+      VARIANT_TYPES.COLLABORATIVE :
+      VARIANT_TYPES.INDIVIDUAL;
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -228,17 +232,15 @@ class ClassifierContainer extends React.Component {
             </button>
 
             {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
-              <label
-                className="admin-override"
-                title="Enter collaborative mode if not available"
+              <button
+                className="flat-button block"
+                onClick={this.toggleUserVariant}
               >
-                <input
-                  onChange={this.toggleAdminOverride}
-                  type="checkbox"
-                  value={this.props.adminOverride}
-                />
-                <span>Show Previous Annotations</span>
-              </label>
+                <span className="classifier-toolbar__icon">
+                  <i className="fa fa-arrows-h" />
+                </span>
+                <span>Enter {toggleMode} Mode</span>
+              </button>
             )}
 
           </div>
@@ -250,38 +252,35 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
 
-        { /*BETA_ONLY: Show sign in prompt to users who haven't signed in.*/
-          (!(this.props.initialised && !this.props.user && this.state.showBetaSignInPrompt)) ? null :
-            <Popup
-              className="beta-popup-sign-in-prompt"
-              onClose={() => { this.setState({ showBetaSignInPrompt: false }); }}
-            >
-              <div>
-                Thanks for participating in our beta test.
-                Before you begin transcribing, please sign in or create an account by clicking the button below:
-              </div>
-              <div>
-                <button
-                  className="green sign-in button"
-                  onClick={() => {
-                    const computeRedirectURL = (window) => {
-                      const { location } = window;
-                      return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
-                    };
-                    oauth.signIn(computeRedirectURL(window));
-                  }}
-                >
-                  Sign In
-                </button>
-                <a
-                  className="continue"
-                  onClick={() => { this.setState({ showBetaSignInPrompt: false }); }}
-                  href="#"
-                >
-                  Continue without signing in
-                </a>
-              </div>
-            </Popup>
+        {(!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) ? null :
+          <Popup
+            className="popup-sign-in-prompt"
+            onClose={() => { this.setState({ showSignInPrompt: false }); }}
+          >
+            <div>
+              Before you begin transcribing, please sign in or create an account by clicking the button below:
+            </div>
+            <div>
+              <button
+                className="green sign-in button"
+                onClick={() => {
+                  const computeRedirectURL = (window) => {
+                    const { location } = window;
+                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+                  };
+                  oauth.signIn(computeRedirectURL(window));
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                className="continue"
+                onClick={() => { this.setState({ showSignInPrompt: false }); }}
+              >
+                Continue without signing in
+              </button>
+            </div>
+          </Popup>
         }
 
       </main>
@@ -343,8 +342,9 @@ class ClassifierContainer extends React.Component {
     this.props.dispatch(toggleFavorite());
   }
 
-  toggleAdminOverride() {
-    this.props.dispatch(toggleOverride());
+  toggleUserVariant() {
+    const currentVariant = this.props.variant;
+    this.props.dispatch(toggleVariant(currentVariant));
   }
 
   showMetadata() {
@@ -387,7 +387,6 @@ class ClassifierContainer extends React.Component {
 ClassifierContainer.propTypes = {
   dispatch: PropTypes.func,
   //--------
-  adminOverride: PropTypes.bool,
   currentSubject: PropTypes.shape({
     id: PropTypes.string,
     metadata: PropTypes.object,
@@ -397,7 +396,7 @@ ClassifierContainer.propTypes = {
   goldStandardMode: PropTypes.bool,
   guide: PropTypes.object,
   icons: PropTypes.object,
-  initialised: PropTypes.bool,  //BETA_ONLY
+  initialised: PropTypes.bool,
   guideStatus: PropTypes.string,
   rotation: PropTypes.number,
   preferences: PropTypes.shape({
@@ -416,6 +415,7 @@ ClassifierContainer.propTypes = {
     admin: PropTypes.bool,
     id: PropTypes.string,
   }),
+  variant: PropTypes.string,
   viewerState: PropTypes.string,
   workflow: PropTypes.shape({
     id: PropTypes.string,
@@ -424,14 +424,13 @@ ClassifierContainer.propTypes = {
 ClassifierContainer.defaultProps = {
   dispatch: () => {},
   //--------
-  adminOverride: false,
   currentSubject: null,
   favoriteSubject: false,
   goldStandardMode: false,
   guide: null,
   guideStatus: GUIDE_STATUS.IDLE,
   icons: null,
-  initialised: false,  //BETA_ONLY
+  initialised: false,
   preferences: null,
   previousAnnotations: [],
   rotation: 0,
@@ -440,6 +439,7 @@ ClassifierContainer.defaultProps = {
   tutorial: null,
   tutorialStatus: TUTORIAL_STATUS.IDLE,
   user: null,
+  variant: VARIANT_TYPES.INDIVIDUAL,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
   workflow: null,
 };
@@ -450,14 +450,13 @@ ClassifierContainer.contextTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    adminOverride: state.splits.adminOverride,
     currentSubject: state.subject.currentSubject,
     favoriteSubject: state.subject.favorite,
     goldStandardMode: state.workflow.goldStandardMode,
     guide: state.fieldGuide.guide,
     guideStatus: state.fieldGuide.status,
     icons: state.fieldGuide.icons,
-    initialised: state.login.initialised,  //BETA_ONLY
+    initialised: state.login.initialised,
     preferences: state.project.userPreferences,
     previousAnnotations: state.previousAnnotations.marks,
     rotation: state.subjectViewer.rotation,
@@ -466,6 +465,7 @@ const mapStateToProps = (state, ownProps) => {
     tutorial: state.tutorial.data,
     tutorialStatus: state.tutorial.status,
     user: state.login.user,
+    variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
     workflow: state.workflow.data,
   };

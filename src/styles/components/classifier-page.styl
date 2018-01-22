@@ -1,5 +1,28 @@
 @import "font-groups.styl"
 
+.notification
+  background-color: $red-orange
+  color: white
+  font-family: $oswald
+  font-size: 0.8em
+  font-weight: 300
+  letter-spacing: 0.1em
+  height: 2em
+  padding: 0.25em
+  text-align: center
+  text-transform: uppercase
+
+  button
+    @extend .instructions
+    background-color: transparent
+    border: none
+    color: white
+    font-size: 0.7em
+    text-transform: inherit
+
+.subject-viewer-container
+  display: flex
+
 .classifier-page
   padding: 1rem 0
 

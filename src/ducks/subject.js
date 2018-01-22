@@ -25,6 +25,8 @@ const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 const SET_SUBJECT_SET = 'SET_SUBJECT_SET';
 const CLEAR_QUEUE = 'CLEAR_QUEUE';
+const ADD_ALREADY_SEEN = 'ADD_ALREADY_SEEN';
+const CHECK_ALREADY_SEEN = 'CHECK_ALREADY_SEEN';
 
 const SUBJECT_STATUS = {
   IDLE: 'subject_status_idle',
@@ -38,6 +40,7 @@ const initialState = {
   imageMetadata: [],  //metadata for each image in the Subject; a single image is defined by subject.location.
   id: null,
   subjectSet: null,
+  alreadySeen: [],
   status: SUBJECT_STATUS.IDLE,
   queue: [],
   favorite: false
@@ -91,9 +94,13 @@ const subjectReducer = (state = initialState, action) => {
       }
 
       return Object.assign({}, state, {
-        imageMetadata
+        imageMetadata,
       });
 
+    case ADD_ALREADY_SEEN:
+      return Object.assign({}, state, {
+        alreadySeen: action.alreadySeen,
+      });
 
     default:
       return state;
@@ -186,7 +193,7 @@ const fetchSubject = (initialFetch = false) => {
       type: FETCH_SUBJECT,
     });
 
-    // BETA_ONLY
+    // INITIAL_LAUNCH_ONLY
     //----------------
     let subjectQuery = { workflow_id };
 
@@ -200,7 +207,7 @@ const fetchSubject = (initialFetch = false) => {
     }
     subjectQuery.subject_set_id = randomSubjectSet;
 
-    // Removed for //BETA_ONLY
+    // Removed for //INITIAL_LAUNCH_ONLY
     // if (getState().subject.subjectSet) {
     //   subjectQuery.subject_set_id = getState().subject.subjectSet;
     // }
@@ -289,9 +296,24 @@ const clearQueue = () => {
   };
 };
 
+const addAlreadySeen = (workflowId, subjectIds) => {
+  return (dispatch, getState) => {
+    const alreadySeen = getState().subject.alreadySeen.slice();
+    subjectIds.map((subjectId) => {
+      alreadySeen.push(`${workflowId}/${subjectId}`);
+
+      dispatch({
+        type: ADD_ALREADY_SEEN,
+        alreadySeen,
+      });
+    });
+  };
+};
+
 export default subjectReducer;
 
 export {
+  addAlreadySeen,
   clearQueue,
   toggleFavorite,
   fetchSubject,

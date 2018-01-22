@@ -1,14 +1,12 @@
-//BETA_ONLY
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const Banner = ({ hideBanner }) => {
   return (
-    <div className="beta-top-banner">
+    <div className="top-banner">
       <h2>
-        Thank you for participating in our second round of beta review! Please
-        sign in, and don’t forget to leave feedback using the link in the
-        top right of the page.
+        Thanks for participating in our beta review! We're making some changes
+        based on your feedback, and will be launching the full project soon!
       </h2>
       <button onClick={hideBanner}>X</button>
     </div>

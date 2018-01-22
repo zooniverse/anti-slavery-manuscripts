@@ -83,7 +83,6 @@ class App extends React.Component {
       <div>
         <Header />
 
-        {/*//BETA_ONLY: Notify of beta and feedback form*/}
         {(this.props.showBanner)
           ? <Banner hideBanner={this.hideBanner} /> : null
         }

@@ -21,6 +21,7 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Popup from '../components/Popup';
 import SVGImage from '../components/SVGImage';
 import AnnotationsPane from '../components/AnnotationsPane';
 import ZoomTools from '../components/ZoomTools';
@@ -29,6 +30,8 @@ import { fetchSubject, setImageMetadata } from '../ducks/subject';
 import { getSubjectLocation } from '../lib/get-subject-location';
 import SelectedAnnotation from '../components/SelectedAnnotation';
 import Crop from '../components/Crop';
+import AnnotationReminder from '../components/AnnotationReminder';
+import AlreadySeen from '../components/AlreadySeen';
 
 import {
   setScaling, setTranslation, resetView,
@@ -80,6 +83,8 @@ class SubjectViewer extends React.Component {
     this.onSelectAnnotation = this.onSelectAnnotation.bind(this);
     this.closeAnnotation = this.closeAnnotation.bind(this);
     this.escapeCrop = this.escapeCrop.bind(this);
+    this.alreadySeen = this.alreadySeen.bind(this);
+    this.closePopup = this.closePopup.bind(this);
 
     //Mouse or touch pointer
     this.pointer = {
@@ -100,6 +105,7 @@ class SubjectViewer extends React.Component {
       cropping: INPUT_STATE.IDLE,
       mouseInViewer: false,
       pointerXYOnImage: null,
+      popup: null,
     };
   }
 
@@ -107,98 +113,121 @@ class SubjectViewer extends React.Component {
 
   render() {
     const transform = `scale(${this.props.scaling}) translate(${this.props.translationX}, ${this.props.translationY}) rotate(${this.props.rotation}) `;
-    let subjectLocation = undefined;
+    let subjectLocation;
     const cursor = this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING ? 'cursor-move' : 'cursor-crosshairs';
+    let alreadySeen = false;
+
+    if (this.props.currentSubject && this.props.workflow) {
+      if (this.props.currentSubject.already_seen || this.checkAlreadySeen(this.props.workflow, this.props.currentSubject)) {
+        alreadySeen = true;
+      }
+    }
 
     if (this.props.currentSubject) {
       subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
       subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
     }
-
     return (
       <section className={`subject-viewer ${cursor}`} ref={(c)=>{this.section=c}}>
 
-        <ZoomTools viewerState={this.props.viewerState} usePanTool={this.usePanTool} useZoomIn={this.useZoomIn} useZoomOut={this.useZoomOut} />
+        {alreadySeen && (
+          <div className="notification">
+            You&apos;ve already seen this subject.
+            <button onClick={this.alreadySeen}>
+              What&apos;s this?
+            </button>
+          </div>
+        )}
 
-        {this.state.annotation}
+        <div>
+          <ZoomTools viewerState={this.props.viewerState} usePanTool={this.usePanTool} useZoomIn={this.useZoomIn} useZoomOut={this.useZoomOut} />
 
-        <svg
-          ref={(c)=>{this.svg=c}}
-          viewBox="0 0 100 100"
-          onMouseEnter={this.onMouseEnter}
-          onMouseDown={this.onMouseDown}
-          onMouseUp={this.onMouseUp}
-          onMouseMove={this.onMouseMove}
-          onMouseLeave={this.onMouseLeave}
-        >
-          <g transform={transform}>
-            {subjectLocation && (
-              <SVGImage
-                ref={(c) => { this.svgImage = c; }}
-                src={subjectLocation}
-                onLoad={this.onImageLoad}
-                contrast={this.props.contrast}
-              />
-            )}
-            <AnnotationsPane
-              imageSize={this.props.imageSize}
-              annotationInProgress={this.props.annotationInProgress}
-              annotations={this.props.annotations}
-              frame={this.props.frame}
-              getPointerXY={this.getPointerXYOnImage}
-              mouseInViewer={this.state.mouseInViewer}
-              onSelectAnnotation={this.onSelectAnnotation}
-              previousAnnotations={this.props.previousAnnotations}
-            />
-          </g>
+          {this.state.annotation}
 
-          {this.state.cropping === INPUT_STATE.ACTIVE && (
+          <svg
+            ref={(c)=>{this.svg=c}}
+            viewBox="0 0 100 100"
+            onMouseEnter={this.onMouseEnter}
+            onMouseDown={this.onMouseDown}
+            onMouseUp={this.onMouseUp}
+            onMouseMove={this.onMouseMove}
+            onMouseLeave={this.onMouseLeave}
+          >
             <g transform={transform}>
-              <Crop
-                getPointerXY={this.getPointerXYOnImage}
+              {subjectLocation && (
+                <SVGImage
+                  ref={(c) => { this.svgImage = c; }}
+                  src={subjectLocation}
+                  onLoad={this.onImageLoad}
+                  contrast={this.props.contrast}
+                />
+              )}
+              <AnnotationsPane
                 imageSize={this.props.imageSize}
+                annotationInProgress={this.props.annotationInProgress}
+                annotations={this.props.annotations}
+                frame={this.props.frame}
+                getPointerXY={this.getPointerXYOnImage}
                 mouseInViewer={this.state.mouseInViewer}
-                rectangleStart={this.rectangleStart}
+                onSelectAnnotation={this.onSelectAnnotation}
+                previousAnnotations={this.props.previousAnnotations}
               />
             </g>
-          )}
 
-          {(!DEV_MODE) ? null :
-            <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
-              {(()=>{
-                const MIN_VAL = 0;
-                const MAX_VAL = 2000;
-                const STEP_VAL = 100;
-                const STYLE = { stroke: '#fff', strokeWidth: 2 };
-                const STYLE_DIVISOR = { stroke: '#c99', strokeWidth: 2 };
-                const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
-                const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
-                const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
-                const arr = []
-                for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
-                  let styl = (v % 500 === 0) ? STYLE_DIVISOR : STYLE;
-                  arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={styl} />);
-                  arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={styl} />);
-                }
-                arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
-                arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
-                arr.push(<text x={2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
-                arr.push(<text x={-2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
-                arr.push(<text x={0} y={0} style={STYLE_TEXT}>(0,0)</text>);
-                return arr;
-              })()}
-            </g>
-          }
-          <defs>
-            <filter id="svg-invert-filter">
-              <feComponentTransfer>
-                <feFuncR type="table" tableValues="1 0"/>
-                <feFuncG type="table" tableValues="1 0"/>
-                <feFuncB type="table" tableValues="1 0"/>
-              </feComponentTransfer>
-            </filter>
-          </defs>
-        </svg>
+            {this.state.cropping === INPUT_STATE.ACTIVE && (
+              <g transform={transform}>
+                <Crop
+                  getPointerXY={this.getPointerXYOnImage}
+                  imageSize={this.props.imageSize}
+                  mouseInViewer={this.state.mouseInViewer}
+                  rectangleStart={this.rectangleStart}
+                />
+              </g>
+            )}
+
+            {(!DEV_MODE) ? null :
+              <g className="developer-grid" transform={transform + `translate(${(-this.props.imageSize.width/2)},${(-this.props.imageSize.height/2)})`}>
+                {(()=>{
+                  const MIN_VAL = 0;
+                  const MAX_VAL = 2000;
+                  const STEP_VAL = 100;
+                  const STYLE = { stroke: '#fff', strokeWidth: 2 };
+                  const STYLE_DIVISOR = { stroke: '#c99', strokeWidth: 2 };
+                  const STYLE_ORIGIN = { stroke: '#c33', strokeWidth: 2 };
+                  const STYLE_TEXT = { fill: '#c33', fontSize: '32px' }
+                  const STYLE_TEXT_SHADOW = { fill: '#fff', fontSize: '32px' }
+                  const arr = []
+                  for (let v = MIN_VAL; v <= MAX_VAL; v += STEP_VAL) {
+                    let styl = (v % 500 === 0) ? STYLE_DIVISOR : STYLE;
+                    arr.push(<line x1={v} y1={MIN_VAL} x2={v} y2={MAX_VAL} style={styl} />);
+                    arr.push(<line x1={MIN_VAL} y1={v} x2={MAX_VAL} y2={v} style={styl} />);
+                  }
+                  arr.push(<line x1={-STEP_VAL} y1={0} x2={STEP_VAL} y2={0} style={STYLE_ORIGIN} />);
+                  arr.push(<line x1={0} y1={-STEP_VAL} x2={0} y2={STEP_VAL} style={STYLE_ORIGIN} />);
+                  arr.push(<text x={2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
+                  arr.push(<text x={-2} y={0} style={STYLE_TEXT_SHADOW}>(0,0)</text>);
+                  arr.push(<text x={0} y={0} style={STYLE_TEXT}>(0,0)</text>);
+                  return arr;
+                })()}
+              </g>
+            }
+            <defs>
+              <filter id="svg-invert-filter">
+                <feComponentTransfer>
+                  <feFuncR type="table" tableValues="1 0"/>
+                  <feFuncG type="table" tableValues="1 0"/>
+                  <feFuncB type="table" tableValues="1 0"/>
+                </feComponentTransfer>
+              </filter>
+            </defs>
+          </svg>
+        </div>
+
+        {(this.state.popup === null) ? null :
+          <Popup onClose={this.closePopup.bind(this)}>
+            {this.state.popup}
+          </Popup>
+        }
       </section>
     );
   }
@@ -329,6 +358,9 @@ class SubjectViewer extends React.Component {
   }
 
   onMouseUp(e) {
+    if (this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING && !this.props.reminderSeen) {
+      this.setState({ popup: <AnnotationReminder /> });
+    }
     if (this.props.viewerState === SUBJECTVIEWER_STATE.NAVIGATING) {
       const pointerXY = this.getPointerXY(e);
       this.pointer.state = INPUT_STATE.IDLE;
@@ -392,6 +424,10 @@ class SubjectViewer extends React.Component {
   onMouseEnter(e) {
     this.setState({ mouseInViewer: true });
     return Utility.stopEvent(e);
+  }
+
+  closePopup() {
+    this.setState({ popup: null });
   }
 
   closeAnnotation() {
@@ -486,17 +522,26 @@ class SubjectViewer extends React.Component {
 
     return { x: inputX, y: inputY };
   }
+
+  closePopup() {
+    this.setState({ popup: null });
+  }
+
+  alreadySeen() {
+    this.setState({ popup: <AlreadySeen /> });
+  }
+
+  checkAlreadySeen(workflow, subject) {
+    return this.props.alreadySeen.includes(`${workflow.id}/${subject.id}`);
+  }
 }
 
 SubjectViewer.propTypes = {
   dispatch: PropTypes.func,
   //--------
-  splits: PropTypes.object,
-  user: PropTypes.shape({
-    id: PropTypes.string
-  }),
-  //--------
+  alreadySeen: PropTypes.arrayOf(PropTypes.string),
   currentSubject: PropTypes.shape({
+    already_seen: PropTypes.bool,
     src: PropTypes.string,
   }),
   //--------
@@ -518,7 +563,6 @@ SubjectViewer.propTypes = {
   //--------
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   //--------
-  annotationsStatus: PropTypes.string,
   annotationInProgress: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -533,9 +577,10 @@ SubjectViewer.propTypes = {
         x: PropTypes.number,
         y: PropTypes.number,
       })),
-    })
+    }),
   ),
   //--------
+  reminderSeen: PropTypes.bool,
   selectedAnnotation: PropTypes.shape({
     text: PropTypes.string,
     points: PropTypes.arrayOf(PropTypes.shape({
@@ -543,11 +588,15 @@ SubjectViewer.propTypes = {
       y: PropTypes.number,
     })),
   }),
+  workflow: PropTypes.shape({
+    id: PropTypes.string,
+  }),
 };
 SubjectViewer.defaultProps = {
   splits: null,
   user: null,
   //-------
+  alreadySeen: [],
   currentSubject: null,
   //-------
   contrast: false,
@@ -569,24 +618,25 @@ SubjectViewer.defaultProps = {
   //--------
   previousAnnotations: [],
   //--------
-  annotationsStatus: ANNOTATION_STATUS.IDLE,
   annotationInProgress: null,
   annotations: [],
   //--------
-  selectedAnnotation: null,
+  reminderSeen: false,
+  workflow: null,
 };
 
 SubjectViewer.contextTypes = {
-  googleLogger: PropTypes.object
+  googleLogger: PropTypes.object,
 };
 
-const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
+const mapStateToProps = (state) => {  //Listens for changes in the Redux Store
   const sv = state.subjectViewer;
   const anno = state.annotations;
   return {
     splits: state.splits.data,
     user: state.login.user,
     //--------
+    alreadySeen: state.subject.alreadySeen,
     currentSubject: state.subject.currentSubject,
     //--------
     contrast: sv.contrast,
@@ -601,11 +651,12 @@ const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Red
     //--------
     previousAnnotations: state.previousAnnotations.marks,
     //--------
-    annotationsStatus: anno.status,
     annotationInProgress: anno.annotationInProgress,
     annotations: anno.annotations,
     //--------
+    reminderSeen: state.project.reminderSeen,
     selectedAnnotation: state.annotations.selectedAnnotation,
+    workflow: state.workflow.data,
   };
 };
 export default connect(mapStateToProps)(SubjectViewer);  //Connects the Component to the Redux Store

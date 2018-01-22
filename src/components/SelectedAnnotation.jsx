@@ -311,7 +311,7 @@ class SelectedAnnotation extends React.Component {
     }
 
     if (this.context.googleLogger && this.state.previousTranscriptionSelection) {
-      this.context.googleLogger.logEvent({ type: 'select-previous-annotation' });
+      this.context.googleLogger.logEvent({ type: 'previous-annotation-agreement' });
     }
 
     this.props.onClose();
