@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Banner = ({ hideBanner }) => {
+  //If no messages, just return null.
+  return null;
+  
+  /*
   return (
     <div className="top-banner">
       <h2>
@@ -11,6 +15,7 @@ const Banner = ({ hideBanner }) => {
       <button onClick={hideBanner}>X</button>
     </div>
   );
+  */
 };
 
 Banner.propTypes = {
