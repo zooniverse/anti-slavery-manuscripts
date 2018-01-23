@@ -67,7 +67,7 @@ class Home extends React.Component {
         }
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Home.fetchRecentSubjects() error: ', err);
       })
   }
 

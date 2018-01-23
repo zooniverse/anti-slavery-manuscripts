@@ -109,8 +109,12 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
           data: project,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         //Step 3b: Tell the Redux store we screwed up.
+        console.error('ducks/project.js fetchProject() error: ', err);
+        Rollbar && Rollbar.error &&
+        Rollbar.error('ducks/project.js fetchProject() error: ', err);
+        
         dispatch({ type: FETCH_PROJECT_ERROR });
       });
   };
@@ -153,7 +157,7 @@ const fetchPreferences = (user) => {
                 });
               })
               .catch((err) => {
-                console.warn(err);
+                console.error('ducks/project.js fetchPreferences() error: ', err);
               });
           }
         });

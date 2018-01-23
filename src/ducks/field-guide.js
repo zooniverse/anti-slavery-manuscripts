@@ -68,6 +68,7 @@ const fetchGuide = () => {
       });
     })
     .catch((err) => {
+      console.error('ducks/field-guide.js fetchGuide() error: ', err);
       dispatch({ type: FETCH_GUIDE_ERROR });
     });
   };

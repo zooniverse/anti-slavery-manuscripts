@@ -232,6 +232,7 @@ const fetchSubject = (initialFetch = false) => {
           prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
+          console.error('ducks/subject.js fetchSubject() error: ', err);
           dispatch({ type: FETCH_SUBJECT_ERROR });
         });
     };
@@ -280,7 +281,7 @@ const fetchSavedSubject = (id) => {
         });
       })
       .catch((err) => {
-        console.error(err);
+        console.error('ducks/subject.js fetchSavedSubject() error: ', err);
         dispatch({ type: FETCH_SUBJECT_ERROR });
       });
   };

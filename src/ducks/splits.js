@@ -94,6 +94,7 @@ const fetchSplit = (user) => {
         dispatch(fetchWorkflow(variant));
       })
       .catch((err) => {
+        console.error('ducks/splits.js fetchSplit() error: ', err);
         dispatch({ type: FETCH_SPLIT_ERROR });
         dispatch(fetchWorkflow(variant));
       })
