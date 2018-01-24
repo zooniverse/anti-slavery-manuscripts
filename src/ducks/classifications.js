@@ -88,7 +88,8 @@ const createClassification = () => {
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
-
+    
+    console.info('ducks/classifications.js createClassification()');
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
@@ -104,12 +105,6 @@ const createClassification = () => {
         workflow: getState().workflow.id,
         subjects: [getState().subject.id]
       }
-    })
-    .catch((err) => {
-      console.error('ducks/classifications.js createClassification() error: ', err);
-      Rollbar && Rollbar.error &&
-      Rollbar.error('ducks/classifications.js createClassification() error: ', err);
-      alert('ERROR: Could not initialise system. Please reload the page.');  //TODO: better presentation
     });
     classification._workflow = getState().workflow.data;
     classification._subjects = [getState().subject.currentSubject];
@@ -128,6 +123,8 @@ const createClassification = () => {
 
 const submitClassification = () => {
   return (dispatch, getState) => {
+    console.info('ducks/classifications.js submitClassification()');
+    
     //Initialise
     //----------------
     const subject = getState().subject;
@@ -177,6 +174,7 @@ const submitClassification = () => {
 
     //Save the classification
     //----------------
+    console.info('ducks/classifications.js submitClassification() checkpoint');
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
       annotations: updatedAnnotations,
@@ -196,13 +194,13 @@ const submitClassification = () => {
         if (user) {
           localStorage.removeItem(`${user.id}.classificationID`);
         }
-        //Log
-        console.log('Submit classification: Success');
+
         try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
           Split.classificationCreated(classification);
         } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
         //Reset values in preparation for the next Subject.
+        console.info('ducks/classifications.js submitClassification() success');
         dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
         dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
         dispatch(resetView());
@@ -234,14 +232,16 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
 
 const retrieveClassification = (id) => {
   return (dispatch) => {
+    console.info('ducks/classifications.js retrieveClassification()');
+    
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
+      
         //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly.
-      
-        console.log('x'.repeat(80), '\n', classification.links.subjects, '\n', classification.annotations);  //TEST
-      
         const subjectId = classification.links.subjects.shift();
         const annotations = classification.annotations.shift();
+      
+        console.info('ducks/classifications.js submitClassification() success');
         dispatch(setAnnotations(annotations.value));
         dispatch(fetchSavedSubject(subjectId));
         dispatch({
@@ -264,6 +264,8 @@ const retrieveClassification = (id) => {
 
 const saveClassificationInProgress = () => {
   return (dispatch, getState) => {
+    console.info('ducks/classifications.js saveClassificationInProgressClassification()');
+    
     let task = "T0";
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
@@ -279,6 +281,8 @@ const saveClassificationInProgress = () => {
 
     const classification = getState().classifications.classification;
 
+    console.info('ducks/classifications.js saveClassificationInProgressClassification() checkpoint');
+    
     classification.update({
       annotations: [annotations],
       completed: false,
@@ -295,8 +299,8 @@ const saveClassificationInProgress = () => {
       //Refresh our Classification object with the newer, fresher version from
       //Panoptes. If we don't, all future .save() and .update() actions on the
       //(old) Classification object will start going wonky.
+      console.info('ducks/classifications.js saveClassificationInProgress() success');
       dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
-      console.log('ducks/classifications.js saveClassificationInProgress(): success');
     })
     .catch((err) => {
       console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);

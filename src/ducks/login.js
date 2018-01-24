@@ -53,6 +53,7 @@ const logoutFromPanoptes = () => {
 
 const setLoginUser = (user) => {
   return (dispatch) => {
+    console.info('ducks/login.js setLoginUser(): user ', user, ', user.id ', (user && user.id));
     if (user) {
       apiClient.type('project_roles').get({ project_id: config.zooniverseLinks.projectId, user_id: user.id })
         .then(([userRoles]) => {

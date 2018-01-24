@@ -163,6 +163,7 @@ const setImageMetadata = (frameId, metadata) => {
 }
 
 const selectSubjectSet = (id) => {
+  console.info('ducks/subject.js selectSubjectSet(): id ', id);
   return (dispatch) => {
     dispatch({
       type: SET_SUBJECT_SET,
@@ -178,8 +179,10 @@ const selectSubjectSet = (id) => {
  */
 const fetchSubject = (initialFetch = false) => {
   return (dispatch, getState) => {
+    console.info('ducks/subject.js fetchSubject() init');
     if (initialFetch && getState().subject.status !== SUBJECT_STATUS.IDLE) return;
     const workflow_id = getState().workflow.id;
+    console.info('ducks/subject.js fetchSubject(): workflow_id ', workflow_id);
 
     let savedClassificationPrompt = false;
     const user = getState().login.user;
@@ -212,6 +215,8 @@ const fetchSubject = (initialFetch = false) => {
     //   subjectQuery.subject_set_id = getState().subject.subjectSet;
     // }
     //----------------
+    
+    console.info('ducks/subject.js fetchSubject(): subject_set_id ', subjectQuery.subject_set_id);
 
     const gsMode = getState().workflow.goldStandardMode;
     if (gsMode) {
@@ -228,7 +233,8 @@ const fetchSubject = (initialFetch = false) => {
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,
           });
-
+        
+          console.info('ducks/subject.js fetchSubject() fetch subject success: subject id ', currentSubject.id);
           prepareForNewSubject(dispatch, currentSubject);
         })
         .catch((err) => {
