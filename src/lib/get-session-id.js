@@ -9,8 +9,8 @@ const generateSessionID = () => {
   try {
     sessionStorage.setItem('session_id', JSON.stringify(stored));
   }
-  catch(e) {
-    console.log(e);
+  catch(err) {
+    console.error('lib/get-session-id.js generateSessionID() error: ', err);
   }
   return stored;
 };
@@ -29,8 +29,8 @@ const getSessionID = () => {
     try {
       sessionStorage.setItem('session_id', JSON.stringify({id, ttl}))
     }
-    catch(e) {
-      console.log(e);
+    catch(err) {
+      console.error('lib/get-session-id.js getSessionID() error: ', err);
     }
   }
   return id;

@@ -61,7 +61,7 @@ const setLoginUser = (user) => {
           }
         })
         .catch((err) => {
-          console.warn(err);
+          console.error('ducks/login.js setLoginUser() error: ', err);
         });
     }
 

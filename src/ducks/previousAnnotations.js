@@ -123,6 +123,7 @@ const fetchPreviousAnnotations = (subject) => {
       });
     })
     .catch((err) => {
+      console.error('ducks/previousAnnotations.js fetchPreviousAnnotations() error: ', err);
       dispatch({ type: FETCH_ANNOTATIONS_ERROR });
     });
   };

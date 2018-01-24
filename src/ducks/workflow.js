@@ -80,9 +80,8 @@ const retrieveWorkflow = (id) => {
 
     })
     .catch((err) => {
-
+      console.error('ducks/workflow.js retrieveWorkflow() error: ', err);
       dispatch({ type: FETCH_WORKFLOW_ERROR });
-
     });
   };
 }

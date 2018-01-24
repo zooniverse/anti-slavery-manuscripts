@@ -55,6 +55,7 @@ const fetchTutorial = (workflow) => {
       })
     })
     .catch((err) => {
+      console.error('ducks/tutorial.js fetchTutorial() error: ', err);
       dispatch({ type: FETCH_TUTORIAL_ERROR });
     });
   };

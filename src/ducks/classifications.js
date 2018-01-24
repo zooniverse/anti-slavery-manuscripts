@@ -199,12 +199,14 @@ const submitClassification = () => {
       //Unsuccessful save
       .catch((err) => {
         //TODO: Proper error handling
-        console.error('Submit classification: Error - ', err);
+        console.error('ducks/classifications.js submitClassification() error: ', err);
+        Rollbar && Rollbar.error &&
+        Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
         alert('ERROR: Could not submit Classification');
-
         dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
       });
     //----------------
+
     const { workflow, subjects } = classification.links;
     dispatch(addAlreadySeen(workflow, subjects));
   };
@@ -236,6 +238,9 @@ const retrieveClassification = (id) => {
         });
       })
       .catch((err) => {
+        console.error('ducks/classifications.js retrieveClassification() error: ', err);
+        Rollbar && Rollbar.error &&
+        Rollbar.error('ducks/classifications.js retrieveClassification() error: ', err);
         dispatch({
           type: CREATE_CLASSIFICATION_ERROR
         })
@@ -279,7 +284,9 @@ const saveClassificationInProgress = () => {
       dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
     })
     .catch((err) => {
-      console.log(err);
+      console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
+      Rollbar && Rollbar.error &&
+      Rollbar.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
     });
   };
 };

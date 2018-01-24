@@ -29,7 +29,7 @@ class ClassificationPrompt extends React.Component {
         classification.delete();
       })
       .catch((err) => {
-        console.warn(err);
+        console.warn('ClassificationPrompt.cancelClassification() warning: ', err);
       });
     this.props.dispatch(fetchSubject());
     this.props.onClose && this.props.onClose(e);
