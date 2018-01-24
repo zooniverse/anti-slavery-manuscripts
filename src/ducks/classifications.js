@@ -43,6 +43,7 @@ const classificationReducer = (state = initialState, action) => {
 
     case CREATE_CLASSIFICATION_ERROR:
       return Object.assign({}, state, {
+        classification: null,
         status: CLASSIFICATION_STATUS.ERROR
       });
 
@@ -87,7 +88,8 @@ const createClassification = () => {
     if (getState().workflow.data) {
       workflow_version = getState().workflow.data.version;
     }
-
+    
+    console.info('ducks/classifications.js createClassification()');
     const classification = apiClient.type('classifications').create({
       annotations: [],
       metadata: {
@@ -121,6 +123,8 @@ const createClassification = () => {
 
 const submitClassification = () => {
   return (dispatch, getState) => {
+    console.info('ducks/classifications.js submitClassification()');
+    
     //Initialise
     //----------------
     const subject = getState().subject;
@@ -129,8 +133,13 @@ const submitClassification = () => {
     const updatedAnnotations = [];  //Always start empty (don't pull anything from classification.annotation) the build the array based on the answers we have.
     const user = getState().login.user;
 
-    //TODO: Better error handling
-    if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
+    if (!classification) {
+      console.error('ducks/classifications.js submitClassification() error: no classification', '');
+      Rollbar && Rollbar.error &&
+      Rollbar.error('ducks/classifications.js submitClassification() error: no classification', '');  //TODO: better presentation
+      alert('ERROR: Could not submit Classification.');
+      return;
+    }
     //----------------
 
     //Record the first task
@@ -165,6 +174,7 @@ const submitClassification = () => {
 
     //Save the classification
     //----------------
+    console.info('ducks/classifications.js submitClassification() checkpoint');
     dispatch({ type: SUBMIT_CLASSIFICATION });
     classification.update({
       annotations: updatedAnnotations,
@@ -184,13 +194,13 @@ const submitClassification = () => {
         if (user) {
           localStorage.removeItem(`${user.id}.classificationID`);
         }
-        //Log
-        console.log('Submit classification: Success');
+
         try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
           Split.classificationCreated(classification);
         } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
         //Reset values in preparation for the next Subject.
+        console.info('ducks/classifications.js submitClassification() success');
         dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
         dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
         dispatch(resetView());
@@ -198,11 +208,10 @@ const submitClassification = () => {
 
       //Unsuccessful save
       .catch((err) => {
-        //TODO: Proper error handling
         console.error('ducks/classifications.js submitClassification() error: ', err);
         Rollbar && Rollbar.error &&
         Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
-        alert('ERROR: Could not submit Classification');
+        alert('ERROR: Could not submit Classification');  //TODO: better messaging
         dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
       });
     //----------------
@@ -223,11 +232,17 @@ const setSubjectCompletionAnswers = (taskId, answerValue) => {
 
 const retrieveClassification = (id) => {
   return (dispatch) => {
+    console.info('ducks/classifications.js retrieveClassification()');
+    
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
-        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly.
-        const subjectId = classification.links.subjects.shift();
-        const annotations = classification.annotations.shift();
+        const subjectId = (classification.links && classification.links.subjects && classification.links.subjects.length > 0)
+          ? classification.links.subjects[0] : null;
+        const annotations = (classification.annotations)
+          ? classification.annotations[0] : { value: [] };
+        if (subjectId === null) { throw 'Subject ID could not be determined.'; }
+      
+        console.info('ducks/classifications.js submitClassification() success');
         dispatch(setAnnotations(annotations.value));
         dispatch(fetchSavedSubject(subjectId));
         dispatch({
@@ -250,6 +265,8 @@ const retrieveClassification = (id) => {
 
 const saveClassificationInProgress = () => {
   return (dispatch, getState) => {
+    console.info('ducks/classifications.js saveClassificationInProgressClassification()');
+    
     let task = "T0";
     if (getState().workflow.data) {
       task = getState().workflow.data.first_task;  //This should usually be T1.
@@ -265,6 +282,8 @@ const saveClassificationInProgress = () => {
 
     const classification = getState().classifications.classification;
 
+    console.info('ducks/classifications.js saveClassificationInProgressClassification() checkpoint');
+    
     classification.update({
       annotations: [annotations],
       completed: false,
@@ -281,6 +300,7 @@ const saveClassificationInProgress = () => {
       //Refresh our Classification object with the newer, fresher version from
       //Panoptes. If we don't, all future .save() and .update() actions on the
       //(old) Classification object will start going wonky.
+      console.info('ducks/classifications.js saveClassificationInProgress() success');
       dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
     })
     .catch((err) => {
