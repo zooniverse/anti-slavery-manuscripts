@@ -43,6 +43,7 @@ const classificationReducer = (state = initialState, action) => {
 
     case CREATE_CLASSIFICATION_ERROR:
       return Object.assign({}, state, {
+        classification: null,
         status: CLASSIFICATION_STATUS.ERROR
       });
 
@@ -103,6 +104,12 @@ const createClassification = () => {
         workflow: getState().workflow.id,
         subjects: [getState().subject.id]
       }
+    })
+    .catch((err) => {
+      console.error('ducks/classifications.js createClassification() error: ', err);
+      Rollbar && Rollbar.error &&
+      Rollbar.error('ducks/classifications.js createClassification() error: ', err);
+      alert('ERROR: Could not initialise system. Please reload the page.');  //TODO: better presentation
     });
     classification._workflow = getState().workflow.data;
     classification._subjects = [getState().subject.currentSubject];
@@ -129,8 +136,13 @@ const submitClassification = () => {
     const updatedAnnotations = [];  //Always start empty (don't pull anything from classification.annotation) the build the array based on the answers we have.
     const user = getState().login.user;
 
-    //TODO: Better error handling
-    if (!classification) { alert('ERROR: Could not submit Classification.'); return; }
+    if (!classification) {
+      console.error('ducks/classifications.js submitClassification() error (no classification): ', err);
+      Rollbar && Rollbar.error &&
+      Rollbar.error('ducks/classifications.js submitClassification() error (no classification): ', err);  //TODO: better presentation
+      alert('ERROR: Could not submit Classification.');
+      return;
+    }
     //----------------
 
     //Record the first task
@@ -198,11 +210,10 @@ const submitClassification = () => {
 
       //Unsuccessful save
       .catch((err) => {
-        //TODO: Proper error handling
         console.error('ducks/classifications.js submitClassification() error: ', err);
         Rollbar && Rollbar.error &&
         Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
-        alert('ERROR: Could not submit Classification');
+        alert('ERROR: Could not submit Classification');  //TODO: better messaging
         dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
       });
     //----------------
@@ -282,6 +293,7 @@ const saveClassificationInProgress = () => {
       //Panoptes. If we don't, all future .save() and .update() actions on the
       //(old) Classification object will start going wonky.
       dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
+      console.log('ducks/classifications.js saveClassificationInProgress(): success');
     })
     .catch((err) => {
       console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
