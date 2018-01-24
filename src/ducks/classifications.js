@@ -236,10 +236,11 @@ const retrieveClassification = (id) => {
     
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
-      
-        //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly.
-        const subjectId = classification.links.subjects.shift();
-        const annotations = classification.annotations.shift();
+        const subjectId = (classification.links && classification.links.subjects && classification.links.subjects.length > 0)
+          ? classification.links.subjects[0] : null;
+        const annotations = (classification.annotations)
+          ? classification.annotations[0] : { value: [] };
+        if (subjectId === null) { throw 'Subject ID could not be determined.'; }
       
         console.info('ducks/classifications.js submitClassification() success');
         dispatch(setAnnotations(annotations.value));
