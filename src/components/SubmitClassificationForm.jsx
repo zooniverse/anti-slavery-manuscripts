@@ -65,14 +65,16 @@ class SubmitClassificationForm extends React.Component {
   }
 
   submitClassificationAndRedirect() {
+    let talkUrl = `${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/talk`;
+
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
     }
 
     if (this.props.currentSubject) {
-      const id = this.props.currentSubject.id;
-      window.open(`${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/talk/subjects/${id}`, '_blank');
+      talkUrl += `/subjects/${this.props.currentSubject.id}`;
     }
+    window.open(talkUrl, '_blank');
 
     this.props.dispatch(submitClassification());
     this.props.closePopup && this.props.closePopup();
