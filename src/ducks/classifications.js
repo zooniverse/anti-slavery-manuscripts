@@ -137,9 +137,9 @@ const submitClassification = () => {
     const user = getState().login.user;
 
     if (!classification) {
-      console.error('ducks/classifications.js submitClassification() error (no classification): ', err);
+      console.error('ducks/classifications.js submitClassification() error: no classification', '');
       Rollbar && Rollbar.error &&
-      Rollbar.error('ducks/classifications.js submitClassification() error (no classification): ', err);  //TODO: better presentation
+      Rollbar.error('ducks/classifications.js submitClassification() error: no classification', '');  //TODO: better presentation
       alert('ERROR: Could not submit Classification.');
       return;
     }
@@ -237,6 +237,9 @@ const retrieveClassification = (id) => {
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         //TODO: Test if classification.annotations.shift() is OK; normally we don't update the classification object directly.
+      
+        console.log('x'.repeat(80), '\n', classification.links.subjects, '\n', classification.annotations);  //TEST
+      
         const subjectId = classification.links.subjects.shift();
         const annotations = classification.annotations.shift();
         dispatch(setAnnotations(annotations.value));
