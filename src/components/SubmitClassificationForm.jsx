@@ -8,8 +8,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { config } from '../config';
 import {
-  createClassification, submitClassification,
-  setSubjectCompletionAnswers,
+  submitClassification, setSubjectCompletionAnswers,
 } from '../ducks/classifications';
 
 class SubmitClassificationForm extends React.Component {
@@ -61,7 +60,7 @@ class SubmitClassificationForm extends React.Component {
       this.context.googleLogger.logEvent({ type: 'complete-classification' });
     }
 
-    this.props.dispatch(submitClassification())
+    this.props.dispatch(submitClassification());
     this.props.closePopup && this.props.closePopup();
   }
 
@@ -70,9 +69,13 @@ class SubmitClassificationForm extends React.Component {
       this.context.googleLogger.logEvent({ type: 'complete-classification-and-talk' });
     }
 
-    this.props.dispatch(submitClassification())
+    if (this.props.currentSubject) {
+      const id = this.props.currentSubject.id;
+      window.open(`${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/talk/subjects/${id}`, '_blank');
+    }
+
+    this.props.dispatch(submitClassification());
     this.props.closePopup && this.props.closePopup();
-    window.open(config.zooniverseLinks.host + 'projects/' + config.zooniverseLinks.projectSlug + '/talk', '_blank');
   }
 
   /*  This function renders all the non-transcription Panoptes tasks (i.e.
@@ -150,6 +153,9 @@ function isAQuestionTask(task, workflow) {
 }
 
 SubmitClassificationForm.propTypes = {
+  currentSubject: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   dispatch: PropTypes.func,
   closePopup: PropTypes.func,
   //--------
@@ -157,6 +163,7 @@ SubmitClassificationForm.propTypes = {
   workflowData: PropTypes.object,
 };
 SubmitClassificationForm.defaultProps = {
+  currentSubject: null,
   dispatch: () => {},
   closePopup: () => {},
   //--------
@@ -169,9 +176,10 @@ SubmitClassificationForm.contextTypes = {
 
 const mapStateToProps = (state, ownProps) => {  //Listens for changes in the Redux Store
   return {
+    classification: state.classifications.classification,
+    currentSubject: state.subject.currentSubject,
     subjectCompletionAnswers: state.classifications.subjectCompletionAnswers,
     workflowData: state.workflow.data,
-    classification: state.classifications.classification,
   };
 };
 export default connect(mapStateToProps)(SubmitClassificationForm);  //Connects the Component to the Redux Store
