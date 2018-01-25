@@ -125,52 +125,54 @@ const createClassification = () => {
 
 const saveAllQueuedClassifications = (dispatch) => {
   const queue = JSON.parse(localStorage.getItem(FAILED_CLASSIFICATION_QUEUE_NAME));
+  let shownAlert = false;
+
   if (queue && queue.length !== 0) {
     console.log('Saving queued classifications:', queue.length);
+    const newQueue = [];
     queue.forEach((classificationData) => {
       apiClient.type('classifications').create(classificationData).save()
         .then((actualClassification) => {
           console.log('Saved classification', actualClassification.id);
 
-          try {  //Fix: IE11 doesn't know what to do with Split.classificationCreated()
+          try {
             Split.classificationCreated(actualClassification);
           } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
           actualClassification.destroy();
-          const indexInQueue = queue.indexOf(classificationData);
-          queue.splice(indexInQueue, 1);
+
           try {
             localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
             console.info('Saved a queued classification, remaining:', queue.length);
-            console.info('ducks/classifications.js submitClassification() success');
             dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
           } catch (error) {
             console.error('Failed to update classification queue:', error);
           }
           const { workflow, subjects } = actualClassification.links;
           dispatch(addAlreadySeen(workflow, subjects));
-
         })
-        .catch((error) => {
-          console.error('Failed to save a queued classification:', error);
+        .catch((err) => {
           console.error('ducks/classifications.js submitClassification() error: ', err);
           Rollbar && Rollbar.error &&
           Rollbar.error('ducks/classifications.js submitClassification() error: ', err);
-          alert('ERROR: Could not submit Classification');  //TODO: better messaging
           dispatch({ type: SUBMIT_CLASSIFICATION_ERROR });
-          switch (error.status) {
+
+          if (!shownAlert) {
+            alert('ERROR: Could not submit Classification');  //TODO: better messaging
+            shownAlert = true;
+          }
+
+          switch (err.status) {
             case 422: {
-              const indexInQueue = queue.indexOf(classificationData);
-              queue.splice(indexInQueue, 1);
-              try {
-                localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
-              } catch (err) {
-                console.error('Failed to update classification queue:', err);
-              }
               break;
             }
             default:
-              return null;
+              try {
+                newQueue.push(classificationData);
+                localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(newQueue));
+              } catch (error) {
+                console.error('Failed to update classification queue:', error);
+              }
           }
         });
     });
