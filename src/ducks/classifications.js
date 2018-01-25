@@ -144,9 +144,6 @@ const saveAllQueuedClassifications = (dispatch) => {
             console.info('Saved a queued classification, remaining:', queue.length);
             console.info('ducks/classifications.js submitClassification() success');
             dispatch({ type: SUBMIT_CLASSIFICATION_SUCCESS });
-            if (user) {
-              localStorage.removeItem(`${user.id}.classificationID`);
-            }
           } catch (error) {
             console.error('Failed to update classification queue:', error);
           }
@@ -182,10 +179,14 @@ const saveAllQueuedClassifications = (dispatch) => {
   dispatch(resetView());
 };
 
-const queueClassification = (classification) => {
+const queueClassification = (classification, user = null) => {
   const queue = JSON.parse(localStorage.getItem(FAILED_CLASSIFICATION_QUEUE_NAME)) || [];
   queue.push(classification);
+
   try {
+    if (user) {
+      localStorage.removeItem(`${user.id}.classificationID`);
+    }
     localStorage.setItem(FAILED_CLASSIFICATION_QUEUE_NAME, JSON.stringify(queue));
     console.info('Queued classifications:', queue.length);
   } catch (error) {
@@ -259,7 +260,7 @@ const submitClassification = () => {
       },
       'metadata.subject_dimensions': subject_dimensions || [],
     });
-    queueClassification(classification);
+    queueClassification(classification, user);
     saveAllQueuedClassifications(dispatch);
   };
 };
