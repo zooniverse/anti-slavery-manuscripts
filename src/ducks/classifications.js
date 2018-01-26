@@ -174,7 +174,6 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
         //Ah, crap.
         itemsFailed++;
         
-        console.error('ducks/classifications.js saveAllQueuedClassifications() failure: item ', classificationObject.id);
         console.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
         Rollbar && Rollbar.error &&
         Rollbar.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
