@@ -131,8 +131,7 @@ const createClassification = () => {
     - Once ALL the items are processed, we are now ready to prepare our data
       for the next Subject to be fetched.
  */
-const saveAllQueuedClassifications = (dispatch, getState) => {
-  const user = getState().login.user;
+const saveAllQueuedClassifications = (dispatch, user = null) => {
   const QUEUE_NAME = (user)
     ? user.id + '.' + CLASSIFICATIONS_QUEUE_NAME
     : '_.' + CLASSIFICATIONS_QUEUE_NAME;
@@ -304,7 +303,7 @@ const submitClassification = () => {
       'metadata.subject_dimensions': subject_dimensions || [],
     });
     queueClassification(classification, user);
-    saveAllQueuedClassifications(dispatch, getState);
+    saveAllQueuedClassifications(dispatch, user);
   };
 };
 
