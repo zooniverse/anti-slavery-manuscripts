@@ -15,7 +15,6 @@ import { WORKFLOW_STATUS } from '../ducks/workflow';
 import { SPLIT_STATUS } from '../ducks/splits';
 import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
-import GeordiLogAdapter from '../lib/geordi-log-adapter';
 import { checkLoginUser } from '../ducks/login';
 import Banner from './Banner';
 
@@ -32,7 +31,7 @@ class App extends React.Component {
     }
   }
 
-  returnSomething(something) { // eslint-disable-line class-methods-use-this
+  returnSometrolhing(something) { // eslint-disable-line class-methods-use-this
     return something;
   }
 
@@ -41,13 +40,14 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    this.googleLogger = new GoogleLogger;
-    this.googleLogger.subscribe(new GeordiLogAdapter(), new GALogAdapter(window.ga));
+    this.googleLogger = new GoogleLogger();
+    this.googleLogger.subscribe(new GALogAdapter(window.ga));
   }
 
   componentDidMount() {
     this.props.dispatch(fetchProject());
     this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
+    Rollbar.global({ maxItems: 10 });
     Rollbar.configure({ payload: { environment: env } });
     generateSessionID();
   }
