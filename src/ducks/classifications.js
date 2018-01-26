@@ -10,7 +10,7 @@ import { resetView } from './subject-viewer';
 import { toggleDialog } from './dialog';
 import SaveSuccess from '../components/SaveSuccess';
 
-const CLASSIFICATIONS_QUEUE = 'classifications-queue';
+const CLASSIFICATIONS_QUEUE_NAME = 'classificationsQueue';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
@@ -133,13 +133,18 @@ const createClassification = () => {
     - Once ALL the items are processed, we are now ready to prepare our data
       for the next Subject to be fetched.
  */
-const saveAllQueuedClassifications = (dispatch) => {
-  const queue = JSON.parse(localStorage.getItem(CLASSIFICATIONS_QUEUE));
+const saveAllQueuedClassifications = (dispatch, getState) => {
+  const user = getState().login.user;
+  const QUEUE_NAME = (user)
+    ? user.id + '.' + CLASSIFICATIONS_QUEUE_NAME
+    : '_.' + CLASSIFICATIONS_QUEUE_NAME;
+        
+  const queue = JSON.parse(localStorage.getItem(QUEUE_NAME));
 
   if (queue && queue.length !== 0) {
     //Prepare 
     const newQueue = [];
-    localStorage.setItem(CLASSIFICATIONS_QUEUE, null);  //Empty the queue first
+    localStorage.setItem(QUEUE_NAME, null);  //Empty the queue first
     
     //Keep track of items processed so we know when ALL items are processed.
     let itemsProcessed = 0;
@@ -199,7 +204,7 @@ const saveAllQueuedClassifications = (dispatch) => {
           }
           
           //Save the new queue.
-          localStorage.setItem(CLASSIFICATIONS_QUEUE, JSON.stringify(newQueue));
+          localStorage.setItem(QUEUE_NAME, JSON.stringify(newQueue));
           
           //All done, get the next Subject!
           dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
@@ -211,17 +216,25 @@ const saveAllQueuedClassifications = (dispatch) => {
 };
 
 const queueClassification = (classification, user = null) => {
-  const queue = JSON.parse(localStorage.getItem(CLASSIFICATIONS_QUEUE)) || [];
+  const QUEUE_NAME = (user)
+    ? user.id + '.' + CLASSIFICATIONS_QUEUE_NAME
+    : '_.' + CLASSIFICATIONS_QUEUE_NAME;
+  
+  const queue = JSON.parse(localStorage.getItem(QUEUE_NAME)) || [];
   queue.push(classification);
 
   try {
     if (user) {
       localStorage.removeItem(`${user.id}.classificationID`);
     }
-    localStorage.setItem(CLASSIFICATIONS_QUEUE, JSON.stringify(queue));
-    console.info('Queued classifications:', queue.length);
-  } catch (error) {
-    console.error('Failed to queue classification:', error);
+    localStorage.setItem(QUEUE_NAME, JSON.stringify(queue));
+    console.info('ducks/classifications.js queueClassification() added: ', queue.length);
+  } catch (err) {
+    //WARNING: if an error appears here, unlikely as it may be, the error might
+    //be catastrophic enough to warrant an alert().
+    console.error('ducks/classifications.js queueClassification() error: ', err);
+    Rollbar && Rollbar.error &&
+    Rollbar.error('ducks/classifications.js queueClassification() error: ', err);
   }
 };
 
