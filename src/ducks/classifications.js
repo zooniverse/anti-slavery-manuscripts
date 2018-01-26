@@ -197,7 +197,7 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
           //Did anything fail?
           if (itemsFailed > 0) {
             //TODO: better presentation
-            alert('ERROR: Your Classification could not be submitted. However, we\'ve saved your work on this computer, so please refresh the page. The next time you submit a Classification, all previous Classifications will also be resubmitted.');
+            alert('Your Transcription could not be submitted at this time. However, we\'ve saved your work on this computer, so please refresh the page to recover your work. The next time you submit a Transcription, all previous work will be resubmitted.');
           }
           
           //Save the new queue.
