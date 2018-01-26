@@ -305,7 +305,7 @@ const submitClassification = () => {
       'metadata.subject_dimensions': subject_dimensions || [],
     });
     queueClassification(classification, user);
-    saveAllQueuedClassifications(dispatch);
+    saveAllQueuedClassifications(dispatch, getState);
   };
 };
 
