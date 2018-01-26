@@ -14,8 +14,6 @@ const CLASSIFICATIONS_QUEUE_NAME = 'classificationsQueue';
 
 //Action Types
 const SUBMIT_CLASSIFICATION = 'SUBMIT_CLASSIFICATION';
-//const SUBMIT_CLASSIFICATION_SUCCESS = 'SUBMIT_CLASSIFICATION_SUCCESS';
-//const SUBMIT_CLASSIFICATION_ERROR = 'SUBMIT_CLASSIFICATION_ERROR';
 const SUBMIT_CLASSIFICATION_FINISHED = 'SUBMIT_CLASSIFICATION_FINISHED';
 const CREATE_CLASSIFICATION = 'CREATE_CLASSIFICATION';
 const CREATE_CLASSIFICATION_ERROR = 'CREATE_CLASSIFICATION_ERROR';
@@ -207,6 +205,7 @@ const saveAllQueuedClassifications = (dispatch, getState) => {
           localStorage.setItem(QUEUE_NAME, JSON.stringify(newQueue));
           
           //All done, get the next Subject!
+          dispatch({ type: SUBMIT_CLASSIFICATION_FINISHED });
           dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
           dispatch(resetView());
         }
