@@ -172,8 +172,6 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
       //FAILURE
       .catch((err) => {
         //Ah, crap.
-        itemsFailed++;
-        
         console.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
         Rollbar && Rollbar.error &&
         Rollbar.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
@@ -184,6 +182,7 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
             break;
 
           default:  //Otherwise, the failed Classification should be re-queued for the next time attempt.
+            itemsFailed++;  //Let the user know that the Classification will be re-queued.
             newQueue.push(classificationData);
         }
       })
@@ -193,6 +192,8 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
 
         //Have all items been processed?
         if (itemsProcessed === itemsToProcess) {
+          console.info('ducks/classifications.js saveAllQueuedClassifications() finished: ${itemsProcessed} items processed, ${itemsFailed} failures');
+          
           //Did anything fail?
           if (itemsFailed > 0) {
             //TODO: better presentation
