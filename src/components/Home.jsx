@@ -62,13 +62,13 @@ class Home extends React.Component {
           const newestSubjects = uniqueSubjects.slice(0, 4);
           apiClient.type('subjects').get(newestSubjects)
             .then((subjectsOfNote) => {
-              this.setState({ subjectsOfNote })
+              this.setState({ subjectsOfNote });
             });
         }
       })
       .catch((err) => {
         console.error('Home.fetchRecentSubjects() error: ', err);
-      })
+      });
   }
 
   toggleGoldStandard() {
@@ -81,7 +81,7 @@ class Home extends React.Component {
         <div key={`Subject_Set_${i}`}>
           <Link onClick={this.setSubjectSet.bind(this, set.id)} to="/classify">{set.title}</Link>
         </div>
-      )
+      );
     });
   }
 
@@ -101,7 +101,8 @@ class Home extends React.Component {
           <img role="presentation" className="divider" src={Divider} />
           <div className="home-page__body-text">
             <b className="body-copy-first-word">Welcome.</b>{' '}
-            {this.props.project && this.props.project.description}
+            {this.props.project && this.props.project.description}<br />
+            <span><b>Note:</b> This project is not currently supported on mobile and tablet devices.</span>
           </div>
 
           <Link to="/classify">Start Transcribing</Link>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '../images/img_divider.png';
+import { config } from '../config';
 import { getSubjectLocation, getThumbnailSource } from '../lib/get-subject-location';
 
 const SocialSection = ({ project, subjectsOfNote }) =>
@@ -14,12 +15,15 @@ const SocialSection = ({ project, subjectsOfNote }) =>
 
           {subjectsOfNote.map((subject, i) => {
             const location = getSubjectLocation(subject);
+            const url = `${config.zooniverseLinks.host}projects/${project.slug}/talk/subjects/${subject.id}`;
             const thumbnail = (location && location.src) ? getThumbnailSource(location.src) : undefined;
             return (
               <div key={i}>
-                <img src={thumbnail} />
+                <a href={url} rel="noopener noreferrer" target="_blank">
+                  <img role="presentation" src={thumbnail} />
+                </a>
               </div>
-            )
+            );
           })}
 
         </div>
@@ -84,8 +88,8 @@ const SocialSection = ({ project, subjectsOfNote }) =>
         </div>
         <div className="social-bar">
           <div>
-            <a href="https://twitter.com/BPLBoston" target="_blank">
-              <i className="fa fa-twitter fa-2x"/>
+            <a href="https://twitter.com/BPLBoston" rel="noopener noreferrer" target="_blank">
+              <i className="fa fa-twitter fa-2x" />
               <div>
                 <span>Twitter</span>
                 <span>@BPLBoston</span>
@@ -93,8 +97,8 @@ const SocialSection = ({ project, subjectsOfNote }) =>
             </a>
           </div>
           <div>
-            <a href="https://www.facebook.com/bostonpubliclibrary/" target="_blank">
-              <i className="fa fa-facebook fa-2x"/>
+            <a href="https://www.facebook.com/bostonpubliclibrary/" rel="noopener noreferrer" target="_blank">
+              <i className="fa fa-facebook fa-2x" />
               <div>
                 <span>Facebook</span>
                 <span>@bostonpubliclibrary</span>
@@ -102,8 +106,8 @@ const SocialSection = ({ project, subjectsOfNote }) =>
             </a>
           </div>
           <div>
-            <a href="https://www.instagram.com/bplboston" target="_blank">
-              <i className="fa fa-instagram fa-2x"/>
+            <a href="https://www.instagram.com/bplboston" rel="noopener noreferrer" target="_blank">
+              <i className="fa fa-instagram fa-2x" />
               <div>
                 <span>Instagram</span>
                 <span>@bplboston</span>
@@ -116,19 +120,17 @@ const SocialSection = ({ project, subjectsOfNote }) =>
   </div>;
 
 SocialSection.defaultProps = {
-  percentComplete: 0,
   project: {
     classifiers_count: 0,
     completeness: 0,
     researcher_quote: '',
     retired_subjects_count: 0,
-    subjects_count: 0
+    subjects_count: 0,
   },
   subjectsOfNote: [],
 };
 
 SocialSection.propTypes = {
-  percentComplete: PropTypes.number,
   project: PropTypes.shape({
     classifiers_count: PropTypes.number,
     completeness: PropTypes.number,
