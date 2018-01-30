@@ -148,6 +148,36 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
     let itemsFailed = 0;
     const itemsToProcess = queue.length;
     
+    //Weirdly, Promise.prototype.finally() causes problems on some browsers. This is a workaround for it.
+    //This is called after the Classification.save() EITHER SUCCEEDS or FAILS.
+    //----------------
+    const doFinally = () => {
+      //That's one item down.
+      itemsProcessed++;
+
+      //Have all items been processed?
+      if (itemsProcessed === itemsToProcess) {
+        console.info(`ducks/classifications.js saveAllQueuedClassifications() finished: ${itemsProcessed} items processed, ${itemsFailed} failures`);
+
+        //Did anything fail?
+        if (itemsFailed > 0) {
+          //TODO: better presentation
+          alert('Your Transcription could not be submitted at this time. However, we\'ve saved your work on this computer, so please refresh the page to recover your work. The next time you submit a Transcription, all previous work will be resubmitted.');
+        }
+
+        //Save the new queue.
+        localStorage.setItem(QUEUE_NAME, JSON.stringify(newQueue));
+
+        //All done, get the next Subject!
+        dispatch({ type: SUBMIT_CLASSIFICATION_FINISHED });
+        dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
+        dispatch(resetView());
+      }
+    };
+    //----------------
+    
+    //Now, attempt to save.
+    //----------------
     queue.forEach((classificationData) => {
       //Let's send those Classifications!
       apiClient.type('classifications').create(classificationData).save()
@@ -167,6 +197,8 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
         //OK, we don't need you any more, Classification. Why is this here? It's in PFE.
         //TODO: check
         classificationObject.destroy();
+        
+        doFinally();
       })
       
       //FAILURE
@@ -185,31 +217,11 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
             itemsFailed++;  //Let the user know that the Classification will be re-queued.
             newQueue.push(classificationData);
         }
-      })
-      .finally(() => {
-        //That's one item down.
-        itemsProcessed++;
-
-        //Have all items been processed?
-        if (itemsProcessed === itemsToProcess) {
-          console.info('ducks/classifications.js saveAllQueuedClassifications() finished: ${itemsProcessed} items processed, ${itemsFailed} failures');
-          
-          //Did anything fail?
-          if (itemsFailed > 0) {
-            //TODO: better presentation
-            alert('Your Transcription could not be submitted at this time. However, we\'ve saved your work on this computer, so please refresh the page to recover your work. The next time you submit a Transcription, all previous work will be resubmitted.');
-          }
-          
-          //Save the new queue.
-          localStorage.setItem(QUEUE_NAME, JSON.stringify(newQueue));
-          
-          //All done, get the next Subject!
-          dispatch({ type: SUBMIT_CLASSIFICATION_FINISHED });
-          dispatch(fetchSubject());  //Note: fetching a Subject will also reset Annotations, reset Previous Annotations, and create an empty Classification.
-          dispatch(resetView());
-        }
+        
+        doFinally();
       });
     });
+    //----------------
   }
 };
 
