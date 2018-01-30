@@ -14,7 +14,7 @@ const KeyboardShortcuts = () => {
         </tr>
         <tr>
           <td>a</td>
-          <td>Toggle Navigate and Annotate</td>
+          <td>Toggle Navigate and Transcribe</td>
         </tr>
         <tr>
           <th>When Transcribing</th>

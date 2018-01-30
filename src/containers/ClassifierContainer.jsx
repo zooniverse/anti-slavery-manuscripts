@@ -99,7 +99,7 @@ class ClassifierContainer extends React.Component {
 
   render() {
     const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
-    const disableAnnotate = this.props.selectedAnnotation !== null;
+    const disableTranscribe = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
@@ -115,7 +115,7 @@ class ClassifierContainer extends React.Component {
           <div>
             <h2>directions</h2>
             <p>
-              Using the Annotate tool, click under the start and end of a line
+              Using the Transcribe tool, click under the start and end of a line
               of text, then add your transcription.
 
               {/*TEMPORARILY REMOVED: CRIBSHEET Clip common symbols or phrases to your
@@ -166,14 +166,14 @@ class ClassifierContainer extends React.Component {
             <h2>Toolbar</h2>
 
             <button
-              disabled={disableAnnotate}
+              disabled={disableTranscribe}
               className={(this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) ? 'flat-button block selected' : 'flat-button block'}
               onClick={this.useAnnotationTool}
             >
               <span className="classifier-toolbar__icon">
-                <i className={`fa fa-plus-circle ${disableAnnotate && 'disable-icon'}`} />
+                <i className={`fa fa-plus-circle ${disableTranscribe && 'disable-icon'}`} />
               </span>
-              <span>Annotate</span>
+              <span>Transcribe</span>
             </button>
 
             <button className="flat-button block" onClick={this.useRotate90}>
