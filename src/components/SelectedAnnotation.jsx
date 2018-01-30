@@ -52,12 +52,9 @@ class SelectedAnnotation extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keyup', this.handleKeyUp);
-    this.inputText.removeEventListener('mousedown', () => {
-      this.dialog.className = DISABLE_DRAG;
-    });
-    this.inputText.removeEventListener('mouseup', () => {
-      this.dialog.className = ENABLE_DRAG;
-    });
+    if (this.inputText) {
+      this.removeEventListeners();
+    }
   }
 
   toggleShowAnnotations() {
@@ -323,11 +320,22 @@ class SelectedAnnotation extends React.Component {
     this.props.onClose();  //Note that deleteSelectedAnnotation() also runs unselectAnnotation(), but this needs to be called anyway to inform the parent component.
   }
 
+  removeEventListeners() {
+    this.inputText.removeEventListener('mouseup', () => {
+      this.dialog.className = ENABLE_DRAG;
+    });
+    this.inputText.removeEventListener('mousedown', () => {
+      this.dialog.className = DISABLE_DRAG;
+    });
+  }
+
   handleKeyUp(e) {
     if (Utility.getKeyCode(e) === KEY_CODES.ESCAPE) {
+      this.removeEventListeners();
       this.cancelAnnotation();
     }
     if (Utility.getKeyCode(e) === KEY_CODES.ENTER && e.ctrlKey) {
+      this.removeEventListeners();
       this.saveText();
     }
   }

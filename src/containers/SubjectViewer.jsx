@@ -300,7 +300,7 @@ class SubjectViewer extends React.Component {
   /*  Once the Subject has been loaded properly, fit it into the SVG Viewer.
    */
   onImageLoad() {
-    if (this.svgImage.image) {
+    if (this.svgImage && this.svgImage.image) {
       const imgW = (this.svgImage.image.width) ? this.svgImage.image.width : 1;
       const imgH = (this.svgImage.image.height) ? this.svgImage.image.height : 1;
 

@@ -57,7 +57,7 @@ class AboutTheCollection extends React.Component {
               </div>
               <div>
                 While the abolitionists were united in their fight against the enslavement
-                of blacks, they were not always united when it came to the question
+                of Black people, they were not always united when it came to the question
                 of whether or not women should participate in the movement.
               </div>
               <div>

@@ -348,8 +348,9 @@ class ClassifierContainer extends React.Component {
   }
 
   showMetadata() {
+    const metadata = (this.props.currentSubject && this.props.currentSubject.metadata) || {};
     this.props.dispatch(toggleDialog(
-      <ShowMetadata metadata={this.props.currentSubject.metadata} />, true, false, 'Subject Info'));
+      <ShowMetadata metadata={metadata} />, true, false, 'Subject Info'));
   }
 
   showShortcuts() {

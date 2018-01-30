@@ -116,15 +116,13 @@ const createFavorites = (project) => {
   const collection = {
     favorite: true,
     display_name,
-    links
+    links,
   };
   apiClient.type('collections')
     .create(collection)
     .save()
-    .catch((err) => {
-      reject(err);
-    })
-}
+    .catch(err => Promise.reject(err));
+};
 
 const toggleFavorite = () => {
   return (dispatch, getState) => {
@@ -215,7 +213,7 @@ const fetchSubject = (initialFetch = false) => {
     //   subjectQuery.subject_set_id = getState().subject.subjectSet;
     // }
     //----------------
-    
+
     console.info('ducks/subject.js fetchSubject(): subject_set_id ', subjectQuery.subject_set_id);
 
     const gsMode = getState().workflow.goldStandardMode;
@@ -233,7 +231,7 @@ const fetchSubject = (initialFetch = false) => {
             type: FETCH_SUBJECT_SUCCESS,
             favorite: currentSubject.favorite || false,
           });
-        
+
           console.info('ducks/subject.js fetchSubject() fetch subject success: subject id ', currentSubject.id);
           prepareForNewSubject(dispatch, currentSubject);
         })
