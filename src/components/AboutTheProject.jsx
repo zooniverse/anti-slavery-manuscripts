@@ -60,6 +60,31 @@ class AboutTheProject extends React.Component {
             the 1870s.
           </span>
 
+          <span>
+            The primary production goal of this project is to gain a complete corpus
+            of machine-readable text from these handwritten documents. There are
+            no software programs that can accurately convert handwriting into
+            characters that a computer can understand as an actual letter, number,
+            or symbol. Once the documents have all been transcribed and converted
+            into this machine-readable text, we will upload the text into our
+            <a
+              href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              repository system
+            </a>
+            and index them along with their corresponding image files. Users will
+            then be able to search the full text of the letters across the entire collection.
+          </span>
+
+          <span>
+            We also plan to make the transcriptions available as a complete, open
+            access data set, with the intention that the corpus will be exposed
+            to machine learning, topic modeling, and other natural language processing
+            and computer visualization applications.
+          </span>
+
           <a href="https://www.digitalcommonwealth.org/collections/commonwealth:ht24xg10q" rel="noopener noreferrer" target="_blank">View Collection</a>
         </div>
 
