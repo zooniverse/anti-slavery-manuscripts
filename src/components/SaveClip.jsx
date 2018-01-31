@@ -14,24 +14,6 @@ class SaveClip extends React.Component {
     this.saveClip = this.saveClip.bind(this);
   }
 
-  componentDidMount() {
-    this.inputText.addEventListener('mousedown', () => {
-      this.dialog.className = DISABLE_DRAG;
-    });
-    this.inputText.addEventListener('mouseup', () => {
-      this.dialog.className = ENABLE_DRAG;
-    });
-  }
-
-  componentWillUnmount() {
-    this.inputText.removeEventListener('mousedown', () => {
-      this.dialog.className = DISABLE_DRAG;
-    });
-    this.inputText.removeEventListener('mouseup', () => {
-      this.dialog.className = ENABLE_DRAG;
-    });
-  }
-
   cropUrl() {
     if (!this.props.points) return null;
     const { width, height, x, y } = this.props.points;
@@ -76,7 +58,13 @@ class SaveClip extends React.Component {
         <div className="save-snippet__image">
           <img role="presentation" src={this.cropUrl()} />
         </div>
-        <input type="text" ref={(c) => { this.inputText = c; }} placeholder="Snippet Name" />
+        <input
+          type="text"
+          ref={(c) => { this.inputText = c; }}
+          onMouseDown={() => { this.dialog.className = DISABLE_DRAG; }}
+          onMouseUp={() => { this.dialog.className = ENABLE_DRAG; }}
+          placeholder="Snippet Name"
+        />
 
         <div className="save-snippet__buttons">
           <button onClick={this.props.onClose}>Cancel</button>
