@@ -4,17 +4,17 @@ import timelineEvents from '../lib/timeline-events';
 import Text from './Text';
 
 const collectionGroups = [{
-  years: "1820-1840",
-  width: "50"
+  years: '1820-1840',
+  width: '50',
 }, {
-  years: "1840-1860",
-  width: "100"
+  years: '1840-1860',
+  width: '100',
 }, {
-  years: "1860-1880",
-  width: "70"
+  years: '1860-1880',
+  width: '70',
 }, {
-  years: "1880-1900",
-  width: "10"
+  years: '1880-1900',
+  width: '10',
 }];
 
 class Timeline extends React.Component {
@@ -26,12 +26,11 @@ class Timeline extends React.Component {
     this.renderEvent = this.renderEvent.bind(this);
     this.renderText = this.renderText.bind(this);
     this.renderGroups = this.renderGroups.bind(this);
-    this.handleOnBlur = this.handleOnBlur.bind(this);
 
     this.state = {
       activeEvent: null,
-      timelineWidth: 100
-    }
+      timelineWidth: 100,
+    };
   }
 
   componentDidMount() {
@@ -49,11 +48,11 @@ class Timeline extends React.Component {
     let color = 'black';
 
     if (date.includes('-')) {
-      const dates = date.split(/\s*-\s*/)
+      const dates = date.split(/\s*-\s*/);
       startDate = dates[0];
       const yearDifference = dates[1] - dates[0];
       yearWidth = yearDifference / TIMELINE_LENGTH * this.state.timelineWidth;
-      if (yearDifference > 10) { color = 'grey' }
+      if (yearDifference > 10) { color = 'grey' };
     }
 
     const percentagePlace = (startDate - BEGINNING_YEAR) / TIMELINE_LENGTH * this.state.timelineWidth;
@@ -61,16 +60,16 @@ class Timeline extends React.Component {
     return {
       placement: percentagePlace,
       width: yearWidth,
-      color
-    }
+      color,
+    };
   }
 
   handleMouseEnter(data) {
-    this.setState({ activeEvent: data })
+    this.setState({ activeEvent: data });
   }
 
   handleMouseLeave() {
-    this.setState({ clickIndex: null })
+    this.setState({ clickIndex: null });
   }
 
   handleKeyPress(data, e) {
@@ -79,19 +78,13 @@ class Timeline extends React.Component {
     }
   }
 
-  handleOnBlur() {
-    this.setState({ activeEvent: null });
-  }
-
   renderEvent(event, i) {
     const position = this.dateFinder(event.year);
-    const clicked = this.state.clickIndex == i ? true : false;
-    const data = { x: position.placement, event: event, i };
+    const data = { x: position.placement, event, i };
 
     return (
-      <g key={i} tabIndex={0} onKeyUp={this.handleKeyPress.bind(this, data)} onBlur={this.handleOnBlur} transform={`translate(${position.placement}, ${60})`} onMouseDown={this.handleMouseEnter.bind(this, data)} >
+      <g key={i} tabIndex={0} onKeyUp={this.handleKeyPress.bind(this, data)} transform={`translate(${position.placement}, ${60})`} onMouseDown={this.handleMouseEnter.bind(this, data)} >
         <line
-          ref={(c) => {this.test = c;} }
           className="event-line"
           x1="0" x2={position.width}
           y1="0" y2="0"
@@ -99,28 +92,28 @@ class Timeline extends React.Component {
           strokeWidth="25"
         />
       </g>
-    )
+    );
   }
 
   renderText() {
-    const data = this.state.activeEvent
-    const anchor = data.i == timelineEvents.length - 1 ? 'end' : 'start';
+    const data = this.state.activeEvent;
+    const anchor = data.i === timelineEvents.length - 1 ? 'end' : 'start';
 
     return (
       <Text textAnchor={anchor} x={data.x} y={100} year={data.event.year} width={200}>
         {data.event.text}
       </Text>
-    )
+    );
   }
 
   renderGroups(group, i) {
-    const test = this.dateFinder(group.years);
+    const date = this.dateFinder(group.years);
 
     return (
       <g key={i}>
-        <line x1={test.placement} y1="60" x2={test.placement + test.width} y2="60" strokeWidth={group.width} stroke="#F4F0E7" />
+        <line x1={date.placement} y1="60" x2={date.placement + date.width} y2="60" strokeWidth={group.width} stroke="#F4F0E7" />
       </g>
-    )
+    );
   }
 
   render() {
@@ -149,7 +142,7 @@ class Timeline extends React.Component {
             <line x1="100%" y1="55" x2="100%" y2="65" strokeWidth="5" stroke="gray" />
 
             {timelineEvents.map((event, i) => {
-              return this.renderEvent(event, i)
+              return this.renderEvent(event, i);
             })}
             {this.state.activeEvent && (
               this.renderText()

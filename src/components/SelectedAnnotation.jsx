@@ -10,8 +10,8 @@ const PANE_WIDTH = 800;
 const PANE_HEIGHT = 350;
 const BUFFER = 10;
 
-const ENABLE_DRAG = "handle selected-annotation";
-const DISABLE_DRAG = "selected-annotation";
+const ENABLE_DRAG = 'handle selected-annotation';
+const DISABLE_DRAG = 'selected-annotation';
 
 class SelectedAnnotation extends React.Component {
   constructor(props) {
@@ -41,30 +41,18 @@ class SelectedAnnotation extends React.Component {
     }
     document.addEventListener('keyup', this.handleKeyUp);
     this.setState({ annotationText: text });
-    this.inputText.addEventListener('mousedown', () => {
-      this.dialog.className = DISABLE_DRAG;
-    });
-    this.inputText.addEventListener('mouseup', () => {
-      this.dialog.className = ENABLE_DRAG;
-    });
     this.inputText.focus();
   }
 
   componentWillUnmount() {
     document.removeEventListener('keyup', this.handleKeyUp);
-    this.inputText.removeEventListener('mousedown', () => {
-      this.dialog.className = DISABLE_DRAG;
-    });
-    this.inputText.removeEventListener('mouseup', () => {
-      this.dialog.className = ENABLE_DRAG;
-    });
   }
 
   toggleShowAnnotations() {
     if (this.context.googleLogger) {
       this.context.googleLogger.logEvent({
         type: 'click-dropdown',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -189,7 +177,7 @@ class SelectedAnnotation extends React.Component {
     inputY = inputY * this.props.scaling + (this.props.translationY * this.props.scaling);
     inputY = inputY + this.props.viewerSize.height / 2;
 
-    const inputClass = this.props.annotation.previousAnnotation ? "selected-annotation__previous" : "selected-annotation__user";
+    const inputClass = this.props.annotation.previousAnnotation ? 'selected-annotation__previous' : 'selected-annotation__user';
 
     const boundPos = this.checkPaneBounds(inputX, inputY);
 
@@ -229,7 +217,15 @@ class SelectedAnnotation extends React.Component {
           </div>
 
           <p>
-            <input className={inputClass} type="text" ref={(c) => { this.inputText = c; }} onChange={this.onTextUpdate} value={this.state.annotationText} />
+            <input
+              className={inputClass}
+              type="text"
+              ref={(c) => { this.inputText = c; }}
+              onChange={this.onTextUpdate}
+              onMouseDown={() => { this.dialog.className = DISABLE_DRAG; }}
+              onMouseUp={() => { this.dialog.className = ENABLE_DRAG; }}
+              value={this.state.annotationText}
+            />
 
             {this.props.annotation.previousAnnotation && (
               <button onClick={this.toggleShowAnnotations}>
@@ -265,7 +261,7 @@ class SelectedAnnotation extends React.Component {
     if (initialAnnotationText.trim().length === 0) {
       this.deleteAnnotation();  //Cancel this action and delete this newly created Annotation.
     } else {
-      if (this.props.onClose) { this.props.onClose() };  //Cancel this action and make no updates to the existing (and valid) Annotation.
+      if (this.props.onClose) { this.props.onClose(); }  //Cancel this action and make no updates to the existing (and valid) Annotation.
     }
 
     if (this.context.googleLogger) {
@@ -303,7 +299,6 @@ class SelectedAnnotation extends React.Component {
       } else {
         this.deleteAnnotation();
       }
-
     }
 
     if (this.context.googleLogger) {
@@ -347,6 +342,7 @@ class SelectedAnnotation extends React.Component {
 }
 
 SelectedAnnotation.defaultProps = {
+  annotation: {},
   annotationPanePosition: {
     x: 0,
     y: 0,
@@ -363,6 +359,9 @@ SelectedAnnotation.defaultProps = {
 };
 
 SelectedAnnotation.propTypes = {
+  annotation: PropTypes.shape({
+    details: React.PropTypes.array,
+  }),
   annotationPanePosition: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,

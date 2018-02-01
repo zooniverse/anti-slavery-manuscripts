@@ -4,16 +4,11 @@ import { connect } from 'react-redux';
 import SVGImage from '../components/SVGImage';
 import { Utility } from '../lib/Utility';
 
-import {
-  setScaling, setTranslation,
-  setViewerState, updateViewerSize, updateImageSize,
-  SUBJECTVIEWER_STATE,
-} from '../ducks/subject-viewer';
+import { setTranslation } from '../ducks/subject-viewer';
 import { getSubjectLocation } from '../lib/get-subject-location';
 
 const SVG_WIDTH = 150;
 const SVG_HEIGHT = 150;
-const ZOOM_STEP = 0.1;
 
 class Navigator extends React.Component {
   constructor(props) {
@@ -27,17 +22,8 @@ class Navigator extends React.Component {
     //Other functions
     this.getBoundingBox = this.getBoundingBox.bind(this);
     this.clickZoom = this.clickZoom.bind(this);
-
   }
   //----------------------------------------------------------------
-
-  componentDidMount() {
-    this.svg.addEventListener('click', this.clickZoom);
-  }
-
-  componentWillUnmount() {
-    this.svg.addEventListener('click', this.clickZoom);
-  }
 
   clickZoom(e) {
     const boundingBox = this.getBoundingBox();
@@ -61,8 +47,8 @@ class Navigator extends React.Component {
     const inputY = (clientY - boundingBox.top) * sizeRatioY;
 
     if (this.props.imageSize.width !== 0 && this.props.imageSize.height !== 0) {
-      const centerX = this.props.imageSize.width / -2
-      const centerY = this.props.imageSize.height / -2
+      const centerX = this.props.imageSize.width / -2;
+      const centerY = this.props.imageSize.height / -2;
       const xScale = SVG_WIDTH / this.props.imageSize.width;
       const yScale = SVG_HEIGHT / this.props.imageSize.height;
       newX = centerX + (inputX / xScale);
@@ -84,13 +70,14 @@ class Navigator extends React.Component {
     if (this.props.currentSubject) {
       subjectLocation = getSubjectLocation(this.props.currentSubject, this.props.frame);
       subjectLocation = (subjectLocation && subjectLocation.src) ? subjectLocation.src : undefined;
-    };
+    }
 
     return (
       <section className="navigator-viewer" ref={(c) => { this.section = c; }}>
         <svg
           style={{ width: `${SVG_WIDTH}px`, height: `${SVG_HEIGHT}px` }}
           ref={(c) => { this.svg = c; }}
+          onMouseUp={this.clickZoom}
           viewBox={viewBox}
         >
           <g transform={rotate}>

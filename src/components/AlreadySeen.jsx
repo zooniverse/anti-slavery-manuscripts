@@ -6,7 +6,7 @@ const AlreadySeen = () => {
       <span>
         You have already seen this manuscript and submitted a classification.
         Don&apos;t worry, we are constantly adding new subjects to the site.
-        You can still annotate and view manuscripts you have already seen before.
+        You can still transcribe and view manuscripts you have already seen before.
       </span>
     </div>
   );
