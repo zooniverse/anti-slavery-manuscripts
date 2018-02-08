@@ -3,6 +3,7 @@ import Rnd from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Utility, KEY_CODES } from '../lib/Utility';
+import { VARIANT_TYPES } from '../ducks/splits';
 import { collaborateWithAnnotation, updateText, deleteSelectedAnnotation } from '../ducks/annotations';
 import { updatePreviousAnnotation, reenablePreviousAnnotation } from '../ducks/previousAnnotations';
 
@@ -158,6 +159,11 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
+    let instructions = 'Please transcribe all of the words in the line of text.';
+    if (this.props.variant === VARIANT_TYPES.COLLABORATIVE) {
+      instructions += ` Open the dropdown menu to use previous volunteers'
+        transcriptions as a starting point.`;
+    }
     if (!this.props.annotation || !this.props.annotationPanePosition) return null;
 
     const panePosition = this.props.annotationPanePosition;
@@ -203,9 +209,7 @@ class SelectedAnnotation extends React.Component {
             <button className="close-button" onClick={this.cancelAnnotation}>X</button>
           </div>
           <span>
-            Enter the words you marked in the order you marked them. Open the
-            dropdown menu to use previous volunteers&apos; transcriptions as a starting
-            point.
+            {instructions}
           </span>
 
           <div className="selected-annotation__markup">
@@ -352,6 +356,7 @@ SelectedAnnotation.defaultProps = {
   selectedAnnotation: null,
   translationX: 0,
   translationY: 0,
+  variant: VARIANT_TYPES.INDIVIDUAL,
   viewerSize: {
     width: 0,
     height: 0,
@@ -376,6 +381,7 @@ SelectedAnnotation.propTypes = {
   selectedAnnotationIndex: PropTypes.number,
   translationX: PropTypes.number,
   translationY: PropTypes.number,
+  variant: PropTypes.string,
   viewerSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
@@ -396,6 +402,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
     translationX: sv.translationX,
     translationY: sv.translationY,
+    variant: state.splits.variant,
     viewerSize: sv.viewerSize,
     imageSize: sv.imageSize,
   };
