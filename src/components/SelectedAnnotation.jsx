@@ -159,7 +159,7 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
-    let instructions = 'Enter the words you marked in the order you marked them.';
+    let instructions = 'Please transcribe all of the words in the line of text.';
     if (this.props.variant === VARIANT_TYPES.COLLABORATIVE) {
       instructions += ` Open the dropdown menu to use previous volunteers'
         transcriptions as a starting point.`;
