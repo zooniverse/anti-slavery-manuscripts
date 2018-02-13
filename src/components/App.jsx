@@ -10,6 +10,9 @@ import Dialog from './Dialog';
 import LoadingSpinner from './LoadingSpinner';
 import { generateSessionID } from '../lib/get-session-id';
 
+import apiClient from 'panoptes-client/lib/api-client';
+import oauth from 'panoptes-client/lib/oauth';
+
 import { env } from '../config';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
 import { SPLIT_STATUS } from '../ducks/splits';
@@ -17,7 +20,6 @@ import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 import { checkLoginUser } from '../ducks/login';
 import Banner from './Banner';
-
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +31,20 @@ class App extends React.Component {
     if (!props.initialised) {  //NOTE: This should almost always trigger, since App.constructor() triggers exactly once, on the website loading, when all initial values are at their default.
       props.dispatch(checkLoginUser());
     }
+    
+    //TODO: This is just a test.
+    apiClient.beforeEveryRequest = () => {
+      return oauth.checkBearerToken()
+        .then((token) => {
+          //All is OK
+          console.log('x'.repeat(100), '\nALL IS OK');
+        })
+        .catch((error) => {
+          //Token has expired! How? Why? We need to force a refresh.
+          console.error('x'.repeat(100), '\nERROR, ERROR');
+        });
+    };
+    //--------------------------------
   }
 
   returnSometrolhing(something) { // eslint-disable-line class-methods-use-this
