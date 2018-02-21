@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
+import { toggleDialog } from '../ducks/dialog';
+
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
@@ -32,23 +34,32 @@ class App extends React.Component {
       props.dispatch(checkLoginUser());
     }
     
-    //TODO: This is just a test.
-    apiClient.beforeEveryRequest = () => {
-      return oauth.checkBearerToken()
-        .then((token) => {
-          //All is OK
-          console.log('x'.repeat(100), '\nALL IS OK');
-        })
-        .catch((error) => {
-          //Token has expired! How? Why? We need to force a refresh.
-          console.error('x'.repeat(100), '\nERROR, ERROR');
-        });
-    };
-    //--------------------------------
+    //SPECIAL: users on ASM tend to stay in a single session for WAY longer
+    //than a standard Zooniverse CFE user, so we're encountering issues where
+    //their login tokens timeout in the middle of classifying a document.
+    //The following is a mechanism that checks if a user is logged in before
+    //performing any action that may require a valid login token, taking safety
+    //actions if necessary.
+    apiClient.beforeEveryRequest = this.checkIfLoggedInUserIsStillLoggedIn.bind(this);
   }
-
-  returnSometrolhing(something) { // eslint-disable-line class-methods-use-this
-    return something;
+  
+  checkIfLoggedInUserIsStillLoggedIn() {
+    const props = this.props;
+    
+    return oauth.checkBearerToken()
+      .then((token) => {
+        console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
+      
+        this.props.dispatch(toggleDialog(<div>Oh no</div>, false, true));
+      
+        //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
+        if (props.initialised && props.user && !token) {
+          //TODO
+        }
+      })
+      .catch((err) => {
+        console.error('App.checkIfLoggedInUserIsStillLoggedIn() error: ', err);
+      });
   }
 
   getChildContext() {
