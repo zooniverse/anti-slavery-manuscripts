@@ -50,12 +50,18 @@ class App extends React.Component {
       .then((token) => {
         console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
       
-        this.props.dispatch(toggleDialog(<div>Oh no</div>, false, true));
+        const DEBUG_TEST = localStorage.getItem("TEST_TOKEN_ERROR");  //Use localStorage.TEST_TOKEN_ERROR = true to trigger the dialog
       
         //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
-        if (props.initialised && props.user && !token) {
+        if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {
+          
+          this.props.dispatch(toggleDialog(<div>Oh no</div>, false, true));
           //TODO
+          
+          return false;
         }
+      
+        return true;
       })
       .catch((err) => {
         console.error('App.checkIfLoggedInUserIsStillLoggedIn() error: ', err);
