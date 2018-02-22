@@ -8,11 +8,13 @@ import { toggleDialog } from '../ducks/dialog';
 
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
+import DialogOfFailure from './DialogOfFailure';
 import Dialog from './Dialog';
 import LoadingSpinner from './LoadingSpinner';
 import { generateSessionID } from '../lib/get-session-id';
 
 import apiClient from 'panoptes-client/lib/api-client';
+import auth from 'panoptes-client/lib/auth';
 import oauth from 'panoptes-client/lib/oauth';
 
 import { env } from '../config';
@@ -50,18 +52,19 @@ class App extends React.Component {
       .then((token) => {
         console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
       
+        //DEBUG/TEST
+        //----------------
         const DEBUG_TEST = localStorage.getItem("TEST_TOKEN_ERROR");  //Use localStorage.TEST_TOKEN_ERROR = true to trigger the dialog
-      
+        //----------------
+
         //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
-        if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {
-          
-          this.props.dispatch(toggleDialog(<div>Oh no</div>, false, true));
-          //TODO
-          
-          return false;
+        if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
+          this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
+          //TODO          
+          return Promise.reject('User is supposed to be logged in, but token has expired.');
         }
       
-        return true;
+        return;
       })
       .catch((err) => {
         console.error('App.checkIfLoggedInUserIsStillLoggedIn() error: ', err);
@@ -130,6 +133,21 @@ class App extends React.Component {
           <Dialog>
             {this.props.dialog}
           </Dialog>
+        }
+        
+        {
+          //DEBUG/TEST
+          //----------------
+          (env !== 'staging' && env !== 'development') ? null :
+          <div style={{position: 'fixed', top: '0', left: '0'}}>
+            <button onClick={()=>{
+              apiClient.type('me').get().then((data)=>{ console.log(data); });
+            }}>TEST: FETCH USER DETAILS</button>
+            <button onClick={()=>{
+              localStorage.setItem('TEST_TOKEN_ERROR', 'true');
+            }}>TEST: DELETE TOKEN</button>
+          </div>
+          //----------------
         }
       </div>
     );
