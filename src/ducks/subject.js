@@ -14,7 +14,8 @@ import { config, subjectSets } from '../config';
 import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
 import { fetchPreviousAnnotations } from './previousAnnotations';
-import { changeFrame } from './subject-viewer'
+import { changeFrame } from './subject-viewer';
+import { checkEmergencySave, emergencyLoadWorkInProgress, clearEmergencySave } from './emergency-save'
 import { toggleDialog } from './dialog';
 import ClassificationPrompt from '../components/ClassificationPrompt';
 
@@ -243,6 +244,8 @@ const fetchSubject = (initialFetch = false) => {
 
     if (savedClassificationPrompt) {
       dispatch(toggleDialog(<ClassificationPrompt />, false, true));
+    } else if (checkEmergencySave()) {
+      dispatch(emergencyLoadWorkInProgress());
     } else if (!getState().subject.queue.length) {
       fetchQueue();
     } else {
@@ -269,6 +272,7 @@ const prepareForNewSubject = (dispatch, subject) => {
   dispatch(fetchPreviousAnnotations(subject));
   dispatch(createClassification());
   dispatch(changeFrame(0));
+  clearEmergencySave();
 };
 
 const fetchSavedSubject = (id) => {

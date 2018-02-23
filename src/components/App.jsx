@@ -6,7 +6,6 @@ import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
 import { toggleDialog } from '../ducks/dialog';
 
-//DEBUG/TEST
 import { emergencySaveWorkInProgress, emergencyLoadWorkInProgress } from '../ducks/emergency-save';
 
 import Header from './Header';
@@ -62,11 +61,10 @@ class App extends React.Component {
 
         //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
         if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
+          this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
-          //TODO          
           return Promise.reject('User is supposed to be logged in, but token has expired.');
-        }
-      
+        }      
         return;
       })
       .catch((err) => {
