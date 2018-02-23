@@ -325,5 +325,6 @@ export {
   fetchSavedSubject,
   selectSubjectSet,
   setImageMetadata,
+  prepareForNewSubject,
   SUBJECT_STATUS,
 };

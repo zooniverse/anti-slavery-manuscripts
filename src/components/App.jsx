@@ -6,6 +6,9 @@ import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
 import { toggleDialog } from '../ducks/dialog';
 
+//DEBUG/TEST
+import { emergencySaveWorkInProgress, emergencyLoadWorkInProgress } from '../ducks/emergency-save';
+
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import DialogOfFailure from './DialogOfFailure';
@@ -145,7 +148,13 @@ class App extends React.Component {
             }}>TEST: FETCH USER DETAILS</button>
             <button onClick={()=>{
               localStorage.setItem('TEST_TOKEN_ERROR', 'true');
-            }}>TEST: DELETE TOKEN</button>
+            }}>TEST: FAKE ERROR</button>
+            <button onClick={()=>{
+              this.props.dispatch(emergencySaveWorkInProgress());
+            }}>TEST: SAVE WIP</button>
+            <button onClick={()=>{
+              this.props.dispatch(emergencyLoadWorkInProgress());
+            }}>TEST: LOAD WIP</button>
           </div>
           //----------------
         }
