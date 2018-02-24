@@ -20,6 +20,14 @@ const DialogOfFailure = () => {
         Your work in progress has been saved, however, and you can resume your
         work after reloading.
       </span>
+      <div>
+        <button
+          className="button"
+          onClick={(e) => { location.reload(); }}
+        >
+          Reload page
+        </button>
+      </div>
     </div>
   );
 };

@@ -8,15 +8,34 @@ them that their progress has been restored.
  */
 
 import React from 'react';
+import { clearEmergencySave } from '../ducks/emergency-save';
 
-const DialogOfContinuation = () => {
+const DialogOfContinuation = ({ onClose }) => {
   return (
     <div className="classification-prompt">
       <h2>Resuming Work</h2>
       <span>
         We detected that you encountered a problem recently, and have restored
-        your work in progress. Thank you for your patience.
+        your work in progress. You can continue your saved work, or start with
+        a new manuscript. Thank you for your patience.
       </span>
+      <div>
+        <button
+          className="button"
+          onClick={(e) => {
+            clearEmergencySave();
+            location.reload();
+          }}
+        >
+          New Manuscript
+        </button>
+        <button
+          className="button"
+          onClick={(e) => { onClose && onClose(e); }}
+        >
+          Continue Saved
+        </button>
+      </div>
     </div>
   );
 };

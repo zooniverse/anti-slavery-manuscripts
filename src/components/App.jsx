@@ -142,6 +142,8 @@ class App extends React.Component {
         {
           //DEBUG/TEST
           //----------------
+          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
+          /*
           (env !== 'staging' && env !== 'development') ? null :
           <div style={{position: 'fixed', top: '0', left: '0'}}>
             <button onClick={()=>{
@@ -156,7 +158,7 @@ class App extends React.Component {
             <button onClick={()=>{
               this.props.dispatch(emergencyLoadWorkInProgress());
             }}>TEST: LOAD WIP</button>
-          </div>
+          </div>*/
           //----------------
         }
       </div>

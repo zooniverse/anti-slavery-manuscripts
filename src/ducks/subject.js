@@ -15,7 +15,7 @@ import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
 import { fetchPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer';
-import { checkEmergencySave, emergencyLoadWorkInProgress, clearEmergencySave } from './emergency-save'
+import { checkEmergencySave, emergencyLoadWorkInProgress } from './emergency-save'
 import { toggleDialog } from './dialog';
 import ClassificationPrompt from '../components/ClassificationPrompt';
 import DialogOfContinuation from '../components/DialogOfContinuation';
@@ -274,7 +274,6 @@ const prepareForNewSubject = (dispatch, subject) => {
   dispatch(fetchPreviousAnnotations(subject));
   dispatch(createClassification());
   dispatch(changeFrame(0));
-  clearEmergencySave();
 };
 
 const fetchSavedSubject = (id) => {
