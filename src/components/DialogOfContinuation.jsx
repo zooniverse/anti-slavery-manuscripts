@@ -11,8 +11,12 @@ import React from 'react';
 
 const DialogOfContinuation = () => {
   return (
-    <div>
-      SYSTEMS OK
+    <div className="classification-prompt">
+      <h2>Resuming Work</h2>
+      <span>
+        We detected that you encountered a problem recently, and have restored
+        your work in progress. Thank you for your patience.
+      </span>
     </div>
   );
 };

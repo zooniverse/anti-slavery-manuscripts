@@ -10,8 +10,8 @@ import { emergencySaveWorkInProgress, emergencyLoadWorkInProgress } from '../duc
 
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
-import DialogOfFailure from './DialogOfFailure';
 import Dialog from './Dialog';
+import DialogOfFailure from './DialogOfFailure';
 import LoadingSpinner from './LoadingSpinner';
 import { generateSessionID } from '../lib/get-session-id';
 
