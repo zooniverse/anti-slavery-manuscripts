@@ -30,8 +30,10 @@ const emergencySaveWorkInProgress = () => {
     const subjectId = getState().subject.id;
     const annotations = getState().annotations.annotations;
     
-    localStorage.setItem(SUBJECT_ID_KEY, subjectId);
-    localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(annotations));
+    if (subjectId !== null) {
+      localStorage.setItem(SUBJECT_ID_KEY, subjectId);
+      localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(annotations));
+    }
   };
 };
 
