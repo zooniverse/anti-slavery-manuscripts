@@ -63,7 +63,10 @@ class App extends React.Component {
         if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
           this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
-          return Promise.reject('User is supposed to be logged in, but token has expired.');
+          return Promise.reject('User is supposed to be logged in, but token has expired.');  //WARNING: Testing has show that this does NOT abort the Panoptes request.
+          //The intent is that if the user is supposed to be logged in but
+          //isn't, the whole request (that comes after .beforeEveryRequest)
+          //should not continue.
         }      
         return;
       })

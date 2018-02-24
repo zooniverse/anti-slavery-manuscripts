@@ -18,6 +18,7 @@ import { changeFrame } from './subject-viewer';
 import { checkEmergencySave, emergencyLoadWorkInProgress, clearEmergencySave } from './emergency-save'
 import { toggleDialog } from './dialog';
 import ClassificationPrompt from '../components/ClassificationPrompt';
+import DialogOfContinuation from '../components/DialogOfContinuation';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -242,11 +243,12 @@ const fetchSubject = (initialFetch = false) => {
         });
     };
 
-    if (savedClassificationPrompt) {
+    if (savedClassificationPrompt) {  //Check if the user has manually saved progress
       dispatch(toggleDialog(<ClassificationPrompt />, false, true));
-    } else if (checkEmergencySave()) {
+    } else if (checkEmergencySave()) {  //If not, check if there's an emergency save. (Manual save trumps emergency save.)
       dispatch(emergencyLoadWorkInProgress());
-    } else if (!getState().subject.queue.length) {
+      dispatch(toggleDialog(<DialogOfContinuation />, false, false));
+    } else if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
       fetchQueue();
     } else {
       const currentSubject = getState().subject.queue.shift();
