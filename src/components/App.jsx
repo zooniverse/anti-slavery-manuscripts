@@ -52,10 +52,9 @@ class App extends React.Component {
     
     return oauth.checkBearerToken()
       .then((token) => {
-        console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
-      
         //DEBUG/TEST
         //----------------
+        console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
         const DEBUG_TEST = localStorage.getItem("TEST_TOKEN_ERROR");  //Use localStorage.TEST_TOKEN_ERROR = true to trigger the dialog
         //----------------
 

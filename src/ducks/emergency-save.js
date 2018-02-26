@@ -43,7 +43,7 @@ const emergencyLoadWorkInProgress = () => {
       const subjectId = localStorage.getItem(SUBJECT_ID_KEY);  //TODO: Check if a type conversion is required.
       const annotations = JSON.parse(localStorage.getItem(ANNOTATIONS_KEY));
       dispatch(fetchSavedSubject(subjectId));
-      prepareForNewSubject(dispatch, null, false);
+      prepareForNewSubject(dispatch, null);
       dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
     } catch (err) {
       console.error('emergencyLoadWorkInProgress() error: ', err);
