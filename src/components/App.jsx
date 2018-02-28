@@ -68,11 +68,8 @@ class App extends React.Component {
           //should not continue.
         }      
         return;
-      })
-      .catch((err) => {
-        console.error('App.checkIfLoggedInUserIsStillLoggedIn() error: ', err);
-        return Promise.reject(err);  //The Promise.reject must be passed on to stop the parent API request.
       });
+      //Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
   }
 
   getChildContext() {
