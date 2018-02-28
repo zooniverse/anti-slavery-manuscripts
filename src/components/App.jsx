@@ -62,7 +62,7 @@ class App extends React.Component {
         if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
           this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
-          return Promise.reject('User is supposed to be logged in, but token has expired.');  //WARNING: Testing has show that this does NOT abort the Panoptes request.
+          return Promise.reject(new Error('User is supposed to be logged in, but token has expired.'));
           //The intent is that if the user is supposed to be logged in but
           //isn't, the whole request (that comes after .beforeEveryRequest)
           //should not continue.
@@ -71,6 +71,7 @@ class App extends React.Component {
       })
       .catch((err) => {
         console.error('App.checkIfLoggedInUserIsStillLoggedIn() error: ', err);
+        return Promise.reject(err);  //The Promise.reject must be passed on to stop the parent API request.
       });
   }
 
@@ -142,15 +143,18 @@ class App extends React.Component {
           //DEBUG/TEST
           //----------------
           //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
-          /*
-          (env !== 'staging' && env !== 'development') ? null :
+          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
+          /*(env !== 'staging' && env !== 'development') ? null :
           <div style={{position: 'fixed', top: '0', left: '0'}}>
             <button onClick={()=>{
-              apiClient.type('me').get().then((data)=>{ console.log(data); });
+              apiClient.type('me').get().then((data)=>{ console.log('/me : ', data); });
             }}>TEST: FETCH USER DETAILS</button>
             <button onClick={()=>{
               localStorage.setItem('TEST_TOKEN_ERROR', 'true');
             }}>TEST: FAKE ERROR</button>
+            <button onClick={()=>{
+              localStorage.removeItem('TEST_TOKEN_ERROR');
+            }}>TEST: !FAKE ERROR</button>
             <button onClick={()=>{
               this.props.dispatch(emergencySaveWorkInProgress());
             }}>TEST: SAVE WIP</button>
