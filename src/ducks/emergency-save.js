@@ -29,11 +29,15 @@ const emergencySaveWorkInProgress = () => {
   return (dispatch, getState) => {
     const subjectId = getState().subject.id;
     const annotations = getState().annotations.annotations;
-    
+
     if (subjectId !== null) {
       localStorage.setItem(SUBJECT_ID_KEY, subjectId);
       localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(annotations));
     }
+
+    console.info('emergencySaveWorkInProgress()');
+    Rollbar && Rollbar.info &&
+    Rollbar.info('emergencySaveWorkInProgress()');
   };
 };
 
@@ -45,8 +49,14 @@ const emergencyLoadWorkInProgress = () => {
       dispatch(fetchSavedSubject(subjectId));
       prepareForNewSubject(dispatch, null);
       dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
+
+      console.info('emergencyLoadWorkInProgress()');
+      Rollbar && Rollbar.info &&
+      Rollbar.info('emergencyLoadWorkInProgress()');
     } catch (err) {
       console.error('emergencyLoadWorkInProgress() error: ', err);
+      Rollbar && Rollbar.error &&
+      Rollbar.error('emergencyLoadWorkInProgress() error: ', err);
     }
   };
 };
