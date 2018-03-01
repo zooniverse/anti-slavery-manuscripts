@@ -49,10 +49,17 @@ class SelectedAnnotation extends React.Component {
       };
       
       this.speechRecognition.onresult = (e) => {
-        console.log('SpeechRecognition End: ', e);
-        
-        if (e && e.result) {
-          console.log(e.result);
+        console.log('SpeechRecognition Result: ', e.results);
+        if (e && e.results && this.inputText) {
+          let text = this.inputText.value.replace(/\s+$/g, '') + ' ';
+          for (let i = 0; i < e.results.length; i++) {
+            if (!e.results[i].isFinal) continue;
+            for (let j = 0; j < e.results.length; j++) {
+              text += e.results[i][j].transcript + ' ';
+            }
+          }
+          this.inputText.value = text;
+          this.onTextUpdate();
         }
       };
       
