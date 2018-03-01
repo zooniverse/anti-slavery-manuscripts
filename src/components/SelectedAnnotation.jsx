@@ -27,11 +27,48 @@ class SelectedAnnotation extends React.Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.checkPaneBounds = this.checkPaneBounds.bind(this);
 
+    //Speech Recognition
+    //--------------------------------
+    try {
+      if ('webkitSpeechRecognition' in window) {
+        this.speechRecognition = new webkitSpeechRecognition();
+      } else if ('SpeechRecognition' in window) {
+        this.speechRecognition = new SpeechRecognition();
+      }
+    } catch (err) { console.error('SpeechRecognition error: ', err); }
+    
+    if (this.speechRecognition) {
+      this.speechRecognition.onstart = (e) => {
+        console.log('SpeechRecognition Start: ', e);
+        this.setState({ speechStatus: 'on' });
+      };
+      
+      this.speechRecognition.onend = (e) => {
+        console.log('SpeechRecognition End: ', e);
+        this.setState({ speechStatus: 'off' });
+      };
+      
+      this.speechRecognition.onresult = (e) => {
+        console.log('SpeechRecognition End: ', e);
+        
+        if (e && e.result) {
+          console.log(e.result);
+        }
+      };
+      
+      this.speechRecognition.onerror = (e) => {
+        console.error('SpeechRecognition.onerror(): ', e);
+        this.setState({ speechStatus: 'error' });
+      };
+    }
+    //--------------------------------
+
     this.state = {
       annotationText: '',
       previousTranscriptionAgreement: false,
       previousTranscriptionSelection: false,
       showAnnotationOptions: false,
+      speechStatus: 'off',
     };
   }
 
@@ -244,6 +281,20 @@ class SelectedAnnotation extends React.Component {
           )}
 
           <div className="selected-annotation__buttons">
+            {(!this.speechRecognition) ? null :
+              <button onClick={(e)=>{
+                if (this.state.speechStatus === 'off') {
+                  this.speechRecognition.start();
+                } else if (this.state.speechStatus === 'on') {
+                  this.speechRecognition.stop();
+                }
+                console.log(this.state.speechStatus);
+              }}>
+              {(this.state.speechStatus === 'off') ? 'Voice: off' : null}
+              {(this.state.speechStatus === 'on') ? 'Voice: on' : null}
+              {(this.state.speechStatus === 'error') ? 'Voice: ERROR' : null}
+              </button>
+            }
             <button className="done-button" onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
