@@ -12,7 +12,7 @@ to be smart, it's a blunt instrument acting as a safety net when the user's Save
 Progress and Panoptes Client's token auto-refresh fails.
  */
 
-import { fetchSavedSubject, prepareForNewSubject } from './subject';
+import { fetchSavedSubject, prepareForNewSubject, setSubjectId } from './subject';
 import { setAnnotations } from './annotations';
 
 const SUBJECT_ID_KEY = 'emergency_save_subjectId';
@@ -47,6 +47,7 @@ const emergencyLoadWorkInProgress = () => {
       const subjectId = localStorage.getItem(SUBJECT_ID_KEY);  //TODO: Check if a type conversion is required.
       const annotations = JSON.parse(localStorage.getItem(ANNOTATIONS_KEY));
       dispatch(fetchSavedSubject(subjectId));
+      dispatch(setSubjectId(subjectId));  //Required so that when prepareForNewSubject creates a Classification, subject ID isn't null. (fetchSavedSubject, above, is async, you see.)
       prepareForNewSubject(dispatch, null);
       dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
 
