@@ -17,10 +17,12 @@ import { setAnnotations } from './annotations';
 
 const SUBJECT_ID_KEY = 'emergency_save_subjectId';
 const ANNOTATIONS_KEY = 'emergency_save_annotations';
+const ANONYMOUS_USER_ID = 'anonymous';
 
-function checkEmergencySave() {
-  const subjectId = localStorage.getItem(SUBJECT_ID_KEY);
-  const annotations = localStorage.getItem(ANNOTATIONS_KEY);
+function checkEmergencySave(user) {
+  const userId = (user) ? user.id : ANONYMOUS_USER_ID;
+  const subjectId = localStorage.getItem(`${userId}.${SUBJECT_ID_KEY}`);
+  const annotations = localStorage.getItem(`${userId}.${ANNOTATIONS_KEY}`);
 
   return !!subjectId && !!annotations;
 }
@@ -30,9 +32,10 @@ const emergencySaveWorkInProgress = () => {
     const subjectId = getState().subject.id;
     const annotations = getState().annotations.annotations;
 
-    if (subjectId !== null) {
-      localStorage.setItem(SUBJECT_ID_KEY, subjectId);
-      localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(annotations));
+    if (subjectId !== null) {      
+      const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
+      localStorage.setItem(`${userId}.${SUBJECT_ID_KEY}`, subjectId);
+      localStorage.setItem(`${userId}.${ANNOTATIONS_KEY}`, JSON.stringify(annotations));
     }
 
     console.info('emergencySaveWorkInProgress()');
@@ -44,8 +47,9 @@ const emergencySaveWorkInProgress = () => {
 const emergencyLoadWorkInProgress = () => {
   return (dispatch, getState) => {
     try {
-      const subjectId = localStorage.getItem(SUBJECT_ID_KEY);  //TODO: Check if a type conversion is required.
-      const annotations = JSON.parse(localStorage.getItem(ANNOTATIONS_KEY));
+      const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
+      const subjectId = localStorage.getItem(`${userId}.${SUBJECT_ID_KEY}`);  //TODO: Check if a type conversion is required.
+      const annotations = JSON.parse(localStorage.getItem(`${userId}.${ANNOTATIONS_KEY}`));
       dispatch(fetchSavedSubject(subjectId));
       dispatch(setSubjectId(subjectId));  //Required so that when prepareForNewSubject creates a Classification, subject ID isn't null. (fetchSavedSubject, above, is async, you see.)
       prepareForNewSubject(dispatch, null);
@@ -63,8 +67,11 @@ const emergencyLoadWorkInProgress = () => {
 };
 
 const clearEmergencySave = () => {
-  localStorage.removeItem(SUBJECT_ID_KEY);
-  localStorage.removeItem(ANNOTATIONS_KEY);
+  return (dispatch, getState) => {
+    const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
+    localStorage.removeItem(`${userId}.${SUBJECT_ID_KEY}`);
+    localStorage.removeItem(`${userId}.${ANNOTATIONS_KEY}`);
+  }
 };
 
 export {

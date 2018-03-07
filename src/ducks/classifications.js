@@ -318,7 +318,7 @@ const submitClassification = () => {
     });
     queueClassification(classification, user);
     saveAllQueuedClassifications(dispatch, user);
-    clearEmergencySave();  //Once a Classification has been sent, remove any emergency save data.
+    dispatch(clearEmergencySave());  //Once a Classification has been sent, remove any emergency save data.
   };
 };
 
