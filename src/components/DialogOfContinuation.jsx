@@ -11,7 +11,6 @@ import React from 'react';
 import { clearEmergencySave } from '../ducks/emergency-save';
 
 const DialogOfContinuation = ({ dispatch, onClose }) => {
-  console.log('x'.repeat(100), dispatch);
   return (
     <div className="classification-prompt">
       <h2>Resuming Work</h2>
