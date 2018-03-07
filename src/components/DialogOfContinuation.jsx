@@ -31,7 +31,10 @@ const DialogOfContinuation = ({ dispatch, onClose }) => {
         </button>
         <button
           className="button"
-          onClick={(e) => { onClose && onClose(e); }}
+          onClick={(e) => {
+            dispatch(clearEmergencySave());
+            onClose && onClose(e);
+          }}
         >
           Continue Saved
         </button>
