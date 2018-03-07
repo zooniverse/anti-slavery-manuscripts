@@ -10,7 +10,7 @@ them that their progress has been restored.
 import React from 'react';
 import { clearEmergencySave } from '../ducks/emergency-save';
 
-const DialogOfContinuation = ({ onClose }) => {
+const DialogOfContinuation = ({ dispatch, onClose }) => {
   return (
     <div className="classification-prompt">
       <h2>Resuming Work</h2>
@@ -23,7 +23,7 @@ const DialogOfContinuation = ({ onClose }) => {
         <button
           className="button"
           onClick={(e) => {
-            clearEmergencySave();
+            dispatch(clearEmergencySave());
             location.reload();
           }}
         >
