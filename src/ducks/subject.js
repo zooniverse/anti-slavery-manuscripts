@@ -14,9 +14,11 @@ import { config, subjectSets } from '../config';
 import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
 import { fetchPreviousAnnotations } from './previousAnnotations';
-import { changeFrame } from './subject-viewer'
+import { changeFrame } from './subject-viewer';
+import { checkEmergencySave, emergencyLoadWorkInProgress } from './emergency-save'
 import { toggleDialog } from './dialog';
 import ClassificationPrompt from '../components/ClassificationPrompt';
+import DialogOfContinuation from '../components/DialogOfContinuation';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -24,6 +26,7 @@ const FETCH_SUBJECT_ERROR = 'FETCH_SUBJECT_ERROR';
 const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 const SET_IMAGE_METADATA = 'SET_IMAGE_METADATA';
 const SET_SUBJECT_SET = 'SET_SUBJECT_SET';
+const SET_SUBJECT_ID = 'SET_SUBJECT_ID';
 const CLEAR_QUEUE = 'CLEAR_QUEUE';
 const ADD_ALREADY_SEEN = 'ADD_ALREADY_SEEN';
 const CHECK_ALREADY_SEEN = 'CHECK_ALREADY_SEEN';
@@ -74,6 +77,12 @@ const subjectReducer = (state = initialState, action) => {
     case SET_SUBJECT_SET:
       return Object.assign({}, state, {
         subjectSet: action.id,
+        queue: [],
+      });
+      
+    case SET_SUBJECT_ID:  //Only used for emergencyLoadWorkInProgress() to bypass standard Subject ID selection.
+      return Object.assign({}, state, {
+        id: action.id,
         queue: [],
       });
 
@@ -148,7 +157,7 @@ const toggleFavorite = () => {
       })
     }
   }
-}
+};
 
 const setImageMetadata = (frameId, metadata) => {
   return (dispatch) => {
@@ -158,7 +167,7 @@ const setImageMetadata = (frameId, metadata) => {
       metadata,
     });
   };
-}
+};
 
 const selectSubjectSet = (id) => {
   console.info('ducks/subject.js selectSubjectSet(): id ', id);
@@ -168,7 +177,18 @@ const selectSubjectSet = (id) => {
       id
     });
   };
-}
+};
+
+
+//Only used for emergencyLoadWorkInProgress() to bypass standard Subject ID selection.
+const setSubjectId = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBJECT_ID,
+      id
+    });
+  };
+};
 
 /*  Fetches a Subject from Panoptes, based on the specified/default Panoptes
     Workflow ID. If `initialFetch` is true, then this call to fetchSubject() is
@@ -241,9 +261,12 @@ const fetchSubject = (initialFetch = false) => {
         });
     };
 
-    if (savedClassificationPrompt) {
+    if (checkEmergencySave(getState().login.user)) {  //If not, check if there's an emergency save.
+      dispatch(emergencyLoadWorkInProgress());
+      dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
+    } else if (savedClassificationPrompt) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
       dispatch(toggleDialog(<ClassificationPrompt />, false, true));
-    } else if (!getState().subject.queue.length) {
+    } else if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
       fetchQueue();
     } else {
       const currentSubject = getState().subject.queue.shift();
@@ -324,6 +347,8 @@ export {
   fetchSubject,
   fetchSavedSubject,
   selectSubjectSet,
+  setSubjectId,
   setImageMetadata,
+  prepareForNewSubject,
   SUBJECT_STATUS,
 };

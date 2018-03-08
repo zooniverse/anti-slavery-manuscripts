@@ -4,11 +4,20 @@ import { connect } from 'react-redux';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
+import { toggleDialog } from '../ducks/dialog';
+
+import { emergencySaveWorkInProgress, emergencyLoadWorkInProgress } from '../ducks/emergency-save';
+
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
 import Dialog from './Dialog';
+import DialogOfFailure from './DialogOfFailure';
 import LoadingSpinner from './LoadingSpinner';
 import { generateSessionID } from '../lib/get-session-id';
+
+import apiClient from 'panoptes-client/lib/api-client';
+import auth from 'panoptes-client/lib/auth';
+import oauth from 'panoptes-client/lib/oauth';
 
 import { env } from '../config';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
@@ -17,7 +26,6 @@ import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 import { checkLoginUser } from '../ducks/login';
 import Banner from './Banner';
-
 
 class App extends React.Component {
   constructor(props) {
@@ -29,10 +37,39 @@ class App extends React.Component {
     if (!props.initialised) {  //NOTE: This should almost always trigger, since App.constructor() triggers exactly once, on the website loading, when all initial values are at their default.
       props.dispatch(checkLoginUser());
     }
+    
+    //SPECIAL: users on ASM tend to stay in a single session for WAY longer
+    //than a standard Zooniverse CFE user, so we're encountering issues where
+    //their login tokens timeout in the middle of classifying a document.
+    //The following is a mechanism that checks if a user is logged in before
+    //performing any action that may require a valid login token, taking safety
+    //actions if necessary.
+    apiClient.beforeEveryRequest = this.checkIfLoggedInUserIsStillLoggedIn.bind(this);
   }
+  
+  checkIfLoggedInUserIsStillLoggedIn() {
+    const props = this.props;
+    
+    return oauth.checkBearerToken()
+      .then((token) => {
+        //DEBUG/TEST
+        //----------------
+        console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
+        const DEBUG_TEST = localStorage.getItem("TEST_TOKEN_ERROR");  //Use localStorage.TEST_TOKEN_ERROR = true to trigger the dialog
+        //----------------
 
-  returnSometrolhing(something) { // eslint-disable-line class-methods-use-this
-    return something;
+        //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
+        if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
+          this.props.dispatch(emergencySaveWorkInProgress());
+          this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
+          return Promise.reject(new Error('User is supposed to be logged in, but token has expired.'));
+          //The intent is that if the user is supposed to be logged in but
+          //isn't, the whole request (that comes after .beforeEveryRequest)
+          //should not continue.
+        }      
+        return;
+      });
+      //Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
   }
 
   getChildContext() {
@@ -97,6 +134,32 @@ class App extends React.Component {
           <Dialog>
             {this.props.dialog}
           </Dialog>
+        }
+        
+        {
+          //DEBUG/TEST
+          //----------------
+          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
+          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
+          /*(env !== 'staging' && env !== 'development') ? null :
+          <div style={{position: 'fixed', top: '0', left: '0'}}>
+            <button onClick={()=>{
+              apiClient.type('me').get().then((data)=>{ console.log('/me : ', data); });
+            }}>TEST: FETCH USER DETAILS</button>
+            <button onClick={()=>{
+              localStorage.setItem('TEST_TOKEN_ERROR', 'true');
+            }}>TEST: FAKE ERROR</button>
+            <button onClick={()=>{
+              localStorage.removeItem('TEST_TOKEN_ERROR');
+            }}>TEST: !FAKE ERROR</button>
+            <button onClick={()=>{
+              this.props.dispatch(emergencySaveWorkInProgress());
+            }}>TEST: SAVE WIP</button>
+            <button onClick={()=>{
+              this.props.dispatch(emergencyLoadWorkInProgress());
+            }}>TEST: LOAD WIP</button>
+          </div>*/
+          //----------------
         }
       </div>
     );

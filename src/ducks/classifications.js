@@ -8,7 +8,9 @@ import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject, addAlreadySeen } from './subject';
 import { resetView } from './subject-viewer';
 import { toggleDialog } from './dialog';
+import { emergencySaveWorkInProgress, clearEmergencySave } from './emergency-save';
 import SaveSuccess from '../components/SaveSuccess';
+import DialogOfFailure from '../components/DialogOfFailure';
 
 const CLASSIFICATIONS_QUEUE_NAME = 'classificationsQueue';
 
@@ -316,6 +318,7 @@ const submitClassification = () => {
     });
     queueClassification(classification, user);
     saveAllQueuedClassifications(dispatch, user);
+    dispatch(clearEmergencySave());  //Once a Classification has been sent, remove any emergency save data.
   };
 };
 
@@ -402,6 +405,8 @@ const saveClassificationInProgress = () => {
       dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
     })
     .catch((err) => {
+      dispatch(emergencySaveWorkInProgress());
+      dispatch(toggleDialog(<DialogOfFailure />, false, true));
       console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
       Rollbar && Rollbar.error &&
       Rollbar.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
