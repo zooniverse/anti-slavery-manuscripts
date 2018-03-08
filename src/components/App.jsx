@@ -52,14 +52,8 @@ class App extends React.Component {
     
     return oauth.checkBearerToken()
       .then((token) => {
-        //DEBUG/TEST
-        //----------------
-        console.log(`checkBearerToken - initialised: ${!!props.initialised}, user: ${!!props.user}, token: ${!!token}`);
-        const DEBUG_TEST = localStorage.getItem("TEST_TOKEN_ERROR");  //Use localStorage.TEST_TOKEN_ERROR = true to trigger the dialog
-        //----------------
-
         //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
-        if (!!DEBUG_TEST || (props.initialised && props.user && !token)) {          
+        if (props.initialised && props.user && !token) {          
           this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
           return Promise.reject(new Error('User is supposed to be logged in, but token has expired.'));
@@ -134,32 +128,6 @@ class App extends React.Component {
           <Dialog>
             {this.props.dialog}
           </Dialog>
-        }
-        
-        {
-          //DEBUG/TEST
-          //----------------
-          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
-          //Will: enable this for testing. Once PR is merged, I'll have a separate PR to delete the debugs. (@shaun 20180223)
-          /*(env !== 'staging' && env !== 'development') ? null :
-          <div style={{position: 'fixed', top: '0', left: '0'}}>
-            <button onClick={()=>{
-              apiClient.type('me').get().then((data)=>{ console.log('/me : ', data); });
-            }}>TEST: FETCH USER DETAILS</button>
-            <button onClick={()=>{
-              localStorage.setItem('TEST_TOKEN_ERROR', 'true');
-            }}>TEST: FAKE ERROR</button>
-            <button onClick={()=>{
-              localStorage.removeItem('TEST_TOKEN_ERROR');
-            }}>TEST: !FAKE ERROR</button>
-            <button onClick={()=>{
-              this.props.dispatch(emergencySaveWorkInProgress());
-            }}>TEST: SAVE WIP</button>
-            <button onClick={()=>{
-              this.props.dispatch(emergencyLoadWorkInProgress());
-            }}>TEST: LOAD WIP</button>
-          </div>*/
-          //----------------
         }
       </div>
     );
