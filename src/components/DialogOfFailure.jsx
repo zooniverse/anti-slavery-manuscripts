@@ -13,12 +13,11 @@ const DialogOfFailure = () => {
     <div className="classification-prompt">
       <h2>Systems Error</h2>
       <span>
-        An unexpected error was encountered; quite possibly, your login session
-        was lost and you may need to reload the page and log in again.
+        An unexpected error has occurred, and your login session was lost.
       </span>
       <span>
-        Your work in progress has been saved, however, and you can resume your
-        work after reloading.
+        Your work in progress has been saved. Please reload the page and log
+        in to your account. You will then be able to resume your work.
       </span>
       <div>
         <button
