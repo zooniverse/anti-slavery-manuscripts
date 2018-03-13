@@ -113,12 +113,12 @@ const fetchPreviousAnnotations = (subject) => {
 
     request(config.zooniverseLinks.caesarHost, query).then((data) => {
       const frame = getState().subjectViewer.frame;
-      const reductions = data.workflow.reductions;
+      const reductions = data.workflow.subject_reductions;
       const marks = constructAnnotations(reductions, frame);
 
       dispatch({
         type: FETCH_ANNOTATIONS_SUCCESS,
-        data: data.workflow.reductions,
+        data: data.workflow.subject_reductions,
         marks
       });
     })
