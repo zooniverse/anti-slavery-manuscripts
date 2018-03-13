@@ -118,7 +118,7 @@ const fetchPreviousAnnotations = (subject) => {
 
       dispatch({
         type: FETCH_ANNOTATIONS_SUCCESS,
-        data: data.workflow.reductions,
+        data: data.workflow.subject_reductions,
         marks
       });
     })
