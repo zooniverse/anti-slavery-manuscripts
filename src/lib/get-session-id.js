@@ -22,7 +22,7 @@ const getSessionID = () => {
     ({id, ttl} = JSON.parse(sessionStorage.getItem('session_id')));
   }
 
-  if (ttl < Date.now()) {
+  if (new Date(ttl).getTime() < Date.now()) {
     id = generateSessionID();
   } else {
     ttl = fiveMinutesFromNow();
