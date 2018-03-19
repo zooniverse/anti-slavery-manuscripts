@@ -4,7 +4,7 @@ const generateSessionID = () => {
   const hash = require('hash.js');
   const sha2 = hash.sha256();
   const id = sha2.update(`${Math.random() * 10000 }${Date.now()}${Math.random() * 1000}`).digest('hex');
-  const ttl = fiveMinutesFromNow();
+  const ttl = twoHoursFromNow();
   const stored = {id, ttl};
   try {
     sessionStorage.setItem('session_id', JSON.stringify(stored));
@@ -22,10 +22,10 @@ const getSessionID = () => {
     ({id, ttl} = JSON.parse(sessionStorage.getItem('session_id')));
   }
 
-  if (ttl < Date.now()) {
+  if (new Date(ttl).getTime() < Date.now()) {
     id = generateSessionID();
   } else {
-    ttl = fiveMinutesFromNow();
+    ttl = twoHoursFromNow();
     try {
       sessionStorage.setItem('session_id', JSON.stringify({id, ttl}))
     }
@@ -39,6 +39,12 @@ const getSessionID = () => {
 const fiveMinutesFromNow = () => {
   const d = new Date();
   d.setMinutes(d.getMinutes() + 5);
+  return d;
+};
+
+const twoHoursFromNow = () => {
+  const d = new Date();
+  d.setHours(d.getHours() + 2);
   return d;
 };
 
