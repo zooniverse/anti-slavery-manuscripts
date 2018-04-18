@@ -79,7 +79,7 @@ const subjectReducer = (state = initialState, action) => {
         subjectSet: action.id,
         queue: [],
       });
-      
+
     case SET_SUBJECT_ID:  //Only used for emergencyLoadWorkInProgress() to bypass standard Subject ID selection.
       return Object.assign({}, state, {
         id: action.id,
@@ -127,11 +127,20 @@ const createFavorites = (project) => {
     display_name,
     links,
   };
-  apiClient.type('collections')
+  const newFavorites = apiClient.type('collections')
     .create(collection)
     .save()
     .catch(err => Promise.reject(err));
+  return newFavorites;
 };
+
+function addSubjectToCollection(collection, subjectId) {
+  collection.addLink('subjects', [subjectId]);
+}
+
+function removeSubjectToCollection(collection, subjectId) {
+  collection.removeLink('subjects', [subjectId]);
+}
 
 const toggleFavorite = () => {
   return (dispatch, getState) => {
@@ -148,11 +157,11 @@ const toggleFavorite = () => {
         owner: user
       }).then(([collection]) => {
         if (collection && !favorite) {
-          collection.addLink('subjects', [subject.id.toString()]);
+          addSubjectToCollection(collection, subject.id);
         } else if (collection && favorite) {
-          collection.removeLink('subjects', [subject.id.toString()]);
+          removeSubjectToCollection(collection, subject.id);
         } else {
-          createFavorites(getState().project);
+          createFavorites(getState().project).then((collection) => addSubjectToCollection(collection, subject.id));
         }
       })
     }
