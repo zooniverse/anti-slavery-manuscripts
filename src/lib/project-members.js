@@ -88,19 +88,6 @@ const ProjectMembers = [
     `,
   },
   {
-    photo: 'Marilyn',
-    name: 'Marilyn Morgan',
-    description: `
-      Marilyn is the Director of the Archives Program and Lecturer in History at
-      UMass Boston. While earning a PhD in History, she became a passionate
-      educator in digital humanities, a seasoned archivist, and a champion of
-      open access and active outreach in archives and libraries. She's thrilled
-      to help expand access to BPL's archival collections on anti-slavery, and
-      believes that engaging the public will enrich digital history and contribute
-      to the transformation of education.
-    `,
-  },
-  {
     photo: 'Shaun',
     name: 'Shaun A. Noordin',
     description: `
