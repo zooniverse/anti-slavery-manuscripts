@@ -5,7 +5,6 @@ import Beth from '../images/Beth-Prindle.jpg';
 import Coleman from '../images/Coleman-Krawczyk.jpg';
 import Eben from '../images/Eben-English.jpg';
 import Katherine from '../images/Katherine-Griffin.jpg';
-import Marilyn from '../images/Marilyn-Morgan.jpg';
 import Sam from '../images/Sam-Blickhan.jpg';
 import Shaun from '../images/Shaun-Noordin.jpg';
 import Susan from '../images/Susan-Mizruchi.jpg';
@@ -19,7 +18,6 @@ const members = {
   Coleman,
   Eben,
   Katherine,
-  Marilyn,
   Sam,
   Shaun,
   Susan,
@@ -107,7 +105,7 @@ class AboutTheProject extends React.Component {
             others closely involved in the anti-slavery movement, presented
             Boston Public Library with a major gathering of correspondence,
             documents, and other original material relating to the abolitionist
-            cause from 1932 until after the American Civil War.
+            cause from 1832 until after the American Civil War.
           </span>
           <span>
             The Anti-Slavery Collection contains about 40,000 pieces of correspondence,
