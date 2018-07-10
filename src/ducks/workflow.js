@@ -106,7 +106,7 @@ const fetchWorkflow = (id) => {
       id,
     });
 
-    apiClient.type('workflows').get(id)
+    return apiClient.type('workflows').get(id)
     .then((workflow) => {
 
       dispatch({

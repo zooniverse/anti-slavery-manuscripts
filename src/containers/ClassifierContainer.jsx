@@ -16,9 +16,10 @@ import {
 
 import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
-import { toggleFavorite } from '../ducks/subject';
+import { toggleFavorite, fetchSubject } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleVariant } from '../ducks/splits';
+import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
 import { Utility, KEY_CODES } from '../lib/Utility';
 
@@ -73,14 +74,22 @@ class ClassifierContainer extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
+
+    //FUTURE UPDATE: 
+    //Select only one workflow
+    //----------------------------------------------------------------
+    //this.props.dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
+    //  this.props.dispatch(fetchSubject());
+    //});
+    //----------------------------------------------------------------
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
-      this.props.dispatch(fetchTutorial(nextProps.workflow));
+    if (nextProps.workflowData && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
+      this.props.dispatch(fetchTutorial(nextProps.workflowData));
 
       if (this.context.googleLogger) {
-        this.context.googleLogger.remember({ workflowID: nextProps.workflow.id });
+        this.context.googleLogger.remember({ workflowID: nextProps.workflowData.id });
       }
     }
 
@@ -100,15 +109,44 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
-    //TEST
-    //TODO: check for workflow status
     
-    return (
-      <main className="app-content classifier-page flex-row">
-        LOADING...
-      </main>
-    );
+    //JULY UPDATE:
+    //Allow users to select their workflow
+    //----------------------------------------------------------------
+    const startWorkflow = (workflow_id) => {
+      this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
+        this.props.dispatch(fetchSubject());
+      });
+    }
     
+    if (this.props.workflowStatus === WORKFLOW_STATUS.IDLE) {
+      return (
+        <main className="app-content flex-column flex-center">
+          <p>CHOOSE YOUR WORKFLOW</p>
+          <div>
+            <button onClick={() => { startWorkflow(config.zooniverseLinks.workflowId) }}>
+              Solo
+            </button>
+            <button onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId) }}>
+              Collaborative
+            </button>
+          </div>
+        </main>
+      );
+    }
+    //----------------------------------------------------------------
+    
+    
+    //----------------------------------------------------------------
+    if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
+      return (
+        <main className="app-content flex-column flex-center">
+          LOADING...
+        </main>
+      );
+    }
+    //----------------------------------------------------------------
+
     const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
     const disableTranscribe = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
@@ -412,10 +450,10 @@ ClassifierContainer.propTypes = {
   }),
   variant: PropTypes.string,
   viewerState: PropTypes.string,
-  workflow: PropTypes.shape({
-    id: PropTypes.string,
-  }),
+  workflowData: PropTypes.object,
+  workflowStatus: PropTypes.string,
 };
+
 ClassifierContainer.defaultProps = {
   dispatch: () => {},
   //--------
@@ -436,7 +474,8 @@ ClassifierContainer.defaultProps = {
   user: null,
   variant: VARIANT_TYPES.INDIVIDUAL,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
-  workflow: null,
+  workflowData: WORKFLOW_INITIAL_STATE.data,
+  workflowStatus: WORKFLOW_INITIAL_STATE.status,
 };
 
 ClassifierContainer.contextTypes = {
@@ -462,7 +501,8 @@ const mapStateToProps = (state, ownProps) => {
     user: state.login.user,
     variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
-    workflow: state.workflow.data,
+    workflowData: state.workflow.data,
+    workflowStatus: state.workflow.status,
   };
 };
 export default connect(mapStateToProps)(ClassifierContainer);
