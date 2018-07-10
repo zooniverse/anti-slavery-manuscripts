@@ -1,3 +1,13 @@
+/*
+Workflow
+--------
+
+This duck manages the project's workflow.
+
+--------------------------------------------------------------------------------
+ */
+
+
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
 import { fetchSplit, setVariant, VARIANT_TYPES } from './splits';
@@ -9,6 +19,13 @@ const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
 const FETCH_WORKFLOW_ERROR = 'FETCH_WORKFLOW_ERROR';
 const SET_GOLD_STANDARD = 'SET_GOLD_STANDARD';
 
+/*
+--------------------------------------------------------------------------------
+ */
+
+// Constants
+// ---------
+
 const WORKFLOW_STATUS = {
   IDLE: 'workflow_status_idle',
   FETCHING: 'workflow_status_fetching',
@@ -16,21 +33,32 @@ const WORKFLOW_STATUS = {
   ERROR: 'workflow_status_error',
 };
 
-const initialState = {
+/*
+--------------------------------------------------------------------------------
+ */
+
+// Initial State / Default Values
+// ------------------------------
+
+const WORKFLOW_INITIAL_STATE = {
   status: WORKFLOW_STATUS.IDLE,
   id: null,
   data: null,
   goldStandardMode: false
 };
 
-const workflowReducer = (state = initialState, action) => {
+/*
+--------------------------------------------------------------------------------
+ */
+
+const workflowReducer = (state = WORKFLOW_INITIAL_STATE, action) => {
   switch (action.type) {
 
     case RESET_WORKFLOW:
       return Object.assign({}, state, {
-        status: initialState.status,
-        id: initialState.id,
-        data: initialState.data,
+        status: WORKFLOW_INITIAL_STATE.status,
+        id: WORKFLOW_INITIAL_STATE.id,
+        data: WORKFLOW_INITIAL_STATE.data,
       });
       
     case FETCH_WORKFLOW:
@@ -60,6 +88,16 @@ const workflowReducer = (state = initialState, action) => {
       return state;
   };
 };
+
+/*
+--------------------------------------------------------------------------------
+ */
+
+const resetWorkflow = () => {
+  return (dispatch) => {
+    dispatch({ type: RESET_WORKFLOW });
+  };
+}
 
 const fetchWorkflow = (id) => {
   return (dispatch) => {
@@ -100,10 +138,16 @@ const setGoldStandard = () => {
   };
 };
 
+/*
+--------------------------------------------------------------------------------
+ */
+
 export default workflowReducer;
 
 export {
+  resetWorkflow,
   fetchWorkflow,
   setGoldStandard,
   WORKFLOW_STATUS,
+  WORKFLOW_INITIAL_STATE,
 };

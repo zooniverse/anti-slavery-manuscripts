@@ -105,8 +105,7 @@ class ClassifierContainer extends React.Component {
     
     return (
       <main className="app-content classifier-page flex-row">
-        <div className="project-background"></div>
-        <LoadingSpinner />
+        LOADING...
       </main>
     );
     
