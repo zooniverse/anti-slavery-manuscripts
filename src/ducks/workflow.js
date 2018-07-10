@@ -3,6 +3,7 @@ import { config } from '../config';
 import { fetchSplit, setVariant, VARIANT_TYPES } from './splits';
 import { clearQueue } from './subject';
 
+const RESET_WORKFLOW = 'RESET_WORKFLOW';
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
 const FETCH_WORKFLOW_SUCCESS = 'FETCH_WORKFLOW_SUCCESS';
 const FETCH_WORKFLOW_ERROR = 'FETCH_WORKFLOW_ERROR';
@@ -25,6 +26,13 @@ const initialState = {
 const workflowReducer = (state = initialState, action) => {
   switch (action.type) {
 
+    case RESET_WORKFLOW:
+      return Object.assign({}, state, {
+        status: initialState.status,
+        id: initialState.id,
+        data: initialState.data,
+      });
+      
     case FETCH_WORKFLOW:
       return Object.assign({}, state, {
         status: WORKFLOW_STATUS.FETCHING,
@@ -53,17 +61,7 @@ const workflowReducer = (state = initialState, action) => {
   };
 };
 
-const fetchWorkflow = (variant = VARIANT_TYPES.INDIVIDUAL) => {
-  const id = variant === VARIANT_TYPES.COLLABORATIVE ?
-    config.zooniverseLinks.collabWorkflowId :
-    config.zooniverseLinks.workflowId;
-
-  return (dispatch) => {
-    dispatch(retrieveWorkflow(id));
-  };
-}
-
-const retrieveWorkflow = (id) => {
+const fetchWorkflow = (id) => {
   return (dispatch) => {
     dispatch({
       type: FETCH_WORKFLOW,

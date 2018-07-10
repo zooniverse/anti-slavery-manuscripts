@@ -1,6 +1,6 @@
 import { Split } from 'seven-ten';
 import { config } from '../config';
-import { fetchWorkflow } from './workflow';
+//NOPE import { fetchWorkflow } from './workflow';
 
 const FETCH_SPLIT = 'FETCH_SPLIT';
 const FETCH_SPLIT_SUCCESS = 'FETCH_SPLIT_SUCCESS';
@@ -68,7 +68,7 @@ const splitReducer = (state = initialState, action) => {
  };
 };
 
-const fetchSplit = (user) => {
+/* //NOPE const fetchSplit = (user) => {
   return (dispatch) => {
     let variant = VARIANT_TYPES.INDIVIDUAL;
 
@@ -108,7 +108,7 @@ const fetchSplit = (user) => {
       dispatch(fetchWorkflow(variant));
     }
   };
-};
+};*/
 
 const clearSplits = () => {
   return (dispatch) => {
@@ -142,7 +142,7 @@ export default splitReducer;
 
 export {
   clearSplits,
-  fetchSplit,
+  //NOPE fetchSplit,
   toggleVariant,
   setVariant,
   SPLIT_STATUS,

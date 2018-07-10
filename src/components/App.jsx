@@ -102,8 +102,7 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.props.projectStatus !== PROJECT_STATUS.READY ||
-        this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
+    if (this.props.projectStatus !== PROJECT_STATUS.READY) {
       return <LoadingSpinner />
     }  //TODO: Consider what to do for STATUS: ERROR
 

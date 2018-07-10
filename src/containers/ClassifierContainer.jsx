@@ -24,6 +24,7 @@ import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
 
+import LoadingSpinner from '../components/LoadingSpinner';
 import Navigator from './Navigator';
 import FilmstripViewer from '../components/FilmstripViewer';
 import FavoritesButton from '../components/FavoritesButton';
@@ -68,6 +69,7 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+
   componentDidMount() {
     this.props.dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
@@ -98,15 +100,21 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
+    //TEST
+    //TODO: check for workflow status
+    
+    return (
+      <main className="app-content classifier-page flex-row">
+        <div className="project-background"></div>
+        <LoadingSpinner />
+      </main>
+    );
+    
     const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
     const disableTranscribe = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
-
-    const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
-      VARIANT_TYPES.COLLABORATIVE :
-      VARIANT_TYPES.INDIVIDUAL;
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -230,19 +238,6 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Shortcuts</span>
             </button>
-
-            {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
-              <button
-                className="flat-button block"
-                onClick={this.toggleUserVariant}
-              >
-                <span className="classifier-toolbar__icon">
-                  <i className="fa fa-arrows-h" />
-                </span>
-                <span>Enter {toggleMode} Mode</span>
-              </button>
-            )}
-
           </div>
         </section>
 
