@@ -18,7 +18,7 @@ import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
 import { toggleFavorite, fetchSubject } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
-import { VARIANT_TYPES, toggleVariant } from '../ducks/splits';
+import { VARIANT_TYPES, toggleVariant, setVariant } from '../ducks/splits';
 import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
 import { Utility, KEY_CODES } from '../lib/Utility';
@@ -80,6 +80,7 @@ class ClassifierContainer extends React.Component {
     //----------------------------------------------------------------
     //this.props.dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
     //  this.props.dispatch(fetchSubject());
+    //  this.props.dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
     //});
     //----------------------------------------------------------------
   }
@@ -113,9 +114,10 @@ class ClassifierContainer extends React.Component {
     //JULY UPDATE:
     //Allow users to select their workflow
     //----------------------------------------------------------------
-    const startWorkflow = (workflow_id) => {
+    const startWorkflow = (workflow_id, variant_type) => {
       this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
         this.props.dispatch(fetchSubject());
+        this.props.dispatch(setVariant(variant_type));
       });
     }
     
@@ -124,10 +126,10 @@ class ClassifierContainer extends React.Component {
         <main className="app-content flex-column flex-center">
           <p>CHOOSE YOUR WORKFLOW</p>
           <div>
-            <button onClick={() => { startWorkflow(config.zooniverseLinks.workflowId) }}>
+            <button onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
               Solo
             </button>
-            <button onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId) }}>
+            <button onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
               Collaborative
             </button>
           </div>
@@ -136,6 +138,8 @@ class ClassifierContainer extends React.Component {
         </main>
       );
     }
+    
+    console.log('+++ previousAnnotations: ', this.props.previousAnnotations);
     //----------------------------------------------------------------
     
     
@@ -154,6 +158,10 @@ class ClassifierContainer extends React.Component {
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
+
+    const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
+      VARIANT_TYPES.COLLABORATIVE :
+      VARIANT_TYPES.INDIVIDUAL;
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -277,6 +285,19 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Shortcuts</span>
             </button>
+
+            {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
+              <button
+                className="flat-button block"
+                onClick={this.toggleUserVariant}
+              >
+                <span className="classifier-toolbar__icon">
+                  <i className="fa fa-arrows-h" />
+                </span>
+                <span>Enter {toggleMode} Mode</span>
+              </button>
+            )}
+
           </div>
         </section>
 
