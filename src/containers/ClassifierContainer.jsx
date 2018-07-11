@@ -131,6 +131,8 @@ class ClassifierContainer extends React.Component {
               Collaborative
             </button>
           </div>
+          
+          {this.renderSignInReminder()}
         </main>
       );
     }
@@ -284,41 +286,47 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
 
-        {(!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) ? null :
-          <Popup
-            className="popup-sign-in-prompt"
-            onClose={() => { this.setState({ showSignInPrompt: false }); }}
-          >
-            <div>
-              Before you begin transcribing, please sign in or create an account by clicking the button below:
-            </div>
-            <div>
-              <button
-                className="green sign-in button"
-                onClick={() => {
-                  const computeRedirectURL = (window) => {
-                    const { location } = window;
-                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
-                  };
-                  oauth.signIn(computeRedirectURL(window));
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                className="continue"
-                onClick={() => { this.setState({ showSignInPrompt: false }); }}
-              >
-                Continue without signing in
-              </button>
-            </div>
-          </Popup>
-        }
-
       </main>
     );
   }
 
+  //----------------------------------------------------------------
+  
+  renderSignInReminder() {
+    if (!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) return null;
+    
+    return (
+      <Popup
+        className="popup-sign-in-prompt"
+        onClose={() => { this.setState({ showSignInPrompt: false }); }}
+      >
+        <div>
+          Before you begin transcribing, please sign in or create an account by clicking the button below:
+        </div>
+        <div>
+          <button
+            className="green sign-in button"
+            onClick={() => {
+              const computeRedirectURL = (window) => {
+                const { location } = window;
+                return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+              };
+              oauth.signIn(computeRedirectURL(window));
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            className="continue"
+            onClick={() => { this.setState({ showSignInPrompt: false }); }}
+          >
+            Continue without signing in
+          </button>
+        </div>
+      </Popup>
+    );
+  }
+  
   //----------------------------------------------------------------
 
   closePopup() {
