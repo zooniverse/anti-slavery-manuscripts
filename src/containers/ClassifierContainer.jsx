@@ -285,6 +285,14 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
+        
+        {/*
+        //FUTURE UPDATE: 
+        //Select only one workflow
+        //----------------------------------------------------------------
+        this.renderSignInReminder()
+        //----------------------------------------------------------------
+        */}
 
       </main>
     );
