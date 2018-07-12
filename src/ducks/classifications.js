@@ -237,8 +237,9 @@ const queueClassification = (classification, user = null) => {
 
   try {
     if (user) {
-      localStorage.removeItem(`${user.id}.classificationID`);
-      localStorage.removeItem(`${user.id}.workflowID`);
+      localStorage.removeItem(`${user.id}.manual_save_classificationID`);
+      localStorage.removeItem(`${user.id}.manual_save_workflowID`);
+      localStorage.removeItem(`${user.id}.manual_save_variant`);
     }
     localStorage.setItem(QUEUE_NAME, JSON.stringify(queue));
     console.info('ducks/classifications.js queueClassification() added: ', queue.length);
@@ -396,8 +397,9 @@ const saveClassificationInProgress = () => {
     .save()
     .then((savedClassification) => {
       if (user) {
-        localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
-        localStorage.setItem(`${user.id}.workflowID`, getState().workflow.id);
+        localStorage.setItem(`${user.id}.manual_save_classificationID`, savedClassification.id);
+        localStorage.setItem(`${user.id}.manual_save_workflowID`, getState().workflow.id);
+        localStorage.setItem(`${user.id}.manual_save_variant`, getState().splits.variant);
       }
       dispatch(toggleDialog(<SaveSuccess />, false, true));
 

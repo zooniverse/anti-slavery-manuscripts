@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { retrieveClassification } from '../ducks/classifications';
 import { fetchWorkflow } from '../ducks/workflow';
 import { fetchSubject } from '../ducks/subject';
+import { setVariant } from '../ducks/splits';
 
 class ClassificationPrompt extends React.Component {
   constructor(props) {
@@ -15,20 +16,23 @@ class ClassificationPrompt extends React.Component {
   }
 
   loadClassification(e) {
-    const classification_id = localStorage.getItem(`${this.props.user.id}.classificationID`);
-    const workflow_id = localStorage.getItem(`${this.props.user.id}.workflowID`);
+    const classification_id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
+    const workflow_id = localStorage.getItem(`${this.props.user.id}.manual_save_workflowID`);
+    const variant = localStorage.getItem(`${this.props.user.id}.manual_save_variant`);
     
     this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
       this.props.dispatch(retrieveClassification(classification_id));
+      this.props.dispatch(setVariant(variant));
     });
     
     this.props.onClose && this.props.onClose(e);
   }
 
   cancelClassification(e) {
-    const id = localStorage.getItem(`${this.props.user.id}.classificationID`);
-    localStorage.removeItem(`${this.props.user.id}.classificationID`);
-    localStorage.removeItem(`${this.props.user.id}.workflowID`);
+    const id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
+    localStorage.removeItem(`${this.props.user.id}.manual_save_classificationID`);
+    localStorage.removeItem(`${this.props.user.id}.manual_save_workflowID`);
+    localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
 
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {

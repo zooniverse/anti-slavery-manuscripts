@@ -87,7 +87,9 @@ class ClassifierContainer extends React.Component {
     
     //Saved Progress Check
     //----------------------------------------------------------------
-    if (this.props.user && localStorage.getItem(`${this.props.user.id}.classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
+    //TODO: Emergency save
+    
+    if (this.props.user && localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
       this.props.dispatch(toggleDialog(<ClassificationPrompt />, false, true));
     }
     //----------------------------------------------------------------
