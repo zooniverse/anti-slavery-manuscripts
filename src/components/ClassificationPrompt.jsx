@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import apiClient from 'panoptes-client/lib/api-client';
 import { connect } from 'react-redux';
 import { retrieveClassification } from '../ducks/classifications';
+import { fetchWorkflow } from '../ducks/workflow';
 import { fetchSubject } from '../ducks/subject';
 
 class ClassificationPrompt extends React.Component {
@@ -14,15 +15,20 @@ class ClassificationPrompt extends React.Component {
   }
 
   loadClassification(e) {
-    const id = localStorage.getItem(`${this.props.user.id}.classificationID`);
-
-    this.props.dispatch(retrieveClassification(id));
+    const classification_id = localStorage.getItem(`${this.props.user.id}.classificationID`);
+    const workflow_id = localStorage.getItem(`${this.props.user.id}.workflowID`);
+    
+    this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
+      this.props.dispatch(retrieveClassification(classification_id));
+    });
+    
     this.props.onClose && this.props.onClose(e);
   }
 
   cancelClassification(e) {
     const id = localStorage.getItem(`${this.props.user.id}.classificationID`);
     localStorage.removeItem(`${this.props.user.id}.classificationID`);
+    localStorage.removeItem(`${this.props.user.id}.workflowID`);
 
     apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
@@ -31,7 +37,7 @@ class ClassificationPrompt extends React.Component {
       .catch((err) => {
         console.warn('ClassificationPrompt.cancelClassification() warning: ', err);
       });
-    this.props.dispatch(fetchSubject());
+    //NOPE this.props.dispatch(fetchSubject());
     this.props.onClose && this.props.onClose(e);
   }
 

@@ -211,13 +211,14 @@ const fetchSubject = (initialFetch = false) => {
     const workflow_id = getState().workflow.id;
     console.info('ducks/subject.js fetchSubject(): workflow_id ', workflow_id);
 
+    /*  //NOPE
     let savedClassificationPrompt = false;
     const user = getState().login.user;
 
     if (user) {
       const savedClassification = localStorage.getItem(`${user.id}.classificationID`);
       if (savedClassification) savedClassificationPrompt = true;
-    }
+    }*/
 
     dispatch({
       type: FETCH_SUBJECT,
@@ -270,12 +271,14 @@ const fetchSubject = (initialFetch = false) => {
         });
     };
 
+    /*  //NOPE
     if (checkEmergencySave(getState().login.user)) {  //If not, check if there's an emergency save.
       dispatch(emergencyLoadWorkInProgress());
       dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
     } else if (savedClassificationPrompt) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
       dispatch(toggleDialog(<ClassificationPrompt />, false, true));
-    } else if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
+    } else*/
+    if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
       fetchQueue();
     } else {
       const currentSubject = getState().subject.queue.shift();

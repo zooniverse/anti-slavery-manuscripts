@@ -27,6 +27,7 @@ import SubjectViewer from './SubjectViewer';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 import Navigator from './Navigator';
+import ClassificationPrompt from '../components/ClassificationPrompt';
 import FilmstripViewer from '../components/FilmstripViewer';
 import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
@@ -83,6 +84,13 @@ class ClassifierContainer extends React.Component {
     //  this.props.dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
     //});
     //----------------------------------------------------------------
+    
+    //Saved Progress Check
+    //----------------------------------------------------------------
+    if (this.props.user && localStorage.getItem(`${this.props.user.id}.classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
+      this.props.dispatch(toggleDialog(<ClassificationPrompt />, false, true));
+    }
+    //----------------------------------------------------------------
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,7 +118,6 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
-    
     //JULY UPDATE:
     //Allow users to select their workflow
     //----------------------------------------------------------------
@@ -134,20 +141,34 @@ class ClassifierContainer extends React.Component {
             </button>
           </div>
           
+          {(this.state.popup === null) ? null :
+            <Popup onClose={this.closePopup.bind(this)}>
+              {this.state.popup}
+            </Popup>
+          }
+          
           {this.renderSignInReminder()}
         </main>
       );
     }
-    
-    console.log('+++ previousAnnotations: ', this.props.previousAnnotations);
     //----------------------------------------------------------------
     
-    
+    //Status Checks
     //----------------------------------------------------------------
     if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
       return (
         <main className="app-content flex-column flex-center">
           LOADING...
+        </main>
+      );
+    }
+    
+    //Sanity Check: cannot proceed with the rest of the render code unless the
+    //Workflow is successfully fetched.
+    if (this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
+      return (
+        <main className="app-content flex-column flex-center">
+          ...
         </main>
       );
     }

@@ -10,8 +10,8 @@ This duck manages the project's workflow.
 
 import apiClient from 'panoptes-client/lib/api-client.js';
 import { config } from '../config';
-import { fetchSplit, setVariant, VARIANT_TYPES } from './splits';
-import { clearQueue } from './subject';
+import { setVariant, VARIANT_TYPES } from './splits';
+import { fetchSubject, clearQueue } from './subject';
 
 const RESET_WORKFLOW = 'RESET_WORKFLOW';
 const FETCH_WORKFLOW = 'FETCH_WORKFLOW';
@@ -116,7 +116,7 @@ const fetchWorkflow = (id) => {
 
     })
     .catch((err) => {
-      console.error('ducks/workflow.js retrieveWorkflow() error: ', err);
+      console.error('ducks/workflow.js fetchWorkflow() error: ', err);
       dispatch({ type: FETCH_WORKFLOW_ERROR });
     });
   };
@@ -129,10 +129,13 @@ const setGoldStandard = () => {
 
     if (isActive) {
       dispatch(setVariant(VARIANT_TYPES.INDIVIDUAL));
-      dispatch(retrieveWorkflow(config.zooniverseLinks.gsWorkflow));
-      dispatch(clearQueue());
+      dispatch(fetchWorkflow(config.zooniverseLinks.gsWorkflow)).then(() => {
+        dispatch(clearQueue());
+        dispatch(fetchSubject());
+      });
     } else {
-      dispatch(fetchSplit(user));
+      //NOPE dispatch(fetchSplit(user));
+      location.reload();
     }
     dispatch({ type: SET_GOLD_STANDARD, gs: isActive });
   };

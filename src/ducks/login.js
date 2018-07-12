@@ -1,7 +1,6 @@
 import apiClient from 'panoptes-client/lib/api-client.js';
 import oauth from 'panoptes-client/lib/oauth';
 import { fetchPreferences, setUserRoles } from './project';
-//NOPE import { fetchSplit } from './splits';
 import { config } from '../config';
 
 // Action Types
@@ -71,7 +70,6 @@ const setLoginUser = (user) => {
       user,
     });
 
-    //NOPE dispatch(fetchSplit(user));
     dispatch(fetchPreferences(user));
   };
 };
