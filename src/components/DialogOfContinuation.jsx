@@ -8,7 +8,7 @@ them that their progress has been restored.
  */
 
 import React from 'react';
-import { clearEmergencySave } from '../ducks/emergency-save';
+import { emergencyLoadWorkInProgress, clearEmergencySave } from '../ducks/emergency-save';
 
 const DialogOfContinuation = ({ dispatch, onClose }) => {
   return (
@@ -32,7 +32,8 @@ const DialogOfContinuation = ({ dispatch, onClose }) => {
         <button
           className="button"
           onClick={(e) => {
-            dispatch(clearEmergencySave());
+            dispatch(emergencyLoadWorkInProgress());
+            //dispatch(clearEmergencySave());
             onClose && onClose(e);
           }}
         >

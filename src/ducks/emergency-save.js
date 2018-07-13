@@ -12,30 +12,39 @@ to be smart, it's a blunt instrument acting as a safety net when the user's Save
 Progress and Panoptes Client's token auto-refresh fails.
  */
 
+import { fetchWorkflow } from './workflow';
 import { fetchSavedSubject, prepareForNewSubject, setSubjectId } from './subject';
 import { setAnnotations } from './annotations';
+import { setVariant } from './splits';
 
 const SUBJECT_ID_KEY = 'emergency_save_subjectId';
+const WORKFLOW_ID_KEY = 'emergency_save_workflowId';
 const ANNOTATIONS_KEY = 'emergency_save_annotations';
+const VARIANT_KEY = 'emergency_save_variant';
 const ANONYMOUS_USER_ID = 'anonymous';
 
 function checkEmergencySave(user) {
   const userId = (user) ? user.id : ANONYMOUS_USER_ID;
   const subjectId = localStorage.getItem(`${userId}.${SUBJECT_ID_KEY}`);
+  const workflowId = localStorage.getItem(`${userId}.${WORKFLOW_ID_KEY}`);
   const annotations = localStorage.getItem(`${userId}.${ANNOTATIONS_KEY}`);
 
-  return !!subjectId && !!annotations;
+  return !!subjectId && !!workflowId && !!annotations;
 }
 
 const emergencySaveWorkInProgress = () => {
   return (dispatch, getState) => {
     const subjectId = getState().subject.id;
+    const workflowId = getState().workflow.id;
     const annotations = getState().annotations.annotations;
+    const variant = getState().splits.variant;
 
     if (subjectId !== null) {      
       const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
       localStorage.setItem(`${userId}.${SUBJECT_ID_KEY}`, subjectId);
+      localStorage.setItem(`${userId}.${WORKFLOW_ID_KEY}`, workflowId);
       localStorage.setItem(`${userId}.${ANNOTATIONS_KEY}`, JSON.stringify(annotations));
+      localStorage.setItem(`${userId}.${VARIANT_KEY}`, variant);
     }
 
     console.info('emergencySaveWorkInProgress()');
@@ -49,12 +58,22 @@ const emergencyLoadWorkInProgress = () => {
     try {
       const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
       const subjectId = localStorage.getItem(`${userId}.${SUBJECT_ID_KEY}`);  //TODO: Check if a type conversion is required.
+      const workflowId = localStorage.getItem(`${userId}.${WORKFLOW_ID_KEY}`);  //TODO: Check if a type conversion is required.
       const annotations = JSON.parse(localStorage.getItem(`${userId}.${ANNOTATIONS_KEY}`));
-      dispatch(fetchSavedSubject(subjectId));
-      dispatch(setSubjectId(subjectId));  //Required so that when prepareForNewSubject creates a Classification, subject ID isn't null. (fetchSavedSubject, above, is async, you see.)
-      prepareForNewSubject(dispatch, null);
-      dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
-
+      const variant = localStorage.getItem(`${userId}.${VARIANT_KEY}`);
+      
+      console.log('+++ EMERGENCY LOAD: ', userId, subjectId, workflowId, annotations, variant);
+      
+      dispatch(fetchWorkflow(workflowId)).then(() => {
+        dispatch(fetchSavedSubject(subjectId))        
+        .then(() => {
+          prepareForNewSubject(dispatch, null);
+          dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
+          dispatch(setVariant(variant));
+          dispatch(clearEmergencySave());
+        });
+      });
+      
       console.info('emergencyLoadWorkInProgress()');
       Rollbar && Rollbar.info &&
       Rollbar.info('emergencyLoadWorkInProgress()');

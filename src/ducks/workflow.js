@@ -108,12 +108,10 @@ const fetchWorkflow = (id) => {
 
     return apiClient.type('workflows').get(id)
     .then((workflow) => {
-
       dispatch({
         type: FETCH_WORKFLOW_SUCCESS,
         data: workflow,
       });
-
     })
     .catch((err) => {
       console.error('ducks/workflow.js fetchWorkflow() error: ', err);
@@ -134,7 +132,7 @@ const setGoldStandard = () => {
         dispatch(fetchSubject());
       });
     } else {
-      //NOPE dispatch(fetchSplit(user));
+      //Refresh the page and get the settings back to normal.
       location.reload();
     }
     dispatch({ type: SET_GOLD_STANDARD, gs: isActive });

@@ -34,15 +34,15 @@ class ClassificationPrompt extends React.Component {
     localStorage.removeItem(`${this.props.user.id}.manual_save_workflowID`);
     localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
 
-    apiClient.type('classifications/incomplete').get({ id })
+    this.props.onClose && this.props.onClose(e);
+    
+    return apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         classification.delete();
       })
       .catch((err) => {
         console.warn('ClassificationPrompt.cancelClassification() warning: ', err);
       });
-    //NOPE this.props.dispatch(fetchSubject());
-    this.props.onClose && this.props.onClose(e);
   }
 
   render() {

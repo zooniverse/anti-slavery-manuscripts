@@ -239,15 +239,6 @@ class SubjectViewer extends React.Component {
     window.addEventListener('resize', this.updateSize);
     document.addEventListener('keyup', this.escapeCrop);
     this.updateSize();
-
-    /*  //NOPE
-    //Fetch the first subject, IF no subject has yet been loaded.
-    //Fetching a subject will also ensure a clean slate for Annotations,
-    //Previous Annotations, and Classifications.
-    this.props.dispatch(fetchSubject(
-      true,  //Initial fetch only, meaning ignore this action call if a Subject is already being fetch/has already been loaded.
-    ));
-    */
   }
 
   componentWillReceiveProps(next) {

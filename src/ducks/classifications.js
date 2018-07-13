@@ -338,7 +338,7 @@ const retrieveClassification = (id) => {
   return (dispatch) => {
     console.info('ducks/classifications.js retrieveClassification()');
 
-    apiClient.type('classifications/incomplete').get({ id })
+    return apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         const subjectId = (classification.links && classification.links.subjects && classification.links.subjects.length > 0)
           ? classification.links.subjects[0] : null;
@@ -348,13 +348,15 @@ const retrieveClassification = (id) => {
 
         console.info('ducks/classifications.js retrieveClassification() success');
         dispatch(setAnnotations(annotations.value));
-        dispatch(fetchSavedSubject(subjectId));
-        dispatch({
-          type: CREATE_CLASSIFICATION,
-          classification,
-          status: CLASSIFICATION_STATUS.IDLE,
-          subjectCompletionAnswers: {},
-        });
+        dispatch(fetchSavedSubject(subjectId))
+        .then(() => {
+          dispatch({
+            type: CREATE_CLASSIFICATION,
+            classification,
+            status: CLASSIFICATION_STATUS.IDLE,
+            subjectCompletionAnswers: {},
+          });
+        });        
       })
       .catch((err) => {
         console.error('ducks/classifications.js retrieveClassification() error: ', err);

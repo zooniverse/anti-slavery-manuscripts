@@ -21,6 +21,7 @@ import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleVariant, setVariant } from '../ducks/splits';
 import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
+import { checkEmergencySave, emergencyLoadWorkInProgress } from '../ducks/emergency-save'
 import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
@@ -34,6 +35,7 @@ import Popup from '../components/Popup';
 import ShowMetadata from '../components/ShowMetadata';
 import CollectionsContainer from './CollectionsContainer';
 import KeyboardShortcuts from '../components/KeyboardShortcuts';
+import DialogOfContinuation from '../components/DialogOfContinuation';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
 import SubmitClassificationForm from '../components/SubmitClassificationForm';
@@ -73,15 +75,17 @@ class ClassifierContainer extends React.Component {
   //----------------------------------------------------------------
 
   componentDidMount() {
-    this.props.dispatch(fetchGuide());
+    const dispatch = this.props.dispatch;
+    
+    dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
 
     //FUTURE UPDATE: 
     //Select only one workflow
     //----------------------------------------------------------------
-    //this.props.dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
-    //  this.props.dispatch(fetchSubject());
-    //  this.props.dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
+    //dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
+    //  dispatch(fetchSubject());
+    //  dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
     //});
     //----------------------------------------------------------------
     
@@ -89,8 +93,12 @@ class ClassifierContainer extends React.Component {
     //----------------------------------------------------------------
     //TODO: Emergency save
     
-    if (this.props.user && localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
-      this.props.dispatch(toggleDialog(<ClassificationPrompt />, false, true));
+    if (checkEmergencySave(this.props.user)) {  //Check if there's an emergency save.
+      console.log('+++ EMERGENCY SAVE DETECTED');
+      //dispatch(emergencyLoadWorkInProgress());
+      dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
+    } else if (this.props.user && localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
+      dispatch(toggleDialog(<ClassificationPrompt />, false, true));
     }
     //----------------------------------------------------------------
   }
