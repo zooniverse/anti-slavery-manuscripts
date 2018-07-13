@@ -2,7 +2,6 @@ import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
-import { Split } from 'seven-ten';
 
 import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject, addAlreadySeen } from './subject';
@@ -187,10 +186,6 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
       //SUCCESS
       .then((classificationObject) => {
         console.info('ducks/classifications.js saveAllQueuedClassifications() success: item ', classificationObject.id);
-
-        try {
-          Split.classificationCreated(classificationObject);
-        } catch (err) { console.error('Split.classificationCreated() error: ', err); }
 
         //Record locally that the Classification has been seen.
         const { workflow, subjects } = classificationObject.links;
