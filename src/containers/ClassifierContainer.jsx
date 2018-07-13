@@ -26,7 +26,6 @@ import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
 
-import LoadingSpinner from '../components/LoadingSpinner';
 import Navigator from './Navigator';
 import ClassificationPrompt from '../components/ClassificationPrompt';
 import FilmstripViewer from '../components/FilmstripViewer';
@@ -91,11 +90,7 @@ class ClassifierContainer extends React.Component {
     
     //Saved Progress Check
     //----------------------------------------------------------------
-    //TODO: Emergency save
-    
     if (checkEmergencySave(this.props.user)) {  //Check if there's an emergency save.
-      console.log('+++ EMERGENCY SAVE DETECTED');
-      //dispatch(emergencyLoadWorkInProgress());
       dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
     } else if (this.props.user && localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
       dispatch(toggleDialog(<ClassificationPrompt />, false, true));
@@ -140,15 +135,20 @@ class ClassifierContainer extends React.Component {
     
     if (this.props.workflowStatus === WORKFLOW_STATUS.IDLE) {
       return (
-        <main className="app-content flex-column flex-center">
-          <p>CHOOSE YOUR WORKFLOW</p>
-          <div>
-            <button onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
+        <main className="app-content classifier-page-panel flex-column flex-center">
+          <div className="header-panel">Choose how you would like to transcribe</div>
+          <div className="button-panel">
+            <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
               Solo
             </button>
-            <button onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
+            <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
               Collaborative
             </button>
+          </div>
+          <div className="details-panel">
+            <p>This selection is an experiment to study how people best experience the transcription process.</p>
+            <p>The "Solo" option lets you focus on your own work, and the only other transcriptions you'll see are grey lines of text that have been "retired" due to sufficient classification.</p>
+            <p>The "Collaborative" option lets you see what other people have transcribed (shown as red lines of text), so you can compare transcriptions and agree/disagree with what they think was written.</p>
           </div>
           
           {(this.state.popup === null) ? null :
@@ -167,8 +167,8 @@ class ClassifierContainer extends React.Component {
     //----------------------------------------------------------------
     if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
       return (
-        <main className="app-content flex-column flex-center">
-          LOADING...
+        <main className="app-content classifier-page-panel flex-column flex-center">
+          <div className="loading-spinner"></div>
         </main>
       );
     }
@@ -177,7 +177,7 @@ class ClassifierContainer extends React.Component {
     //Workflow is successfully fetched.
     if (this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
       return (
-        <main className="app-content flex-column flex-center">
+        <main className="app-content classifier-page-panel flex-column flex-center">
           ...
         </main>
       );

@@ -61,9 +61,7 @@ const emergencyLoadWorkInProgress = () => {
       const workflowId = localStorage.getItem(`${userId}.${WORKFLOW_ID_KEY}`);  //TODO: Check if a type conversion is required.
       const annotations = JSON.parse(localStorage.getItem(`${userId}.${ANNOTATIONS_KEY}`));
       const variant = localStorage.getItem(`${userId}.${VARIANT_KEY}`);
-      
-      console.log('+++ EMERGENCY LOAD: ', userId, subjectId, workflowId, annotations, variant);
-      
+
       dispatch(fetchWorkflow(workflowId)).then(() => {
         dispatch(fetchSavedSubject(subjectId))        
         .then(() => {
