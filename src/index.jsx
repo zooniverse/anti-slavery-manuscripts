@@ -11,7 +11,6 @@ import AboutTheProject from './components/AboutTheProject';
 import Classifier from './containers/ClassifierContainer';
 import { config } from './config';
 import configureStore from './store';
-import './lib/split-config.js';
 
 // Todo: let's find a better way to include Styles,
 // currently Styles looks like an unused var to eslint

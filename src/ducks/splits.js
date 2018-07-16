@@ -1,17 +1,6 @@
-import { Split } from 'seven-ten';
-import { config } from '../config';
-
 const CLEAR_SPLITS = 'CLEAR_SPLITS';
 const TOGGLE_VARIANT = 'TOGGLE_VARIANT';
 const SET_VARIANT = 'SET_VARIANT';
-
-
-const SPLIT_STATUS = {
-  IDLE: 'split_status_idle',
-  FETCHING: 'split_status_fetching',
-  READY: 'split_status_ready',
-  ERROR: 'split_status_error',
-};
 
 const VARIANT_TYPES = {
   INDIVIDUAL: 'individual',
@@ -46,14 +35,6 @@ const splitReducer = (state = initialState, action) => {
  };
 };
 
-const clearSplits = () => {
-  return (dispatch) => {
-    dispatch({
-      type: CLEAR_SPLITS,
-    });
-  };
-};
-
 const toggleVariant = (currentVariant) => {
   return (dispatch, getState) => {
     const variant = currentVariant === VARIANT_TYPES.INDIVIDUAL ? VARIANT_TYPES.COLLABORATIVE : VARIANT_TYPES.INDIVIDUAL;
@@ -77,9 +58,7 @@ const setVariant = (variant) => {
 export default splitReducer;
 
 export {
-  clearSplits,
   toggleVariant,
   setVariant,
-  SPLIT_STATUS,
   VARIANT_TYPES
 };

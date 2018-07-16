@@ -12,7 +12,6 @@ AnnotationsPane.jsx for details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { VisibilitySplit } from 'seven-ten';
 import { Utility } from '../lib/Utility';
 import PendingAnnotation from './PendingAnnotation';
 import { VARIANT_TYPES } from '../ducks/splits';
@@ -275,18 +274,6 @@ class AnnotationsPane extends React.Component {
         </g>
       );
 
-      if (this.props.variant === VARIANT_TYPES.COLLABORATIVE && previousAnnotations) {
-        return (
-          <VisibilitySplit
-            key={annotationPrefix + index}
-            splits={this.props.splits}
-            splitKey={'classifier.collaborative'}
-            elementKey={'div'}
-          >
-            {renderedMarks}
-          </VisibilitySplit>
-        );
-      }
       return renderedMarks;
     });
   }
@@ -326,9 +313,6 @@ AnnotationsPane.propTypes = {
   }),
   selectedAnnotationIndex: PropTypes.number,
   shownMarks: PropTypes.number,
-  splits: PropTypes.shape({
-    data: PropTypes.object,
-  }),
   variant: PropTypes.string,
 };
 
@@ -350,7 +334,6 @@ AnnotationsPane.defaultProps = {
   },
   selectedAnnotationIndex: 0,
   shownMarks: 0,
-  splits: null,
   variant: VARIANT_TYPES.INDIVIDUAL,
 };
 
@@ -361,7 +344,6 @@ const mapStateToProps = (state) => {
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
     shownMarks: state.subjectViewer.shownMarks,
-    splits: state.splits.data,
     variant: state.splits.variant,
   };
 };

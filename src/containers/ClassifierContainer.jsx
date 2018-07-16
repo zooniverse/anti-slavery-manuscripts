@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
 import { browserHistory } from 'react-router';
 import { config } from '../config';
@@ -117,7 +116,6 @@ class ClassifierContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    Split.clear();
     document.removeEventListener('keyup', this.handleKeyUp);
     this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
   }
