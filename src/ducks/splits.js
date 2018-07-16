@@ -1,5 +1,3 @@
-import { config } from '../config';
-
 const CLEAR_SPLITS = 'CLEAR_SPLITS';
 const TOGGLE_VARIANT = 'TOGGLE_VARIANT';
 const SET_VARIANT = 'SET_VARIANT';
