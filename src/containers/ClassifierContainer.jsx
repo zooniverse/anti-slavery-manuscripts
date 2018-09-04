@@ -320,7 +320,8 @@ class ClassifierContainer extends React.Component {
               <span>Shortcuts</span>
             </button>
 
-            {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
+            {/*  //TODO: Will, is this still necessary?
+            (!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
               <button
                 className="flat-button block"
                 onClick={this.toggleUserVariant}
@@ -330,7 +331,7 @@ class ClassifierContainer extends React.Component {
                 </span>
                 <span>Enter {toggleMode} Mode</span>
               </button>
-            )}
+            )*/}
             
             <img className="divider" role="presentation" src={Divider} />
             
@@ -339,9 +340,16 @@ class ClassifierContainer extends React.Component {
             <button
               className="flat-button block"
               onClick={()=>{
-                const confirmed = confirm('WARNING: You will lose all current progress if you switch modes. Is this OK?');
+                const confirmed = confirm('WARNING: You will lose all current progress (including saved work) if you switch modes. Is this OK?');
                 if (confirmed) {
-                  clearEmergencySave();
+                  //If the use chooses to switch modes, remove ALL saved progress to prevent confusion.
+                  if (this.props.user) {
+                    const id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_classificationID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_workflowID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
+                  }
+                  this.props.dispatch(clearEmergencySave());
                   location.reload();
                 }
               }}
