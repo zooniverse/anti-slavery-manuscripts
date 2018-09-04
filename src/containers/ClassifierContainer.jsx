@@ -144,10 +144,12 @@ class ClassifierContainer extends React.Component {
             </button>
           </div>
           <div className="details-panel">
-            <p>This selection is an experiment to study how people best experience the transcription process.</p>
-            <p>The "Solo" option lets you focus on your own work, and the only other transcriptions you'll see are grey lines of text that have been "retired" due to sufficient classification.</p>
-            <p>The "Collaborative" option lets you see what other people have transcribed (shown as red lines of text), so you can compare transcriptions and agree/disagree with what they think was written.</p>
-          </div>
+            <p>When we first launched this project, we ran an A/B experiment to research what method of transcription produces the highest-quality results. You can read more about this ongoing research on the project <a href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/" target="blank" rel="noopener noreferrer">blog.</a></p>
+            <p>Now that the experiment has finished, we are curious to know what you, our volunteers, think of each method. For the next month, you will have the option to choose between <b>Independent</b> and <b>Collaborative</b> transcription methods.</p>
+            <p>The <b>Collaborative</b> option allows you to see other volunteers' transcriptions. The <b>Independent</b> option allows volunteers to transcribe independently. Please read the tutorial before participating in an unfamiliar method, as the transcription process differs for each method.</p>
+            <p>We'd love to hear your thoughts about the methods: you can give us feedback on the workflows here; additionally, you can visit the project Talk board to chat with other volunteers about this process and ask questions of the research team.</p>
+            <p>Thanks, and happy transcribing!</p>
+        </div>
           
           {(this.state.popup === null) ? null :
             <Popup onClose={this.closePopup.bind(this)}>
