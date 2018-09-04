@@ -15,10 +15,8 @@ import { createClassification } from './classifications';
 import { resetAnnotations } from './annotations';
 import { fetchPreviousAnnotations } from './previousAnnotations';
 import { changeFrame } from './subject-viewer';
-import { checkEmergencySave, emergencyLoadWorkInProgress } from './emergency-save'
 import { toggleDialog } from './dialog';
 import ClassificationPrompt from '../components/ClassificationPrompt';
-import DialogOfContinuation from '../components/DialogOfContinuation';
 
 const FETCH_SUBJECT = 'FETCH_SUBJECT';
 const FETCH_SUBJECT_SUCCESS = 'FETCH_SUBJECT_SUCCESS';
@@ -211,14 +209,6 @@ const fetchSubject = (initialFetch = false) => {
     const workflow_id = getState().workflow.id;
     console.info('ducks/subject.js fetchSubject(): workflow_id ', workflow_id);
 
-    let savedClassificationPrompt = false;
-    const user = getState().login.user;
-
-    if (user) {
-      const savedClassification = localStorage.getItem(`${user.id}.classificationID`);
-      if (savedClassification) savedClassificationPrompt = true;
-    }
-
     dispatch({
       type: FETCH_SUBJECT,
     });
@@ -250,7 +240,7 @@ const fetchSubject = (initialFetch = false) => {
       subjectQuery = { workflow_id: config.zooniverseLinks.gsWorkflow };
     }
     const fetchQueue = () => {
-      apiClient.type('subjects/queued').get(subjectQuery)
+      return apiClient.type('subjects/queued').get(subjectQuery)
         .then((queue) => {
           const currentSubject = queue.shift();
           dispatch({
@@ -270,12 +260,7 @@ const fetchSubject = (initialFetch = false) => {
         });
     };
 
-    if (checkEmergencySave(getState().login.user)) {  //If not, check if there's an emergency save.
-      dispatch(emergencyLoadWorkInProgress());
-      dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
-    } else if (savedClassificationPrompt) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
-      dispatch(toggleDialog(<ClassificationPrompt />, false, true));
-    } else if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
+    if (!getState().subject.queue.length) {  //If not, check if there are any subjects left in the queue.
       fetchQueue();
     } else {
       const currentSubject = getState().subject.queue.shift();
@@ -305,7 +290,7 @@ const prepareForNewSubject = (dispatch, subject) => {
 
 const fetchSavedSubject = (id) => {
   return (dispatch) => {
-    apiClient.type('subjects').get(id)
+    return apiClient.type('subjects').get(id)
       .then((currentSubject) => {
         dispatch(fetchPreviousAnnotations(currentSubject));
         dispatch(changeFrame(0));
@@ -315,6 +300,7 @@ const fetchSavedSubject = (id) => {
           currentSubject,
           id,
         });
+        return currentSubject;
       })
       .catch((err) => {
         console.error('ducks/subject.js fetchSavedSubject() error: ', err);

@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Split } from 'seven-ten';
 import { Tutorial } from 'zooniverse-react-components';
-import { browserHistory } from 'react-router';
 import { config } from '../config';
 
 import oauth from 'panoptes-client/lib/oauth';
@@ -16,21 +14,25 @@ import {
 
 import { fetchGuide, GUIDE_STATUS } from '../ducks/field-guide';
 import { fetchTutorial, TUTORIAL_STATUS } from '../ducks/tutorial';
-import { toggleFavorite } from '../ducks/subject';
+import { toggleFavorite, fetchSubject } from '../ducks/subject';
 import { toggleDialog } from '../ducks/dialog';
-import { VARIANT_TYPES, toggleVariant } from '../ducks/splits';
+import { VARIANT_TYPES, toggleVariant, setVariant } from '../ducks/splits';
+import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
+import { checkEmergencySave, clearEmergencySave } from '../ducks/emergency-save'
 import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
 
 import Navigator from './Navigator';
+import ClassificationPrompt from '../components/ClassificationPrompt';
 import FilmstripViewer from '../components/FilmstripViewer';
 import FavoritesButton from '../components/FavoritesButton';
 import Popup from '../components/Popup';
 import ShowMetadata from '../components/ShowMetadata';
 import CollectionsContainer from './CollectionsContainer';
 import KeyboardShortcuts from '../components/KeyboardShortcuts';
+import DialogOfContinuation from '../components/DialogOfContinuation';
 import Divider from '../images/img_divider.png';
 import FieldGuide from '../components/FieldGuide';
 import SubmitClassificationForm from '../components/SubmitClassificationForm';
@@ -68,17 +70,38 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
+
   componentDidMount() {
-    this.props.dispatch(fetchGuide());
+    const dispatch = this.props.dispatch;
+
+    dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
+
+    //FUTURE UPDATE:
+    //Select only one workflow
+    //----------------------------------------------------------------
+    //dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
+    //  dispatch(fetchSubject());
+    //  dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
+    //});
+    //----------------------------------------------------------------
+
+    //Saved Progress Check
+    //----------------------------------------------------------------
+    if (checkEmergencySave(this.props.user)) {  //Check if there's an emergency save.
+      dispatch(toggleDialog(<DialogOfContinuation dispatch={dispatch} />, false, false));
+    } else if (this.props.user && localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`)) {  //Check if the user has manually saved progress. (Emergency save trumps manual save.)
+      dispatch(toggleDialog(<ClassificationPrompt />, false, true));
+    }
+    //----------------------------------------------------------------
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.workflow && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
-      this.props.dispatch(fetchTutorial(nextProps.workflow));
+    if (nextProps.workflowData && nextProps.preferences && nextProps.tutorialStatus === TUTORIAL_STATUS.IDLE) {
+      this.props.dispatch(fetchTutorial(nextProps.workflowData));
 
       if (this.context.googleLogger) {
-        this.context.googleLogger.remember({ workflowID: nextProps.workflow.id });
+        this.context.googleLogger.remember({ workflowID: nextProps.workflowData.id });
       }
     }
 
@@ -92,21 +115,87 @@ class ClassifierContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    Split.clear();
     document.removeEventListener('keyup', this.handleKeyUp);
     this.context.googleLogger && this.context.googleLogger.forget(['subjectID']);
   }
 
   render() {
+    //JULY UPDATE:
+    //Allow users to select their workflow
+    //----------------------------------------------------------------
+    const startWorkflow = (workflow_id, variant_type) => {
+      this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
+        this.props.dispatch(fetchSubject());
+        this.props.dispatch(setVariant(variant_type));
+      });
+    }
+
+    if (this.props.workflowStatus === WORKFLOW_STATUS.IDLE) {
+      return (
+        <main className="app-content classifier-page-panel flex-column flex-center">
+          <div className="project-background" />
+          <div className="header-panel">Choose how you would like to transcribe</div>
+          <div className="button-panel">
+            <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
+              Solo
+            </button>
+            <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
+              Collaborative
+            </button>
+          </div>
+          <div className="details-panel">
+            <p>When we first launched this project, we ran an A/B experiment to research what method of transcription produces the highest-quality results. You can read more about this ongoing research on the project <a href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/" target="blank" rel="noopener noreferrer">blog.</a></p>
+            <p>Now that the experiment has finished, we are curious to know what you, our volunteers, think of each method. For the next month, you will have the option to choose between <b>Independent</b> and <b>Collaborative</b> transcription methods.</p>
+            <p>The <b>Collaborative</b> option allows you to see other volunteers' transcriptions. The <b>Independent</b> option allows volunteers to transcribe independently. Please read the tutorial before participating in an unfamiliar method, as the transcription process differs for each method.</p>
+            <p>We'd love to hear your thoughts about the methods: you can give us feedback on the workflows <a href="https://goo.gl/forms/j7HaJMMTPkV4kd5w2" target="blank" rel="noopener noreferrer">here</a>; additionally, you can visit the project <a href="https://www.zooniverse.org/projects/bostonpubliclibrary/anti-slavery-manuscripts/talk" target="blank" rel="noopener noreferrer">Talk</a> board to chat with other volunteers about this process and ask questions of the research team.</p>
+            <p>Thanks, and happy transcribing!</p>
+        </div>
+
+          {(this.state.popup === null) ? null :
+            <Popup onClose={this.closePopup.bind(this)}>
+              {this.state.popup}
+            </Popup>
+          }
+
+          {this.renderSignInReminder()}
+        </main>
+      );
+    }
+    //----------------------------------------------------------------
+
+    //Status Checks
+    //----------------------------------------------------------------
+    if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
+      return (
+        <main className="app-content classifier-page-panel flex-column flex-center">
+          <div className="loading-spinner"></div>
+        </main>
+      );
+    }
+
+    //Sanity Check: cannot proceed with the rest of the render code unless the
+    //Workflow is successfully fetched.
+    if (this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
+      return (
+        <main className="app-content classifier-page-panel flex-column flex-center">
+          ...
+        </main>
+      );
+    }
+    //----------------------------------------------------------------
+
     const activeCrop = this.props.viewerState === SUBJECTVIEWER_STATE.CROPPING ? 'active-crop' : '';
     const disableTranscribe = this.props.selectedAnnotation !== null;
     const isAdmin = this.props.user && this.props.user.admin;
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
 
+    const currentMode = this.props.variant === VARIANT_TYPES.COLLABORATIVE ?
+      'Collaborative' :
+      'Solo';
     const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
-      VARIANT_TYPES.COLLABORATIVE :
-      VARIANT_TYPES.INDIVIDUAL;
+      'Collaborative' :
+      'Solo';
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -231,17 +320,34 @@ class ClassifierContainer extends React.Component {
               <span>Shortcuts</span>
             </button>
 
-            {(!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
-              <button
-                className="flat-button block"
-                onClick={this.toggleUserVariant}
-              >
-                <span className="classifier-toolbar__icon">
-                  <i className="fa fa-arrows-h" />
-                </span>
-                <span>Enter {toggleMode} Mode</span>
-              </button>
-            )}
+            <img className="divider" role="presentation" src={Divider} />
+
+            <div>Currently working in <b>{currentMode}</b> mode</div>
+
+            <button
+              className="flat-button block"
+              onClick={()=>{
+                const confirmed = confirm('WARNING: You will lose all current progress (including saved work) if you switch modes. Is this OK?');
+                if (confirmed) {
+                  //If the use chooses to switch modes, remove ALL saved progress to prevent confusion.
+                  if (this.props.user) {
+                    const id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_classificationID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_workflowID`);
+                    localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
+                  }
+                  this.props.dispatch(clearEmergencySave());
+                  location.reload();
+                }
+              }}
+            >
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-arrows-h" />
+              </span>
+              <span>Switch to {toggleMode}</span>
+            </button>
+
+            <div>Warning: switching modes will reset all your current work.</div>
 
           </div>
         </section>
@@ -252,38 +358,52 @@ class ClassifierContainer extends React.Component {
           </Popup>
         }
 
-        {(!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) ? null :
-          <Popup
-            className="popup-sign-in-prompt"
-            onClose={() => { this.setState({ showSignInPrompt: false }); }}
-          >
-            <div>
-              Before you begin transcribing, please sign in or create an account by clicking the button below:
-            </div>
-            <div>
-              <button
-                className="green sign-in button"
-                onClick={() => {
-                  const computeRedirectURL = (window) => {
-                    const { location } = window;
-                    return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
-                  };
-                  oauth.signIn(computeRedirectURL(window));
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                className="continue"
-                onClick={() => { this.setState({ showSignInPrompt: false }); }}
-              >
-                Continue without signing in
-              </button>
-            </div>
-          </Popup>
-        }
+        {/*
+        //FUTURE UPDATE:
+        //Select only one workflow
+        //----------------------------------------------------------------
+        this.renderSignInReminder()
+        //----------------------------------------------------------------
+        */}
 
       </main>
+    );
+  }
+
+  //----------------------------------------------------------------
+
+  renderSignInReminder() {
+    if (!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) return null;
+
+    return (
+      <Popup
+        className="popup-sign-in-prompt"
+        onClose={() => { this.setState({ showSignInPrompt: false }); }}
+      >
+        <div>
+          Before you begin transcribing, please sign in or create an account by clicking the button below:
+        </div>
+        <div>
+          <button
+            className="green sign-in button"
+            onClick={() => {
+              const computeRedirectURL = (window) => {
+                const { location } = window;
+                return location.origin || `${location.protocol}//${location.hostname}:${location.port}`;
+              };
+              oauth.signIn(computeRedirectURL(window));
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            className="continue"
+            onClick={() => { this.setState({ showSignInPrompt: false }); }}
+          >
+            Continue without signing in
+          </button>
+        </div>
+      </Popup>
     );
   }
 
@@ -418,10 +538,10 @@ ClassifierContainer.propTypes = {
   }),
   variant: PropTypes.string,
   viewerState: PropTypes.string,
-  workflow: PropTypes.shape({
-    id: PropTypes.string,
-  }),
+  workflowData: PropTypes.object,
+  workflowStatus: PropTypes.string,
 };
+
 ClassifierContainer.defaultProps = {
   dispatch: () => {},
   //--------
@@ -442,7 +562,8 @@ ClassifierContainer.defaultProps = {
   user: null,
   variant: VARIANT_TYPES.INDIVIDUAL,
   viewerState: SUBJECTVIEWER_STATE.NAVIGATING,
-  workflow: null,
+  workflowData: WORKFLOW_INITIAL_STATE.data,
+  workflowStatus: WORKFLOW_INITIAL_STATE.status,
 };
 
 ClassifierContainer.contextTypes = {
@@ -468,7 +589,8 @@ const mapStateToProps = (state, ownProps) => {
     user: state.login.user,
     variant: state.splits.variant,
     viewerState: state.subjectViewer.viewerState,
-    workflow: state.workflow.data,
+    workflowData: state.workflow.data,
+    workflowStatus: state.workflow.status,
   };
 };
 export default connect(mapStateToProps)(ClassifierContainer);

@@ -2,7 +2,6 @@ import React from 'react';
 import apiClient from 'panoptes-client/lib/api-client.js';
 import counterpart from 'counterpart';
 import { getSessionID } from '../lib/get-session-id';
-import { Split } from 'seven-ten';
 
 import { setAnnotations } from './annotations';
 import { fetchSubject, fetchSavedSubject, addAlreadySeen } from './subject';
@@ -188,10 +187,6 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
       .then((classificationObject) => {
         console.info('ducks/classifications.js saveAllQueuedClassifications() success: item ', classificationObject.id);
 
-        try {
-          Split.classificationCreated(classificationObject);
-        } catch (err) { console.error('Split.classificationCreated() error: ', err); }
-
         //Record locally that the Classification has been seen.
         const { workflow, subjects } = classificationObject.links;
         dispatch(addAlreadySeen(workflow, subjects));
@@ -237,7 +232,9 @@ const queueClassification = (classification, user = null) => {
 
   try {
     if (user) {
-      localStorage.removeItem(`${user.id}.classificationID`);
+      localStorage.removeItem(`${user.id}.manual_save_classificationID`);
+      localStorage.removeItem(`${user.id}.manual_save_workflowID`);
+      localStorage.removeItem(`${user.id}.manual_save_variant`);
     }
     localStorage.setItem(QUEUE_NAME, JSON.stringify(queue));
     console.info('ducks/classifications.js queueClassification() added: ', queue.length);
@@ -319,6 +316,7 @@ const submitClassification = () => {
     queueClassification(classification, user);
     saveAllQueuedClassifications(dispatch, user);
     dispatch(clearEmergencySave());  //Once a Classification has been sent, remove any emergency save data.
+    //----------------
   };
 };
 
@@ -335,7 +333,7 @@ const retrieveClassification = (id) => {
   return (dispatch) => {
     console.info('ducks/classifications.js retrieveClassification()');
 
-    apiClient.type('classifications/incomplete').get({ id })
+    return apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         const subjectId = (classification.links && classification.links.subjects && classification.links.subjects.length > 0)
           ? classification.links.subjects[0] : null;
@@ -345,13 +343,15 @@ const retrieveClassification = (id) => {
 
         console.info('ducks/classifications.js retrieveClassification() success');
         dispatch(setAnnotations(annotations.value));
-        dispatch(fetchSavedSubject(subjectId));
-        dispatch({
-          type: CREATE_CLASSIFICATION,
-          classification,
-          status: CLASSIFICATION_STATUS.IDLE,
-          subjectCompletionAnswers: {},
-        });
+        dispatch(fetchSavedSubject(subjectId))
+        .then(() => {
+          dispatch({
+            type: CREATE_CLASSIFICATION,
+            classification,
+            status: CLASSIFICATION_STATUS.IDLE,
+            subjectCompletionAnswers: {},
+          });
+        });        
       })
       .catch((err) => {
         console.error('ducks/classifications.js retrieveClassification() error: ', err);
@@ -394,7 +394,9 @@ const saveClassificationInProgress = () => {
     .save()
     .then((savedClassification) => {
       if (user) {
-        localStorage.setItem(`${user.id}.classificationID`, savedClassification.id);
+        localStorage.setItem(`${user.id}.manual_save_classificationID`, savedClassification.id);
+        localStorage.setItem(`${user.id}.manual_save_workflowID`, getState().workflow.id);
+        localStorage.setItem(`${user.id}.manual_save_variant`, getState().splits.variant);
       }
       dispatch(toggleDialog(<SaveSuccess />, false, true));
 

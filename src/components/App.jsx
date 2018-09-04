@@ -21,7 +21,6 @@ import oauth from 'panoptes-client/lib/oauth';
 
 import { env } from '../config';
 import { WORKFLOW_STATUS } from '../ducks/workflow';
-import { SPLIT_STATUS } from '../ducks/splits';
 import GALogAdapter from '../lib/ga-log-adapter';
 import GoogleLogger from '../lib/GoogleLogger';
 import { checkLoginUser } from '../ducks/login';
@@ -88,10 +87,6 @@ class App extends React.Component {
       this.googleLogger.remember({ userID: nextProps.user.id });
     }
 
-    if (nextProps.splitStatus !== this.props.splitStatus && nextProps.splitStatus === SPLIT_STATUS.READY) {
-      this.googleLogger.remember({ cohort: nextProps.variant, experiment: nextProps.splitID });
-    }
-
     if (!nextProps.user && nextProps.user !== this.props.user) {
       this.googleLogger.forget(['userID']);
     }
@@ -102,8 +97,7 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.props.projectStatus !== PROJECT_STATUS.READY ||
-        this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
+    if (this.props.projectStatus !== PROJECT_STATUS.READY) {
       return <LoadingSpinner />
     }  //TODO: Consider what to do for STATUS: ERROR
 
@@ -146,12 +140,8 @@ App.propTypes = {
   //--------
   dialog: PropTypes.node,
   //--------
-  variant: PropTypes.string,
-  splitID: PropTypes.string,
   projectStatus: PropTypes.string,
-  workflowStatus: PropTypes.string,
   showBanner: PropTypes.bool,
-  splitStatus: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -163,12 +153,8 @@ App.defaultProps = {
   //--------
   dialog: null,
   //--------
-  variant: null,
-  splitID: null,
   projectStatus: PROJECT_STATUS.IDLE,
-  workflowStatus: WORKFLOW_STATUS.IDLE,
   showBanner: true,
-  splitStatus: SPLIT_STATUS.IDLE,
 };
 
 App.childContextTypes = {
@@ -183,11 +169,7 @@ const mapStateToProps = (state) => {
     //--------
     dialog: state.dialog.data,
     //--------
-    variant: state.splits.variant,
-    splitID: state.splits.id,
     projectStatus: state.project.status,
-    workflowStatus: state.workflow.status,
-    splitStatus: state.splits.status,
   };
 };
 

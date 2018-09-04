@@ -40,7 +40,6 @@
     "redux-devtools-extension": "^1.0.0",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",
-    "seven-ten": "^3.1.0",
     "zoo-grommet": "^0.2.1",
     "zooniverse-react-components": "github:zooniverse/Zooniverse-react-components#v0.7.0"
   },
@@ -51,6 +50,7 @@
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.9",
     "babel-plugin-react-transform": "^2.0.2",
+    "babel-plugin-transform-object-rest-spread": "~6.23.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
