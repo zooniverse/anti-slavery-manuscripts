@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tutorial } from 'zooniverse-react-components';
-import { browserHistory } from 'react-router';
 import { config } from '../config';
 
 import oauth from 'panoptes-client/lib/oauth';
@@ -20,7 +19,7 @@ import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleVariant, setVariant } from '../ducks/splits';
 import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
-import { checkEmergencySave, emergencyLoadWorkInProgress, clearEmergencySave } from '../ducks/emergency-save'
+import { checkEmergencySave, clearEmergencySave } from '../ducks/emergency-save'
 import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
@@ -320,19 +319,6 @@ class ClassifierContainer extends React.Component {
               <span>Shortcuts</span>
             </button>
 
-            {/*  //TODO: Will, is this still necessary?
-            (!(isAdmin && this.props.previousAnnotations && this.props.previousAnnotations.length > 0)) ? null : (
-              <button
-                className="flat-button block"
-                onClick={this.toggleUserVariant}
-              >
-                <span className="classifier-toolbar__icon">
-                  <i className="fa fa-arrows-h" />
-                </span>
-                <span>Enter {toggleMode} Mode</span>
-              </button>
-            )*/}
-            
             <img className="divider" role="presentation" src={Divider} />
             
             <div>Currently working in <b>{currentMode}</b> mode</div>

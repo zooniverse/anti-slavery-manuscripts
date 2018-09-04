@@ -13,7 +13,7 @@ Progress and Panoptes Client's token auto-refresh fails.
  */
 
 import { fetchWorkflow } from './workflow';
-import { fetchSavedSubject, prepareForNewSubject, setSubjectId } from './subject';
+import { fetchSavedSubject, prepareForNewSubject } from './subject';
 import { setAnnotations } from './annotations';
 import { setVariant } from './splits';
 
