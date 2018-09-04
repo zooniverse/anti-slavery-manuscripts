@@ -137,7 +137,7 @@ class ClassifierContainer extends React.Component {
           <div className="header-panel">Choose how you would like to transcribe</div>
           <div className="button-panel">
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
-              Solo
+              Independent
             </button>
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
               Collaborative
