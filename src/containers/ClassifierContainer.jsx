@@ -137,7 +137,7 @@ class ClassifierContainer extends React.Component {
           <div className="header-panel">Choose how you would like to transcribe</div>
           <div className="button-panel">
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
-              Solo
+              Independent
             </button>
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
               Collaborative
@@ -192,10 +192,10 @@ class ClassifierContainer extends React.Component {
 
     const currentMode = this.props.variant === VARIANT_TYPES.COLLABORATIVE ?
       'Collaborative' :
-      'Solo';
+      'Independent';
     const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
       'Collaborative' :
-      'Solo';
+      'Independent';
 
     return (
       <main className="app-content classifier-page flex-row">
