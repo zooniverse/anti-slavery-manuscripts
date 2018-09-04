@@ -73,11 +73,11 @@ class ClassifierContainer extends React.Component {
 
   componentDidMount() {
     const dispatch = this.props.dispatch;
-    
+
     dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
 
-    //FUTURE UPDATE: 
+    //FUTURE UPDATE:
     //Select only one workflow
     //----------------------------------------------------------------
     //dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
@@ -85,7 +85,7 @@ class ClassifierContainer extends React.Component {
     //  dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
     //});
     //----------------------------------------------------------------
-    
+
     //Saved Progress Check
     //----------------------------------------------------------------
     if (checkEmergencySave(this.props.user)) {  //Check if there's an emergency save.
@@ -129,10 +129,11 @@ class ClassifierContainer extends React.Component {
         this.props.dispatch(setVariant(variant_type));
       });
     }
-    
+
     if (this.props.workflowStatus === WORKFLOW_STATUS.IDLE) {
       return (
         <main className="app-content classifier-page-panel flex-column flex-center">
+          <div className="project-background" />
           <div className="header-panel">Choose how you would like to transcribe</div>
           <div className="button-panel">
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
@@ -149,19 +150,19 @@ class ClassifierContainer extends React.Component {
             <p>We'd love to hear your thoughts about the methods: you can give us feedback on the workflows <a href="https://goo.gl/forms/j7HaJMMTPkV4kd5w2" target="blank" rel="noopener noreferrer">here</a>; additionally, you can visit the project <a href="https://www.zooniverse.org/projects/bostonpubliclibrary/anti-slavery-manuscripts/talk" target="blank" rel="noopener noreferrer">Talk</a> board to chat with other volunteers about this process and ask questions of the research team.</p>
             <p>Thanks, and happy transcribing!</p>
         </div>
-          
+
           {(this.state.popup === null) ? null :
             <Popup onClose={this.closePopup.bind(this)}>
               {this.state.popup}
             </Popup>
           }
-          
+
           {this.renderSignInReminder()}
         </main>
       );
     }
     //----------------------------------------------------------------
-    
+
     //Status Checks
     //----------------------------------------------------------------
     if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
@@ -171,7 +172,7 @@ class ClassifierContainer extends React.Component {
         </main>
       );
     }
-    
+
     //Sanity Check: cannot proceed with the rest of the render code unless the
     //Workflow is successfully fetched.
     if (this.props.workflowStatus !== WORKFLOW_STATUS.READY) {
@@ -320,9 +321,9 @@ class ClassifierContainer extends React.Component {
             </button>
 
             <img className="divider" role="presentation" src={Divider} />
-            
+
             <div>Currently working in <b>{currentMode}</b> mode</div>
-            
+
             <button
               className="flat-button block"
               onClick={()=>{
@@ -345,7 +346,7 @@ class ClassifierContainer extends React.Component {
               </span>
               <span>Switch to {toggleMode}</span>
             </button>
-            
+
             <div>Warning: switching modes will reset all your current work.</div>
 
           </div>
@@ -356,9 +357,9 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
-        
+
         {/*
-        //FUTURE UPDATE: 
+        //FUTURE UPDATE:
         //Select only one workflow
         //----------------------------------------------------------------
         this.renderSignInReminder()
@@ -370,10 +371,10 @@ class ClassifierContainer extends React.Component {
   }
 
   //----------------------------------------------------------------
-  
+
   renderSignInReminder() {
     if (!(this.props.initialised && !this.props.user && this.state.showSignInPrompt)) return null;
-    
+
     return (
       <Popup
         className="popup-sign-in-prompt"
@@ -405,7 +406,7 @@ class ClassifierContainer extends React.Component {
       </Popup>
     );
   }
-  
+
   //----------------------------------------------------------------
 
   closePopup() {
