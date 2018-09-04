@@ -192,10 +192,10 @@ class ClassifierContainer extends React.Component {
 
     const currentMode = this.props.variant === VARIANT_TYPES.COLLABORATIVE ?
       'Collaborative' :
-      'Solo';
+      'Independent';
     const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
       'Collaborative' :
-      'Solo';
+      'Independent';
 
     return (
       <main className="app-content classifier-page flex-row">
