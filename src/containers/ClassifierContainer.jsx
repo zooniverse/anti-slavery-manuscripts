@@ -20,7 +20,7 @@ import { toggleDialog } from '../ducks/dialog';
 import { VARIANT_TYPES, toggleVariant, setVariant } from '../ducks/splits';
 import { fetchWorkflow, WORKFLOW_INITIAL_STATE, WORKFLOW_STATUS } from '../ducks/workflow';
 import { saveClassificationInProgress } from '../ducks/classifications';
-import { checkEmergencySave, emergencyLoadWorkInProgress } from '../ducks/emergency-save'
+import { checkEmergencySave, emergencyLoadWorkInProgress, clearEmergencySave } from '../ducks/emergency-save'
 import { Utility, KEY_CODES } from '../lib/Utility';
 
 import SubjectViewer from './SubjectViewer';
@@ -190,9 +190,12 @@ class ClassifierContainer extends React.Component {
     const shownMarksClass = (MARKS_STATE.ALL === this.props.shownMarks) ? 'fa fa-eye' :
       (MARKS_STATE.USER === this.props.shownMarks) ? 'fa fa-eye-slash' : 'fa fa-eye-slash grey';
 
+    const currentMode = this.props.variant === VARIANT_TYPES.COLLABORATIVE ?
+      'Collaborative' :
+      'Solo';
     const toggleMode = this.props.variant === VARIANT_TYPES.INDIVIDUAL ?
-      VARIANT_TYPES.COLLABORATIVE :
-      VARIANT_TYPES.INDIVIDUAL;
+      'Collaborative' :
+      'Solo';
 
     return (
       <main className="app-content classifier-page flex-row">
@@ -328,6 +331,28 @@ class ClassifierContainer extends React.Component {
                 <span>Enter {toggleMode} Mode</span>
               </button>
             )}
+            
+            <img className="divider" role="presentation" src={Divider} />
+            
+            <div>Currently working in <b>{currentMode}</b> mode</div>
+            
+            <button
+              className="flat-button block"
+              onClick={()=>{
+                const confirmed = confirm('WARNING: You will lose all current progress if you switch modes. Is this OK?');
+                if (confirmed) {
+                  clearEmergencySave();
+                  location.reload();
+                }
+              }}
+            >
+              <span className="classifier-toolbar__icon">
+                <i className="fa fa-arrows-h" />
+              </span>
+              <span>Switch to {toggleMode}</span>
+            </button>
+            
+            <div>Warning: switching modes will reset all your current work.</div>
 
           </div>
         </section>
