@@ -6,7 +6,7 @@ const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const FETCH_ANNOTATIONS_SUCCESS = 'FETCH_ANNOTATIONS_SUCCESS';
 const FETCH_ANNOTATIONS_ERROR = 'FETCH_ANNOTATIONS_ERROR';
 
-const UPDATE_FRAME ='UPDATE_FRAME';
+const UPDATE_FRAME = 'UPDATE_FRAME';
 const UPDATE_PREVIOUS_ANNOTATION = 'UPDATE_PREVIOUS_ANNOTATION';
 const REENABLE_PREVIOUS_ANNOTATION = 'REENABLE_PREVIOUS_ANNOTATION';
 
@@ -28,27 +28,27 @@ const previousAnnotationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_ANNOTATIONS:
       return Object.assign({}, state, {
-        data: null,  //Reset
-        marks: [],  //Reset
-        selectedPreviousAnnotation: null,  //Reset
-        status: PREVIOUS_ANNOTATION_STATUS.FETCHING
+        data: null,
+        marks: [],
+        selectedPreviousAnnotation: null,
+        status: PREVIOUS_ANNOTATION_STATUS.FETCHING,
       });
 
     case FETCH_ANNOTATIONS_SUCCESS:
       return Object.assign({}, state, {
         data: action.data,
         marks: action.marks,
-        status: PREVIOUS_ANNOTATION_STATUS.READY
+        status: PREVIOUS_ANNOTATION_STATUS.READY,
       });
 
     case FETCH_ANNOTATIONS_ERROR:
       return Object.assign({}, state, {
-        status: PREVIOUS_ANNOTATION_STATUS.ERROR
+        status: PREVIOUS_ANNOTATION_STATUS.ERROR,
       });
 
     case UPDATE_FRAME:
       return Object.assign({}, state, {
-        marks: action.marks
+        marks: action.marks,
       });
 
     case UPDATE_PREVIOUS_ANNOTATION:
@@ -57,25 +57,24 @@ const previousAnnotationsReducer = (state = initialState, action) => {
       updatedAnnotation.hasCollaborated = true;
 
       return Object.assign({}, state, {
-        marks
+        marks,
       });
 
     case REENABLE_PREVIOUS_ANNOTATION:
-      //Find the Previous (Aggregated) Annotation that matches the Selected Annotation, then reenable it.
       const reenabledMarks = state.marks.map((item) => {
-        let isAMatch =  //First check: does the current Previous Annotation and the Selected Annotation look remotely similar?
+        let isAMatch =  // First check: does the current Previous Annotation and the Selected Annotation look remotely similar?
           item.hasCollaborated && item.points &&
           action.selectedAnnotation && action.selectedAnnotation.points &&
           item.points.length === action.selectedAnnotation.points.length;
 
-        if (isAMatch) {  //Second check: do all the x-y coordinates that make the line match up?
+        if (isAMatch) {  // Second check: do all the x-y coordinates that make the line match up?
           item.points.map((a, index) => {
             const b = action.selectedAnnotation.points[index];
             isAMatch = isAMatch && a.x === b.x && a.y === b.y;
           });
         }
 
-        //Finally, reenable the Previous Annotation if it's a match.
+        // Finally, reenable the Previous Annotation if it's a match.
         if (isAMatch) item.hasCollaborated = false;
 
         //WARNING: This is a fairly primitive method of reenabling the previous
@@ -89,9 +88,9 @@ const previousAnnotationsReducer = (state = initialState, action) => {
         marks: reenabledMarks,
       });
 
-   default:
-     return state;
- };
+    default:
+      return state;
+  }
 };
 
 const fetchPreviousAnnotations = (subject) => {
@@ -119,13 +118,13 @@ const fetchPreviousAnnotations = (subject) => {
       dispatch({
         type: FETCH_ANNOTATIONS_SUCCESS,
         data: data.workflow.subject_reductions,
-        marks
+        marks,
       });
     })
-    .catch((err) => {
-      console.error('ducks/previousAnnotations.js fetchPreviousAnnotations() error: ', err);
-      dispatch({ type: FETCH_ANNOTATIONS_ERROR });
-    });
+      .catch((err) => {
+        console.error('ducks/previousAnnotations.js fetchPreviousAnnotations() error: ', err);
+        dispatch({ type: FETCH_ANNOTATIONS_ERROR });
+      });
   };
 };
 
@@ -149,7 +148,7 @@ const reenablePreviousAnnotation = () => {
       selectedAnnotation,
     });
   };
-}
+};
 
 const changeFrameData = (index) => {
   return (dispatch, getState) => {
@@ -157,7 +156,7 @@ const changeFrameData = (index) => {
     const marks = constructAnnotations(data, index);
     dispatch({
       type: UPDATE_FRAME,
-      marks
+      marks,
     });
   };
 };
@@ -165,7 +164,7 @@ const changeFrameData = (index) => {
 
 const constructAnnotations = (reductions, frame) => {
   const clusteredAnnotations = reductions || [];
-  let previousAnnotations = [];
+  const previousAnnotations = [];
   clusteredAnnotations.map((reduction) => {
     const currentFrameAnnotations = reduction.data[`frame${frame}`];
 
@@ -174,15 +173,17 @@ const constructAnnotations = (reductions, frame) => {
         const points = constructCoordinates(annotation);
         const textOptions = constructText(annotation, i);
         const data = {
-          points, frame, textOptions,
+          points,
+          frame,
+          textOptions,
           consensusReached: annotation.consensus_score >= CONSENSUS_SCORE,
           previousAnnotation: true,
           hasCollaborated: false,
         };
         previousAnnotations.push(data);
-      })
+      });
     }
-  })
+  });
   return previousAnnotations;
 };
 

@@ -4,7 +4,7 @@ Redux Duck: Annotations
  */
 import { SUBJECTVIEWER_STATE, setViewerState } from './subject-viewer';
 
-//Action Types
+// Action Types
 const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
 const ADD_ANNOTATION_POINT = 'ADD_ANNOTATION_POINT';
 const COMPLETE_ANNOTATION = 'COMPLETE_ANNOTATION';
@@ -15,7 +15,7 @@ const COLLABORATE_WITH_ANNOTATION = 'COLLABORATE_WITH_ANNOTATION';
 const UPDATE_TEXT = 'UPDATE_TEXT';
 const SET_ANNOTATIONS = 'SET_ANNOTATIONS';
 
-//Misc Constants
+// Misc Constants
 const ANNOTATION_STATUS = {
   IDLE: 'annotation_status_idle',
   IN_PROGRESS: 'annotation_status_in_progress',
@@ -23,7 +23,7 @@ const ANNOTATION_STATUS = {
 
 //------------------------------------------------------------------------------
 
-//Reducer
+// Reducer
 
 //Note: a single Annotation should look like this:
 //{ text: "Example text",
@@ -34,10 +34,10 @@ const ANNOTATION_STATUS = {
 
 const initialState = {
   status: ANNOTATION_STATUS.IDLE,
-  annotationInProgress: null,  //Incomplete annotation. null if nothing is in progress.
+  annotationInProgress: null,
   annotationPanePosition: null,
-  annotations: [],  //Completed annotations.
-  selectedAnnotation: null,  //Existing annotation that's been selected, by clicking on them. null if nothing is selected.
+  annotations: [],
+  selectedAnnotation: null,
   selectedAnnotationIndex: null,
 };
 
@@ -48,8 +48,8 @@ const annotationsReducer = (state = initialState, action) => {
 
     case ADD_ANNOTATION_POINT:
       const annotationInProgress = (state.annotationInProgress)
-        ? Object.assign({}, state.annotationInProgress) //Create a copy, don't modify the existing object.
-        : { details: [{value: ''}], points: [], frame: action.frame };
+        ? Object.assign({}, state.annotationInProgress) // Create a copy, don't modify the existing object.
+        : { details: [{ value: '' }], points: [], frame: action.frame };
       annotationInProgress.points.push({ x: action.x, y: action.y });
       return Object.assign({}, state, {
         status: ANNOTATION_STATUS.IN_PROGRESS,
@@ -67,8 +67,8 @@ const annotationsReducer = (state = initialState, action) => {
         annotationInProgress: null,
         annotations,
         annotationPanePosition: endPoint,
-        selectedAnnotation: state.annotationInProgress,  //Auto-select latest annotation.
-        selectedAnnotationIndex: annotations.length - 1
+        selectedAnnotation: state.annotationInProgress,
+        selectedAnnotationIndex: annotations.length - 1,
       });
 
     case SELECT_ANNOTATION:
@@ -87,46 +87,52 @@ const annotationsReducer = (state = initialState, action) => {
       const newAnnotation = {
         details: [{ value: action.text }],
         points: action.annotation.points,
-        frame: action.annotation.frame
+        frame: action.annotation.frame,
       };
       userAnnotations.push(newAnnotation);
 
       return Object.assign({}, state, {
-        annotations: userAnnotations
+        annotations: userAnnotations,
       });
 
     case SET_ANNOTATIONS:
       return Object.assign({}, state, {
-        annotations: action.annotations
+        annotations: action.annotations,
       });
 
     case UPDATE_TEXT:
-      const newDetails = [{value: action.text}];
+      const newDetails = [{ value: action.text }];
       const annotationCopy = state.annotations.slice();
       const updatedAnnotation = annotationCopy[state.selectedAnnotationIndex];
       updatedAnnotation.details = newDetails;
 
       return Object.assign({}, state, {
-        annotations: annotationCopy
+        annotations: annotationCopy,
       });
 
     case UNSELECT_ANNOTATION:
       return Object.assign({}, state, {
         annotationPanePosition: null,
         selectedAnnotation: null,
-        selectedAnnotationIndex: null
+        selectedAnnotationIndex: null,
       });
 
     case DELETE_SELECTED_ANNOTATION:
       let filteredAnnotations = [];
-      if (state.annotations && state.selectedAnnotationIndex !== null) {
-        filteredAnnotations = state.annotations.filter((item, index) => {
-          return index !== state.selectedAnnotationIndex;
+      if (state.annotations && state.selectedAnnotation) {
+        filteredAnnotations = state.annotations.filter((item) => {
+          let shouldRemove = false;
+          item.points.map((a, i) => {
+            const b = state.selectedAnnotation.points[i];
+            shouldRemove = a.x === b.x && a.y === b.y;
+          });
+          return !shouldRemove;
         });
+      } else if (state.annotations) {
+        filteredAnnotations = state.annotations;
       }
       return Object.assign({}, state, {
         annotations: filteredAnnotations,
-        //Note: delete_selected_annotation also performs unselect_annotation.
         annotationPanePosition: null,
         selectedAnnotation: null,
         selectedAnnotationIndex: null,
@@ -139,7 +145,7 @@ const annotationsReducer = (state = initialState, action) => {
 
 //------------------------------------------------------------------------------
 
-//Action Creators
+// Action Creators
 
 const resetAnnotations = () => {
   return (dispatch) => {
@@ -151,7 +157,9 @@ const addAnnotationPoint = (x, y, frame) => {
   return (dispatch) => {
     dispatch({
       type: ADD_ANNOTATION_POINT,
-      x, y, frame
+      x,
+      y,
+      frame,
     });
   };
 };
@@ -212,7 +220,7 @@ const updateText = (text) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_TEXT,
-      text
+      text,
     });
   };
 };
@@ -221,7 +229,8 @@ const collaborateWithAnnotation = (annotation, text) => {
   return (dispatch) => {
     dispatch({
       type: COLLABORATE_WITH_ANNOTATION,
-      annotation, text
+      annotation,
+      text,
     });
   };
 };
@@ -230,7 +239,7 @@ const setAnnotations = (annotations) => {
   return (dispatch) => {
     dispatch({
       type: SET_ANNOTATIONS,
-      annotations
+      annotations,
     });
   };
 };
@@ -239,7 +248,7 @@ export default annotationsReducer;
 
 //------------------------------------------------------------------------------
 
-//Exports
+// Exports
 
 export {
   resetAnnotations, setAnnotations,
