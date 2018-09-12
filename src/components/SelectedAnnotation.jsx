@@ -256,14 +256,14 @@ class SelectedAnnotation extends React.Component {
   }
 
   cancelAnnotation() {
-    //Cancelling a new Annotation (i.e. it starts off with empty text) should also delete it.
+    // Cancelling a new Annotation (i.e. it starts off with empty text) should also delete it.
     const initialAnnotationText =
       (this.props.selectedAnnotation && this.props.selectedAnnotation.details &&
        this.props.selectedAnnotation.details[0] && this.props.selectedAnnotation.details[0].value)
-      ? this.props.selectedAnnotation.details[0].value : '';
+        ? this.props.selectedAnnotation.details[0].value : '';
 
     if (initialAnnotationText.trim().length === 0) {
-      this.deleteAnnotation();  //Cancel this action and delete this newly created Annotation.
+      this.deleteAnnotation();
     } else {
       if (this.props.onClose) { this.props.onClose(); }  //Cancel this action and make no updates to the existing (and valid) Annotation.
     }
@@ -288,14 +288,14 @@ class SelectedAnnotation extends React.Component {
   }
 
   saveText() {
-    //There are two possibilities here: either the user is agreeing with a
-    //Previous (Aggregated) Annotation, or the user is creating/editing their
-    //own.
+    // There are two possibilities here: either the user is agreeing with a
+    // Previous (Aggregated) Annotation, or the user is creating/editing their
+    // own.
     if (this.props.annotation.previousAnnotation) {
       this.props.dispatch(collaborateWithAnnotation(this.props.annotation, this.state.annotationText));
       this.props.dispatch(updatePreviousAnnotation(this.props.selectedAnnotationIndex));
     } else {
-      //If the newly updated annotation text is essentially blank, just delete this whole Annotation line.
+      // If the newly updated annotation text is essentially blank, just delete this whole Annotation line.
       const text = (this.state.annotationText && this.state.annotationText.trim)
         ? this.state.annotationText.trim() : '';
       if (text !== '') {
@@ -366,6 +366,8 @@ SelectedAnnotation.defaultProps = {
 SelectedAnnotation.propTypes = {
   annotation: PropTypes.shape({
     details: React.PropTypes.array,
+    previousAnnotation: React.PropTypes.bool,
+    textOptions: React.PropTypes.array,
   }),
   annotationPanePosition: PropTypes.shape({
     x: PropTypes.number,
@@ -392,7 +394,7 @@ SelectedAnnotation.contextTypes = {
   googleLogger: PropTypes.object,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const sv = state.subjectViewer;
   return {
     annotationPanePosition: state.annotations.annotationPanePosition,
