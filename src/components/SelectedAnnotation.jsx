@@ -159,6 +159,8 @@ class SelectedAnnotation extends React.Component {
   }
 
   render() {
+    const disableDone = this.state.annotationText.length === 0;
+
     let instructions = 'Please transcribe all of the words in the line of text.';
     if (this.props.variant === VARIANT_TYPES.COLLABORATIVE) {
       instructions += ` Open the dropdown menu to use previous volunteers'
@@ -244,7 +246,7 @@ class SelectedAnnotation extends React.Component {
           )}
 
           <div className="selected-annotation__buttons">
-            <button className="done-button" onClick={this.saveText}>Done</button>
+            <button className="done-button" disabled={disableDone} onClick={this.saveText}>Done</button>
             <button onClick={this.cancelAnnotation}>Cancel</button>
             {(this.props.annotation.previousAnnotation) ? null :
               <button onClick={this.deleteAnnotation}>Delete</button>
