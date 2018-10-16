@@ -6,7 +6,6 @@ This duck (collection of redux actions + reducers) is used to control the view
 options/settings of the SubjectViewer component.
 
  */
-import { CONSENSUS_SCORE } from '../config';
 import { VARIANT_TYPES } from '../ducks/splits';
 
 //Misc Constants
