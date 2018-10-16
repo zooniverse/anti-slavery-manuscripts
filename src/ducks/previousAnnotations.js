@@ -1,6 +1,6 @@
 import { request } from 'graphql-request';
 import { constructCoordinates, constructText } from '../lib/construct-previous-annotations';
-import { config, CONSENSUS_SCORE } from '../config.js';
+import { config, CONSENSUS_SCORE_TO_RETIRE, MINIMUM_VIEW_TO_RETIRE } from '../config.js';
 
 const FETCH_ANNOTATIONS = 'FETCH_ANNOTATIONS';
 const FETCH_ANNOTATIONS_SUCCESS = 'FETCH_ANNOTATIONS_SUCCESS';
@@ -176,7 +176,9 @@ const constructAnnotations = (reductions, frame) => {
           points,
           frame,
           textOptions,
-          consensusReached: annotation.consensus_score >= CONSENSUS_SCORE,
+          consensusReached:
+            annotation.consensus_score >= CONSENSUS_SCORE_TO_RETIRE ||
+            annotation.number_views >= MINIMUM_VIEW_TO_RETIRE,
           previousAnnotation: true,
           hasCollaborated: false,
         };

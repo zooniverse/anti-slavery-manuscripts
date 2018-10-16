@@ -11,7 +11,8 @@ By default, this is the development environment, but this can be changed either 
  */
 
 var DEFAULT_ENV = 'development';
-var CONSENSUS_SCORE = 3;
+var CONSENSUS_SCORE_TO_RETIRE = 3;
+var MINIMUM_VIEW_TO_RETIRE = 5;
 var envFromBrowser = locationMatch(/\W?env=(\w+)/);
 var envFromShell = process.env.NODE_ENV;
 var env = envFromBrowser || envFromShell || DEFAULT_ENV;
@@ -72,7 +73,7 @@ baseSubjectSets.staging = baseSubjectSets.development;
 const config = baseConfig[env];
 const subjectSets = baseSubjectSets[env];
 
-export { env, config, CONSENSUS_SCORE, subjectSets };
+export { env, config, CONSENSUS_SCORE_TO_RETIRE, MINIMUM_VIEW_TO_RETIRE, subjectSets };
 
 // Try and match the location.search property against a regex. Basically mimics
 // the CoffeeScript existential operator, in case we're not in a browser.
