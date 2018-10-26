@@ -135,13 +135,16 @@ class ClassifierContainer extends React.Component {
         <main className="app-content classifier-page-panel flex-column flex-center">
           <div className="project-background" />
           <div className="header-panel">Choose how you would like to transcribe</div>
-          <div className="button-panel">
+          <div className="button-panel flex-row">
             <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
               Independent
             </button>
-            <button className="white-green button" onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
-              Collaborative
-            </button>
+            <div className="flex-column">
+              <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
+                Collaborative
+              </button>
+              <span>New subjects coming soon</span>
+            </div>
           </div>
           <div className="details-panel">
             <p>When we first launched this project, we ran an A/B experiment to research what method of transcription produces the highest-quality results. You can read more about this ongoing research on the project <a href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/" target="blank" rel="noopener noreferrer">blog.</a></p>
