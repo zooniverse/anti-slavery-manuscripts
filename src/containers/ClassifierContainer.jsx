@@ -136,9 +136,12 @@ class ClassifierContainer extends React.Component {
           <div className="project-background" />
           <div className="header-panel">Choose how you would like to transcribe</div>
           <div className="button-panel flex-row">
-            <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
-              Independent
-            </button>
+            <div className="flex-column">
+              <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
+                Independent
+              </button>
+              <span>Under maintenance</span>
+            </div>
             <div className="flex-column">
               <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
                 Collaborative
