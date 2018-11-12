@@ -121,6 +121,7 @@ class ClassifierContainer extends React.Component {
   render() {
     // Status Checks
     //----------------------------------------------------------------
+
     if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
       return (
         <main className="app-content classifier-page-panel flex-column flex-center">
@@ -155,6 +156,10 @@ class ClassifierContainer extends React.Component {
 
     return (
       <main className="app-content classifier-page flex-row">
+        {!this.props.user && (
+          this.renderSignInReminder()
+        )}
+
         <div className="project-background"></div>
         <section id="help-column" className="help-pane">
           <div>
