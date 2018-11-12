@@ -80,10 +80,9 @@ class ClassifierContainer extends React.Component {
     //FUTURE UPDATE:
     //Select only one workflow
     //----------------------------------------------------------------
-    //dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
-    //  dispatch(fetchSubject());
-    //  dispatch(setVariant(VARIANT_TYPE.COLLABORATIVE));
-    //});
+    dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
+      dispatch(fetchSubject());
+    });
     //----------------------------------------------------------------
 
     //Saved Progress Check
@@ -120,61 +119,12 @@ class ClassifierContainer extends React.Component {
   }
 
   render() {
-    //JULY UPDATE:
-    //Allow users to select their workflow
-    //----------------------------------------------------------------
-    const startWorkflow = (workflow_id, variant_type) => {
-      this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
-        this.props.dispatch(fetchSubject());
-        this.props.dispatch(setVariant(variant_type));
-      });
-    }
-
-    if (this.props.workflowStatus === WORKFLOW_STATUS.IDLE) {
-      return (
-        <main className="app-content classifier-page-panel flex-column flex-center">
-          <div className="project-background" />
-          <div className="header-panel">Choose how you would like to transcribe</div>
-          <div className="button-panel flex-row">
-            <div className="flex-column">
-              <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.workflowId, VARIANT_TYPES.INDIVIDUAL) }}>
-                Independent
-              </button>
-              <span>Under maintenance</span>
-            </div>
-            <div className="flex-column">
-              <button className="white-green button" disabled onClick={() => { startWorkflow(config.zooniverseLinks.collabWorkflowId, VARIANT_TYPES.COLLABORATIVE) }}>
-                Collaborative
-              </button>
-              <span>New subjects coming soon</span>
-            </div>
-          </div>
-          <div className="details-panel">
-            <p>When we first launched this project, we ran an A/B experiment to research what method of transcription produces the highest-quality results. You can read more about this ongoing research on the project <a href="https://www.bpl.org/distinction/tag/anti-slavery-manuscripts/" target="blank" rel="noopener noreferrer">blog.</a></p>
-            <p>Now that the experiment has finished, we are curious to know what you, our volunteers, think of each method. For the next month, you will have the option to choose between <b>Independent</b> and <b>Collaborative</b> transcription methods.</p>
-            <p>The <b>Collaborative</b> option allows you to see other volunteers' transcriptions. The <b>Independent</b> option allows volunteers to transcribe independently. Please read the tutorial before participating in an unfamiliar method, as the transcription process differs for each method.</p>
-            <p>We'd love to hear your thoughts about the methods: you can give us feedback on the workflows <a href="https://goo.gl/forms/j7HaJMMTPkV4kd5w2" target="blank" rel="noopener noreferrer">here</a>; additionally, you can visit the project <a href="https://www.zooniverse.org/projects/bostonpubliclibrary/anti-slavery-manuscripts/talk" target="blank" rel="noopener noreferrer">Talk</a> board to chat with other volunteers about this process and ask questions of the research team.</p>
-            <p>Thanks, and happy transcribing!</p>
-        </div>
-
-          {(this.state.popup === null) ? null :
-            <Popup onClose={this.closePopup.bind(this)}>
-              {this.state.popup}
-            </Popup>
-          }
-
-          {this.renderSignInReminder()}
-        </main>
-      );
-    }
-    //----------------------------------------------------------------
-
-    //Status Checks
+    // Status Checks
     //----------------------------------------------------------------
     if (this.props.workflowStatus === WORKFLOW_STATUS.FETCHING) {
       return (
         <main className="app-content classifier-page-panel flex-column flex-center">
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner" />
         </main>
       );
     }
