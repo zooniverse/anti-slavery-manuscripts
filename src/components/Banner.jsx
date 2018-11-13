@@ -8,8 +8,7 @@ const Banner = ({ hideBanner }) => {
   return (
     <div className="top-banner">
       <h2>
-        Thank you for participating! Please provide feedback on the two workflows
-        <a href="https://goo.gl/forms/j7HaJMMTPkV4kd5w2" target="blank" rel="noopener noreferrer">here</a>.
+        This project is undergoing some light maintenance and will resume shortly, with new letters to transcribe!
       </h2>
       <button onClick={hideBanner}>X</button>
     </div>
