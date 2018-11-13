@@ -281,35 +281,6 @@ class ClassifierContainer extends React.Component {
               <span>Shortcuts</span>
             </button>
 
-            <img className="divider" role="presentation" src={Divider} />
-
-            <div>Currently working in <b>{currentMode}</b> mode</div>
-
-            <button
-              className="flat-button block"
-              onClick={()=>{
-                const confirmed = confirm('WARNING: You will lose all current progress (including saved work) if you switch modes. Is this OK?');
-                if (confirmed) {
-                  //If the use chooses to switch modes, remove ALL saved progress to prevent confusion.
-                  if (this.props.user) {
-                    const id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
-                    localStorage.removeItem(`${this.props.user.id}.manual_save_classificationID`);
-                    localStorage.removeItem(`${this.props.user.id}.manual_save_workflowID`);
-                    localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
-                  }
-                  this.props.dispatch(clearEmergencySave());
-                  location.reload();
-                }
-              }}
-            >
-              <span className="classifier-toolbar__icon">
-                <i className="fa fa-arrows-h" />
-              </span>
-              <span>Switch to {toggleMode}</span>
-            </button>
-
-            <div>Warning: switching modes will reset all your current work.</div>
-
           </div>
         </section>
 
