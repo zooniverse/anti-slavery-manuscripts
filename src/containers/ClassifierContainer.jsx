@@ -77,7 +77,6 @@ class ClassifierContainer extends React.Component {
     dispatch(fetchGuide());
     document.addEventListener('keyup', this.handleKeyUp);
 
-    //FUTURE UPDATE:
     //Select only one workflow
     //----------------------------------------------------------------
     dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
@@ -289,14 +288,6 @@ class ClassifierContainer extends React.Component {
             {this.state.popup}
           </Popup>
         }
-
-        {/*
-        //FUTURE UPDATE:
-        //Select only one workflow
-        //----------------------------------------------------------------
-        this.renderSignInReminder()
-        //----------------------------------------------------------------
-        */}
 
       </main>
     );
