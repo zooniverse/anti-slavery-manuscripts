@@ -75,8 +75,8 @@ class SelectedAnnotation extends React.Component {
     let textAfter;
     let textInBetween;
 
-    const startTag = '[' + textTag + ']';
-    const endTag = '[/' + textTag + ']';
+    const startTag = `[${textTag}]`;
+    const endTag = `[/${textTag}]`;
     const text = this.inputText;
     const textAreaValue = text.value;
     const selectionStart = text.selectionStart;
@@ -220,6 +220,7 @@ class SelectedAnnotation extends React.Component {
             <button onClick={this.insertTextModifier.bind(this, 'deletion')}>[deletion]</button>
             <button onClick={this.insertTextModifier.bind(this, 'unclear')}>[unclear]</button>
             <button onClick={this.insertTextModifier.bind(this, 'underline')}>[underline]</button>
+            <button onClick={this.insertTextModifier.bind(this, 'table')}>[table]</button>
           </div>
 
           <p>
