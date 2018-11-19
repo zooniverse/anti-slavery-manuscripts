@@ -8,7 +8,7 @@ const VARIANT_TYPES = {
 };
 
 const initialState = {
-  variant: VARIANT_TYPES.INDIVIDUAL,
+  variant: VARIANT_TYPES.COLLABORATIVE,
   data: null,
   id: null,
 };
