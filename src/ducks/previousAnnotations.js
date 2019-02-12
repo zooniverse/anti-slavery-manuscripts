@@ -54,7 +54,9 @@ const previousAnnotationsReducer = (state = initialState, action) => {
     case UPDATE_PREVIOUS_ANNOTATION:
       const marks = state.marks.slice();
       const updatedAnnotation = marks[action.index];
-      updatedAnnotation.hasCollaborated = true;
+      if (updatedAnnotation) {
+        updatedAnnotation.hasCollaborated = true;
+      }
 
       return Object.assign({}, state, {
         marks,
