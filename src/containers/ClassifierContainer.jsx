@@ -81,7 +81,10 @@ class ClassifierContainer extends React.Component {
     //----------------------------------------------------------------
     dispatch(fetchWorkflow(config.zooniverseLinks.collabWorkflowId)).then(() => {
       dispatch(fetchSubject());
-    });
+    })
+      .catch((err) => {
+        console.error('Workflow Fetch Failed: ', err);
+      });
     //----------------------------------------------------------------
 
     //Saved Progress Check

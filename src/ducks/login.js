@@ -46,6 +46,9 @@ const logoutFromPanoptes = () => {
     oauth.signOut()
       .then((user) => {
         dispatch(setLoginUser(user));
+      })
+      .catch((err) => {
+        console.error('User Login Error: ', err);
       });
   };
 };

@@ -53,7 +53,7 @@ const classificationReducer = (state = initialState, action) => {
       return Object.assign({}, state,{
         status: CLASSIFICATION_STATUS.SENDING,
       });
-      
+
     //Submitting Classification also resets the store.
     //This is only called once the WHOLE queue of Classifications has been processed.
     case SUBMIT_CLASSIFICATION_FINISHED:
@@ -136,19 +136,19 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
   const QUEUE_NAME = (user)
     ? user.id + '.' + CLASSIFICATIONS_QUEUE_NAME
     : '_.' + CLASSIFICATIONS_QUEUE_NAME;
-        
+
   const queue = JSON.parse(localStorage.getItem(QUEUE_NAME));
 
   if (queue && queue.length !== 0) {
-    //Prepare 
+    //Prepare
     const newQueue = [];
     localStorage.setItem(QUEUE_NAME, null);  //Empty the queue first
-    
+
     //Keep track of items processed so we know when ALL items are processed.
     let itemsProcessed = 0;
     let itemsFailed = 0;
     const itemsToProcess = queue.length;
-    
+
     //Weirdly, Promise.prototype.finally() causes problems on some browsers. This is a workaround for it.
     //This is called after the Classification.save() EITHER SUCCEEDS or FAILS.
     //----------------
@@ -176,47 +176,47 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
       }
     };
     //----------------
-    
-    //Now, attempt to save.
+
+    // Now, attempt to save.
     //----------------
     queue.forEach((classificationData) => {
-      //Let's send those Classifications!
+      // Let's send those Classifications!
       apiClient.type('classifications').create(classificationData).save()
-      
-      //SUCCESS
-      .then((classificationObject) => {
-        console.info('ducks/classifications.js saveAllQueuedClassifications() success: item ', classificationObject.id);
 
-        //Record locally that the Classification has been seen.
-        const { workflow, subjects } = classificationObject.links;
-        dispatch(addAlreadySeen(workflow, subjects));
-        
-        //OK, we don't need you any more, Classification. Why is this here? It's in PFE.
-        //TODO: check
-        classificationObject.destroy();
-        
-        doFinally();
-      })
-      
-      //FAILURE
-      .catch((err) => {
-        //Ah, crap.
-        console.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
-        Rollbar && Rollbar.error &&
-        Rollbar.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
+        // SUCCESS
+        .then((classificationObject) => {
+          console.info('ducks/classifications.js saveAllQueuedClassifications() success: item ', classificationObject.id);
 
-        //Right, why did it fail?
-        switch (err.status) {
-          case 422:  //If the reason for failure is that Panoptes returned a 422, it means the Classification was bad and should be discarded.
-            break;
+          // Record locally that the Classification has been seen.
+          const { workflow, subjects } = classificationObject.links;
+          dispatch(addAlreadySeen(workflow, subjects));
 
-          default:  //Otherwise, the failed Classification should be re-queued for the next time attempt.
-            itemsFailed++;  //Let the user know that the Classification will be re-queued.
-            newQueue.push(classificationData);
-        }
-        
-        doFinally();
-      });
+          // OK, we don't need you any more, Classification. Why is this here? It's in PFE.
+          // TODO: check
+          classificationObject.destroy();
+
+          doFinally();
+        })
+
+      // FAILURE
+        .catch((err) => {
+          // Ah, crap.
+          console.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
+          Rollbar && Rollbar.error &&
+          Rollbar.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
+
+          // Right, why did it fail?
+          switch (err.status) {
+            case 422:  //If the reason for failure is that Panoptes returned a 422, it means the Classification was bad and should be discarded.
+              break;
+
+            default:  //Otherwise, the failed Classification should be re-queued for the next time attempt.
+              itemsFailed++;  //Let the user know that the Classification will be re-queued.
+              newQueue.push(classificationData);
+          }
+
+          doFinally();
+        });
     });
     //----------------
   }
@@ -226,7 +226,7 @@ const queueClassification = (classification, user = null) => {
   const QUEUE_NAME = (user)
     ? user.id + '.' + CLASSIFICATIONS_QUEUE_NAME
     : '_.' + CLASSIFICATIONS_QUEUE_NAME;
-  
+
   const queue = JSON.parse(localStorage.getItem(QUEUE_NAME)) || [];
   queue.push(classification);
 
@@ -344,14 +344,17 @@ const retrieveClassification = (id) => {
         console.info('ducks/classifications.js retrieveClassification() success');
         dispatch(setAnnotations(annotations.value));
         dispatch(fetchSavedSubject(subjectId))
-        .then(() => {
-          dispatch({
-            type: CREATE_CLASSIFICATION,
-            classification,
-            status: CLASSIFICATION_STATUS.IDLE,
-            subjectCompletionAnswers: {},
+          .then(() => {
+            dispatch({
+              type: CREATE_CLASSIFICATION,
+              classification,
+              status: CLASSIFICATION_STATUS.IDLE,
+              subjectCompletionAnswers: {},
+            });
+          })
+          .catch((err) => {
+            console.error('Classification Creation Failed: ', err);
           });
-        });        
       })
       .catch((err) => {
         console.error('ducks/classifications.js retrieveClassification() error: ', err);
@@ -391,28 +394,28 @@ const saveClassificationInProgress = () => {
       'metadata.session': getSessionID(),
       'metadata.finished_at': (new Date()).toISOString(),
     })
-    .save()
-    .then((savedClassification) => {
-      if (user) {
-        localStorage.setItem(`${user.id}.manual_save_classificationID`, savedClassification.id);
-        localStorage.setItem(`${user.id}.manual_save_workflowID`, getState().workflow.id);
-        localStorage.setItem(`${user.id}.manual_save_variant`, getState().splits.variant);
-      }
-      dispatch(toggleDialog(<SaveSuccess />, false, true));
+      .save()
+      .then((savedClassification) => {
+        if (user) {
+          localStorage.setItem(`${user.id}.manual_save_classificationID`, savedClassification.id);
+          localStorage.setItem(`${user.id}.manual_save_workflowID`, getState().workflow.id);
+          localStorage.setItem(`${user.id}.manual_save_variant`, getState().splits.variant);
+        }
+        dispatch(toggleDialog(<SaveSuccess />, false, true));
 
-      //Refresh our Classification object with the newer, fresher version from
-      //Panoptes. If we don't, all future .save() and .update() actions on the
-      //(old) Classification object will start going wonky.
-      console.info('ducks/classifications.js saveClassificationInProgress() success');
-      dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
-    })
-    .catch((err) => {
-      dispatch(emergencySaveWorkInProgress());
-      dispatch(toggleDialog(<DialogOfFailure />, false, true));
-      console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
-      Rollbar && Rollbar.error &&
-      Rollbar.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
-    });
+        // Refresh our Classification object with the newer, fresher version from
+        // Panoptes. If we don't, all future .save() and .update() actions on the
+        // (old) Classification object will start going wonky.
+        console.info('ducks/classifications.js saveClassificationInProgress() success');
+        dispatch({ type: UPDATE_CLASSIFICATION, classification: savedClassification });
+      })
+      .catch((err) => {
+        dispatch(emergencySaveWorkInProgress());
+        dispatch(toggleDialog(<DialogOfFailure />, false, true));
+        console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
+        Rollbar && Rollbar.error &&
+        Rollbar.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
+      });
   };
 };
 

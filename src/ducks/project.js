@@ -110,11 +110,11 @@ const fetchProject = (id = config.zooniverseLinks.projectId) => {
         });
       })
       .catch((err) => {
-        //Step 3b: Tell the Redux store we screwed up.
+        // Step 3b: Tell the Redux store we screwed up.
         console.error('ducks/project.js fetchProject() error: ', err);
         Rollbar && Rollbar.error &&
         Rollbar.error('ducks/project.js fetchProject() error: ', err);
-        
+
         dispatch({ type: FETCH_PROJECT_ERROR });
       });
   };
@@ -160,6 +160,9 @@ const fetchPreferences = (user) => {
                 console.error('ducks/project.js fetchPreferences() error: ', err);
               });
           }
+        })
+        .catch((err) => {
+          console.error('Preferences Fetch Warning: ', err);
         });
     } else {
       Promise.resolve(apiClient.type('project_preferences').create({
@@ -171,7 +174,10 @@ const fetchPreferences = (user) => {
           type: FETCH_PREFERENCES,
           preferences,
         });
-      });
+      })
+        .catch((err) => {
+          console.error('Guest Preferences Failed to Save: ', err);
+        });
     }
   };
 };

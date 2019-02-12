@@ -44,21 +44,23 @@ const fieldGuideReducer = (state = initialState, action) => {
 };
 
 const fetchGuide = () => {
-  return (dispatch, getState) => {
-
+  return (dispatch) => {
     dispatch({
       type: FETCH_GUIDE,
     });
 
     apiClient.type('field_guides').get({ project_id: `${config.zooniverseLinks.projectId}` }).then(([guide]) => {
-      let icons = {};
+      const icons = {};
 
       if (guide) {
         guide.get('attached_images', { page_size: 100 }).then((images) => {
           images.map((image) => {
             icons[image.id] = image;
           });
-        });
+        })
+          .catch((err) => {
+            console.error('Attached Image Retieval Failed: ', err);
+          });
       }
 
       dispatch({
@@ -67,10 +69,10 @@ const fetchGuide = () => {
         guide
       });
     })
-    .catch((err) => {
-      console.error('ducks/field-guide.js fetchGuide() error: ', err);
-      dispatch({ type: FETCH_GUIDE_ERROR });
-    });
+      .catch((err) => {
+        console.error('ducks/field-guide.js fetchGuide() error: ', err);
+        dispatch({ type: FETCH_GUIDE_ERROR });
+      });
   };
 };
 

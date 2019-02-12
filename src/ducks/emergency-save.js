@@ -39,7 +39,7 @@ const emergencySaveWorkInProgress = () => {
     const annotations = getState().annotations.annotations;
     const variant = getState().splits.variant;
 
-    if (subjectId !== null) {      
+    if (subjectId !== null) {
       const userId = (getState().login.user) ? getState().login.user.id : ANONYMOUS_USER_ID;
       localStorage.setItem(`${userId}.${SUBJECT_ID_KEY}`, subjectId);
       localStorage.setItem(`${userId}.${WORKFLOW_ID_KEY}`, workflowId);
@@ -63,15 +63,18 @@ const emergencyLoadWorkInProgress = () => {
       const variant = localStorage.getItem(`${userId}.${VARIANT_KEY}`);
 
       dispatch(fetchWorkflow(workflowId)).then(() => {
-        dispatch(fetchSavedSubject(subjectId))        
-        .then(() => {
-          prepareForNewSubject(dispatch, null);
-          dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
-          dispatch(setVariant(variant));
-          dispatch(clearEmergencySave());
-        });
+        dispatch(fetchSavedSubject(subjectId))
+          .then(() => {
+            prepareForNewSubject(dispatch, null);
+            dispatch(setAnnotations(annotations));  //Note: be sure to set Annotations AFTER prepareForNewSubject().
+            dispatch(setVariant(variant));
+            dispatch(clearEmergencySave());
+          })
+          .catch((err) => {
+            console.error('Emergency Load Failed: ', err);
+          });
       });
-      
+
       console.info('emergencyLoadWorkInProgress()');
       Rollbar && Rollbar.info &&
       Rollbar.info('emergencyLoadWorkInProgress()');

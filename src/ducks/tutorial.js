@@ -42,8 +42,7 @@ const tutorialReducer = (state = initialState, action) => {
 };
 
 const fetchTutorial = (workflow) => {
-  return (dispatch, getState) => {
-
+  return (dispatch) => {
     dispatch({
       type: FETCH_TUTORIAL,
     });
@@ -52,12 +51,12 @@ const fetchTutorial = (workflow) => {
       dispatch({
         type: FETCH_TUTORIAL_SUCCESS,
         data: tutorial
-      })
+      });
     })
-    .catch((err) => {
-      console.error('ducks/tutorial.js fetchTutorial() error: ', err);
-      dispatch({ type: FETCH_TUTORIAL_ERROR });
-    });
+      .catch((err) => {
+        console.error('ducks/tutorial.js fetchTutorial() error: ', err);
+        dispatch({ type: FETCH_TUTORIAL_ERROR });
+      });
   };
 };
 
