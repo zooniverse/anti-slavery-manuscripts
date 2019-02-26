@@ -135,7 +135,9 @@ class AnnotationsPane extends React.Component {
   }
 
   renderPreviousAnnotations() {
-    return this.renderAnnotations(this.props.previousAnnotations, true);
+    if (this.props.subjectId === this.props.previousAnnotationSubjectId) {
+      return this.renderAnnotations(this.props.previousAnnotations, true);
+    }
   }
 
   determineGreenLine(annotation, index) {
@@ -307,12 +309,14 @@ AnnotationsPane.propTypes = {
   rotation: PropTypes.number,
   getPointerXY: PropTypes.func,
   mouseInViewer: PropTypes.bool,
+  previousAnnotationSubjectId: PropTypes.string,
   previousAnnotations: PropTypes.arrayOf(PropTypes.object),
   selectedAnnotation: PropTypes.shape({
     previousAnnotation: PropTypes.bool,
   }),
   selectedAnnotationIndex: PropTypes.number,
   shownMarks: PropTypes.number,
+  subjectId: PropTypes.string,
   variant: PropTypes.string,
 };
 
@@ -329,11 +333,13 @@ AnnotationsPane.defaultProps = {
   annotations: [],
   rotation: 0,
   previousAnnotations: [],
+  previousAnnotationSubjectId: null,
   selectedAnnotation: {
     previousAnnotation: false,
   },
   selectedAnnotationIndex: 0,
   shownMarks: 0,
+  subjectId: null,
   variant: VARIANT_TYPES.INDIVIDUAL,
 };
 
@@ -341,9 +347,11 @@ const mapStateToProps = (state) => {
   return {
     frame: state.subjectViewer.frame,
     rotation: state.subjectViewer.rotation,
+    previousAnnotationSubjectId: state.previousAnnotations.subjectId,
     selectedAnnotation: state.annotations.selectedAnnotation,
     selectedAnnotationIndex: state.annotations.selectedAnnotationIndex,
     shownMarks: state.subjectViewer.shownMarks,
+    subjectId: state.subject.id,
     variant: state.splits.variant,
   };
 };

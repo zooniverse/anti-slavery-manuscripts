@@ -295,6 +295,7 @@ class SelectedAnnotation extends React.Component {
     // Previous (Aggregated) Annotation, or the user is creating/editing their
     // own.
     if (this.props.annotation.previousAnnotation) {
+      if (this.inputText && !this.inputText.value) return null;
       this.props.dispatch(collaborateWithAnnotation(this.props.annotation, this.state.annotationText));
       this.props.dispatch(updatePreviousAnnotation(this.props.selectedAnnotationIndex));
     } else {

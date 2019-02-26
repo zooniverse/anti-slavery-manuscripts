@@ -162,6 +162,9 @@ const toggleFavorite = () => {
           createFavorites(getState().project).then((collection) => addSubjectToCollection(collection, subject.id));
         }
       })
+        .catch((err) => {
+          console.error('Collection Fetch Warning: ', err);
+        });
     }
   }
 };

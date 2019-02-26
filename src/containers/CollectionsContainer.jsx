@@ -21,11 +21,11 @@ class CollectionContainer extends React.Component {
     if (this.props.selectedCollections.length) {
       this.props.selectedCollections.forEach((item) => {
         item.collection.addLink('subjects', [this.props.currentSubject.id])
-        .then(() => { this.props.closePopup(); })
-        .catch((e) => {
-          this.setState({ error: e.toString() })
-        })
-      })
+          .then(() => { this.props.closePopup(); })
+          .catch((e) => {
+            this.setState({ error: e.toString() });
+          });
+      });
     }
   }
 
@@ -37,16 +37,16 @@ class CollectionContainer extends React.Component {
     const links = {
       project: this.props.project.id,
       subjects: [this.props.currentSubject.id]
-    }
-    const collection = { display_name, private: privateChecked, links }
+    };
+    const collection = { display_name, private: privateChecked, links };
 
     apiClient.type('collections').create(collection).save()
       .then(() => {
         this.props.closePopup();
       })
       .catch((e) => {
-        this.setState({ error: e.toString() })
-      })
+        this.setState({ error: e.toString() });
+      });
   }
 
   searchCollections(value) {
@@ -55,9 +55,9 @@ class CollectionContainer extends React.Component {
       page_size: 20,
       favorite: false,
       current_user_roles: 'owner, collaborator, contributor',
-    }
+    };
     if (value !== '') {
-      query.search = `${value}`
+      query.search = `${value}`;
     }
     return apiClient.type('collections').get(query).then((collections) => {
       options = collections.map((collection) => {
@@ -65,13 +65,13 @@ class CollectionContainer extends React.Component {
           value: collection.id,
           label: collection.display_name,
           collection
-        }
-      })
-      return { options }
+        };
+      });
+      return { options };
     })
-    .catch((e) => {
-      this.setState({ error: e.toString() })
-    })
+      .catch((e) => {
+        this.setState({ error: e.toString() });
+      });
   }
 
   render() {

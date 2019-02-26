@@ -63,6 +63,9 @@ class Home extends React.Component {
           apiClient.type('subjects').get(newestSubjects)
             .then((subjectsOfNote) => {
               this.setState({ subjectsOfNote });
+            })
+            .catch((err) => {
+              console.error('Talk Subject Fetch Failed: ', err);
             });
         }
       })

@@ -19,12 +19,15 @@ class ClassificationPrompt extends React.Component {
     const classification_id = localStorage.getItem(`${this.props.user.id}.manual_save_classificationID`);
     const workflow_id = localStorage.getItem(`${this.props.user.id}.manual_save_workflowID`);
     const variant = localStorage.getItem(`${this.props.user.id}.manual_save_variant`);
-    
+
     this.props.dispatch(fetchWorkflow(workflow_id)).then(() => {
       this.props.dispatch(retrieveClassification(classification_id));
       this.props.dispatch(setVariant(variant));
-    });
-    
+    })
+      .catch((err) => {
+        console.error('Workflow Fetch Failed: ', err);
+      });
+
     this.props.onClose && this.props.onClose(e);
   }
 
@@ -35,7 +38,7 @@ class ClassificationPrompt extends React.Component {
     localStorage.removeItem(`${this.props.user.id}.manual_save_variant`);
 
     this.props.onClose && this.props.onClose(e);
-    
+
     return apiClient.type('classifications/incomplete').get({ id })
       .then(([classification]) => {
         classification.delete();

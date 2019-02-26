@@ -36,7 +36,7 @@ class App extends React.Component {
     if (!props.initialised) {  //NOTE: This should almost always trigger, since App.constructor() triggers exactly once, on the website loading, when all initial values are at their default.
       props.dispatch(checkLoginUser());
     }
-    
+
     //SPECIAL: users on ASM tend to stay in a single session for WAY longer
     //than a standard Zooniverse CFE user, so we're encountering issues where
     //their login tokens timeout in the middle of classifying a document.
@@ -45,24 +45,24 @@ class App extends React.Component {
     //actions if necessary.
     apiClient.beforeEveryRequest = this.checkIfLoggedInUserIsStillLoggedIn.bind(this);
   }
-  
+
   checkIfLoggedInUserIsStillLoggedIn() {
     const props = this.props;
-    
+
     return oauth.checkBearerToken()
       .then((token) => {
-        //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
-        if (props.initialised && props.user && !token) {          
+        // If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
+        if (props.initialised && props.user && !token) {
           this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
           return Promise.reject(new Error('User is supposed to be logged in, but token has expired.'));
-          //The intent is that if the user is supposed to be logged in but
-          //isn't, the whole request (that comes after .beforeEveryRequest)
-          //should not continue.
-        }      
+          // The intent is that if the user is supposed to be logged in but
+          // isn't, the whole request (that comes after .beforeEveryRequest)
+          // should not continue.
+        }
         return;
       });
-      //Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
+    // Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
   }
 
   getChildContext() {

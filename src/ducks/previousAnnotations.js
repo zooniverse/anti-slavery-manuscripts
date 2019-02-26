@@ -21,6 +21,7 @@ const initialState = {
   data: null,
   marks: [],
   selectedPreviousAnnotation: null,
+  subjectId: null,
   status: PREVIOUS_ANNOTATION_STATUS.IDLE,
 };
 
@@ -31,6 +32,7 @@ const previousAnnotationsReducer = (state = initialState, action) => {
         data: null,
         marks: [],
         selectedPreviousAnnotation: null,
+        subjectId: null,
         status: PREVIOUS_ANNOTATION_STATUS.FETCHING,
       });
 
@@ -39,6 +41,7 @@ const previousAnnotationsReducer = (state = initialState, action) => {
         data: action.data,
         marks: action.marks,
         status: PREVIOUS_ANNOTATION_STATUS.READY,
+        subjectId: action.subjectId
       });
 
     case FETCH_ANNOTATIONS_ERROR:
@@ -54,7 +57,9 @@ const previousAnnotationsReducer = (state = initialState, action) => {
     case UPDATE_PREVIOUS_ANNOTATION:
       const marks = state.marks.slice();
       const updatedAnnotation = marks[action.index];
-      updatedAnnotation.hasCollaborated = true;
+      if (updatedAnnotation) {
+        updatedAnnotation.hasCollaborated = true;
+      }
 
       return Object.assign({}, state, {
         marks,
@@ -109,7 +114,6 @@ const fetchPreviousAnnotations = (subject) => {
     dispatch({
       type: FETCH_ANNOTATIONS,
     });
-
     request(config.zooniverseLinks.caesarHost, query).then((data) => {
       const frame = getState().subjectViewer.frame;
       const reductions = data.workflow.subject_reductions;
@@ -119,6 +123,7 @@ const fetchPreviousAnnotations = (subject) => {
         type: FETCH_ANNOTATIONS_SUCCESS,
         data: data.workflow.subject_reductions,
         marks,
+        subjectId: subject.id
       });
     })
       .catch((err) => {

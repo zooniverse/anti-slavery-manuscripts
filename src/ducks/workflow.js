@@ -60,7 +60,7 @@ const workflowReducer = (state = WORKFLOW_INITIAL_STATE, action) => {
         id: WORKFLOW_INITIAL_STATE.id,
         data: WORKFLOW_INITIAL_STATE.data,
       });
-      
+
     case FETCH_WORKFLOW:
       return Object.assign({}, state, {
         status: WORKFLOW_STATUS.FETCHING,
@@ -107,18 +107,18 @@ const fetchWorkflow = (id) => {
     });
 
     return apiClient.type('workflows').get(id)
-    .then((workflow) => {
-      dispatch({
-        type: FETCH_WORKFLOW_SUCCESS,
-        data: workflow,
+      .then((workflow) => {
+        dispatch({
+          type: FETCH_WORKFLOW_SUCCESS,
+          data: workflow,
+        });
+      })
+      .catch((err) => {
+        console.error('ducks/workflow.js fetchWorkflow() error: ', err);
+        dispatch({ type: FETCH_WORKFLOW_ERROR });
       });
-    })
-    .catch((err) => {
-      console.error('ducks/workflow.js fetchWorkflow() error: ', err);
-      dispatch({ type: FETCH_WORKFLOW_ERROR });
-    });
   };
-}
+};
 
 const setGoldStandard = () => {
   return (dispatch, getState) => {
