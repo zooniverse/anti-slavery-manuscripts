@@ -51,21 +51,18 @@ class App extends React.Component {
 
     return oauth.checkBearerToken()
       .then((token) => {
-        //If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
+        // If the App thinks you're logged in, but the token says otherwise, deploy emergency measures.
         if (props.initialised && props.user && !token) {
           this.props.dispatch(emergencySaveWorkInProgress());
           this.props.dispatch(toggleDialog(<DialogOfFailure />, false, true));
           return Promise.reject(new Error('User is supposed to be logged in, but token has expired.'));
-          //The intent is that if the user is supposed to be logged in but
-          //isn't, the whole request (that comes after .beforeEveryRequest)
-          //should not continue.
+          // The intent is that if the user is supposed to be logged in but
+          // isn't, the whole request (that comes after .beforeEveryRequest)
+          // should not continue.
         }
         return;
-      })
-      .catch((err) => {
-        console.error('Bearer Token Fetch Failed: ', err);
       });
-      //Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
+    // Note: do NOT add a catch() here, or else Promise.reject() above won't stop the API request.
   }
 
   getChildContext() {
