@@ -13,12 +13,12 @@ module.exports = {
     path.join(__dirname, 'src/index.jsx'),
   ],
 
-  mode: 'production',
-
   output: {
     path: path.join(__dirname, '/dist/'),
     filename: '[name]-[hash].min.js',
   },
+
+  mode: 'production',
 
   plugins: [
     new CleanWebpackPlugin(['dist']),
@@ -48,8 +48,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.jsx?$/,
-      exclude: /node_modules\/(?!(markdown-it-anchor|markdown-it-table-of-contents)\/).*/,
-      // markdown-it-anchor and markdown-it-table-of-contents are written in ES6 and aren't properly compiled
+      exclude: /node_modules/,
       use: 'babel-loader',
     }, {
       test: /\.css$/,
@@ -74,15 +73,21 @@ module.exports = {
         },
       ],
     }, {
-      test: /\.(jpg|png|gif|otf|eot|svg)$/,
-      loader: 'file-loader',
+      test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
+      use: [{
+        loader: 'file-loader',
+      }, {
+        loader: 'image-webpack-loader',
+      }],
     }, {
-      test: /\.(ico|ttf|woff\d?)$/,
-      loader: 'file-loader?name=[name].[ext]',
+      test: /\.(txt|ico)$/,
+      use: [{
+        loader: 'file-loader?name=[name].[ext]',
+      }],
     }],
   },
   node: {
-    fs: 'empty'
-  }
+    fs: 'empty',
+  },
 
 };

@@ -2,7 +2,7 @@
   "env": {
     "development": {
       "presets": ["es2015", "react"],
-      "plugins": ["transform-object-rest-spread"]
+      "plugins": ["react-hot-loader/babel", "transform-object-rest-spread"]
     },
     "production": {
       "presets": [
@@ -12,7 +12,8 @@
       "plugins": ["transform-object-rest-spread"]
     },
     "test": {
-      "presets": ["es2015", "react"]
+      "presets": ["es2015", "react"],
+      "plugins": ["transform-object-rest-spread"]
     }
   }
 }
