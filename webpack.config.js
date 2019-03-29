@@ -14,6 +14,8 @@ module.exports = {
     path.join(__dirname, 'src/index.jsx'),
   ],
 
+  mode: 'production',
+
   output: {
     path: path.join(__dirname, '/dist/'),
     filename: '[name].js',
@@ -28,7 +30,6 @@ module.exports = {
       gtm: '',
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('staging'),
     }),

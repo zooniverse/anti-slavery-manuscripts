@@ -2,16 +2,18 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 const nib = require('nib');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniSccExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 
   entry: [
     path.join(__dirname, 'src/index.jsx'),
   ],
+
+  mode: 'production',
 
   output: {
     path: path.join(__dirname, '/dist/'),
@@ -26,14 +28,8 @@ module.exports = {
       filename: 'index.html',
       gtm: '<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WDW6V4" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src="//www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);})(window,document,"script","dataLayer","GTM-WDW6V4");</script>',
     }),
-    new ExtractTextPlugin({
-      filename: '[name]-[hash].min.css',
-      allChunks: true,
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        screw_ie8: true,
-      },
+    new MiniSccExtractPlugin({
+      filename: '[name]-[contenthash].css'
     }),
     new StatsPlugin('webpack.stats.json', {
       source: false,
@@ -57,28 +53,26 @@ module.exports = {
       use: 'babel-loader',
     }, {
       test: /\.css$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: {
-          loader: 'css-loader',
-        },
-      }),
+      use: [
+        MiniSccExtractPlugin.loader,
+        'css-loader'
+      ]
     }, {
       test: /\.styl$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [{
+      use: [
+        MiniSccExtractPlugin.loader,
+        {
           loader: 'css-loader',
           options: {
              includePaths: [path.resolve(__dirname, 'node_modules/zoo-grommet/dist'), path.resolve(__dirname, 'node_modules/zooniverse-react-components/lib/zooniverse-react-components.css')]
-          }
+          },
         }, {
           loader: 'stylus-loader',
           options: {
             use: [nib()],
           },
-        }],
-      }),
+        },
+      ],
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg)$/,
       loader: 'file-loader',
@@ -88,7 +82,7 @@ module.exports = {
     }],
   },
   node: {
-    fs: "empty"
+    fs: 'empty'
   }
 
 };
