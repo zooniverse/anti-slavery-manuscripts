@@ -25,7 +25,7 @@ module.exports = {
   },
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
-    'react-hot-loader/patch',
+    'webpack-hot-middleware/client?reload=true',
     path.join(__dirname, 'src/index.jsx'),
   ],
 
