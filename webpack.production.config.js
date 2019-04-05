@@ -41,14 +41,14 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['.js', '.jsx', '.styl', '.css'],
+    extensions: ['*', '.js', '.jsx', '.styl', '.css'],
     modules: ['.', 'node_modules'],
   },
 
   module: {
     rules: [{
       test: /\.jsx?$/,
-      exclude: /node_modules/,
+      exclude: /node_modules\/(?!(markdown-it-anchor|markdown-it-table-of-contents|striptags)\/).*/,
       use: 'babel-loader',
     }, {
       test: /\.css$/,
