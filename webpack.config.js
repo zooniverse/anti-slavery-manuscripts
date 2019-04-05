@@ -41,7 +41,7 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.styl'],
+    extensions: ['*', '.js', '.jsx', '.styl', '.css'],
     modules: ['.', 'node_modules'],
   },
 
@@ -53,6 +53,13 @@ module.exports = {
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
       use: 'file-loader',
+    }, {
+      test: /\.css$/,
+      use: [{
+        loader: 'style-loader',
+      }, {
+        loader: 'css-loader',
+      }],
     }, {
       test: /\.styl$/,
       use: [{

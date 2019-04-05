@@ -2,26 +2,42 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
-const nib = require('nib');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniSccExtractPlugin = require('mini-css-extract-plugin');
+const nib = require('nib');
 
 module.exports = {
-
   entry: [
     path.join(__dirname, 'src/index.jsx'),
   ],
-
-  output: {
-    path: path.join(__dirname, '/dist/'),
-    filename: '[name]-[hash].min.js',
-  },
-
   mode: 'production',
-
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'main',
+          test: /\.(css|styl)$/,
+          chunks: 'all',
+          enforce: true
+        },
+        vendor: {
+          name: 'vendor',
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
+  },
+  output: {
+    publicPath: '/',
+    path: path.join(__dirname, '/dist/'),
+    filename: '[name]-[chunkhash].min.js',
+    chunkFilename: '[name]-chunkhash.js',
+  },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.tpl.html',
       inject: 'body',
@@ -31,15 +47,7 @@ module.exports = {
     new MiniSccExtractPlugin({
       filename: '[name]-[contenthash].css'
     }),
-    new StatsPlugin('webpack.stats.json', {
-      source: false,
-      modules: false,
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
   ],
-
   resolve: {
     extensions: ['*', '.js', '.jsx', '.styl', '.css'],
     modules: ['.', 'node_modules'],
@@ -58,20 +66,16 @@ module.exports = {
       ],
     }, {
       test: /\.styl$/,
-      use: [
-        MiniSccExtractPlugin.loader,
-        {
-          loader: 'css-loader',
-          options: {
-             includePaths: [path.resolve(__dirname, 'node_modules/zoo-grommet/dist'), path.resolve(__dirname, 'node_modules/zooniverse-react-components/lib/zooniverse-react-components.css')]
-          },
-        }, {
-          loader: 'stylus-loader',
-          options: {
-            use: [nib()],
-          },
+      use: [{
+        loader: MiniSccExtractPlugin.loader,
+      }, {
+        loader: 'css-loader',
+      }, {
+        loader: 'stylus-loader',
+        options: {
+          use: [nib()],
         },
-      ],
+      }],
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
       use: [{
