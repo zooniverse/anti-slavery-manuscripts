@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "start": "BABEL_ENV=development check-engines && check-dependencies && webpack-dashboard -p 3001 -- webpack-dev-server --config ./webpack.config.js",
-    "test": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
-    "test-travis": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
+    "test": "echo 'This project has no tests.' || true",
+    "test-travis": "true",
     "eslint": "eslint .",
     "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js -p",
     "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org"
