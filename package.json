@@ -18,8 +18,8 @@
     "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org"
   },
   "engines": {
-    "node": "^8.1.2",
-    "npm": ">=5"
+    "node": "^10.15.3",
+    "npm": ">=6"
   },
   "author": "Zooniverse",
   "license": "Apache-2.0",
