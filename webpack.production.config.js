@@ -32,7 +32,7 @@ module.exports = {
     publicPath: '/',
     path: path.join(__dirname, '/dist/'),
     filename: '[name]-[chunkhash].min.js',
-    chunkFilename: '[name]-chunkhash.js',
+    chunkFilename: '[name]-[chunkhash].js',
   },
   plugins: [
     new webpack.DefinePlugin({
