@@ -11,15 +11,15 @@
   ],
   "scripts": {
     "start": "BABEL_ENV=development check-engines && check-dependencies && webpack-dashboard -p 3001 -- webpack-dev-server --config ./webpack.config.js",
-    "test": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
-    "test-travis": "NODE_ENV=development BABEL_ENV=test mocha $(find src -name *.spec.jsx) --compilers js:babel-core/register || true",
+    "test": "echo 'This project has no tests.' || true",
+    "test-travis": "true",
     "eslint": "eslint .",
     "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js -p",
     "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org"
   },
   "engines": {
-    "node": "^8.1.2",
-    "npm": ">=5"
+    "node": "^10.15.3",
+    "npm": ">=6"
   },
   "author": "Zooniverse",
   "license": "Apache-2.0",
@@ -44,8 +44,8 @@
     "redux-devtools-extension": "~1.0.0",
     "redux-logger": "~2.7.4",
     "redux-thunk": "~2.1.0",
-    "zoo-grommet": "~0.2.1",
-    "zooniverse-react-components": "github:zooniverse/Zooniverse-react-components#v0.7.0"
+    "zoo-grommet": "~0.3.0",
+    "zooniverse-react-components": "github:zooniverse/Zooniverse-react-components#v0.7.3"
   },
   "devDependencies": {
     "@babel/cli": "~7.0.0",
