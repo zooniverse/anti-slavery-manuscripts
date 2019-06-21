@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const MAX_THUMBNAIL_DIMENSION = 999;
 
@@ -53,8 +54,8 @@ Thumbnail.defaultProps = {
 };
 
 Thumbnail.propTypes = {
-  height: React.PropTypes.number,
-  origin: React.PropTypes.string,
-  src: React.PropTypes.string,
-  width: React.PropTypes.number,
+  height: PropTypes.number,
+  origin: PropTypes.string,
+  src: PropTypes.string,
+  width: PropTypes.number,
 };

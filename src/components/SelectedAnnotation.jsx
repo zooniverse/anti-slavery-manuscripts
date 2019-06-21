@@ -369,9 +369,9 @@ SelectedAnnotation.defaultProps = {
 
 SelectedAnnotation.propTypes = {
   annotation: PropTypes.shape({
-    details: React.PropTypes.array,
-    previousAnnotation: React.PropTypes.bool,
-    textOptions: React.PropTypes.array,
+    details: PropTypes.array,
+    previousAnnotation: PropTypes.bool,
+    textOptions: PropTypes.array,
   }),
   annotationPanePosition: PropTypes.shape({
     x: PropTypes.number,
