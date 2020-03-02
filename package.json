@@ -15,7 +15,7 @@
     "test-travis": "true",
     "eslint": "eslint .",
     "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js -p",
-    "_stage": "BABEL_ENV=staging check-engines && check-dependencies && webpack --config webpack.config.js -p",
+    "_stage": "BABEL_ENV=staging check-engines && check-dependencies && webpack --config webpack.config.js",
     "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org",
     "deploy-staging": "NODE_ENV=staging npm run _stage && publisssh dist zooniverse-static/preview.zooniverse.org/antislaverymanuscripts"
   },
