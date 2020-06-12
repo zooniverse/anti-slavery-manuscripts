@@ -48,8 +48,6 @@ const emergencySaveWorkInProgress = () => {
     }
 
     console.info('emergencySaveWorkInProgress()');
-    Rollbar && Rollbar.info &&
-    Rollbar.info('emergencySaveWorkInProgress()');
   };
 };
 
@@ -76,12 +74,8 @@ const emergencyLoadWorkInProgress = () => {
       });
 
       console.info('emergencyLoadWorkInProgress()');
-      Rollbar && Rollbar.info &&
-      Rollbar.info('emergencyLoadWorkInProgress()');
     } catch (err) {
       console.error('emergencyLoadWorkInProgress() error: ', err);
-      Rollbar && Rollbar.error &&
-      Rollbar.error('emergencyLoadWorkInProgress() error: ', err);
     }
   };
 };

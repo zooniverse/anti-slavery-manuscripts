@@ -77,8 +77,6 @@ class App extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchProject());
     this.googleLogger.remember({ projectToken: 'antiSlaveryManuscripts' });
-    Rollbar.global({ maxItems: 10 });
-    Rollbar.configure({ payload: { environment: env } });
     generateSessionID();
   }
 

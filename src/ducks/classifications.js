@@ -202,8 +202,6 @@ const saveAllQueuedClassifications = (dispatch, user = null) => {
         .catch((err) => {
           // Ah, crap.
           console.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
-          Rollbar && Rollbar.error &&
-          Rollbar.error('ducks/classifications.js saveAllQueuedClassifications() error: ', err);
 
           // Right, why did it fail?
           switch (err.status) {
@@ -242,8 +240,6 @@ const queueClassification = (classification, user = null) => {
     //WARNING: if an error appears here, unlikely as it may be, the error might
     //be catastrophic enough to warrant an alert().
     console.error('ducks/classifications.js queueClassification() error: ', err);
-    Rollbar && Rollbar.error &&
-    Rollbar.error('ducks/classifications.js queueClassification() error: ', err);
   }
 };
 
@@ -261,8 +257,6 @@ const submitClassification = () => {
 
     if (!classification) {
       console.error('ducks/classifications.js submitClassification() error: no classification', '');
-      Rollbar && Rollbar.error &&
-      Rollbar.error('ducks/classifications.js submitClassification() error: no classification', '');  //TODO: better presentation
       alert('ERROR: Could not submit Classification.');
       return;
     }
@@ -358,8 +352,6 @@ const retrieveClassification = (id) => {
       })
       .catch((err) => {
         console.error('ducks/classifications.js retrieveClassification() error: ', err);
-        Rollbar && Rollbar.error &&
-        Rollbar.error('ducks/classifications.js retrieveClassification() error: ', err);
         dispatch({
           type: CREATE_CLASSIFICATION_ERROR
         })
@@ -413,8 +405,6 @@ const saveClassificationInProgress = () => {
         dispatch(emergencySaveWorkInProgress());
         dispatch(toggleDialog(<DialogOfFailure />, false, true));
         console.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
-        Rollbar && Rollbar.error &&
-        Rollbar.error('ducks/classifications.js saveClassificationInProgress() error: ', err);
       });
   };
 };
