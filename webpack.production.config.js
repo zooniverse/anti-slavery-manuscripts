@@ -77,7 +77,7 @@ module.exports = {
         },
       }],
     }, {
-      test: /social\-media\-preview\.jpg$/,
+      test: /social\-media\-preview\.jpeg/,
       use: [{
         loader: 'file-loader?name=[name].[ext]',
       }],
