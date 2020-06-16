@@ -16,7 +16,6 @@ import configureStore from './store';
 // currently Styles looks like an unused var to eslint
 import Styles from './styles/main.styl'; // eslint-disable-line no-unused-vars
 import favicon from './images/favicon.ico';
-import socialMediaPreview from './images/social-media-preview.jpeg';
 
 const store = configureStore();
 
