@@ -77,7 +77,7 @@ module.exports = {
         },
       }],
     }, {
-      test: /social\-media\-preview\.jpeg/,
+      test: /social\-media\-preview\.jpeg/,  /* Use .jpeg so it doesn't trigger the .jpg processing rule too. */
       use: [{
         loader: 'file-loader?name=[name].[ext]',
       }],
