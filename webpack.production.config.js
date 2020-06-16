@@ -77,6 +77,11 @@ module.exports = {
         },
       }],
     }, {
+      test: /social\-media\-preview\.jpg$/,
+      use: [{
+        loader: 'file-loader?name=[name].[ext]',
+      }],
+    }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
       use: [{
         loader: 'file-loader',
