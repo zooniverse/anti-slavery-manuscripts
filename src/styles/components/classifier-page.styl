@@ -94,9 +94,10 @@
         padding: 0.5em
         text-align: left
 
-        &:hover, &:focus, &.selected
-          background: $white
-          border-radius: 2em
+        &:enabled
+          &:hover, &:focus, &.selected
+            background: $white
+            border-radius: 2em
 
         &.selected
           color: $red-orange
