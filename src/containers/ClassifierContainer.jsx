@@ -195,7 +195,13 @@ class ClassifierContainer extends React.Component {
               <button className="white-green button" onClick={this.saveCurrentClassification}>Save Progress</button>
             )}
 
-            <button className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
+            <button
+              className="white-green button"
+              disabled
+              onClick={this.prepareSubmitClassificationForm}
+            >
+              Finish
+            </button>
           </div>
         </section>
 
