@@ -2,6 +2,8 @@
 
 Anti-Slavery Manuscripts invites volunteers to transcribe documents from the American abolitionist movement, working together with the Zooniverse community and the Boston Public Library.
 
+As of August 12, 2020, this project is complete. Transcribing and submitting classifications are disabled with [PR 316](https://github.com/zooniverse/anti-slavery-manuscripts/pull/316) and a separate PR mentioned therein.
+
 ## Usage
 
 __Install the dependencies:__
