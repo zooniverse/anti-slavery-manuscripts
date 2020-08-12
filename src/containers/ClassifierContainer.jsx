@@ -195,7 +195,13 @@ class ClassifierContainer extends React.Component {
               <button className="white-green button" onClick={this.saveCurrentClassification}>Save Progress</button>
             )}
 
-            <button className="white-green button" onClick={this.prepareSubmitClassificationForm}>Finish</button>
+            <button
+              className="white-green button"
+              disabled
+              onClick={this.prepareSubmitClassificationForm}
+            >
+              Finish
+            </button>
           </div>
         </section>
 
@@ -218,12 +224,12 @@ class ClassifierContainer extends React.Component {
             <h2>Toolbar</h2>
 
             <button
-              disabled={disableTranscribe}
+              disabled
               className={(this.props.viewerState === SUBJECTVIEWER_STATE.ANNOTATING) ? 'flat-button block selected' : 'flat-button block'}
               onClick={this.useAnnotationTool}
             >
               <span className="classifier-toolbar__icon">
-                <i className={`fa fa-plus-circle ${disableTranscribe && 'disable-icon'}`} />
+                <i className="fa fa-plus-circle disable-icon" />
               </span>
               <span>Transcribe</span>
             </button>
