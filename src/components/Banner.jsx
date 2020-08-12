@@ -5,7 +5,7 @@ const Banner = ({ hideBanner }) => {
   return (
     <div className="top-banner">
       <h2>
-        As of [date], this project is complete. Our sincere thanks to the almost 14,000
+        As of August 12, 2020, this project is complete. Our sincere thanks to the almost 14,000
         volunteers who helped to transcribe this collection of more than 12,000 letters
         in just over 2.5 years. We’ll post on the Talk boards and send out a newsletter
         with information about the project’s next steps, including where/when you’ll be
