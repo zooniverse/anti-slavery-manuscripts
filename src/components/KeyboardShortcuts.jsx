@@ -14,10 +14,6 @@ const KeyboardShortcuts = () => {
             <td>Toggle Previous Marks</td>
           </tr>
           <tr>
-            <td>a</td>
-            <td>Toggle Navigate and Transcribe</td>
-          </tr>
-          <tr>
             <th>When Transcribing</th>
           </tr>
           <tr>
