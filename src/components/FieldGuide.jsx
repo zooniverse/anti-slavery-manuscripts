@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StepThrough } from 'zooniverse-react-components';
 import { Markdown } from "markdownz";
-import Thumbnail from './thumbnail';
+import Thumbnail from './Thumbnail';
 
 class FieldGuide extends React.Component {
   constructor(props) {
