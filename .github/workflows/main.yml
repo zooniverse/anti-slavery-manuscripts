@@ -17,6 +17,13 @@ jobs:
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - run: npm ci
+    - run: npm run build
+
     - name: Upload to blob storage
       uses: azure/CLI@v1
       with:
