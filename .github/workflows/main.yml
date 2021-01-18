@@ -1,0 +1,29 @@
+name: Deploy ASM to Production
+
+on:
+    # Run this workflow on push to master (incl PR merges)
+    push:
+        branches: [ master ]
+
+    # Allow running this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+            az storage blob upload-batch --account-name zooniverse-static -d '$web/www.antislaverymanuscripts.org' -s .
+
+# Azure logout
+    - name: logout
+      run: |
+            az logout
