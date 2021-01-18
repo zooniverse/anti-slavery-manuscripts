@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: azure/login@v1
       with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_STATIC_SITES }}
 
     - name: Use Node.js
       uses: actions/setup-node@v1
