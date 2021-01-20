@@ -29,7 +29,6 @@ module.exports = {
     }
   },
   output: {
-    publicPath: '/',
     path: path.join(__dirname, '/dist/'),
     filename: '[name]-[chunkhash].min.js',
     chunkFilename: '[name]-[chunkhash].js',
@@ -69,7 +68,7 @@ module.exports = {
       use: [{
         loader: MiniSccExtractPlugin.loader,
       }, {
-        loader: 'css-loader',
+        loader: 'css-loader'
       }, {
         loader: 'stylus-loader',
         options: {
