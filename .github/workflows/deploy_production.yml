@@ -39,7 +39,7 @@ jobs:
               --account-name zooniversestatic \
               --content-cache-control 'public, max-age=60' \
               --container-name '$web' \
-              --name 'antislaverymanuscripts.org/index.html' \
+              --name 'www.antislaverymanuscripts.org/index.html' \
               --file ./dist/index.html
 
     - name: Slack notification
