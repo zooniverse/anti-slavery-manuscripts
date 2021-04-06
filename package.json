@@ -12,12 +12,8 @@
   "scripts": {
     "start": "BABEL_ENV=development check-engines && check-dependencies && webpack-dashboard -p 3001 -- webpack-dev-server --config ./webpack.config.js",
     "test": "echo 'This project has no tests.' || true",
-    "test-travis": "true",
     "eslint": "eslint .",
-    "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js -p",
-    "_stage": "BABEL_ENV=staging check-engines && check-dependencies && webpack --config webpack.config.js",
-    "deploy-production": "NODE_ENV=production npm run build && publisssh dist zooniverse-static/www.antislaverymanuscripts.org",
-    "deploy-staging": "NODE_ENV=staging npm run _stage && publisssh dist zooniverse-static/preview.zooniverse.org/antislaverymanuscripts"
+    "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js -p"
   },
   "engines": {
     "node": ">=14",
@@ -85,7 +81,6 @@
     "mini-css-extract-plugin": "~0.5.0",
     "mocha": "~4.0.0",
     "nib": "~1.1.2",
-    "publisssh": "~1.1.0",
     "react-addons-test-utils": "~15.4.2",
     "react-test-renderer": "~15.4.2",
     "rimraf": "~2.5.4",
