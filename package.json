@@ -17,7 +17,7 @@
   },
   "engines": {
     "node": ">=14",
-    "npm": ">=6"
+    "npm": ">=7"
   },
   "author": "Zooniverse",
   "license": "Apache-2.0",
