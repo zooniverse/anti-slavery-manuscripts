@@ -1,91 +1,39 @@
 name: Deploy ASM to Production
 
 on:
-    # Run this workflow on push to production-release tag (via chatops)
-    push:
-        tags:
-          - production-release
-
-    # Allow running this workflow manually from the Actions tab
-    workflow_dispatch:
+  # Run this workflow on push to production-release tag (via chatops)
+  push:
+      tags:
+        - production-release
 
 jobs:
-  deploy_production:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: azure/login@v1
-      with:
-          creds: ${{ secrets.AZURE_STATIC_SITES }}
-
-    - name: Node install and build
-      uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-    - run: npm ci
-    - run: npm run build
-
-    - name: Upload to blob storage
-      uses: azure/CLI@v1
-      with:
-        creds: ${{ secrets.AZURE_STATIC_SITES }}
-        inlineScript: |
-            az storage blob upload-batch \
-              --account-name zooniversestatic \
-              --content-cache-control 'public, immutable, max-age=604800' \
-              --destination '$web/www.antislaverymanuscripts.org' \
-              --source ./dist
-            az storage blob upload \
-              --account-name zooniversestatic \
-              --content-cache-control 'public, max-age=60' \
-              --container-name '$web' \
-              --name 'www.antislaverymanuscripts.org/index.html' \
-              --file ./dist/index.html
-
-    - name: Slack notification
-      uses: 8398a7/action-slack@v3
-      if: always()
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      with:
-        fields: took
-        status: custom
-        custom_payload: |
-          {
-            "channel": "#deploys",
-            "icon_emoji": ":octocat:",
-            "username": "Deploy Action",
-            "attachments": [{
-              "color": '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              "mrkdwn_in": ["text"],
-              "author_name": "${{ github.actor }}",
-              "author_link": "https://github.com/${{ github.actor }}/",
-              "author_icon": "https://github.com/${{ github.actor }}.png?size=40",
-              "title": "ASM Production deploy complete",
-              "title_link": "https://antislaverymanuscripts.org",
-              "fields": [
-                  {
-                      "title": "Status",
-                      "value": '${{ job.status }}' === 'success' ? `:white_check_mark: Success in ${process.env.AS_TOOK}` : '${{ job.status }}' === 'failure' ? ':x: Failed' : ':warning: Warning',
-                      "short": true
-                  },
-                  {
-                      "title": "Triggered by",
-                      "value": "${{ github.event_name }}",
-                      "short": true
-                  },
-                  {
-                      "title": "Run Link",
-                      "value": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-              ],
-              "thumb_url": "https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-teal.png",
-              "footer": "<https://github.com/${{ github.repository }}|${{ github.repository }}> #${{ github.run_number }}",
-              "footer_icon": "https://www.zooniverse.org/favicon.ico"
-            }]
-          }
-
-# Azure logout
-    - name: logout
-      run: |
-            az logout
+  build:
+    name: Build production
+    uses: zooniverse/ci-cd/.github/workflows/npm_build.yaml@main
+    with:
+      commit_id: ${{ github.sha }}
+      node_version: '16.x'
+      output: 'dist'
+      script: 'build'
+  deploy:
+    name: Deploy production
+    uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@main
+    needs: build
+    with:
+      source: 'dist'
+      target: 'www.antislaverymanuscripts.org'
+    secrets:
+      creds: ${{ secrets.AZURE_STATIC_SITES }}
+  slack_notification:
+    name: Send Slack notification
+    uses: zooniverse/ci-cd/.github/workflows/slack_notification.yaml@main
+    needs: deploy
+    if: always()
+    with:
+      commit_id: ${{ github.sha }}
+      job_name: Build production / build
+      status: ${{ needs.deploy.result }}
+      title: 'ASM Production deploy complete'
+      title_link: 'https://www.antislaverymanuscripts.org'
+    secrets:
+      slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
