@@ -14,7 +14,7 @@ __Test:__
 
 ```npm run test```
 
-__Development mode with livereload:__
+__Development mode with live reload:__
 
 ```npm run start```
 
