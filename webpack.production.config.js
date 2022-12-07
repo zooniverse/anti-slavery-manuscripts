@@ -70,10 +70,7 @@ module.exports = {
       }, {
         loader: 'css-loader'
       }, {
-        loader: 'stylus-loader',
-        options: {
-          use: [nib()],
-        },
+        loader: 'stylus-loader'
       }],
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
