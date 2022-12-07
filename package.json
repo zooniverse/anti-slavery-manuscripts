@@ -91,7 +91,7 @@
     "webpack-cli": "^3.3.12",
     "webpack-dashboard": "~3.3.7",
     "webpack-dev-middleware": "~1.10.1",
-    "webpack-dev-server": "^3.11.3",
+    "webpack-dev-server": "^4.11.1",
     "webpack-hot-middleware": "~2.25.3"
   }
 }
