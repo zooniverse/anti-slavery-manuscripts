@@ -1,0 +1,16 @@
+name: Build Anti-Slavery Manuscripts PR branch
+
+on:
+  # run this on any change to a PR branch
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build production
+    uses: zooniverse/ci-cd/.github/workflows/npm_build.yaml@main
+    with:
+      commit_id: ${{ github.sha }}
+      node_version: '16.x'
+      output: 'dist'
+      script: 'build'
