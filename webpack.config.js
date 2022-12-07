@@ -12,10 +12,13 @@ module.exports = {
       '.zooniverse.org',
     ],
     historyApiFallback: true,
-    contentBase: path.join(__dirname, '/src/'),
+    client: {
+      overlay: true,
+      progress: true
+    },
     open: true,
-    inline: true,
     port: 3000, // Change this for your project
+    server: 'https'
   },
   devtool: 'cheap-module-source-map',
   entry: [
@@ -66,10 +69,7 @@ module.exports = {
       }, {
         loader: 'css-loader',
       }, {
-        loader: 'stylus-loader',
-        options: {
-          use: [nib()],
-        },
+        loader: 'stylus-loader'
       }],
     }, {
       test: /\.(txt|ico)$/,
