@@ -57,7 +57,7 @@
     "@babel/preset-react": "~7.0.0",
     "@babel/register": "~7.18.9",
     "autoprefixer": "~6.5.3",
-    "babel-eslint": "~7.1.1",
+    "babel-eslint": "~10.1.0",
     "babel-loader": "~8.0.0",
     "babel-plugin-transform-es2015-modules-commonjs": "~6.26.2",
     "chai": "~3.5.0",
