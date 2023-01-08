@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import oauth from 'panoptes-client/lib/oauth';
 
 import App from './components/App';
@@ -15,7 +15,7 @@ import Styles from './styles/main.styl'; // eslint-disable-line no-unused-vars
 import favicon from './images/favicon.ico';
 
 const store = configureStore();
-const history = createHistory();
+const history = createBrowserHistory();
 
 oauth.init(config.panoptesAppId)
   .then(() => {
