@@ -42,7 +42,7 @@
     "react-select": "~1.0.0-rc.5",
     "redux": "~4.2.0",
     "redux-devtools-extension": "~2.13.9",
-    "redux-logger": "~2.7.4",
+    "redux-logger": "~3.0.6",
     "redux-thunk": "~2.4.2",
     "zoo-grommet": "~0.3.4",
     "zooniverse-react-components": "~0.10.6"
