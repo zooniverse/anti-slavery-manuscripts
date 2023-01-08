@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { config } from '../config';
 
@@ -38,23 +38,23 @@ class ProjectHeader extends React.Component {
           <h1 className="main-title">Anti-Slavery Manuscripts</h1>
         )}
         <nav className="project-header__nav">
-          <Link
+          <NavLink
             activeClassName="project-header__link--active"
             className="project-header__link"
-            onlyActiveOnIndex
+            exact
             to="/"
           >
             Home
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             activeClassName="project-header__link--active"
             className="project-header__link"
             to="/classify"
           >
             Transcribe
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             activeClassName="project-header__link--active"
             className="project-header__link"
             to="/about"
@@ -62,7 +62,7 @@ class ProjectHeader extends React.Component {
             <button onClick={this.aboutClick} tabIndex="-1">
               About
             </button>
-          </Link>
+          </NavLink>
           <a
             className="project-header__link"
             href={`${config.zooniverseLinks.host}projects/${config.zooniverseLinks.projectSlug}/collections`}

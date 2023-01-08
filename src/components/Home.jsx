@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import apiClient from 'panoptes-client/lib/api-client';
 import talkClient from 'panoptes-client/lib/talk-client';
@@ -108,7 +108,7 @@ class Home extends React.Component {
             <span><b>Note:</b> This project is not currently supported on mobile and tablet devices.</span>
           </div>
 
-          <Link to="/classify">Start Transcribing</Link>
+          <NavLink to="/classify">Start Transcribing</NavLink>
           {/*
           NOTE: Hide Subject Set Selection During Initial Launch.
           <h3 className="transcribe">

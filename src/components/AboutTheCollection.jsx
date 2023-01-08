@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
 import Timeline from './Timeline';
 import MobileTimeline from './MobileTimeline';
 import AboutEnvelope from '../images/about-envelope.png';
@@ -19,7 +19,7 @@ class AboutTheCollection extends React.Component {
         <div className="project-background" />
         <div className="about-the-collection__intro flex-row">
           <div>
-            <Link to="/">Anti-Slavery Manuscripts</Link>
+            <NavLink to="/">Anti-Slavery Manuscripts</NavLink>
             <h3>About <i>the</i> Collection</h3>
             <span className="about-the-collection__content">
               The Boston Public Library&apos;s Anti-Slavery collection&mdash;one of the largest
@@ -28,7 +28,7 @@ class AboutTheCollection extends React.Component {
               newspapers, pamphlets, books, and memorabilia from the 1830s through
               the 1870s.
             </span><br />
-            <Link to="/about-the-project">About the Project</Link>
+            <NavLink to="/about-the-project">About the Project</NavLink>
           </div>
           <div>
             <img role="presentation" src={AboutEnvelope} />
@@ -70,7 +70,7 @@ class AboutTheCollection extends React.Component {
               </div>
             </div>
 
-            <Link to="/classify">Start Transcribing</Link>
+            <NavLink to="/classify">Start Transcribing</NavLink>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ class AboutTheCollection extends React.Component {
         </div>
 
         <div className="about-the-collection__transcribe">
-          <Link to="/classify">Start Transcribing</Link>
+          <NavLink to="/classify">Start Transcribing</NavLink>
         </div>
       </main>
     );

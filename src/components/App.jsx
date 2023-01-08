@@ -1,12 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { ZooFooter } from 'zooniverse-react-components';
 import { fetchProject, PROJECT_STATUS } from '../ducks/project';
 import { disableBanner } from '../ducks/banner';
 import { toggleDialog } from '../ducks/dialog';
 
 import { emergencySaveWorkInProgress, emergencyLoadWorkInProgress } from '../ducks/emergency-save';
+
+import Home from './Home';
+import AboutTheCollection from './AboutTheCollection';
+import AboutTheProject from './AboutTheProject';
+import Classifier from '../containers/ClassifierContainer';
 
 import Header from './Header';
 import ProjectHeader from './ProjectHeader';
@@ -111,7 +117,12 @@ class App extends React.Component {
         }
 
         <ProjectHeader showTitle={showTitle} />
-        {this.props.children}
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/classify" component={Classifier} />
+          <Route exact path="/about" component={AboutTheCollection} />
+          <Route exact path="/about-the-project" component={AboutTheProject} />
+        </Switch>
         <div className="grommet">
           <ZooFooter />
         </div>
