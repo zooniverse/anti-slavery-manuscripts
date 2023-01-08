@@ -79,7 +79,7 @@
     "image-webpack-loader": "~4.6.0",
     "json-loader": "~0.5.4",
     "mini-css-extract-plugin": "~1.6.0",
-    "mocha": "~10.1.0",
+    "mocha": "~10.2.0",
     "nib": "~1.1.2",
     "react-addons-test-utils": "~15.6.2",
     "react-test-renderer": "~15.4.2",
