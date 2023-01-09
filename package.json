@@ -46,7 +46,7 @@
     "redux-logger": "~3.0.6",
     "redux-thunk": "~2.4.2",
     "zoo-grommet": "~0.3.4",
-    "zooniverse-react-components": "~0.10.6"
+    "zooniverse-react-components": "~0.11.0"
   },
   "devDependencies": {
     "@babel/cli": "~7.20.7",
