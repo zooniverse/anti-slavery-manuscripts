@@ -85,16 +85,13 @@ module.exports = {
       }],
     }, {
       test: /\.(jpg|png|gif|otf|eot|svg|ttf|woff\d?)$/,
-      use: [{
-        loader: 'file-loader',
-      }, {
-        loader: 'image-webpack-loader',
-      }],
+      type: 'asset/resource'
     }, {
       test: /\.(txt|ico)$/,
-      use: [{
-        loader: 'file-loader?name=[name].[ext]',
-      }],
+      type: 'asset/resource',
+      generator: {
+        filename: '[name][ext]'
+      }
     }],
   }
 };
