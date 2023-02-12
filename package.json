@@ -16,7 +16,7 @@
     "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js"
   },
   "engines": {
-    "node": ">=16",
+    "node": ">=18",
     "npm": ">=8"
   },
   "author": "Zooniverse",
