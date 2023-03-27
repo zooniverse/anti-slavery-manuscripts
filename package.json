@@ -86,7 +86,7 @@
     "process": "~0.11.10",
     "react-addons-test-utils": "~15.6.2",
     "react-test-renderer": "~16.14.0",
-    "rimraf": "~4.4.0",
+    "rimraf": "~4.4.1",
     "style-loader": "~3.3.2",
     "stylus": "~0.59.0",
     "stylus-loader": "~7.1.0",
