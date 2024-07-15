@@ -13,7 +13,7 @@
     "start": "BABEL_ENV=development check-engines && check-dependencies && webpack-dashboard -p 3001 -- webpack-dev-server --config ./webpack.config.js",
     "test": "echo 'This project has no tests.' || true",
     "eslint": "eslint .",
-    "build": "BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js"
+    "build": "export NODE_ENV=production ; BABEL_ENV=production check-engines && check-dependencies && webpack --config webpack.production.config.js"
   },
   "engines": {
     "node": ">=18",
