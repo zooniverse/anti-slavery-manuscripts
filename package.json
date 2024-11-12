@@ -37,7 +37,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-redux": "~8.1.3",
-    "react-rnd": "~5.1.0",
+    "react-rnd": "~10.4.13",
     "react-router": "~4.1.2",
     "react-router-dom": "~4.1.2",
     "react-select": "~1.0.0-rc.5",
@@ -46,7 +46,7 @@
     "redux-logger": "~3.0.6",
     "redux-thunk": "~2.4.2",
     "zoo-grommet": "~0.3.5",
-    "zooniverse-react-components": "~0.13.2"
+    "zooniverse-react-components": "~0.14.2"
   },
   "devDependencies": {
     "@babel/cli": "~7.23.0",
@@ -59,10 +59,10 @@
     "@babel/preset-env": "~7.23.2",
     "@babel/preset-react": "~7.22.15",
     "@babel/register": "~7.22.5",
+    "ajv": "~8.17.1",
     "autoprefixer": "~10.4.16",
     "babel-eslint": "~10.1.0",
     "babel-loader": "~9.1.3",
-    "babel-plugin-transform-es2015-modules-commonjs": "~6.26.2",
     "chai": "~4.3.10",
     "check-dependencies": "~2.0.0",
     "check-engines": "~1.6.0",
@@ -76,7 +76,6 @@
     "eslint-plugin-react": "~7.33.2",
     "eventsource-polyfill": "~0.9.6",
     "express": "~4.21.1",
-    "extract-text-webpack-plugin": "~2.1.0",
     "html-webpack-plugin": "~5.5.3",
     "json-loader": "~0.5.4",
     "mini-css-extract-plugin": "~1.6.0",
@@ -96,7 +95,7 @@
     "webpack-cli": "~5.1.4",
     "webpack-dashboard": "~3.3.8",
     "webpack-dev-middleware": "~6.1.2",
-    "webpack-dev-server": "^4.15.1",
+    "webpack-dev-server": "^5.1.0",
     "webpack-hot-middleware": "~2.25.4"
   }
 }

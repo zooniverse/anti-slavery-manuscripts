@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { connect } from 'react-redux';
 import { toggleDialog } from '../ducks/dialog';
 import { Utility } from '../lib/Utility';

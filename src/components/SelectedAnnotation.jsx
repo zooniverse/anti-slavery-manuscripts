@@ -1,5 +1,5 @@
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Utility, KEY_CODES } from '../lib/Utility';
