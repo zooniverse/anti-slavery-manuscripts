@@ -17,9 +17,6 @@ module.exports = function (api) {
           [
             '@babel/plugin-transform-react-jsx',
           ],
-          [
-            'transform-es2015-modules-commonjs',
-          ],
         ],
       },
       staging: {
@@ -33,9 +30,6 @@ module.exports = function (api) {
           [
             '@babel/plugin-transform-react-jsx',
           ],
-          [
-            'transform-es2015-modules-commonjs',
-          ],
         ],
       },
       production: {
@@ -48,9 +42,6 @@ module.exports = function (api) {
           ],
           [
             '@babel/plugin-transform-react-jsx',
-          ],
-          [
-            'transform-es2015-modules-commonjs',
           ],
         ],
       },
@@ -67,9 +58,6 @@ module.exports = function (api) {
           ],
           [
             '@babel/plugin-transform-react-jsx',
-          ],
-          [
-            'transform-es2015-modules-commonjs',
           ],
         ],
       },
