@@ -76,7 +76,7 @@
     "eslint-plugin-react": "~7.33.2",
     "eventsource-polyfill": "~0.9.6",
     "express": "~4.21.1",
-    "html-webpack-plugin": "~5.5.3",
+    "html-webpack-plugin": "~5.6.3",
     "json-loader": "~0.5.4",
     "mini-css-extract-plugin": "~1.6.0",
     "mocha": "~10.2.0",
